@@ -1,9 +1,0 @@
-{
-  "schema_version": 1,
-  "ticker": "KO",
-  "period": "2025-FY",
-  "analysis_status": "unavailable",
-  "unavailable_reason_code": "risk_not_authored",
-  "validation_findings": [],
-  "risks": []
-}
