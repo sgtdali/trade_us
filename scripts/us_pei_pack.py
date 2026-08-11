@@ -1198,13 +1198,6 @@ can and mark them as such; where you cannot, state the limitation and carry on.
 TASKS = {
     "idea": """Use idea-generation across all {n} companies in one screen.
 
-Classify every ticker into your own bucket vocabulary -- `A - immediate research
-candidate`, `B - watchlist / needs trigger`, `C - screen flag only`, `Reject` --
-as research priority, not as a buy recommendation.
-
-For each A name give Actionability, Variant Wedge, Why Now, First Rejection,
-What Would Make It Investable, What Would Kill It, and Next Workflow.
-
 End with a single table covering all {n} tickers, one row each:
 
 | Ticker | Bucket | Setup | Variant wedge | First rejection | Next workflow |
@@ -1213,41 +1206,15 @@ Two companies reaching the same conclusion must still differ in their
 company-specific evidence and first rejection. Repeated boilerplate rationale
 is a failed run.""",
 
-    "tearsheet": """Use company-tearsheet for {ticker}.
-
-**Do not classify this name.** The tearsheet output contract ends at
-`Recommended next step or downstream handoff`. Any add / trim / hold /
-watchlist / wait-for-proof judgment belongs to earnings-preview,
-long-short-pitch or thesis-tracker, not here. If you feel the need for a verdict
-label, name the skill that owns it instead and stop.
-
-What I want: the factual investor read, the core earnings-driver question, four
-or five decision-useful metrics with period and source, valuation context,
-concise catalysts and risks, material evidence gaps, and the next analytical
-route.""",
+    "tearsheet": """Use company-tearsheet for {ticker}.""",
 
     "preview": """Use earnings-preview for {ticker}.
 
-State the freeze time and the expectation bar first: consensus, company guide,
-the last reported baseline, and the estimate-revision path. All of those are in
-the pack.
-
-Then the 3-6 KPIs that can actually move the stock, guidance credibility, and
-the EPS-quality landmines -- tax rate, share count, equity-investment marks, FX,
-asset sales, impairments, restructuring, and any mismatch between GAAP EPS,
-adjusted EPS and the consensus basis.
-
 I have no options or implied-move data and no positioning or short-interest
 data. Do not construct an implied-move bar from an expiry that does not isolate
-the event; say the input is missing instead.
-
-Close with the position action from your own vocabulary and with call questions
-that carry a listen-for and a falsifier.""",
+the event; say the input is missing instead.""",
 
     "deepdive": """Use earnings-deep-dive for {ticker}.
-
-The print is out. Compare it against what was expected, then say what the
-quarter changed.
 
 `quarterly_series` holds discrete quarters differenced from the cumulative
 filings, so a growth trajectory can be read without mistaking a nine-month
@@ -1259,14 +1226,7 @@ computed for that print and must not be estimated -- say so instead.
 
 I have no earnings-call transcript. Mark the Q&A and debate-map sections
 `transcript not provided` and name the missing artifact rather than rendering an
-empty table.
-
-Run the EPS quality screen: tax, share count, equity-investment marks, FX, asset
-sales, impairments, restructuring, litigation, and anything else that would make
-headline EPS misstate recurring performance.
-
-Close with what changed in the thesis, what the next falsifier is, and the
-position action from your own vocabulary.""",
+empty table.""",
 
     "comps": """Use comps-valuation for {ticker}.
 
@@ -1274,22 +1234,13 @@ position action from your own vocabulary.""",
 computed with one definition, plus the peer medians. Read `median_caveat`
 before you use those medians.
 
-Answer specifically: what does the current price imply, and is the upside driven
-by fundamentals, multiple expansion, mix, capital return, sentiment or event
-probability? If the case rests on convergence to a peer multiple, say so
-plainly and state what independent evidence supports that multiple.
-
 Peer selection is yours -- my grouping is a starting universe, not a
 conclusion. Say which peers you exclude and why.""",
 
     "pitch": """Use long-short-pitch for {ticker}.
 
-Build on the earlier work in this conversation. The pack is here for the
-current numbers; no new raw data is needed.
-
-Give Actionability from your own vocabulary, the variant perception, what is
-priced in, why now, the catalyst path with dates, what must be true, kill
-criteria, and the add / trim / exit rules.
+Build on the earlier work in this conversation; the pack is here for the
+current numbers, no new raw data is needed.
 
 Every threshold must carry a number and a date. A threshold without one is not
 a threshold.""",
