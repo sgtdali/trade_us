@@ -1141,10 +1141,6 @@ news, events, management commentary, earnings call content, what the market is
 currently debating, and sector or macro context. That layer is the one I cannot
 produce.
 
-To be clear about what is being asked: ordinary web search only. Nothing here
-needs a browser to be driven, a page to be clicked through, or any
-computer-control tool.
-
 **If you have no web access, that is fine and not a reason to stop.** The pack
 is self-contained. Do the analysis from it, and list what you would have checked
 online as an open item.
@@ -1544,8 +1540,7 @@ def main() -> int:
                       "No second price is available for this name.")
         scope = (f"It contains one company, {ticker}, plus its sector peer group."
                  if peers is not None else
-                 f"It contains one company, {ticker}. This step's source "
-                 f"categories do not include a sector peer group.")
+                 f"It contains one company, {ticker}.")
         hit_n = 1 if entry["consensus_estimates"]["status"] == "available" else 0
         guidance_n = int(entry["latest_earnings_release"]
                          .get("guidance", {}).get("status") == "available")
