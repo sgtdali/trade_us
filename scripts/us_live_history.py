@@ -25,11 +25,11 @@ sys.path.insert(0, str(REPO / "src"))
 
 from adapter.point_in_time import (  # noqa: E402
     build_month_plans, freeze_price_ledger, freeze_sec_discovery_ledger,
-    initialize_backtest, materialize_month_cutoff, read_json,
+    initialize_run_root, materialize_month_cutoff, read_json,
 )
 from adapter.live_refresh import (  # noqa: E402
     END_DATE, LIVE_PARENT, RUN_ID, START_DATE, month_is_complete,
-    run_live_month, sec_user_agent, sync_config,
+    run_live_month, sec_user_agent,
 )
 from adapter.sec_client import SecClient  # noqa: E402
 
@@ -54,10 +54,9 @@ def main() -> int:
 
     if not root.is_dir():
         agent = sec_user_agent(REPO)
-        root = initialize_backtest(repo_root=REPO, run_id=RUN_ID,
+        root = initialize_run_root(repo_root=REPO, run_id=RUN_ID,
                                    start_date=START_DATE, end_date=END_DATE,
                                    parent=REPO / LIVE_PARENT)
-        sync_config(repo_root=REPO, run_root=root)
         print("kok kuruldu, defterler donduruluyor...", flush=True)
         started = time.time()
         freeze_price_ledger(run_root=root)
@@ -89,7 +88,7 @@ def main() -> int:
     for index, plan in enumerate(todo, start=1):
         started = time.time()
         materialize_month_cutoff(run_root=root, plan=plan)
-        outcome = run_live_month(client=client, run_root=root, plan=plan,
+        outcome = run_live_month(client=client, run_root=root, repo_root=REPO, plan=plan,
                                  tickers=universe)
         skipped = outcome.get("skipped") or {}
         print(f"[{index}/{len(todo)}] {plan.month}  ({time.time()-started:.0f} sn, "

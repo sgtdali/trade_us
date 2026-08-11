@@ -17,9 +17,10 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 
 def generate_us_peer_comparisons(
     *, workspace: Path, tickers: list[str], as_of_date: str, generated_at: str,
-    generate_report: bool = True,
+    generate_report: bool = True, config_root: Path | None = None,
 ) -> dict[str, int]:
-    universe_root = workspace / "config" / "valuation" / "comparison" / "peer-universes"
+    config_root = config_root if config_root is not None else workspace
+    universe_root = config_root / "config" / "valuation" / "comparison" / "peer-universes"
     universe_paths = sorted(universe_root.glob("*.json"))
     if not universe_paths:
         raise UsPipelineError(f"no peer universe is defined under {universe_root}")
@@ -82,7 +83,7 @@ def generate_us_peer_comparisons(
     # KENDISI yukarida artifact olarak yazildi; bu tur yalniz sunum icin.
     if generate_report:
         for ticker in tickers:
-            _rerender_report(workspace, ticker, as_of_date)
+            _rerender_report(workspace, ticker, as_of_date, config_root=config_root)
     return {"comparison_count": generated_count, "ticker_count": len(tickers)}
 
 
@@ -100,7 +101,7 @@ def _single_result_path(workspace: Path, ticker: str, as_of_date: str) -> Path:
     ))
 
 
-def _rerender_report(workspace: Path, ticker: str, as_of_date: str) -> None:
+def _rerender_report(workspace: Path, ticker: str, as_of_date: str, *, config_root: Path) -> None:
     result_path = _single_result_path(workspace, ticker, as_of_date)
     context_id = result_path.parent.name
     financials = [
@@ -118,6 +119,7 @@ def _rerender_report(workspace: Path, ticker: str, as_of_date: str) -> None:
         latest["period"],
         latest_fy["period"],
         workspace=workspace,
+        config_root=config_root,
     )
     if errors:
         raise UsPipelineError(

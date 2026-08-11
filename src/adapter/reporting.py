@@ -120,7 +120,9 @@ def generate_us_valuation_report(
     fy_period: str,
     *,
     workspace: Path,
+    config_root: Path | None = None,
 ) -> tuple[str, list[str]]:
+    config_root = config_root if config_root is not None else workspace
     deps = load_report_dependencies(
         ticker=ticker,
         as_of_date=as_of_date,
@@ -133,7 +135,7 @@ def generate_us_valuation_report(
     operational_path = workspace / "data" / "financial-operational" / ticker / f"{fy_period}.json"
     issuer_operational = read_json(operational_path) if operational_path.exists() else {"metrics": []}
     peer_universe = read_json(
-        workspace / "config" / "valuation" / "comparison" / "peer-universes" /
+        config_root / "config" / "valuation" / "comparison" / "peer-universes" /
         "consumer-staples.json"
     )
     signal_details = {

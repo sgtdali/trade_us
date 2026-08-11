@@ -55,6 +55,7 @@ def build_context(
     period_id: str,
     allow_inactive: bool = False,
     data_root: Path | None = None,
+    config_root: Path | None = None,
 ) -> AnalysisContext:
     """Load an :class:`AnalysisContext`.
 
@@ -65,9 +66,16 @@ def build_context(
     (``config/pipeline``, ``config/taxonomies``) always resolves against the
     real repository, since it is versioned infrastructure the fixture is
     meant to exercise for real, not something a fixture should shadow.
+
+    ``config_root`` overrides where ``config/companies`` specifically is
+    read from when it needs to differ from ``data_root`` (e.g. a run root
+    that holds its own generated data but has no reason to keep a private
+    copy of the shared company registry). Defaults to ``data_root``.
     """
     ticker = safe_ticker(ticker)
-    company_config = load_company(ticker, allow_inactive=allow_inactive, data_root=data_root)
+    company_config = load_company(
+        ticker, allow_inactive=allow_inactive, data_root=data_root, config_root=config_root,
+    )
     company_type_id = company_config["pipeline"]["company_type"]
     sector_module_id = company_config["pipeline"]["sector_module"]
     assert_implemented(company_type_id)

@@ -56,8 +56,17 @@ def run_company_workflow(
     historical_market_observation: dict[str, str] | None = None,
     historical_technical_input: dict[str, Any] | None = None,
     generate_report: bool = True,
+    config_root: Path | None = None,
 ) -> dict[str, Any]:
-    company = read_json(workspace / "config" / "companies" / f"{ticker}.json")
+    """`config_root` is a repo-root-like directory containing a `config/`
+    subdirectory (matching `data_root`'s existing convention) that
+    overrides where config is read from; defaults to `workspace` (the
+    original, single-root behaviour) so plain CLI usage (workspace == repo
+    root already) is unaffected. A run root that holds its own generated
+    data but shares the real, always-current company registry passes
+    `config_root=repo_root` explicitly."""
+    config_root = config_root if config_root is not None else workspace
+    company = read_json(config_root / "config" / "companies" / f"{ticker}.json")
     cik = resolve_cik(client, ticker)
     filings = list_filings(client, cik, as_of=as_of, forms=("10-K", "10-Q"))
     event_filings = list_filings(client, cik, as_of=as_of, forms=("8-K",))
@@ -81,7 +90,7 @@ def run_company_workflow(
         facts_by_accession[filing.accession] = facts
         period_id, direct, evidence = normalize_filing(
             workspace=workspace, ticker=ticker, filing=filing, facts=facts,
-            mapping_path=workspace / "config" / "sec" / "metric-map.json",
+            mapping_path=config_root / "config" / "sec" / "metric-map.json",
         )
         comparison_direct = build_comparison_period_artifact(direct, evidence)
         write_normalized_filing(
@@ -93,7 +102,7 @@ def run_company_workflow(
         if comparison_direct is not None:
             comparison_period = comparison_direct["period"]
             comparison_validation = validate_inputs(
-                build_context(ticker, comparison_period, data_root=workspace)
+                build_context(ticker, comparison_period, data_root=workspace, config_root=config_root)
             )
             if not comparison_validation.ok:
                 raise UsPipelineError(
@@ -101,7 +110,7 @@ def run_company_workflow(
                     f"{comparison_validation.as_dict()}"
                 )
             comparison_generated = run_pipeline(
-                build_context(ticker, comparison_period, data_root=workspace)
+                build_context(ticker, comparison_period, data_root=workspace, config_root=config_root)
             )
             if not comparison_generated.validation.ok:
                 raise UsPipelineError(
@@ -134,10 +143,10 @@ def run_company_workflow(
                 "currency_profile": debt_profile["currency_profile"],
                 "weighted_average_rates": debt_profile["interest_profile"]["weighted_average_rates"],
             }
-        validation = validate_inputs(build_context(ticker, period_id, data_root=workspace))
+        validation = validate_inputs(build_context(ticker, period_id, data_root=workspace, config_root=config_root))
         if not validation.ok:
             raise UsPipelineError(f"{ticker} {period_id}: normalized financial validation failed: {validation.as_dict()}")
-        generated = run_pipeline(build_context(ticker, period_id, data_root=workspace))
+        generated = run_pipeline(build_context(ticker, period_id, data_root=workspace, config_root=config_root))
         if not generated.validation.ok:
             raise UsPipelineError(f"{ticker} {period_id}: analysis failed: {generated.validation.as_dict()}")
         paths = output_paths(ticker, period_id, workspace)
@@ -180,7 +189,7 @@ def run_company_workflow(
         if candidate.exists():
             prior_interim_period = read_json(candidate)
     valuation = run_us_valuation(
-        workspace=workspace, ticker=ticker, exchange=company["exchange"],
+        workspace=workspace, config_root=config_root, ticker=ticker, exchange=company["exchange"],
         as_of_date=as_of.isoformat(), cutoff_instant=cutoff_instant,
         accession=latest_filing.accession, facts=facts_by_accession[latest_filing.accession],
         latest_period=latest_period, fy_period=fy_period,

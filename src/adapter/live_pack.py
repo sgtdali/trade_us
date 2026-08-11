@@ -197,7 +197,7 @@ def build_pack_from_artifacts(*, run_root: Path, month: str,
                               guidance_root: Path | None = None) -> dict:
     config = _read_json(run_root / "run-config.json")
     cutoff = _read_json(run_root / "months" / month / "cutoff.json")
-    workspace = run_root / "workspace"
+    workspace = run_root
     plan = MonthPlan(month=month, decision_date=cutoff["decision_date"],
                      cutoff_date=cutoff["cutoff_date"],
                      cutoff_instant=cutoff["cutoff_instant"],

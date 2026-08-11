@@ -52,37 +52,32 @@ class MonthPlan:
         }
 
 
-def initialize_backtest(
-    *, repo_root: Path, run_id: str, start_date: str, end_date: str,
-    parent: Path | None = None,
+def initialize_run_root(
+    *, repo_root: Path, run_id: str, start_date: str, end_date: str, parent: Path,
 ) -> Path:
-    """`parent` verilmezse kok us/backtests altinda kurulur.
+    """Kok dizini kurar: run-config.json (universe, cohorts, tarih araligi).
 
-    Canli veri koku bir backtest DEGIL; kendi yerine kurulabilsin diye
-    parametre eklendi. Fonksiyon adi tarihsel; iceriginde artik backtest'e
-    ozel bir varsayim yok."""
+    Config'in kendisi kopyalanmaz -- run-config.json'a yalniz universe/
+    cohort listesi (donem donem degismesi beklenmeyen bir karar) yazilir;
+    her okuma gercek config/'a gider, hep guncel. Emsal evreni dondurma
+    (eskiden _activate_frozen_peer_universe) kaldirildi: bu yalniz coklu-ay
+    walk-forward backtest'in "gecmis bir aya, evren daha authored edilmeden
+    once bile gecerliymis gibi davran" ihtiyaciydi -- tek, hep-guncel bir
+    canli kosu icin authored effective_from tarihlerini bastan yazmak
+    yanlisti (peer-universes dosyalarinin kendi authored effective_from'u
+    zaten var, config/valuation/comparison/peer-universes/*.json)."""
     if not run_id or any(char not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_" for char in run_id):
         raise UsPipelineError("run_id may contain only letters, numbers, dash and underscore")
-    base = parent.resolve() if parent else (repo_root.resolve() / "backtests")
-    root = base / run_id
+    root = parent.resolve() / run_id
     if root.exists():
         config = read_json(root / "run-config.json")
         if config["start_date"] != start_date or config["end_date"] != end_date:
-            raise UsPipelineError("existing backtest run has different date boundaries")
-        _activate_frozen_peer_universe(
-            root / "workspace" / "config",
-            effective_from=(date.fromisoformat(start_date) - timedelta(days=1)).isoformat(),
-        )
+            raise UsPipelineError("existing run has different date boundaries")
         return root
 
-    source_config = repo_root.resolve() / "config"
+    config_root = repo_root.resolve() / "config"
     root.mkdir(parents=True)
-    _copytree(source_config, root / "workspace" / "config")
-    _activate_frozen_peer_universe(
-        root / "workspace" / "config",
-        effective_from=(date.fromisoformat(start_date) - timedelta(days=1)).isoformat(),
-    )
-    cohorts = load_cohorts(source_config)
+    cohorts = load_cohorts(config_root)
     tickers = sorted(cohorts)
     if len(tickers) < MAX_POSITIONS:
         raise UsPipelineError(
@@ -105,7 +100,6 @@ def initialize_backtest(
         "max_per_cohort": MAX_PER_COHORT,
         "transaction_cost_rate": str(TRANSACTION_COST_RATE),
         "created_at": _utc_now(),
-        "source_config_sha256": _tree_hash(source_config),
     }
     write_json_atomic(root / "run-config.json", config)
     return root
@@ -132,15 +126,6 @@ def load_cohorts(config_root: Path) -> dict[str, str]:
                 raise UsPipelineError(f"duplicate peer-universe ticker: {ticker}")
             result[ticker] = models[0]
     return result
-
-
-def _activate_frozen_peer_universe(config_root: Path, *, effective_from: str) -> None:
-    for path in peer_universe_paths(config_root):
-        universe = read_json(path)
-        universe["effective_from"] = effective_from
-        for member in universe.get("members", []):
-            member["effective_from"] = effective_from
-        write_json_atomic(path, universe)
 
 
 def freeze_price_ledger(*, run_root: Path) -> Path:
@@ -423,19 +408,6 @@ def _available(row: dict[str, Any], field: str, ticker: str) -> str:
     if value.get("status") != "available" or value.get("value") is None:
         raise UsPipelineError(f"{ticker}: {field} is unavailable on {row.get('trade_date')}")
     return str(value["value"])
-
-
-def _copytree(source: Path, target: Path) -> None:
-    import shutil
-    shutil.copytree(source, target)
-
-
-def _tree_hash(root: Path) -> str:
-    digest = hashlib.sha256()
-    for path in sorted(item for item in root.rglob("*") if item.is_file()):
-        digest.update(path.relative_to(root).as_posix().encode("utf-8"))
-        digest.update(path.read_bytes())
-    return digest.hexdigest()
 
 
 def _file_hash(path: Path) -> str:

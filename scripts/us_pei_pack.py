@@ -666,7 +666,7 @@ def attach_net_debt(pack: dict, source_run: Path, horizon: str) -> tuple[int, li
     Value" diyor, yani kendi sozlesmesinde kiralari disarida birakiyor.
     Ikisini toplayip tek sayi vermek o sozlesmeyi sessizce bozardi.
     """
-    root = source_run / "workspace" / "data" / "financial"
+    root = source_run / "data" / "financial"
     ok, missing = 0, []
     for entry in pack["companies"]:
         payload = latest_statement(root / entry["ticker"], horizon)
@@ -805,7 +805,7 @@ def attach_quarterly_series(pack: dict, source_run: Path,
     for entry in pack["companies"]:
         periods: dict[str, dict] = {}
         for index, root in enumerate(reversed(roots)):
-            folder = root / "workspace" / "data" / "financial" / entry["ticker"]
+            folder = root / "data" / "financial" / entry["ticker"]
             if not folder.is_dir():
                 continue
             for path in folder.glob("*.json"):
@@ -1442,7 +1442,7 @@ def main() -> int:
         hit, missing = attach_consensus(pack, companies, consensus_as_of)
     events_n, events_as_of = (0, None) if is_historical else attach_events(pack)
     history_n, history_last = attach_valuation_history(pack, horizon)
-    pack["_financial_root"] = str(source_run / "workspace" / "data" / "financial")
+    pack["_financial_root"] = str(source_run / "data" / "financial")
     special_n, special_names = flag_special_situations(pack, source_run)
     roic_n, roic_skipped = attach_roic(pack, horizon)
     pack.pop("_financial_root", None)

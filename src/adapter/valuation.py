@@ -29,6 +29,7 @@ def run_us_valuation(
     filing_available_at: str | None = None,
     historical_technical_input: dict[str, Any] | None = None,
     generate_report: bool = True,
+    config_root: Path | None = None,
 ) -> dict[str, Any]:
     registry = load_catalog_registry()
     context_periods = tuple(dict.fromkeys((latest_period, fy_period)))
@@ -109,7 +110,8 @@ def run_us_valuation(
     report_text = ""
     if generate_report:
         report_text, errors = generate_us_valuation_report(
-            ticker, as_of_date, context_id, latest_period, fy_period, workspace=workspace,
+            ticker, as_of_date, context_id, latest_period, fy_period,
+            workspace=workspace, config_root=config_root,
         )
         if errors:
             raise UsPipelineError(f"valuation report validation failed: {'; '.join(errors)}")
