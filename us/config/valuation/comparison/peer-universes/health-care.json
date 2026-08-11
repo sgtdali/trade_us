@@ -1,0 +1,260 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "valuation_peer_universe",
+  "artifact_id": "valuation-peer-universe:health_care_us:1",
+  "owner_type": "authored",
+  "universe_id": "health_care_us",
+  "universe_version": 1,
+  "sector_family": "health_care",
+  "method_family_ids": [
+    "val.method.earnings_yield.reported_parent",
+    "gross_margin",
+    "net_margin",
+    "free_cash_flow_margin",
+    "current_ratio"
+  ],
+  "effective_from": "2026-01-01",
+  "effective_to": null,
+  "members": [
+    {
+      "member_id": "abbv",
+      "ticker": "ABBV",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareLargePharma"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "abt",
+      "ticker": "ABT",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareMedTech"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "bdx",
+      "ticker": "BDX",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareMedTech"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "bmy",
+      "ticker": "BMY",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareLargePharma"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "bsx",
+      "ticker": "BSX",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareMedTech"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "jnj",
+      "ticker": "JNJ",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareLargePharma"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "lly",
+      "ticker": "LLY",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareLargePharma"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "mdt",
+      "ticker": "MDT",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareMedTech"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "mrk",
+      "ticker": "MRK",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareLargePharma"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "pfe",
+      "ticker": "PFE",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareLargePharma"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "syk",
+      "ticker": "SYK",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareMedTech"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "zbh",
+      "ticker": "ZBH",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": [
+        "MODEL:HealthCareMedTech"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    }
+  ],
+  "inclusion_policy_ref": "val.policy.peer_universe.inclusion@1.0.0",
+  "review": {
+    "author": "fundamentaltrading",
+    "reviewer": "fundamentaltrading",
+    "reviewed_at": "2026-08-05T00:00:00Z",
+    "methodology_version": "1.0.0",
+    "rationale_codes": [
+      "comparison.health_care_standard_corporate"
+    ]
+  },
+  "lifecycle": "approved",
+  "supersedes_ref": null,
+  "lineage": {
+    "dag": {
+      "nodes": [
+        {
+          "node_id": "n1",
+          "node_type": "peer_universe",
+          "owner_type": "authored"
+        }
+      ],
+      "edges": []
+    }
+  }
+}

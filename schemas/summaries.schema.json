@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fundemental-trading/schemas/summaries.schema.json",
+  "title": "Deterministic section summaries",
+  "type": "object",
+  "required": ["schema_version", "ticker", "period", "generated_from", "input_completeness", "summaries"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1, "maximum": 1},
+    "ticker": {"type": "string", "pattern": "^[A-Z0-9.\\-]+$"},
+    "period": {"type": "string"},
+    "note": {"type": "string"},
+    "generated_from": {"type": "object"},
+    "input_completeness": {
+      "type": "object",
+      "description": "Overall input/metric completeness from the central completeness engine (distinct from each section's own signal completeness below); reproducible from the normalized inputs, never hand-copied.",
+      "required": ["company_type", "sector_module", "required_metrics", "optional_metrics", "provenance"],
+      "properties": {
+        "company_type": {"type": "string"},
+        "sector_module": {"type": "string"},
+        "required_metrics": {"$ref": "#/$defs/completenessBlock"},
+        "optional_metrics": {"$ref": "#/$defs/completenessBlock"},
+        "provenance": {"$ref": "#/$defs/completenessBlock"}
+      },
+      "additionalProperties": false
+    },
+    "summaries": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "status", "positive_signals", "negative_signals", "neutral_signals",
+          "unavailable_signals", "missing_signals", "completeness", "data_completeness", "investment_signal"
+        ],
+        "properties": {
+          "status": {"type": "string", "enum": ["positive", "negative", "neutral", "mixed", "insufficient_data"]},
+          "positive_signals": {"type": "array", "items": {"type": "string"}},
+          "negative_signals": {"type": "array", "items": {"type": "string"}},
+          "neutral_signals": {"type": "array", "items": {"type": "string"}},
+          "unavailable_signals": {"type": "array", "items": {"type": "string"}},
+          "missing_signals": {"type": "array", "items": {"type": "string"}},
+          "key_drivers": {"type": "array", "items": {"type": "string"}},
+          "key_risks": {"type": "array", "items": {"type": "string"}},
+          "completeness": {
+            "type": "object",
+            "required": ["section_signals"],
+            "properties": {
+              "section_signals": {
+                "type": "object",
+                "required": ["applicable", "available", "unavailable", "missing", "completeness_pct"],
+                "properties": {
+                  "applicable": {"type": "integer", "minimum": 0},
+                  "available": {"type": "integer", "minimum": 0},
+                  "unavailable": {"type": "integer", "minimum": 0},
+                  "missing": {"type": "integer", "minimum": 0},
+                  "completeness_pct": {"type": "number", "minimum": 0, "maximum": 100}
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "data_completeness": {"type": "number", "minimum": 0, "maximum": 100},
+          "investment_signal": {"type": "boolean", "const": false}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "completenessBlock": {
+      "type": "object",
+      "required": ["applicable", "available", "missing", "completeness_pct"],
+      "properties": {
+        "applicable": {"type": "integer", "minimum": 0},
+        "available": {"type": "integer", "minimum": 0},
+        "missing": {"type": "integer", "minimum": 0},
+        "missing_ids": {"type": "array", "items": {"type": "string"}},
+        "completeness_pct": {"type": "number", "minimum": 0, "maximum": 100}
+      },
+      "additionalProperties": false
+    }
+  }
+}

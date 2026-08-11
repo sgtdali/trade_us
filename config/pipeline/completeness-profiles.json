@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "profiles": [
+    {
+      "company_type": "standard_corporate",
+      "sector_module": "generic",
+      "required_metrics": [
+        "revenue_total",
+        "gross_profit",
+        "net_profit_for_period",
+        "total_assets",
+        "total_equity",
+        "cf_net_operating_activities"
+      ],
+      "optional_metrics": [
+        "cf_capex_ppe_intangible"
+      ]
+    },
+    {
+      "company_type": "standard_corporate",
+      "sector_module": "aviation",
+      "required_metrics": [
+        "revenue_total",
+        "gross_profit",
+        "net_profit_for_period",
+        "total_assets",
+        "total_equity",
+        "cf_net_operating_activities",
+        "ask",
+        "passenger_count",
+        "passenger_load_factor_quarterly",
+        "rask_adjusted_cargo_capacity"
+      ],
+      "optional_metrics": [
+        "cargo_tonnage",
+        "fuel_unit_cost",
+        "cask",
+        "ex_fuel_cask"
+      ]
+    }
+  ]
+}

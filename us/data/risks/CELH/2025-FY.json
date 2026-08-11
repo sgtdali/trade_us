@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "ticker": "CELH",
+  "period": "2025-FY",
+  "as_of": "2026-03-02",
+  "scope_note": "10-K Item 1A risk metninden deterministik olarak çıkarılmıştır; önem derecesi ve parasal etki tahmin edilmemiştir.",
+  "analysis_status": "available",
+  "unavailable_reason_code": null,
+  "validation_findings": [],
+  "risks": [
+    {
+      "risk_id": "competition_and_demand",
+      "category": "market",
+      "title": "Rekabet ve Tüketici Talebi Riski",
+      "description": "Şirket, rekabet koşulları veya tüketici talebindeki değişimlerin faaliyet sonuçlarını olumsuz etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001341766-26-000024-risk-factors",
+          "source_file": "raw/sec-filings/CELH/0001341766-26-000024-risk-factors.txt",
+          "page": null,
+          "summary": "…and reputation. Risk Factors Related to Our IndustryWe are subject to significant competition by other companies in the functional beverage product industry. The functional beverage product industry is highly competitive."
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "supply_chain_and_inputs",
+      "category": "operational",
+      "title": "Tedarik Zinciri ve Girdi Maliyeti Riski",
+      "description": "Şirket, tedarik zinciri kesintileri veya girdi maliyetlerindeki değişimlerin operasyonlarını ve marjlarını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001341766-26-000024-risk-factors",
+          "source_file": "raw/sec-filings/CELH/0001341766-26-000024-risk-factors.txt",
+          "page": null,
+          "summary": "…cash flows. Increases in cost or shortages of raw materials or increases in costs of co-packing could harm our business. The principal raw materials used in producing our products are…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "cybersecurity_and_systems",
+      "category": "operational",
+      "title": "Siber Güvenlik ve Bilgi Sistemleri Riski",
+      "description": "Şirket, siber olayların veya bilgi sistemi kesintilerinin operasyonları ve itibarı üzerinde olumsuz etki yaratabileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001341766-26-000024-risk-factors",
+          "source_file": "raw/sec-filings/CELH/0001341766-26-000024-risk-factors.txt",
+          "page": null,
+          "summary": "A significant cybersecurity breach, third-party outage or prolonged system failure could result in violations of data protection laws, reputational damage, operational delays, loss of intellectual property or material financial costs."
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "regulation_and_litigation",
+      "category": "regulatory",
+      "title": "Düzenleyici ve Hukuki Riskler",
+      "description": "Şirket, düzenleme, vergi veya hukuki süreçlerdeki değişimlerin maliyet ve faaliyet sonuçlarını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001341766-26-000024-risk-factors",
+          "source_file": "raw/sec-filings/CELH/0001341766-26-000024-risk-factors.txt",
+          "page": null,
+          "summary": "…which could result in operational disruptions, increased costs, regulatory scrutiny or reputational harm and could have a material adverse effect on our business, financial condition, results of operations and cash…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "foreign_currency_and_macro",
+      "category": "financial",
+      "title": "Döviz ve Makroekonomik Riskler",
+      "description": "Şirket, döviz, enflasyon, faiz veya genel ekonomik koşullardaki değişimlerin sonuçlarını olumsuz etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001341766-26-000024-risk-factors",
+          "source_file": "raw/sec-filings/CELH/0001341766-26-000024-risk-factors.txt",
+          "page": null,
+          "summary": "…condition, results of operations and cash flows. Tariffs, inflationary pressures and global supply-chain disruptions could increase costs and reduce profitability. Tariffs, inflationary pressures and global supply-chain disruptions could increase our…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "climate_and_environment",
+      "category": "regulatory",
+      "title": "İklim ve Çevresel Düzenleme Riski",
+      "description": "Şirket, iklim olayları veya çevresel düzenlemelerin operasyon ve maliyet yapısını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001341766-26-000024-risk-factors",
+          "source_file": "raw/sec-filings/CELH/0001341766-26-000024-risk-factors.txt",
+          "page": null,
+          "summary": "…operations and cash flows. Compliance with climate-disclosure and environmental-reporting requirements may increase costs and regulatory risk. We are subject to evolving federal, state and international regulations concerning climate-related disclosure and…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    }
+  ]
+}

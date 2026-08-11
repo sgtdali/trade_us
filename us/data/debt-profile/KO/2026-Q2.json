@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "ticker": "KO",
+  "period": "2026-Q2",
+  "period_end": "2026-07-03",
+  "currency": "USD",
+  "scale": "million",
+  "extracted_at": "2026-07-29",
+  "extraction_method": "sec_xbrl",
+  "source_documents": [
+    {
+      "source_id": "sec-0001628280-26-010047",
+      "source_file": "raw/sec-filings/KO/0001628280-26-010047.json"
+    },
+    {
+      "source_id": "sec-0001628280-26-050503",
+      "source_file": "raw/sec-filings/KO/0001628280-26-050503.json"
+    }
+  ],
+  "debt_totals": {
+    "short_term_financial_debt": {
+      "value": 48,
+      "raw_quoted_value": "48",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-050503",
+        "source_file": "raw/sec-filings/KO/0001628280-26-050503.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2026}NotesAndLoansPayable#c-25"
+      }
+    },
+    "current_portion_long_term_debt": {
+      "value": 6494,
+      "raw_quoted_value": "6494",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-050503",
+        "source_file": "raw/sec-filings/KO/0001628280-26-050503.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2026}LongTermDebtAndCapitalLeaseObligationsCurrent#c-25"
+      }
+    },
+    "long_term_financial_debt": {
+      "value": 37001,
+      "raw_quoted_value": "37001",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-050503",
+        "source_file": "raw/sec-filings/KO/0001628280-26-050503.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2026}LongTermDebtAndCapitalLeaseObligations#c-25"
+      }
+    },
+    "lease_liabilities_current": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "lease_liabilities_noncurrent": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "cash_and_cash_equivalents": {
+      "value": 12907,
+      "raw_quoted_value": "12907",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-050503",
+        "source_file": "raw/sec-filings/KO/0001628280-26-050503.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2026}CashAndCashEquivalentsAtCarryingValue#c-25"
+      }
+    }
+  },
+  "maturity_profile": [
+    {
+      "value": 1822.0,
+      "raw_quoted_value": "1822000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths#c-29"
+      },
+      "liability_scope": "Long-term debt",
+      "maturity_bucket": "next 12 months"
+    },
+    {
+      "value": 4817.0,
+      "raw_quoted_value": "4817000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo#c-29"
+      },
+      "liability_scope": "Long-term debt",
+      "maturity_bucket": "year 2"
+    },
+    {
+      "value": 2923.0,
+      "raw_quoted_value": "2923000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree#c-29"
+      },
+      "liability_scope": "Long-term debt",
+      "maturity_bucket": "year 3"
+    },
+    {
+      "value": 2955.0,
+      "raw_quoted_value": "2955000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour#c-29"
+      },
+      "liability_scope": "Long-term debt",
+      "maturity_bucket": "year 4"
+    },
+    {
+      "value": 3411.0,
+      "raw_quoted_value": "3411000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive#c-29"
+      },
+      "liability_scope": "Long-term debt",
+      "maturity_bucket": "year 5"
+    },
+    {
+      "value": 381.0,
+      "raw_quoted_value": "381000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueNextTwelveMonths#c-29"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "next 12 months"
+    },
+    {
+      "value": 317.0,
+      "raw_quoted_value": "317000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueYearTwo#c-29"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "year 2"
+    },
+    {
+      "value": 259.0,
+      "raw_quoted_value": "259000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueYearThree#c-29"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "year 3"
+    },
+    {
+      "value": 213.0,
+      "raw_quoted_value": "213000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueYearFour#c-29"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "year 4"
+    },
+    {
+      "value": 170.0,
+      "raw_quoted_value": "170000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueYearFive#c-29"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "year 5"
+    },
+    {
+      "value": 679.0,
+      "raw_quoted_value": "679000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001628280-26-010047",
+        "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueAfterYearFive#c-29"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "after year 5"
+    }
+  ],
+  "currency_profile": [],
+  "interest_profile": {
+    "fixed_rate_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "floating_rate_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "weighted_average_rates": [
+      {
+        "debt_type": "Long-term debt",
+        "currency": null,
+        "rate_pct": 3.3000000000000003,
+        "status": "reported",
+        "evidence": {
+          "source_id": "sec-0001628280-26-010047",
+          "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+          "page": null,
+          "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LongtermDebtWeightedAverageInterestRate#c-29"
+        }
+      },
+      {
+        "debt_type": "Short-term debt",
+        "currency": null,
+        "rate_pct": 3.9,
+        "status": "reported",
+        "evidence": {
+          "source_id": "sec-0001628280-26-010047",
+          "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+          "page": null,
+          "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}ShortTermDebtWeightedAverageInterestRate#c-29"
+        }
+      },
+      {
+        "debt_type": "Operating leases",
+        "currency": null,
+        "rate_pct": 3.9,
+        "status": "reported",
+        "evidence": {
+          "source_id": "sec-0001628280-26-010047",
+          "source_file": "raw/sec-filings/KO/0001628280-26-010047.json",
+          "page": null,
+          "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}OperatingLeaseWeightedAverageDiscountRatePercent#c-29"
+        }
+      }
+    ]
+  },
+  "risk_sensitivities": {
+    "fx_sensitivity": [],
+    "interest_rate_sensitivity": []
+  },
+  "liquidity_support": {
+    "undrawn_credit_facilities": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "committed_facilities": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "covenants_or_defaults": {
+      "value": null,
+      "status": "not_disclosed",
+      "evidence": null
+    }
+  },
+  "refinancing_disclosures": [],
+  "diagnostics": {
+    "total_financial_debt": {
+      "status": "available",
+      "value": 43543.0,
+      "unit": "source_scale"
+    },
+    "near_term_financial_debt": {
+      "status": "available",
+      "value": 6542.0,
+      "unit": "source_scale"
+    },
+    "cash_to_near_term_debt": {
+      "status": "available",
+      "value": 1.9729440538061755,
+      "unit": "ratio"
+    },
+    "near_term_debt_share": {
+      "status": "available",
+      "value": 0.15024228923133454,
+      "unit": "ratio"
+    },
+    "floating_rate_debt_share": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "ratio"
+    },
+    "refinancing_pressure": {
+      "status": "available",
+      "level": "low",
+      "confidence": "medium",
+      "reason_codes": [
+        "cash_and_maturity_indicators_are_comfortable"
+      ]
+    }
+  }
+}

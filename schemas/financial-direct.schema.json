@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fundemental-trading/schemas/financial-direct.schema.json",
+  "title": "Direct financial statement data",
+  "type": "object",
+  "required": [
+    "schema_version", "ticker", "period", "period_type", "currency", "scale",
+    "accounting_basis", "inflation_adjustment", "restatement", "publication_date", "source_revision",
+    "income_statement", "balance_sheet", "cash_flow_statement"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1, "maximum": 1},
+    "ticker": {"type": "string", "pattern": "^[A-Z0-9.\\-]+$"},
+    "period": {"type": "string"},
+    "period_start": {"type": ["string", "null"]},
+    "period_end": {"type": ["string", "null"]},
+    "period_type": {"type": "string", "enum": ["annual", "quarterly", "half_year", "nine_month", "monthly"]},
+    "currency": {"type": "string", "minLength": 1},
+    "scale": {"type": "string", "enum": ["unit", "thousand", "million", "billion"]},
+    "consolidation": {"type": ["string", "null"]},
+    "audit_status": {"type": ["string", "null"]},
+    "accounting_basis": {"type": "string", "enum": ["IFRS", "TFRS", "US_GAAP", "other", "undetermined"]},
+    "inflation_adjustment": {"$ref": "#/$defs/inflationAdjustment"},
+    "restatement": {"$ref": "#/$defs/restatement"},
+    "publication_date": {"type": ["string", "null"]},
+    "source_revision": {"type": ["string", "null"]},
+    "comparison_accounting_context": {"$ref": "#/$defs/comparisonContextOverride"},
+    "rounding": {"type": ["string", "null"]},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_file", "source_type"],
+        "properties": {
+          "source_file": {"type": "string"},
+          "source_type": {"type": "string"},
+          "description": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "income_statement": {"type": "array", "items": {"$ref": "#/$defs/directMetric"}},
+    "balance_sheet": {"type": "array", "items": {"$ref": "#/$defs/directMetric"}},
+    "cash_flow_statement": {"type": "array", "items": {"$ref": "#/$defs/directMetric"}},
+    "commitments": {"type": "array", "items": {"$ref": "#/$defs/directMetric"}}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "inflationAdjustment": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"type": "string", "enum": ["applied", "not_applied", "not_applicable", "undetermined"]},
+        "standard": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "restatement": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"type": "string", "enum": ["original", "restated", "not_applicable", "undetermined"]},
+        "restated_from_publication_date": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "comparisonContextOverride": {
+      "type": ["object", "null"],
+      "properties": {
+        "currency": {"type": "string"},
+        "scale": {"type": "string", "enum": ["unit", "thousand", "million", "billion"]},
+        "consolidation": {"type": "string"},
+        "accounting_basis": {"type": "string", "enum": ["IFRS", "TFRS", "US_GAAP", "other", "undetermined"]},
+        "inflation_adjustment": {"$ref": "#/$defs/inflationAdjustment"},
+        "restatement": {"$ref": "#/$defs/restatement"},
+        "publication_date": {"type": ["string", "null"]},
+        "source_revision": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source_file", "source_type", "source_id"],
+      "properties": {
+        "source_file": {"type": "string", "minLength": 1},
+        "source_type": {"type": "string"},
+        "source_id": {"type": "string", "minLength": 1},
+        "page": {"type": ["integer", "null"]},
+        "sheet": {"type": ["string", "null"]},
+        "cell_or_range": {"type": ["string", "null"]},
+        "formula": {"type": ["string", "null"]},
+        "notes": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "directMetric": {
+      "type": "object",
+      "required": ["metric_id", "name", "value", "unit", "data_type"],
+      "properties": {
+        "metric_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "name": {"type": "string"},
+        "value": {"type": ["number", "null"]},
+        "unit": {"type": "string"},
+        "period": {"type": "string"},
+        "comparison_value": {"type": ["number", "null"]},
+        "comparison_period": {"type": ["string", "null"]},
+        "change": {"type": ["number", "null"]},
+        "change_unit": {"type": ["string", "null"]},
+        "data_type": {"type": "string", "enum": ["direct", "derived"]},
+        "status": {"type": "string", "enum": ["available", "unavailable", "not_disclosed", "not_applicable", "calculation_blocked"]},
+        "reason": {"type": ["string", "null"]},
+        "provenance": {"$ref": "#/$defs/provenance"}
+      },
+      "additionalProperties": false,
+      "if": {"properties": {"status": {"const": "available"}}, "required": ["status"]},
+      "then": {"required": ["value"]},
+      "allOf": [
+        {
+          "if": {"properties": {"data_type": {"const": "direct"}}},
+          "then": {"required": ["provenance"]}
+        }
+      ]
+    }
+  }
+}

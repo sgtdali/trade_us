@@ -1,0 +1,63 @@
+{
+  "roa_t": {
+    "status": "available",
+    "value": "0.081651"
+  },
+  "roa_t1": {
+    "status": "available",
+    "value": "0.078551"
+  },
+  "cfo_t": {
+    "status": "available",
+    "value": "41565.000000"
+  },
+  "cfoa_t": {
+    "status": "available",
+    "value": "0.146012"
+  },
+  "leverage_t": {
+    "status": "available",
+    "value": "0.121629"
+  },
+  "leverage_t1": {
+    "status": "available",
+    "value": "0.128060"
+  },
+  "current_ratio_t": {
+    "status": "available",
+    "value": "0.789753"
+  },
+  "current_ratio_t1": {
+    "status": "available",
+    "value": "0.822683"
+  },
+  "equity_issuance_amount_t": {
+    "status": "available",
+    "value": "0.000000"
+  },
+  "gross_margin_t": {
+    "status": "available",
+    "value": "0.249267"
+  },
+  "gross_margin_t1": {
+    "status": "available",
+    "value": "0.248511"
+  },
+  "asset_turnover_t": {
+    "status": "available",
+    "value": "2.505245"
+  },
+  "asset_turnover_t1": {
+    "status": "available",
+    "value": "2.610909"
+  },
+  "current_refs": [
+    "data/financial/WMT/2026-FY.json"
+  ],
+  "prior_refs": [
+    "data/financial/WMT/2025-FY.json"
+  ],
+  "opening_balance_refs": [
+    "data/financial/WMT/2024-FY.json"
+  ]
+}

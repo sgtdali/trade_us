@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "ticker": "CPB",
+  "period": "2026-Q3",
+  "as_of": "2026-06-08",
+  "scope_note": "10-Q Item 1A risk metninden deterministik olarak çıkarılmıştır; önem derecesi ve parasal etki tahmin edilmemiştir.",
+  "analysis_status": "available",
+  "unavailable_reason_code": null,
+  "validation_findings": [],
+  "risks": [
+    {
+      "risk_id": "competition_and_demand",
+      "category": "market",
+      "title": "Rekabet ve Tüketici Talebi Riski",
+      "description": "Şirket, rekabet koşulları veya tüketici talebindeki değişimlerin faaliyet sonuçlarını olumsuz etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0000016732-26-000012-risk-factors",
+          "source_file": "raw/sec-filings/CPB/0000016732-26-000012-risk-factors.txt",
+          "page": null,
+          "summary": "We operate in a highly competitive industry and experience competition in all of our categories. On August 26, 2024, we completed the sale of our Pop Secret popcorn business."
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "supply_chain_and_inputs",
+      "category": "operational",
+      "title": "Tedarik Zinciri ve Girdi Maliyeti Riski",
+      "description": "Şirket, tedarik zinciri kesintileri veya girdi maliyetlerindeki değişimlerin operasyonlarını ve marjlarını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0000016732-26-000012-risk-factors",
+          "source_file": "raw/sec-filings/CPB/0000016732-26-000012-risk-factors.txt",
+          "page": null,
+          "summary": "…United States, have caused significant disruption to energy supplies and increases in global energy prices, which has heightened inflationary pressures, disrupted global supply chains and adversely impacted consumer spending patterns."
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "cybersecurity_and_systems",
+      "category": "operational",
+      "title": "Siber Güvenlik ve Bilgi Sistemleri Riski",
+      "description": "Şirket, siber olayların veya bilgi sistemi kesintilerinin operasyonları ve itibarı üzerinde olumsuz etki yaratabileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0000016732-26-000012-risk-factors",
+          "source_file": "raw/sec-filings/CPB/0000016732-26-000012-risk-factors.txt",
+          "page": null,
+          "summary": "…million ($1 million after tax) related to a cybersecurity incident that was identified in the fourth quarter of 2023;•In the third quarter of 2025, the company performed an interim impairment…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "regulation_and_litigation",
+      "category": "regulatory",
+      "title": "Düzenleyici ve Hukuki Riskler",
+      "description": "Şirket, düzenleme, vergi veya hukuki süreçlerdeki değişimlerin maliyet ve faaliyet sonuçlarını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0000016732-26-000012-risk-factors",
+          "source_file": "raw/sec-filings/CPB/0000016732-26-000012-risk-factors.txt",
+          "page": null,
+          "summary": "…initiatives (approximately 4 points); a reduction in certain litigation expenses (approximately 2 points) and lower incentive compensation (approximately 2 points), partially offset by higher general administrative costs (approximately 4 points).…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "foreign_currency_and_macro",
+      "category": "financial",
+      "title": "Döviz ve Makroekonomik Riskler",
+      "description": "Şirket, döviz, enflasyon, faiz veya genel ekonomik koşullardaki değişimlerin sonuçlarını olumsuz etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0000016732-26-000012-risk-factors",
+          "source_file": "raw/sec-filings/CPB/0000016732-26-000012-risk-factors.txt",
+          "page": null,
+          "summary": "On a year-to-date basis, through the third quarter, we have experienced elevated input cost inflation, impacts from tariffs and other supply chain costs."
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    }
+  ]
+}

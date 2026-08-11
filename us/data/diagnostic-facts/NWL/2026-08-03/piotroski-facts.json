@@ -1,0 +1,63 @@
+{
+  "roa_t": {
+    "status": "available",
+    "value": "-0.026244"
+  },
+  "roa_t1": {
+    "status": "available",
+    "value": "-0.018647"
+  },
+  "cfo_t": {
+    "status": "available",
+    "value": "264.000000"
+  },
+  "cfoa_t": {
+    "status": "available",
+    "value": "0.024638"
+  },
+  "leverage_t": {
+    "status": "available",
+    "value": "0.423985"
+  },
+  "leverage_t1": {
+    "status": "available",
+    "value": "0.409669"
+  },
+  "current_ratio_t": {
+    "status": "available",
+    "value": "1.072475"
+  },
+  "current_ratio_t1": {
+    "status": "available",
+    "value": "1.138695"
+  },
+  "equity_issuance_amount_t": {
+    "status": "available",
+    "value": "3000000.000000"
+  },
+  "gross_margin_t": {
+    "status": "available",
+    "value": "0.337590"
+  },
+  "gross_margin_t1": {
+    "status": "available",
+    "value": "0.336059"
+  },
+  "asset_turnover_t": {
+    "status": "available",
+    "value": "0.672329"
+  },
+  "asset_turnover_t1": {
+    "status": "available",
+    "value": "0.689022"
+  },
+  "current_refs": [
+    "data/financial/NWL/2025-FY.json"
+  ],
+  "prior_refs": [
+    "data/financial/NWL/2024-FY.json"
+  ],
+  "opening_balance_refs": [
+    "data/financial/NWL/2023-FY.json"
+  ]
+}

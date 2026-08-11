@@ -1,0 +1,791 @@
+{
+  "schema_version": 1,
+  "ticker": "TGT",
+  "period": "2026-Q1",
+  "filing": {
+    "cik": "0000027419",
+    "accession": "0000027419-26-000022",
+    "form": "10-Q",
+    "filing_date": "2026-05-29",
+    "report_date": "2026-05-02",
+    "primary_document": "tgt-20260502.htm",
+    "is_amendment": false
+  },
+  "selected_facts": [
+    {
+      "metric_id": "revenue_total",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "value": "25443000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "value": "23846000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "cost_of_sales",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "CostOfGoodsAndServicesSold",
+        "value": "18061000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "CostOfGoodsAndServicesSold",
+        "value": "17128000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "operating_profit_before_investment_activities",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "OperatingIncomeLoss",
+        "value": "1135000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "OperatingIncomeLoss",
+        "value": "1472000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "operating_profit",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "OperatingIncomeLoss",
+        "value": "1135000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "OperatingIncomeLoss",
+        "value": "1472000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "financial_expense",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "InterestExpenseNonoperating",
+        "value": "117000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "InterestExpenseNonoperating",
+        "value": "116000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "profit_before_tax",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+        "value": "1033000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+        "value": "1382000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "tax_expense_total",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "IncomeTaxExpenseBenefit",
+        "value": "252000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "IncomeTaxExpenseBenefit",
+        "value": "346000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "net_profit_for_period",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetIncomeLoss",
+        "value": "781000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetIncomeLoss",
+        "value": "1036000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "net_profit_attributable_parent",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetIncomeLoss",
+        "value": "781000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetIncomeLoss",
+        "value": "1036000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "eps_basic_usc",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "EarningsPerShareBasic",
+        "value": "1.72",
+        "unit": "USD/shares",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "2"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "EarningsPerShareBasic",
+        "value": "2.28",
+        "unit": "USD/shares",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "2"
+      }
+    },
+    {
+      "metric_id": "eps_diluted_usc",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "EarningsPerShareDiluted",
+        "value": "1.71",
+        "unit": "USD/shares",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "2"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "EarningsPerShareDiluted",
+        "value": "2.27",
+        "unit": "USD/shares",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "2"
+      }
+    },
+    {
+      "metric_id": "cash_and_equivalents",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
+        "value": "3534000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
+        "value": "2887000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "inventories",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "InventoryNet",
+        "value": "12317000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "InventoryNet",
+        "value": "13048000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "total_current_assets",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "AssetsCurrent",
+        "value": "18065000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "AssetsCurrent",
+        "value": "17759000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "total_assets",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "Assets",
+        "value": "58010000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "Assets",
+        "value": "56185000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "borrowings_long_term_current_portion",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "LongTermDebtAndCapitalLeaseObligationsCurrent",
+        "value": "1133000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "LongTermDebtAndCapitalLeaseObligationsCurrent",
+        "value": "1139000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "borrowings_long_term",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "LongTermDebtAndCapitalLeaseObligations",
+        "value": "14282000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "LongTermDebtAndCapitalLeaseObligations",
+        "value": "14334000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "lease_liabilities_long_term",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "OperatingLeaseLiabilityNoncurrent",
+        "value": "3416000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "OperatingLeaseLiabilityNoncurrent",
+        "value": "3564000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "trade_payables",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "AccountsPayableCurrent",
+        "value": "12188000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "AccountsPayableCurrent",
+        "value": "11823000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "total_current_liabilities",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "LiabilitiesCurrent",
+        "value": "19384000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "LiabilitiesCurrent",
+        "value": "18991000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "equity_attributable_to_parent",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "StockholdersEquity",
+        "value": "16395000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "StockholdersEquity",
+        "value": "14947000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "total_equity",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "StockholdersEquity",
+        "value": "16395000000",
+        "unit": "USD",
+        "context_id": "c-4",
+        "start_date": null,
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "StockholdersEquity",
+        "value": "14947000000",
+        "unit": "USD",
+        "context_id": "c-6",
+        "start_date": null,
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "cf_net_profit_for_period",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetIncomeLoss",
+        "value": "781000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetIncomeLoss",
+        "value": "1036000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "cf_depreciation_amortisation",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "DepreciationDepletionAndAmortization",
+        "value": "813000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "DepreciationDepletionAndAmortization",
+        "value": "787000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "cf_net_operating_activities",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetCashProvidedByUsedInOperatingActivities",
+        "value": "716000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetCashProvidedByUsedInOperatingActivities",
+        "value": "275000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "cf_capex_ppe_intangible",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+        "value": "1035000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+        "value": "790000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "cf_net_investing_activities",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetCashProvidedByUsedInInvestingActivities",
+        "value": "-1033000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetCashProvidedByUsedInInvestingActivities",
+        "value": "-787000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "cf_net_financing_activities",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetCashProvidedByUsedInFinancingActivities",
+        "value": "-1637000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "NetCashProvidedByUsedInFinancingActivities",
+        "value": "-1363000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "cf_dividends_paid",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "PaymentsOfDividendsCommonStock",
+        "value": "516000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "PaymentsOfDividendsCommonStock",
+        "value": "510000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "cf_share_repurchases",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "PaymentsForRepurchaseOfCommonStock",
+        "value": "0",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "PaymentsForRepurchaseOfCommonStock",
+        "value": "250000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    },
+    {
+      "metric_id": "cf_net_change_in_cash",
+      "current": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect",
+        "value": "-1954000000",
+        "unit": "USD",
+        "context_id": "c-1",
+        "start_date": "2026-02-01",
+        "end_date": "2026-05-02",
+        "dimensions": [],
+        "decimals": "-6"
+      },
+      "comparison": {
+        "namespace": "http://fasb.org/us-gaap/2025",
+        "concept": "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect",
+        "value": "-1875000000",
+        "unit": "USD",
+        "context_id": "c-3",
+        "start_date": "2025-02-02",
+        "end_date": "2025-05-03",
+        "dimensions": [],
+        "decimals": "-6"
+      }
+    }
+  ]
+}

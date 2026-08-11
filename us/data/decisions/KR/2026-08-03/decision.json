@@ -1,0 +1,108 @@
+{
+  "yargi": "alinmaz",
+  "alinmaz_nedeni": "degerleme_desteksiz",
+  "tez": "",
+  "tez_testleri": [],
+  "belirleyici_veriler": [
+    {
+      "tur": "sayisal",
+      "reported_value": 33.98,
+      "report_section": "Section 6 — Price / Earnings",
+      "alinti": null,
+      "aciklama": "The earnings multiple is demanding relative to the reported revenue growth of 2.2% and net profit growth of 4.1%."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 24.45,
+      "report_section": "Section 6 — Lease-Exclusive Enterprise Value / Reported Operating Income",
+      "alinti": null,
+      "aciklama": "The operating-income valuation is also elevated despite operating profit growth of only 6.4% and a 3.05% operating margin."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 7.86,
+      "report_section": "Section 6 — Parent-Attributed Free Cash Flow Yield (Proxy)",
+      "alinti": null,
+      "aciklama": "This is the principal favorable valuation indicator, but its numerator is a parent-attribution proxy rather than a reported parent cash-flow measure."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": -56.5,
+      "report_section": "Section 10 — Free Cash Flow Trend",
+      "alinti": null,
+      "aciklama": "Current YTD free cash flow fell to 481.0 million USD from 1,105.0 million USD, weakening the durability of the apparently favorable cash-flow yield."
+    },
+    {
+      "tur": "anlati",
+      "reported_value": null,
+      "report_section": "Section 1 — Executive Summary",
+      "alinti": "Forward estimates are not embedded.",
+      "aciklama": "The report provides no prospective earnings or cash-flow evidence capable of supporting the premium historical multiples."
+    }
+  ],
+  "tezi_bozacak_kosullar": [
+    "A future filing demonstrates durable acceleration in revenue, operating profit, and net profit sufficient to support the current valuation multiples.",
+    "Operating cash flow and free cash flow recover from their current YTD levels while cash conversion remains sound.",
+    "A valuation reset or a substantial increase in reconciled TTM earnings and operating income materially reduces the current multiples."
+  ],
+  "belirsizlik": [
+    "Forward estimates are absent, preventing assessment of whether future growth can justify the valuation premium.",
+    "Gross profit and gross margin are unavailable, limiting analysis of core merchandising economics.",
+    "Issuer-reported EBITDA and issuer-reported net debt are unavailable.",
+    "No structured debt or lease maturity schedules were extracted, limiting the long-horizon refinancing assessment.",
+    "Maintenance and growth capital expenditures are not separated.",
+    "The market price is 72 days later than the latest financial cut-off, with no post-period financial adjustment."
+  ],
+  "guven": "orta",
+  "gerekce": "KR is profitable and cash-generative, and the 7.86% parent-attributed TTM free-cash-flow yield offers some valuation support. That support is insufficient because it relies on a proxy while current YTD free cash flow declined 56.5% and operating cash flow declined 17.4%. Against modest revenue, operating-profit, and net-profit growth, the 33.98x P/E and 24.45x lease-exclusive EV/reported operating-income multiples require prospective improvement that the report does not evidence. The standalone disqualifier is therefore unsupported valuation rather than immediate financial fragility.",
+  "decision_mode": "direct_report_single_model",
+  "validation": {
+    "numeric_evidence": [
+      {
+        "evidence_index": 0,
+        "reported_value": 33.98,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 1,
+        "reported_value": 24.45,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 2,
+        "reported_value": 7.86,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 3,
+        "reported_value": -56.5,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      }
+    ]
+  },
+  "provenance": {
+    "decision_stage": "single",
+    "role": "official_company_decision",
+    "market": "US",
+    "ticker": "KR",
+    "as_of": "2026-08-03",
+    "model_key": "codex",
+    "model_id": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "prompt_version": "us-direct.v1",
+    "prompt_sha256": "33b9d8792792b5d15592db8abf954043ff10b268d027f47554fb224d3120219d",
+    "report_sha256": "e72df11cb08814fb64c277c496471b4e8786502af2d1e0bff92a9b9076d5abb1",
+    "generated_at": "2026-08-04T07:44:47.412114+00:00",
+    "repo_commit_sha": "82f5e00d089fb2791b8ed3866790beb38d2f12c5",
+    "source_boundary": "valuation_report_only",
+    "stderr_tail": "tion support. That support is insufficient because it relies on a proxy while current YTD free cash flow declined 56.5% and operating cash flow declined 17.4%. Against modest revenue, operating-profit, and net-profit growth, the 33.98x P/E and 24.45x lease-exclusive EV/reported operating-income multiples require prospective improvement that the report does not evidence. The standalone disqualifier is therefore unsupported valuation rather than immediate financial fragility.\"}\ntokens used\n20.566\n"
+  }
+}

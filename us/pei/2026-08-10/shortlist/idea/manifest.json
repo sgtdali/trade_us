@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-08-10T12:42:50.244702+00:00",
+  "built_on": "2026-08-10",
+  "last_market_session": "2026-08-07",
+  "intended_step": "idea",
+  "ticker": null,
+  "source_month": "2026-08-07",
+  "source_run_root": "us/live/current",
+  "financials_as_of": "2026-08-07T23:59:59Z",
+  "prices_as_of": "2026-08-07",
+  "consensus_as_of": "2026-08-10",
+  "consensus_file": "data/consensus/snapshot-2026-08-10.json",
+  "companies_in_pack": 18,
+  "consensus_coverage": "18/18",
+  "consensus_missing": [],
+  "guidance_coverage": "8/18",
+  "price_drift_ge_5pct": "0/18",
+  "price_drift_worst_pct": 1.08,
+  "pack_sha256": "f7932eb92ccd328a014849cbdf8d62112fa12b795c5f80e50f5b5cf2369628b7"
+}

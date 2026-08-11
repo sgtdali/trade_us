@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "ticker": "KHC",
+  "period": "2026-Q1",
+  "as_of": "2026-02-12",
+  "scope_note": "Son 10-K yeni ve ayrıntılı Item 1A riskleri sunmadığı için son 10-K risk bazını devralır; üç aylık filing ayrıca kontrol edilmiştir.",
+  "analysis_status": "available",
+  "unavailable_reason_code": null,
+  "validation_findings": [],
+  "risks": [
+    {
+      "risk_id": "competition_and_demand",
+      "category": "market",
+      "title": "Rekabet ve Tüketici Talebi Riski",
+      "description": "Şirket, rekabet koşulları veya tüketici talebindeki değişimlerin faaliyet sonuçlarını olumsuz etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001637459-26-000009-risk-factors",
+          "source_file": "raw/sec-filings/KHC/0001637459-26-000009-risk-factors.txt",
+          "page": null,
+          "summary": "While we believe we have identified and discussed the material risks affecting our business below, there may be additional risks and uncertainties that are…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "supply_chain_and_inputs",
+      "category": "operational",
+      "title": "Tedarik Zinciri ve Girdi Maliyeti Riski",
+      "description": "Şirket, tedarik zinciri kesintileri veya girdi maliyetlerindeki değişimlerin operasyonlarını ve marjlarını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001637459-26-000009-risk-factors",
+          "source_file": "raw/sec-filings/KHC/0001637459-26-000009-risk-factors.txt",
+          "page": null,
+          "summary": "These pressures have restricted, and may in the future continue to restrict, our ability to increase prices and maintain those price increases in response…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "cybersecurity_and_systems",
+      "category": "operational",
+      "title": "Siber Güvenlik ve Bilgi Sistemleri Riski",
+      "description": "Şirket, siber olayların veya bilgi sistemi kesintilerinin operasyonları ve itibarı üzerinde olumsuz etki yaratabileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001637459-26-000009-risk-factors",
+          "source_file": "raw/sec-filings/KHC/0001637459-26-000009-risk-factors.txt",
+          "page": null,
+          "summary": "Further, we have experienced, and may continue to experience, input cost volatility due global competition for resources, foreign currency fluctuations, geopolitical conditions or conflicts,…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "regulation_and_litigation",
+      "category": "regulatory",
+      "title": "Düzenleyici ve Hukuki Riskler",
+      "description": "Şirket, düzenleme, vergi veya hukuki süreçlerdeki değişimlerin maliyet ve faaliyet sonuçlarını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001637459-26-000009-risk-factors",
+          "source_file": "raw/sec-filings/KHC/0001637459-26-000009-risk-factors.txt",
+          "page": null,
+          "summary": "We compete based on product innovation, price, product quality, nutritional value, service, taste, convenience, brand recognition and loyalty, effectiveness of marketing and distribution, promotional…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "foreign_currency_and_macro",
+      "category": "financial",
+      "title": "Döviz ve Makroekonomik Riskler",
+      "description": "Şirket, döviz, enflasyon, faiz veya genel ekonomik koşullardaki değişimlerin sonuçlarını olumsuz etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001637459-26-000009-risk-factors",
+          "source_file": "raw/sec-filings/KHC/0001637459-26-000009-risk-factors.txt",
+          "page": null,
+          "summary": "These pressures have restricted, and may in the future continue to restrict, our ability to increase prices and maintain those price increases in response…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "climate_and_environment",
+      "category": "regulatory",
+      "title": "İklim ve Çevresel Düzenleme Riski",
+      "description": "Şirket, iklim olayları veya çevresel düzenlemelerin operasyon ve maliyet yapısını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001637459-26-000009-risk-factors",
+          "source_file": "raw/sec-filings/KHC/0001637459-26-000009-risk-factors.txt",
+          "page": null,
+          "summary": "If we fail to expand our product offerings successfully across product 8categories or platforms, or if we do not rapidly develop products in faster-growing…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    }
+  ]
+}

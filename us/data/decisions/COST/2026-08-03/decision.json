@@ -1,0 +1,110 @@
+{
+  "yargi": "alinmaz",
+  "alinmaz_nedeni": "degerleme_desteksiz",
+  "tez": "",
+  "tez_testleri": [],
+  "belirleyici_veriler": [
+    {
+      "tur": "sayisal",
+      "reported_value": 47.76,
+      "report_section": "Section 6",
+      "alinti": null,
+      "aciklama": "The TTM P/E multiple requires unusually durable future growth, but the report contains no forward estimates to substantiate that expectation."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 2.09,
+      "report_section": "Section 6",
+      "alinti": null,
+      "aciklama": "The parent-attributed TTM free cash flow yield proxy is low and provides limited valuation support at the observed market capitalization."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 36.42,
+      "report_section": "Section 6",
+      "alinti": null,
+      "aciklama": "Lease-exclusive enterprise value relative to reported operating income is elevated, independently reinforcing the demanding valuation."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 4.61,
+      "report_section": "Section 8",
+      "alinti": null,
+      "aciklama": "The external-peer median earnings yield materially exceeds the subject's 2.09%, indicating a substantial relative valuation premium."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 17.6,
+      "report_section": "Section 10",
+      "alinti": null,
+      "aciklama": "Operating cash flow growth is strong, but even this favorable current performance does not adequately support the valuation implied by the low cash-flow yield."
+    }
+  ],
+  "tezi_bozacak_kosullar": [],
+  "belirsizlik": [
+    "The report embeds no forward estimates, preventing assessment of whether future growth can justify the current valuation.",
+    "The price observation is 82 days after the latest financial cut-off, and no post-period financial adjustment is estimated.",
+    "The free cash flow yield uses a parent-attribution proxy rather than a GAAP-reported parent cash-flow measure.",
+    "Issuer-reported EBITDA is unavailable, so an additional enterprise-value valuation cross-check cannot be calculated.",
+    "Cash paid for 2025-FY share repurchases is unavailable, limiting assessment of total capital returns."
+  ],
+  "guven": "yuksek",
+  "gerekce": "Current fundamentals are favorable: revenue, operating profit, net profit, operating cash flow, and free cash flow all grew year over year, while liquidity is positive. However, the standalone valuation is unsupported by the evidence provided. A 47.76x P/E, 2.09% parent-attributed FCF yield, and 36.42x lease-exclusive EV to operating income leave little margin for error. The subject's 2.09% earnings yield is also well below the 4.61% external-peer median. Because the report explicitly contains no forward estimates, it offers no evidence that growth can persist at a level sufficient to justify this premium.",
+  "decision_mode": "direct_report_single_model",
+  "validation": {
+    "numeric_evidence": [
+      {
+        "evidence_index": 0,
+        "reported_value": 47.76,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 1,
+        "reported_value": 2.09,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 2,
+        "reported_value": 36.42,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 3,
+        "reported_value": 4.61,
+        "report_section": "8",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 4,
+        "reported_value": 17.6,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      }
+    ]
+  },
+  "provenance": {
+    "decision_stage": "single",
+    "role": "official_company_decision",
+    "market": "US",
+    "ticker": "COST",
+    "as_of": "2026-08-03",
+    "model_key": "codex",
+    "model_id": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "prompt_version": "us-direct.v1",
+    "prompt_sha256": "858f828a4276e2ece14a7072cf7ea2484827db25794ef5f8fcef2ae43a3daf54",
+    "report_sha256": "116cbf9df5f971fe5f6b01808f84c1bdc36bc85d6e715146c312d8093885a574",
+    "generated_at": "2026-08-04T07:44:14.739379+00:00",
+    "repo_commit_sha": "82f5e00d089fb2791b8ed3866790beb38d2f12c5",
+    "source_boundary": "valuation_report_only",
+    "stderr_tail": "ear, while liquidity is positive. However, the standalone valuation is unsupported by the evidence provided. A 47.76x P/E, 2.09% parent-attributed FCF yield, and 36.42x lease-exclusive EV to operating income leave little margin for error. The subject's 2.09% earnings yield is also well below the 4.61% external-peer median. Because the report explicitly contains no forward estimates, it offers no evidence that growth can persist at a level sufficient to justify this premium.\"}\ntokens used\n19.589\n"
+  }
+}

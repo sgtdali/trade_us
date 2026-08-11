@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "ticker": "PEP",
+  "period": "2024-FY",
+  "as_of": "2025-02-04",
+  "scope_note": "SEC filinginde ayrıştırılabilir Item 1A risk bölümü bulunamadı.",
+  "analysis_status": "unavailable",
+  "unavailable_reason_code": "risk_extraction_failed",
+  "validation_findings": [],
+  "risks": []
+}

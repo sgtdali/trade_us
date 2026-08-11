@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/technical-snapshot.schema.json",
+  "title": "Generated technical_snapshot artifact",
+  "description": "Deterministic technical analysis snapshot artifact containing entry-timing indicators computed from daily market price history. additionalProperties:false is enforced recursively at every level.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "artifact_id",
+    "owner_type",
+    "ticker",
+    "as_of_date",
+    "generated_at",
+    "engine_version",
+    "indicators",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "technical_snapshot"
+    },
+    "artifact_id": {
+      "type": "string",
+      "pattern": "^technical-snapshot:[A-Z0-9][A-Z0-9.\\-]{0,31}:[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+    },
+    "owner_type": {
+      "const": "generated"
+    },
+    "ticker": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/ticker"
+    },
+    "as_of_date": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+    },
+    "generated_at": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+    },
+    "engine_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "indicators": {
+      "type": "object",
+      "required": [
+        "sma_50",
+        "sma_200",
+        "price_vs_sma_50",
+        "price_vs_sma_200",
+        "sma_50_vs_sma_200",
+        "rsi_14",
+        "avg_volume_20d",
+        "avg_volume_60d",
+        "volume_trend",
+        "support_63d",
+        "resistance_63d"
+      ],
+      "properties": {
+        "sma_50": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope" },
+        "sma_200": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope" },
+        "price_vs_sma_50": { "$ref": "#/$defs/stringEnvelope" },
+        "price_vs_sma_200": { "$ref": "#/$defs/stringEnvelope" },
+        "sma_50_vs_sma_200": { "$ref": "#/$defs/stringEnvelope" },
+        "rsi_14": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope" },
+        "avg_volume_20d": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope" },
+        "avg_volume_60d": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope" },
+        "volume_trend": { "$ref": "#/$defs/stringEnvelope" },
+        "support_63d": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope" },
+        "resistance_63d": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope" }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "price_series_length",
+        "lookback_start_date",
+        "lookback_end_date",
+        "price_field_used",
+        "yfinance_ticker"
+      ],
+      "properties": {
+        "price_series_length": { "type": "integer", "minimum": 0 },
+        "lookback_start_date": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate" },
+        "lookback_end_date": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate" },
+        "price_field_used": { "type": "string" },
+        "yfinance_ticker": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "stringEnvelope": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus" },
+        "value": { "type": "string" },
+        "reason_codes": {
+          "type": "array",
+          "items": { "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef" }
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "available" } }, "required": ["status"] },
+          "then": { "required": ["value"] }
+        },
+        {
+          "if": { "not": { "properties": { "status": { "const": "available" } }, "required": ["status"] } },
+          "then": {
+            "not": { "required": ["value"] },
+            "required": ["reason_codes"],
+            "properties": { "reason_codes": { "minItems": 1 } }
+          }
+        }
+      ]
+    }
+  }
+}

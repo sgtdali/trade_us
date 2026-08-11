@@ -1,0 +1,27 @@
+{
+  "ebit": {
+    "status": "available",
+    "value": "30183000000.000000"
+  },
+  "enterprise_value": {
+    "status": "available",
+    "value": "932310377749.869786"
+  },
+  "net_working_capital": {
+    "status": "available",
+    "value": "-23184000000.000000"
+  },
+  "net_operating_fixed_assets": {
+    "status": "available",
+    "value": "136083000000.000000"
+  },
+  "revenue": {
+    "status": "available",
+    "value": "713163000000.000000"
+  },
+  "total_assets": {
+    "status": "available",
+    "value": "284668000000.000000"
+  },
+  "lease_basis_compatible": true
+}

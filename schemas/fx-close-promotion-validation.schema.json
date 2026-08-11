@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/fx-close-promotion-validation.schema.json",
+  "title": "FX-close promotion validation findings",
+  "description": "Ordered, machine-readable findings produced while promoting one fx-rate-series row into a T70-compatible fx observation. Structurally identical to eod-close-promotion-validation.schema.json's generic Finding shape.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "findings"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "fx_close_promotion_validation"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": [
+        "rule_id",
+        "severity",
+        "scope",
+        "reason_code",
+        "message"
+      ],
+      "properties": {
+        "rule_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "info",
+            "warning",
+            "error",
+            "blocker"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "field",
+            "artifact",
+            "bundle"
+          ]
+        },
+        "reason_code": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCode"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "json_pointer": {
+          "type": "string"
+        },
+        "related_reference_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message_params": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

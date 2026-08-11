@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "units": [
+    "million_usd",
+    "million_try",
+    "million_currency",
+    "percent",
+    "percentage_point",
+    "ratio",
+    "count",
+    "million",
+    "thousand_ton",
+    "billion_km",
+    "usc",
+    "usd_per_ton",
+    "not_applicable"
+  ],
+  "sign_semantics": [
+    "positive_value",
+    "signed_statement_value",
+    "signed_cash_flow_value",
+    "positive_outflow_magnitude",
+    "absolute_magnitude"
+  ]
+}

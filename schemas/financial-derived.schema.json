@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fundemental-trading/schemas/financial-derived.schema.json",
+  "title": "Derived financial ratios",
+  "type": "object",
+  "required": ["schema_version", "ticker", "period"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1, "maximum": 1},
+    "ticker": {"type": "string", "pattern": "^[A-Z0-9.\\-]+$"},
+    "period": {"type": "string"},
+    "growth": {"type": "array", "items": {"$ref": "#/$defs/derivedMetric"}},
+    "margins": {"type": "array", "items": {"$ref": "#/$defs/derivedMetric"}},
+    "liquidity": {"type": "array", "items": {"$ref": "#/$defs/derivedMetric"}},
+    "leverage": {"type": "array", "items": {"$ref": "#/$defs/derivedMetric"}},
+    "returns": {"type": "array", "items": {"$ref": "#/$defs/derivedMetric"}},
+    "cash_generation": {"type": "array", "items": {"$ref": "#/$defs/derivedMetric"}}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "derivedMetric": {
+      "type": "object",
+      "required": ["metric_id", "name", "value", "unit", "period", "data_type", "formula_id", "formula_version", "formula_inputs"],
+      "properties": {
+        "metric_id": {"type": "string"},
+        "name": {"type": "string"},
+        "value": {"type": ["number", "null"]},
+        "unit": {"type": "string"},
+        "period": {"type": "string"},
+        "comparison_value": {"type": ["number", "null"]},
+        "comparison_period": {"type": ["string", "null"]},
+        "change": {"type": ["number", "null"]},
+        "change_unit": {"type": "string"},
+        "data_type": {"type": "string", "const": "derived"},
+        "formula_id": {"type": "string"},
+        "formula_version": {"type": "integer", "minimum": 1},
+        "formula_inputs": {"type": "array", "items": {"type": "string"}},
+        "formula_description": {"type": "string"},
+        "status": {"type": "string", "enum": ["available", "unavailable", "calculation_blocked", "not_comparable"]},
+        "reason": {"type": ["string", "null"]},
+        "components": {"type": "object"}
+      },
+      "additionalProperties": false,
+      "if": {"not": {"properties": {"status": {"const": "available"}}, "required": ["status"]}},
+      "then": {},
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"not": {"const": "available"}}}, "required": ["status"]},
+          "then": {"required": ["reason"]}
+        }
+      ]
+    }
+  }
+}

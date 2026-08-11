@@ -1,0 +1,17 @@
+{
+  "provider_id": "yfinance",
+  "provider_library": "yfinance",
+  "pinned_library_version": "1.5.1",
+  "adjustment_policy": "auto_adjust_disabled_provider_supplies_both_close_and_adjusted_close_no_recomputation",
+  "revision_policy": "provider_repair_enabled_repaired_rows_are_explicitly_recorded_and_validated_before_promotion",
+  "ticker_mappings": [
+    {
+      "internal_ticker": "EREGL",
+      "provider_symbol": "EREGL.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    }
+  ]
+}

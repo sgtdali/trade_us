@@ -1,0 +1,564 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/share-count-ledger.schema.json",
+  "title": "Point-in-time share-count and corporate-action ledger",
+  "description": "An authored (owner_type=authored, never generated) artifact recording point-in-time issued/treasury spot share-count evidence and corporate-action events for one instrument. This is the input to the generic share-count promotion engine, never a T70 observation itself. Weighted-average EPS shares are explicitly out of scope -- only spot_issued/spot_treasury concepts are controlled here.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "owner_type",
+    "ledger_id",
+    "ledger_version",
+    "ticker",
+    "instrument_id",
+    "trading_currency",
+    "quote_unit_basis",
+    "records",
+    "corporate_actions",
+    "coverage",
+    "source_catalog"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "share_count_ledger"
+    },
+    "owner_type": {
+      "const": "authored"
+    },
+    "ledger_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ledger_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ticker": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/ticker"
+    },
+    "instrument_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "share_class_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "trading_currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$"
+    },
+    "quote_unit_basis": {
+      "$ref": "#/$defs/quoteUnitBasis"
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/shareCountRecord"
+      }
+    },
+    "corporate_actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/corporateActionLedgerEntry"
+      }
+    },
+    "coverage": {
+      "$ref": "#/$defs/coverageRecord"
+    },
+    "source_catalog": {
+      "description": "Every source_id referenced by records[]/corporate_actions[] source_refs must appear here exactly once.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sourceLocator"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "quoteUnitBasis": {
+      "description": "Distinguishes statutory legal shares (e.g. TRY 0.01 nominal) from BIST market-quote-compatible units (e.g. TRY 1.00 nominal) -- see docs/eregl-point-in-time-share-count-governance.md. T70 output values are always in market-quote-compatible units, never raw statutory legal-share pieces.",
+      "type": "object",
+      "required": [
+        "statutory_nominal_value_per_legal_share",
+        "statutory_nominal_currency",
+        "market_quote_unit_nominal_value",
+        "market_quote_unit_currency",
+        "legal_shares_per_market_quote_unit",
+        "t70_output_unit",
+        "price_compatibility_basis"
+      ],
+      "properties": {
+        "statutory_nominal_value_per_legal_share": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+        },
+        "statutory_nominal_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "market_quote_unit_nominal_value": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+        },
+        "market_quote_unit_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "legal_shares_per_market_quote_unit": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "t70_output_unit": {
+          "const": "shares"
+        },
+        "price_compatibility_basis": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "sourceLocator": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/repositoryPdfLocator"
+        },
+        {
+          "$ref": "#/$defs/externalOfficialMetadataLocator"
+        }
+      ]
+    },
+    "repositoryPdfLocator": {
+      "description": "Repository-referenced evidence located by relative path within raw/{TICKER} (Drive-archived, see raw/{TICKER}/.drive-manifest.json -- no byte-level hash is required, this is a single-user tool with no adversarial-tampering threat model).",
+      "type": "object",
+      "required": [
+        "source_id",
+        "locator_type",
+        "relative_path",
+        "page"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator_type": {
+          "const": "repository_pdf"
+        },
+        "relative_path": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/relativePath"
+        },
+        "page": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "section": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "extraction_locator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "externalOfficialMetadataLocator": {
+      "description": "Official (e.g. KAP) metadata corroboration whose original bytes are not stored in this repository. Never claims a source-file SHA-256 for bytes that are not actually held.",
+      "type": "object",
+      "required": [
+        "source_id",
+        "locator_type",
+        "authority",
+        "official_url_ref",
+        "evidence_role",
+        "immutable_source_bytes_available"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator_type": {
+          "const": "external_official_metadata"
+        },
+        "authority": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notification_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "official_url_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "submission_at": {
+          "anyOf": [
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "captured_at": {
+          "anyOf": [
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_role": {
+          "const": "external_official_metadata"
+        },
+        "immutable_source_bytes_available": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "shareCountRecord": {
+      "type": "object",
+      "required": [
+        "record_id",
+        "concept",
+        "value",
+        "unit_basis",
+        "effective_at",
+        "published_at",
+        "available_at",
+        "derivation_type",
+        "source_refs",
+        "revision_status"
+      ],
+      "properties": {
+        "record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "concept": {
+          "type": "string",
+          "enum": [
+            "issued_shares",
+            "treasury_shares"
+          ]
+        },
+        "value": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+        },
+        "unit_basis": {
+          "const": "market_quote_unit"
+        },
+        "effective_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "published_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "available_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "derivation_type": {
+          "type": "string",
+          "enum": [
+            "direct_disclosure",
+            "derived_from_nominal_capital",
+            "derived_from_direct_nominal_amount",
+            "derived_from_percentage",
+            "reconciled_from_components"
+          ]
+        },
+        "derivation_operands": {
+          "description": "Required whenever derivation_type is not direct_disclosure -- every operand and the formula identity used to derive value, so no arithmetic is hidden.",
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "formula_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "operands": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "formula_id",
+            "operands"
+          ],
+          "additionalProperties": false
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "revision_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revision_status": {
+          "type": "string",
+          "enum": [
+            "original",
+            "corrected",
+            "restated",
+            "withdrawn",
+            "unknown"
+          ]
+        },
+        "supersedes_revision_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "not": {
+              "properties": {
+                "derivation_type": {
+                  "const": "direct_disclosure"
+                }
+              },
+              "required": [
+                "derivation_type"
+              ]
+            }
+          },
+          "then": {
+            "required": [
+              "derivation_operands"
+            ]
+          }
+        }
+      ]
+    },
+    "corporateActionLedgerEntry": {
+      "type": "object",
+      "required": [
+        "event_id",
+        "event_type",
+        "instrument_id",
+        "available_at",
+        "effective_date",
+        "status",
+        "source_refs",
+        "revision_status"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "split",
+            "reverse_split",
+            "capital_increase",
+            "capital_reduction",
+            "treasury_purchase",
+            "treasury_sale",
+            "cancellation",
+            "class_conversion",
+            "other"
+          ]
+        },
+        "instrument_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "announcement_at": {
+          "anyOf": [
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "available_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "effective_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "announced",
+            "approved",
+            "effective",
+            "cancelled",
+            "unknown"
+          ]
+        },
+        "pre_issued_quote_units": {
+          "anyOf": [
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "post_issued_quote_units": {
+          "anyOf": [
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pre_treasury_quote_units": {
+          "anyOf": [
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "post_treasury_quote_units": {
+          "anyOf": [
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "adjustment_ratio": {
+          "anyOf": [
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "revision_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revision_status": {
+          "type": "string",
+          "enum": [
+            "original",
+            "corrected",
+            "restated",
+            "withdrawn",
+            "unknown"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "coverageRecord": {
+      "type": "object",
+      "required": [
+        "coverage_start_date",
+        "coverage_end_date",
+        "coverage_status",
+        "reviewed_at",
+        "review_method",
+        "reviewed_source_refs",
+        "unresolved_gap_refs"
+      ],
+      "properties": {
+        "coverage_start_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "coverage_end_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "coverage_status": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "gap",
+            "unknown"
+          ]
+        },
+        "reviewed_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "review_method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed_source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "unresolved_gap_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

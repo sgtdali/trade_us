@@ -1,0 +1,138 @@
+{
+  "yargi": "sartli",
+  "alinmaz_nedeni": null,
+  "tez": "Revenue growth, gross-margin improvement, and stronger operating cash generation could produce an earnings recovery if operating costs normalize. The thesis remains conditional because operating profit and net income are contracting, quarterly free cash flow is negative, liquidity is below one, and the reported free-cash-flow yield is not a normalized recurring run rate.",
+  "tez_testleri": [
+    {
+      "metric_id": "operating_profit_growth",
+      "baseline": -22.9,
+      "expected_direction": "increase",
+      "deadline_period": "2027-Q2",
+      "failure_condition": "Year-over-year operating profit growth remains at or below 0%."
+    },
+    {
+      "metric_id": "free_cash_flow_margin",
+      "baseline": -1.25,
+      "expected_direction": "increase",
+      "deadline_period": "2027-Q2",
+      "failure_condition": "Free cash flow margin remains at or below 0%."
+    },
+    {
+      "metric_id": "revenue_growth",
+      "baseline": 6.7,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q2",
+      "failure_condition": "Year-over-year revenue growth falls below 5%."
+    },
+    {
+      "metric_id": "current_ratio",
+      "baseline": 0.932,
+      "expected_direction": "increase",
+      "deadline_period": "2027-FY",
+      "failure_condition": "Current ratio remains below 1.00."
+    }
+  ],
+  "belirleyici_veriler": [
+    {
+      "tur": "sayisal",
+      "reported_value": 6.7,
+      "report_section": "Section 10",
+      "alinti": null,
+      "aciklama": "Year-over-year revenue growth exceeded the report's favorable threshold, providing the demand foundation for a possible recovery."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 160.4,
+      "report_section": "Section 10",
+      "alinti": null,
+      "aciklama": "Operating cash flow increased sharply year over year, although the low comparison base limits its standalone strength."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": -22.9,
+      "report_section": "Section 10",
+      "alinti": null,
+      "aciklama": "Reported operating income contracted materially despite revenue growth, showing that the economic benefit has not reached operating earnings."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": -319.0,
+      "report_section": "Section 4",
+      "alinti": null,
+      "aciklama": "Current-year-to-date free cash flow remained negative, making cash-flow normalization a required thesis condition."
+    },
+    {
+      "tur": "anlati",
+      "reported_value": null,
+      "report_section": "Section 6",
+      "alinti": "this yield is unnormalized, requires review, and must not be treated as a recurring run-rate forecast",
+      "aciklama": "The report explicitly prevents treating the 4.48% free-cash-flow yield as durable valuation support."
+    }
+  ],
+  "tezi_bozacak_kosullar": [
+    "Revenue growth falls below 5% without a corresponding operating-margin recovery.",
+    "Operating profit growth fails to return above 0% by 2027-Q2.",
+    "Free cash flow margin remains non-positive through 2027-Q2.",
+    "The current ratio remains below 1.00 through 2027-FY.",
+    "Subsequent filings show that operating-cash-flow improvement was primarily a temporary working-capital effect."
+  ],
+  "belirsizlik": [
+    "The report contains no forward estimates.",
+    "The valuation date is 93 days after the latest financial cut-off, with no post-period adjustment.",
+    "The free-cash-flow yield relies on a parent-attribution proxy and a favorable mechanical TTM base effect from subtracting negative prior-year free cash flow.",
+    "Maintenance and growth capital expenditures are not separated.",
+    "Current financial debt, current lease liabilities, and structured debt and lease maturity schedules are unavailable."
+  ],
+  "guven": "orta",
+  "gerekce": "A plausible recovery mechanism exists because revenue, gross profit, and operating cash flow improved, but current evidence does not establish profitable conversion: operating profit and net income declined materially, quarterly free cash flow was negative, and liquidity remained below one. Valuation support is also incomplete because the reported free-cash-flow yield is explicitly unnormalized. A future filing demonstrating operating-margin recovery, positive free cash flow, and improved liquidity is therefore necessary.",
+  "decision_mode": "direct_report_single_model",
+  "validation": {
+    "numeric_evidence": [
+      {
+        "evidence_index": 0,
+        "reported_value": 6.7,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 1,
+        "reported_value": 160.4,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 2,
+        "reported_value": -22.9,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 3,
+        "reported_value": -319.0,
+        "report_section": "4",
+        "status": "verified",
+        "reason": null
+      }
+    ]
+  },
+  "provenance": {
+    "decision_stage": "single",
+    "role": "official_company_decision",
+    "market": "US",
+    "ticker": "TGT",
+    "as_of": "2026-08-03",
+    "model_key": "codex",
+    "model_id": "gpt-5.6-sol",
+    "reasoning_effort": "high",
+    "prompt_version": "us-direct.v1",
+    "prompt_sha256": "d5f954e4dd48d80a647491ae5fd87a10835402085b6c461dbda54726d456bce3",
+    "report_sha256": "f67489a34783386cfaf12534a3a272ca2cf32095f2cb5ea9b36d480fb3e32040",
+    "generated_at": "2026-08-04T07:44:56.310393+00:00",
+    "repo_commit_sha": "82f5e00d089fb2791b8ed3866790beb38d2f12c5",
+    "source_boundary": "valuation_report_only",
+    "stderr_tail": "enue, gross profit, and operating cash flow improved, but current evidence does not establish profitable conversion: operating profit and net income declined materially, quarterly free cash flow was negative, and liquidity remained below one. Valuation support is also incomplete because the reported free-cash-flow yield is explicitly unnormalized. A future filing demonstrating operating-margin recovery, positive free cash flow, and improved liquidity is therefore necessary.\"}\ntokens used\n20.199\n"
+  }
+}

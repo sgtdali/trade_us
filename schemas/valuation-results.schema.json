@@ -1,0 +1,885 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/valuation-results.schema.json",
+  "title": "Valuation-results artifact (current-method capability only)",
+  "description": "T71-A defines this schema only; no runtime in this PR produces a valuation-results artifact (that is T71-B/T71-C). scenario_set_ref and weighted_scenario_result are locked to null and scenario_results is either absent or an empty array: T71 implements no scenario capability. Every configured current method emits exactly one method_results[] envelope, including failures.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "artifact_id",
+    "owner_type",
+    "run_identity",
+    "temporal_context",
+    "valuation_input_ref",
+    "scenario_set_ref",
+    "method_set_ref",
+    "method_results",
+    "weighted_scenario_result",
+    "coverage",
+    "bundle_status",
+    "confidence_summary",
+    "validation_summary",
+    "publication_state",
+    "lineage"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "valuation_results"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/resultArtifactId"
+    },
+    "owner_type": {
+      "const": "generated"
+    },
+    "run_identity": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "company_ref",
+        "ticker",
+        "valuation_context_id",
+        "run_purpose",
+        "engine_version",
+        "methodology_bundle_ref",
+        "canonical_serialization_version"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "company_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ticker": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/ticker"
+        },
+        "valuation_context_id": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/contextId"
+        },
+        "run_purpose": {
+          "type": "string",
+          "enum": [
+            "current",
+            "historical",
+            "scenario",
+            "comparison_input",
+            "diagnostic"
+          ]
+        },
+        "engine_version": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+        },
+        "methodology_bundle_ref": {
+          "$ref": "#/$defs/methodSetRef"
+        },
+        "canonical_serialization_version": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+        }
+      },
+      "additionalProperties": false
+    },
+    "temporal_context": {
+      "type": "object",
+      "required": [
+        "as_of_date",
+        "valuation_timezone",
+        "valuation_cutoff_at",
+        "temporal_mode",
+        "calendar_policy_ref"
+      ],
+      "properties": {
+        "as_of_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "valuation_timezone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "valuation_cutoff_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "temporal_mode": {
+          "type": "string",
+          "enum": [
+            "point_in_time",
+            "current",
+            "retrospective_reconstruction",
+            "diagnostic"
+          ]
+        },
+        "calendar_policy_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generated_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        }
+      },
+      "additionalProperties": false
+    },
+    "valuation_input_ref": {
+      "allOf": [
+        {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/artifactReference"
+        },
+        {
+          "properties": {
+            "artifact_type": {
+              "const": "valuation_inputs"
+            }
+          }
+        }
+      ]
+    },
+    "scenario_set_ref": {
+      "description": "T71 implements no scenario capability: this field is always null for every artifact this schema version accepts.",
+      "type": "null"
+    },
+    "method_set_ref": {
+      "$ref": "#/$defs/methodSetRef"
+    },
+    "method_results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/methodResult"
+      }
+    },
+    "weighted_scenario_result": {
+      "description": "T71 implements no scenario capability: this field is always null for every artifact this schema version accepts.",
+      "type": "null"
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "configured_method_count",
+        "applicable_method_count",
+        "available_method_count",
+        "unavailable_method_count",
+        "not_applicable_method_count",
+        "coverage_ratio",
+        "primary_family_available",
+        "current_use_method_count",
+        "method_status_refs",
+        "family_coverage"
+      ],
+      "properties": {
+        "configured_method_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "applicable_method_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "available_method_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unavailable_method_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "not_applicable_method_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "coverage_ratio": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+        },
+        "primary_family_available": {
+          "type": "boolean"
+        },
+        "current_use_method_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "method_status_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "family_coverage": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "economic_family_id",
+              "applicable_count",
+              "available_count",
+              "current_use_eligible"
+            ],
+            "properties": {
+              "economic_family_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "applicable_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "available_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "current_use_eligible": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "bundle_status": {
+      "type": "object",
+      "required": [
+        "state",
+        "whole_run_blockers",
+        "method_level_failures",
+        "warnings",
+        "minimum_valid_family_satisfied",
+        "assessment_eligible",
+        "current_publication_eligible"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "partial",
+            "all_methods_unavailable",
+            "calculation_blocked",
+            "diagnostic_only"
+          ]
+        },
+        "whole_run_blockers": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+          }
+        },
+        "method_level_failures": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+          }
+        },
+        "minimum_valid_family_satisfied": {
+          "type": "boolean"
+        },
+        "assessment_eligible": {
+          "type": "boolean"
+        },
+        "current_publication_eligible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "confidence_summary": {
+      "$ref": "#/$defs/propagatedConfidence"
+    },
+    "validation_summary": {
+      "type": "object",
+      "required": [
+        "structurally_valid",
+        "finding_ids",
+        "blocking_finding_count",
+        "warning_finding_count"
+      ],
+      "properties": {
+        "structurally_valid": {
+          "type": "boolean"
+        },
+        "finding_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "blocking_finding_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warning_finding_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "publication_state": {
+      "type": "object",
+      "required": [
+        "structured_artifact_valid",
+        "report_render_eligible",
+        "current_use_eligible",
+        "historical_use_eligible",
+        "comparison_input_eligible",
+        "portfolio_review_handoff_eligible",
+        "restriction_reason_refs"
+      ],
+      "properties": {
+        "structured_artifact_valid": {
+          "type": "boolean"
+        },
+        "report_render_eligible": {
+          "type": "boolean"
+        },
+        "current_use_eligible": {
+          "type": "boolean"
+        },
+        "historical_use_eligible": {
+          "type": "boolean"
+        },
+        "comparison_input_eligible": {
+          "type": "boolean"
+        },
+        "portfolio_review_handoff_eligible": {
+          "type": "boolean"
+        },
+        "restriction_reason_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "lineage": {
+      "type": "object",
+      "required": [
+        "nodes",
+        "edges"
+      ],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "node_id",
+              "node_type",
+              "owner_type"
+            ],
+            "properties": {
+              "node_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "node_type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "artifact_ref": {
+                "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/artifactReference"
+              },
+              "owner_type": {
+                "type": "string",
+                "enum": [
+                  "authored",
+                  "ingestion_generated",
+                  "generated"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "edge_id",
+              "from_node_id",
+              "to_node_id",
+              "relation",
+              "criticality"
+            ],
+            "properties": {
+              "edge_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "from_node_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "to_node_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "relation": {
+                "type": "string",
+                "enum": [
+                  "observed_from",
+                  "selected_from",
+                  "converted_by",
+                  "normalized_by",
+                  "calculated_from",
+                  "assumed_from",
+                  "reviewed_from",
+                  "supersedes",
+                  "compares_to",
+                  "blocked_by"
+                ]
+              },
+              "transformation_ref": {
+                "type": "string"
+              },
+              "criticality": {
+                "type": "string",
+                "enum": [
+                  "critical",
+                  "contextual"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "resultArtifactId": {
+      "type": "string",
+      "pattern": "^valuation-results:[A-Z0-9][A-Z0-9.\\-]{0,31}:[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]):ctx-[0-9a-f]{24}$"
+    },
+    "methodSetRef": {
+      "type": "object",
+      "required": [
+        "method_set_id",
+        "method_set_version"
+      ],
+      "properties": {
+        "method_set_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method_set_version": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+        }
+      },
+      "additionalProperties": false
+    },
+    "formulaRef": {
+      "type": "object",
+      "required": [
+        "formula_id",
+        "formula_version"
+      ],
+      "properties": {
+        "formula_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formula_version": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+        }
+      },
+      "additionalProperties": false
+    },
+    "propagatedConfidence": {
+      "type": "object",
+      "required": [
+        "level",
+        "critical_dimension_refs",
+        "limiting_factor_refs",
+        "noncritical_gap_refs",
+        "policy_ref",
+        "rationale_code"
+      ],
+      "properties": {
+        "level": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+        },
+        "critical_dimension_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "limiting_factor_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "noncritical_gap_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "policy_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale_code": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCode"
+        }
+      },
+      "additionalProperties": false
+    },
+    "methodPeriodRef": {
+      "type": "object",
+      "required": [
+        "period_kind",
+        "period_variant"
+      ],
+      "properties": {
+        "period_kind": {
+          "type": "string",
+          "enum": [
+            "flow",
+            "stock",
+            "instant"
+          ]
+        },
+        "period_variant": {
+          "type": "string",
+          "enum": [
+            "true_ttm",
+            "fy",
+            "spot"
+          ]
+        },
+        "period_end": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        }
+      },
+      "additionalProperties": false
+    },
+    "methodOperand": {
+      "type": "object",
+      "required": [
+        "basis_ref",
+        "economic_type",
+        "amount",
+        "period_ref",
+        "ownership_scope",
+        "lease_scope",
+        "sign_state"
+      ],
+      "properties": {
+        "basis_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "economic_type": {
+          "type": "string",
+          "enum": [
+            "market_cap",
+            "parent_net_income",
+            "parent_equity",
+            "standard_fcf",
+            "after_lease_fcf",
+            "fcfe",
+            "standard_fcf_parent_share",
+            "after_lease_fcf_parent_share",
+            "enterprise_value_ex_lease",
+            "enterprise_value_incl_lease",
+            "core_ebit",
+            "canonical_ebitda",
+            "canonical_ebitdar",
+            "dividend_per_share",
+            "spot_price_per_share",
+            "one"
+          ]
+        },
+        "amount": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "period_ref": {
+          "$ref": "#/$defs/methodPeriodRef"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "scale": {
+          "type": "string",
+          "enum": [
+            "units",
+            "thousands",
+            "millions",
+            "billions"
+          ]
+        },
+        "ownership_scope": {
+          "type": "string",
+          "enum": [
+            "parent_common_equity",
+            "enterprise_consolidated",
+            "per_share",
+            "not_applicable"
+          ]
+        },
+        "lease_scope": {
+          "type": "string",
+          "enum": [
+            "lease_exclusive",
+            "lease_inclusive",
+            "not_applicable"
+          ]
+        },
+        "accounting_context_ref": {
+          "type": "string"
+        },
+        "component_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "sign_state": {
+          "type": "string",
+          "enum": [
+            "positive",
+            "zero",
+            "negative",
+            "unknown"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "methodApplicability": {
+      "type": "object",
+      "required": [
+        "outcome",
+        "company_type_applicable",
+        "sector_policy_applicable",
+        "applicability_policy_ref",
+        "applicability_reason_codes"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "applicable_primary",
+            "applicable_secondary",
+            "applicable_diagnostic",
+            "conditional_data",
+            "conditional_adapter",
+            "not_applicable",
+            "deferred_not_implemented"
+          ]
+        },
+        "company_type_applicable": {
+          "type": "boolean"
+        },
+        "sector_policy_applicable": {
+          "type": "boolean"
+        },
+        "basis_capability_ref": {
+          "type": "string"
+        },
+        "applicability_policy_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "applicability_reason_codes": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "outputSemantics": {
+      "type": "object",
+      "required": [
+        "unit",
+        "direction_interpretation",
+        "claim_basis",
+        "per_share_or_aggregate",
+        "display_policy_ref",
+        "arithmetic_context_ref"
+      ],
+      "properties": {
+        "unit": {
+          "type": "string",
+          "enum": [
+            "multiple",
+            "ratio"
+          ]
+        },
+        "direction_interpretation": {
+          "type": "string",
+          "enum": [
+            "higher_is_more_attractive",
+            "lower_is_more_attractive",
+            "higher_is_higher_risk",
+            "lower_is_higher_risk",
+            "neutral_contextual",
+            "not_rankable"
+          ]
+        },
+        "claim_basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "per_share_or_aggregate": {
+          "type": "string",
+          "enum": [
+            "aggregate",
+            "per_share"
+          ]
+        },
+        "display_policy_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "arithmetic_context_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "methodResult": {
+      "type": "object",
+      "required": [
+        "method_result_id",
+        "method_id",
+        "method_version",
+        "economic_family_id",
+        "role",
+        "variant_id",
+        "applicability",
+        "status",
+        "formula_ref",
+        "output_semantics",
+        "data_confidence",
+        "model_confidence",
+        "output_confidence",
+        "reason_records",
+        "lineage_node_refs",
+        "current_use_eligible",
+        "ranking_eligible"
+      ],
+      "properties": {
+        "method_result_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method_version": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+        },
+        "economic_family_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "primary",
+            "secondary",
+            "diagnostic",
+            "conditional",
+            "deferred"
+          ]
+        },
+        "variant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "applicability": {
+          "$ref": "#/$defs/methodApplicability"
+        },
+        "status": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus"
+        },
+        "basis_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "formula_ref": {
+          "$ref": "#/$defs/formulaRef"
+        },
+        "numerator": {
+          "$ref": "#/$defs/methodOperand"
+        },
+        "denominator": {
+          "$ref": "#/$defs/methodOperand"
+        },
+        "canonical_value": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "diagnostic_value": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "output_semantics": {
+          "$ref": "#/$defs/outputSemantics"
+        },
+        "data_confidence": {
+          "$ref": "#/$defs/propagatedConfidence"
+        },
+        "model_confidence": {
+          "$ref": "#/$defs/propagatedConfidence"
+        },
+        "output_confidence": {
+          "$ref": "#/$defs/propagatedConfidence"
+        },
+        "reason_records": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+          }
+        },
+        "lineage_node_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "current_use_eligible": {
+          "type": "boolean"
+        },
+        "ranking_eligible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

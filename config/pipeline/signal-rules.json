@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "rule_definitions": [
+    {
+      "rule_id": "growth_or_transition_band", "version": 1,
+      "description": "Ordinary single-period YoY growth banded at +/-5%; if the comparison period had the opposite profit/loss sign, classifies the transition (loss_to_profit, profit_to_loss, loss_narrowing >=20%, loss_widening) instead of computing a misleading percentage.",
+      "thresholds": {"positive_pct": 5.0, "negative_pct": -5.0, "loss_narrowing_pct": 20.0}
+    },
+    {
+      "rule_id": "margin_change_band", "version": 1,
+      "description": "Margin change banded at +/-0.5 percentage points.",
+      "thresholds": {"positive_pp": 0.5, "negative_pp": -0.5}
+    },
+    {
+      "rule_id": "cost_direction", "version": 1,
+      "description": "Directional signal on a unit-cost growth rate: declining cost is positive, rising cost is negative, flat is neutral."
+    },
+    {
+      "rule_id": "dual_growth_confirmation", "version": 1,
+      "description": "Requires reported and constant-currency growth to agree in sign to award the full +2/-2 score; a single available growth figure is scored one grade more cautiously; disagreement is mixed/0."
+    },
+    {
+      "rule_id": "cash_conversion_ratio_change", "version": 1,
+      "description": "Change in operating-cash-flow-to-net-profit ratio banded at +/-0.10; unavailable when the ratio could not be computed for the comparison period (e.g. negative prior net profit).",
+      "thresholds": {"positive": 0.10, "negative": -0.10}
+    },
+    {
+      "rule_id": "liquidity_composite", "version": 1,
+      "description": "Current ratio and cash-plus-short-term-investments ratio changes must agree in direction for a directional score; disagreement is mixed/0."
+    },
+    {
+      "rule_id": "leverage_composite", "version": 1,
+      "description": "Liability-including-lease-to-equity change and net-debt-to-EBITDAR change, banded by average magnitude (<0.05 neutral, 0.05-0.20 one grade, >0.20 two grades) when both agree in direction; degrades to the single available component when the other cannot be resolved.",
+      "thresholds": {"small": 0.05, "large": 0.20}
+    },
+    {
+      "rule_id": "lease_burden_composite", "version": 1,
+      "description": "Average of lease-liability growth and lease-payment growth (on payment magnitude), banded at 10%.",
+      "thresholds": {"large_pct": 10.0}
+    },
+    {
+      "rule_id": "deferred_revenue_composite", "version": 1,
+      "description": "Deferred-revenue balance growth and its cash-flow contribution growth; positive when both grow (capped at +1, since it also represents a growing liability), negative when both shrink, mixed otherwise."
+    }
+  ],
+  "summary_context_policies": {
+    "balance_sheet_summary": {
+      "min_completeness_pct": 66.7,
+      "required_signal_ids": ["leverage_trend"]
+    },
+    "leverage_summary": {
+      "min_completeness_pct": 100.0,
+      "required_signal_ids": ["leverage_trend"]
+    }
+  },
+  "signals": [
+    {"signal_id": "revenue_growth_trend", "rule_id": "growth_or_transition_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "direct", "current_ref": "direct:revenue_total", "reason_code": "revenue_growth"},
+    {"signal_id": "passenger_revenue_growth_trend", "rule_id": "growth_or_transition_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"], "interpretation_scope": "financial", "source_dataset": "direct", "current_ref": "direct:revenue_passenger_total", "reason_code": "passenger_revenue_growth"},
+    {"signal_id": "cargo_revenue_growth_trend", "rule_id": "growth_or_transition_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"], "interpretation_scope": "financial", "source_dataset": "direct", "current_ref": "direct:revenue_cargo_total", "reason_code": "cargo_revenue_growth"},
+    {"signal_id": "operating_profit_before_investment_trend", "rule_id": "growth_or_transition_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "direct", "current_ref": "direct:operating_profit_before_investment_activities", "reason_code": "operating_profit_before_investment"},
+    {"signal_id": "operating_profit_including_investments_trend", "rule_id": "growth_or_transition_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "direct", "current_ref": "direct:operating_profit", "reason_code": "operating_profit_including_investments"},
+    {"signal_id": "net_profit_trend", "rule_id": "growth_or_transition_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "direct", "current_ref": "direct:net_profit_for_period", "reason_code": "net_profit"},
+    {"signal_id": "operating_cash_flow_trend", "rule_id": "growth_or_transition_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "direct", "current_ref": "direct:cf_net_operating_activities", "reason_code": "operating_cash_flow"},
+    {"signal_id": "free_cash_flow_trend", "rule_id": "growth_or_transition_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "derived", "current_ref": "derived:free_cash_flow", "reason_code": "free_cash_flow"},
+    {"signal_id": "gross_margin_trend", "rule_id": "margin_change_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "derived", "margin_ref": "derived:gross_margin", "reason_code": "gross_margin", "context_policy": {"absolute_ref": "derived:gross_margin", "negative_below": 0.0, "positive_above": 0.0}},
+    {"signal_id": "operating_margin_trend", "rule_id": "margin_change_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "derived", "margin_ref": "derived:operating_margin", "reason_code": "operating_margin", "context_policy": {"absolute_ref": "derived:operating_margin", "negative_below": 0.0, "positive_above": 0.0}},
+    {"signal_id": "net_margin_trend", "rule_id": "margin_change_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "derived", "margin_ref": "derived:net_margin", "reason_code": "net_margin", "context_policy": {"absolute_ref": "derived:net_margin", "negative_below": 0.0, "positive_above": 0.0}},
+    {"signal_id": "ebitdar_margin_trend", "rule_id": "margin_change_band", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"], "interpretation_scope": "financial_operational", "source_dataset": "derived", "margin_ref": "derived:ebitdar_margin", "reason_code": "ebitdar_margin", "context_policy": {"absolute_ref": "derived:ebitdar_margin", "negative_below": 0.0, "positive_above": 0.0}},
+    {"signal_id": "fuel_unit_cost_trend", "rule_id": "cost_direction", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"], "interpretation_scope": "financial_operational", "source_dataset": "finops", "current_ref": "finops:fuel_unit_cost", "reason_code": "fuel_unit_cost"},
+    {"signal_id": "ex_fuel_unit_cost_trend", "rule_id": "cost_direction", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"], "interpretation_scope": "financial_operational", "source_dataset": "finops", "current_ref": "finops:ex_fuel_cask", "reason_code": "ex_fuel_unit_cost"},
+    {"signal_id": "rask_trend", "rule_id": "dual_growth_confirmation", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"], "interpretation_scope": "financial_operational", "source_dataset": "finops", "current_ref": "finops:rask_adjusted_cargo_capacity", "reason_code": "rask"},
+    {"signal_id": "passenger_rask_trend", "rule_id": "dual_growth_confirmation", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"], "interpretation_scope": "financial_operational", "source_dataset": "finops", "current_ref": "finops:passenger_rask", "reason_code": "passenger_rask"},
+    {"signal_id": "passenger_yield_trend", "rule_id": "dual_growth_confirmation", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"], "interpretation_scope": "financial_operational", "source_dataset": "finops", "current_ref": "finops:passenger_yield", "reason_code": "passenger_yield"},
+    {"signal_id": "cash_conversion_trend", "rule_id": "cash_conversion_ratio_change", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "derived", "ratio_ref": "derived:ocf_to_net_profit", "reason_code": "cash_conversion"},
+    {"signal_id": "liquidity_trend", "rule_id": "liquidity_composite", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "derived", "current_ratio_ref": "derived:current_ratio", "cash_ratio_ref": "derived:cash_and_st_investments_to_current_liabilities", "reason_code": "liquidity"},
+    {"signal_id": "leverage_trend", "rule_id": "leverage_composite", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "derived", "liability_ratio_ref": "derived:liability_incl_lease_to_equity", "net_debt_ratio_ref": "derived:net_debt_to_ebitdar", "reason_code": "leverage", "context_policy": {"required_reason_params": ["liability_ratio_change", "net_debt_ratio_change"]}},
+    {"signal_id": "lease_burden_trend", "rule_id": "lease_burden_composite", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "derived", "lease_liability_ref": "derived:lease_liability_total", "lease_payments_ref": "direct:cf_lease_payments", "reason_code": "lease_burden", "context_policy": {"required_reason_params": ["lease_liability_growth_pct", "lease_payments_growth_pct"]}},
+    {"signal_id": "deferred_revenue_trend", "rule_id": "deferred_revenue_composite", "rule_version": 1, "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"], "interpretation_scope": "financial", "source_dataset": "direct", "balance_ref": "direct:deferred_revenue_current", "cash_flow_ref": "direct:cf_deferred_revenue_change", "reason_code": "deferred_revenue"}
+  ]
+}

@@ -1,0 +1,822 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/valuation-inputs.schema.json",
+  "title": "Valuation inputs artifact",
+  "description": "Frozen capital-basis valuation input artifact (T66.3). T70-A defines this schema only; no runtime in this PR produces valuation inputs (that is T70-B).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "artifact_id",
+    "input_identity",
+    "temporal_context",
+    "market_snapshot_ref",
+    "financial_basis_refs",
+    "reporting_currency_basis",
+    "price_basis",
+    "share_basis",
+    "market_cap_basis",
+    "capital_structure_ledger",
+    "ev_basis_family",
+    "input_capabilities",
+    "data_confidence",
+    "validation_summary",
+    "lineage"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "valuation_inputs"
+    },
+    "artifact_id": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/artifactId"
+    },
+    "owner_type": {
+      "const": "generated"
+    },
+    "input_identity": {
+      "type": "object",
+      "required": [
+        "ticker",
+        "context_id",
+        "purpose"
+      ],
+      "properties": {
+        "ticker": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/ticker"
+        },
+        "context_id": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/contextId"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "current",
+            "historical",
+            "scenario",
+            "comparison",
+            "diagnostic"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "temporal_context": {
+      "type": "object",
+      "required": [
+        "as_of_date",
+        "cutoff_instant"
+      ],
+      "properties": {
+        "as_of_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "cutoff_instant": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        }
+      },
+      "additionalProperties": false
+    },
+    "market_snapshot_ref": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/artifactReference"
+    },
+    "financial_basis_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "source_id",
+          "period_end",
+          "period_type"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "period_end": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+          },
+          "period_type": {
+            "type": "string",
+            "enum": [
+              "annual",
+              "quarterly",
+              "half_year",
+              "nine_month",
+              "ttm"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "reporting_currency_basis": {
+      "type": "object",
+      "required": [
+        "valuation_reporting_currency",
+        "financial_presentation_currency",
+        "accounting_translation_mode"
+      ],
+      "properties": {
+        "valuation_reporting_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "financial_presentation_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "selection_reason_code": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCode"
+        },
+        "accounting_translation_mode": {
+          "type": "string",
+          "enum": [
+            "native_financial_column",
+            "official_parallel_column",
+            "valuation_date_stock_conversion",
+            "historical_flow_translation",
+            "not_required"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "price_basis": {
+      "type": "object",
+      "required": [
+        "price_observation_ref",
+        "mode",
+        "price_unit",
+        "current_use_eligible"
+      ],
+      "properties": {
+        "price_observation_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "official_close",
+            "intraday",
+            "historical_close",
+            "diagnostic_reference"
+          ]
+        },
+        "native_price": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "reporting_currency_price": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "price_unit": {
+          "type": "string",
+          "enum": [
+            "per_share",
+            "per_depositary_receipt",
+            "per_lot"
+          ]
+        },
+        "current_use_eligible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "share_basis": {
+      "type": "object",
+      "required": [
+        "basis_type",
+        "spot_basic_shares_outstanding",
+        "effective_date",
+        "reconciliation_status"
+      ],
+      "properties": {
+        "basis_type": {
+          "const": "spot_basic_shares_outstanding"
+        },
+        "spot_basic_shares_outstanding": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "effective_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "reconciliation_status": {
+          "type": "string",
+          "enum": [
+            "reconciled",
+            "unreconciled"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "market_cap_basis": {
+      "type": "object",
+      "required": [
+        "formula_ref",
+        "reconciliation_status",
+        "status"
+      ],
+      "properties": {
+        "native_total_market_cap": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "reporting_currency_total_market_cap": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "formula_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reconciliation_status": {
+          "type": "string",
+          "enum": [
+            "reconciled",
+            "unreconciled"
+          ]
+        },
+        "status": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus"
+        },
+        "lineage": {
+          "type": "object",
+          "required": [
+            "source_id"
+          ],
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "derivation": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "earnings_bases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/earningsBasis"
+      }
+    },
+    "cash_flow_bases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cashFlowBasis"
+      }
+    },
+    "capital_structure_ledger": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capitalComponent"
+      }
+    },
+    "ev_basis_family": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evBasis"
+      }
+    },
+    "company_specific_inputs": {
+      "$ref": "#/$defs/companySpecificInputs"
+    },
+    "book_equity_basis": {
+      "$ref": "#/$defs/bookEquityBasis"
+    },
+    "distribution_basis": {
+      "$ref": "#/$defs/distributionBasis"
+    },
+    "input_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "capability_id",
+          "capability_type",
+          "state"
+        ],
+        "properties": {
+          "capability_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "capability_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "available",
+              "partial",
+              "unavailable",
+              "blocked",
+              "not_applicable"
+            ]
+          },
+          "missing_or_blocking_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason_codes": {
+            "type": "array",
+            "items": {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "data_confidence": {
+      "type": "object",
+      "required": [
+        "level"
+      ],
+      "properties": {
+        "level": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+        },
+        "limiting_dimensions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation_summary": {
+      "type": "object",
+      "required": [
+        "publication_basis_eligible"
+      ],
+      "properties": {
+        "schema_valid": {
+          "type": "boolean"
+        },
+        "market_cap_reconciled": {
+          "type": "boolean"
+        },
+        "capital_ledger_no_double_count": {
+          "type": "boolean"
+        },
+        "publication_basis_eligible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "lineage": {
+      "type": "array",
+      "items": {
+        "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/lineageRef"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "companySpecificInputs": {
+      "description": "Discriminated by 'module', closed for every module including 'aviation' and 'steel' (docs/valuation-t66-03-valuation-inputs-specification.md Section 'company_specific_inputs' names their exact metric sets in prose -- ASK/RPK/load-factor/RASK/CASK/EBITDAR/fleet-lease-refs for aviation; production/sales tonnes/capacity/utilization/revenue-per-tonne/mix/EBITDA-per-ton-refs for steel -- so an unconstrained additionalProperties: true bag is not appropriate here, particularly since THYAO's production routing is standard_corporate+aviation and T70-B will project directly into this module). Only 'module' and 'period_anchor_ref' are required per module; individual metrics stay optional (each may be absent/unavailable independently, per the same missing-is-never-zero rule as everywhere else in this schema) but no undeclared field is accepted.",
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "module"
+          ],
+          "properties": {
+            "module": {
+              "const": "generic"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "$ref": "#/$defs/aviationInputs"
+        },
+        {
+          "$ref": "#/$defs/steelInputs"
+        }
+      ]
+    },
+    "aviationInputs": {
+      "type": "object",
+      "required": [
+        "module",
+        "period_anchor_ref"
+      ],
+      "properties": {
+        "module": {
+          "const": "aviation"
+        },
+        "period_anchor_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ask": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "rpk": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "passenger_load_factor": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "rask": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "cask": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "cask_ex_fuel": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "ebitdar": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "fleet_lease_driver_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "steelInputs": {
+      "type": "object",
+      "required": [
+        "module",
+        "period_anchor_ref"
+      ],
+      "properties": {
+        "module": {
+          "const": "steel"
+        },
+        "period_anchor_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "production_tonnes": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "sales_tonnes": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "effective_capacity_tonnes": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "capacity_utilization": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "revenue_per_tonne": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "product_mix_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "geography_mix_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "ebitda_per_tonne_candidate_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "bookEquityBasis": {
+      "description": "T71-B addition: parent-attributable book equity, the P/B denominator. Not part of capital_structure_ledger (that array is scoped to the EV bridge's add/subtract components, never the book-equity figure itself) and not an earnings/cash-flow basis, so it gets its own small top-level field rather than being forced into an unrelated existing array.",
+      "type": "object",
+      "required": [
+        "book_equity_basis_id",
+        "period_anchor_ref",
+        "amount",
+        "status"
+      ],
+      "properties": {
+        "book_equity_basis_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "period_anchor_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "amount": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "accounting_context_ref": {
+          "type": "string"
+        },
+        "formula_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus"
+        }
+      },
+      "additionalProperties": false
+    },
+    "distributionBasis": {
+      "description": "T71-B addition: the governed dividend-per-share distribution basis the dividend-yield method needs. An explicit governed zero-dividend event (event_type='no_dividend_governed') is a distinct, valid, available-zero state -- never conflated with a missing dividend history (status='unavailable').",
+      "type": "object",
+      "required": [
+        "dividend_per_share",
+        "status"
+      ],
+      "properties": {
+        "dividend_per_share": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "trailing_paid_12m",
+            "no_dividend_governed"
+          ]
+        },
+        "formula_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus"
+        }
+      },
+      "additionalProperties": false
+    },
+    "earningsBasis": {
+      "type": "object",
+      "required": [
+        "earnings_basis_id",
+        "earnings_type",
+        "period_anchor_ref",
+        "amount",
+        "status"
+      ],
+      "properties": {
+        "earnings_basis_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "earnings_type": {
+          "type": "string",
+          "enum": [
+            "reported_parent_net_income",
+            "reported_total_net_income",
+            "reported_core_ebit",
+            "company_adjusted_apm",
+            "derived_reported_bridge",
+            "analyst_normalized",
+            "cycle_normalized"
+          ]
+        },
+        "period_anchor_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "period_variant": {
+          "type": "string",
+          "enum": [
+            "true_ttm",
+            "fy"
+          ]
+        },
+        "reconciliation_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comparability": {
+          "type": "string",
+          "enum": [
+            "issuer_specific_only",
+            "definition_review_required",
+            "cross_company_comparable"
+          ]
+        },
+        "amount": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "status": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus"
+        }
+      },
+      "additionalProperties": false
+    },
+    "cashFlowBasis": {
+      "type": "object",
+      "required": [
+        "cash_flow_basis_id",
+        "cash_flow_type",
+        "period_anchor_ref",
+        "amount",
+        "status"
+      ],
+      "properties": {
+        "cash_flow_basis_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cash_flow_type": {
+          "type": "string",
+          "enum": [
+            "standard_fcf",
+            "after_lease_fcf",
+            "fcff",
+            "fcfe",
+            "owner_earnings_diagnostic",
+            "standard_fcf_parent_share",
+            "after_lease_fcf_parent_share"
+          ]
+        },
+        "period_anchor_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "period_variant": {
+          "type": "string",
+          "enum": [
+            "true_ttm",
+            "fy"
+          ]
+        },
+        "amount": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "formula_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus"
+        }
+      },
+      "additionalProperties": false
+    },
+    "capitalComponent": {
+      "type": "object",
+      "required": [
+        "component_id",
+        "component_type",
+        "amount",
+        "inclusion_role",
+        "status",
+        "lineage"
+      ],
+      "properties": {
+        "component_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component_type": {
+          "type": "string",
+          "enum": [
+            "ordinary_equity_market_cap",
+            "financial_debt_current",
+            "financial_debt_noncurrent",
+            "lease_liability_current",
+            "lease_liability_noncurrent",
+            "preferred_equity",
+            "noncontrolling_interests",
+            "eligible_cash",
+            "eligible_investment",
+            "restricted_cash",
+            "equity_method_investment",
+            "debt_like_item",
+            "nonoperating_asset_adjustment"
+          ]
+        },
+        "amount": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "balance_sheet_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "lease_scope": {
+          "type": "string",
+          "enum": [
+            "lease_exclusive",
+            "lease_inclusive",
+            "not_applicable"
+          ]
+        },
+        "inclusion_role": {
+          "type": "string",
+          "enum": [
+            "included",
+            "excluded",
+            "conditional_included",
+            "unresolved"
+          ]
+        },
+        "sign_in_bridge": {
+          "type": "string",
+          "enum": [
+            "add",
+            "subtract"
+          ]
+        },
+        "status": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus"
+        },
+        "lineage": {
+          "type": "object",
+          "required": [
+            "source_id"
+          ],
+          "properties": {
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "derivation": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "evBasis": {
+      "type": "object",
+      "required": [
+        "ev_basis_id",
+        "basis_type",
+        "enterprise_value",
+        "formula_ref",
+        "status"
+      ],
+      "properties": {
+        "ev_basis_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis_type": {
+          "type": "string",
+          "enum": [
+            "lease_exclusive",
+            "lease_inclusive",
+            "company_reported_diagnostic",
+            "sector_policy_variant"
+          ]
+        },
+        "market_cap_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "included_component_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "excluded_component_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "enterprise_value": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "formula_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

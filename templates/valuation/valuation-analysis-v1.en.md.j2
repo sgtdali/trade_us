@@ -1,0 +1,320 @@
+# Historical Valuation Diagnostics and Analysis Report: {{ company_name }} ({{ ticker }})
+
+## 1. Executive Summary
+
+This report presents filing-backed historical valuation evidence for {{ company_name }} as of {{ as_of_date }}. Forward estimates are not embedded.
+
+{% for method_id, method in methods.items() if method.status == 'available' and (method_id != 'val.method.earnings_yield.reported_parent' or methods.get('val.method.pe.reported_parent', {}).get('status') != 'available') %}
+* **{{ method_label_en(method_id) }}:** {{ fmt_metric_en(method.canonical_value) }}
+{% endfor %}
+
+Net income, EBIT, and Free Cash Flow valuation bases use the explicitly reconciled TTM figures in Section 4. Book value uses the latest balance sheet, and market values use the observed closing price.
+
+**Interpretation framework:** P/E and Earnings Yield are one parent-earnings claim expressed in inverse forms and must be counted once. P/B uses parent book equity; Free Cash Flow Yield uses a net-income-share proxy for parent attribution; and lease-exclusive EV / reported operating income uses reported EBIT. The methods are not averaged or ranked.
+
+## 2. Analysis Context and Fiscal Basis
+
+* **Ticker / Exchange:** {{ ticker }} / {{ exchange }}
+* **Valuation date:** {{ fmt_date_en(as_of_date) }}
+* **Price observation date:** {{ fmt_date_en(price_session_date) }}
+* **Reporting currency:** {{ reporting_currency }}
+* **Accounting basis:** {{ accounting_basis_en }}
+* **Latest reported period:** {{ fiscal_period_label(latest_financials) }}
+* **Latest annual period:** {{ fiscal_period_label(fy_financials) }}
+{% if fiscal_year_naming_note %}* **Fiscal-year naming note:** {{ fiscal_year_naming_note }}
+{% endif %}
+* **Share-count basis:** {{ share_count_basis_en }}
+* **Observed closing price:** {{ fmt_number_en(market_snapshot.price_observation.price, 2) }} USD per share on {{ fmt_date_en(price_session_date) }}
+{% if market_financial_gap_days is not none %}* **Price / latest financial cut-off gap:** {{ market_financial_gap_days }} days; no post-period financial adjustment is estimated
+{% endif %}
+
+## 3. Latest Financial Snapshot — {{ fiscal_period_label(latest_financials) }}
+
+**Source basis:** SEC accession {{ latest_source.source_id }}; filed {{ fmt_date_en(latest_source.publication_date) }}.
+
+{% for metric_id in ['revenue_total', 'gross_profit', 'operating_profit_before_investment_activities', 'net_profit_for_period', 'net_profit_attributable_parent'] %}
+* **{{ metric_label_en(metric_id) }}:** {{ fmt_record_en(latest_lookup.get(metric_id) if latest_lookup.is_available(metric_id) else none) }}
+{% endfor %}
+{% if latest_lookup.is_available('net_financial_debt') %}* **Issuer-reported net debt APM:** {{ fmt_record_en(latest_lookup.get('net_financial_debt')) }}
+{% else %}* **Issuer-reported net debt APM:** not disclosed; Section 5 separately presents an internally calculated net financial debt
+{% endif %}
+
+## 4. Fiscal-Year Snapshot and Free Cash Flow Bridges — {{ fiscal_period_label(fy_financials) }}
+
+**Source basis:** SEC accession {{ fy_source.source_id }}; filed {{ fmt_date_en(fy_source.publication_date) }}.
+
+### Annual Earnings Snapshot
+
+{% for metric_id in ['revenue_total', 'gross_profit', 'operating_profit_before_investment_activities', 'net_profit_for_period', 'net_profit_attributable_parent'] %}
+* **{{ metric_label_en(metric_id) }}:** {{ fmt_record_en(fy_lookup.get(metric_id) if fy_lookup.is_available(metric_id) else none) }}
+{% endfor %}
+
+### Fiscal-Year Free Cash Flow
+
+{% for metric_id in ['cf_net_operating_activities', 'cf_capex_ppe_intangible', 'free_cash_flow'] %}
+* **{{ metric_label_en(metric_id) }}:** {{ fmt_record_en(fy_lookup.get(metric_id) if fy_lookup.is_available(metric_id) else none) }}
+{% endfor %}
+
+The canonical free-cash-flow calculation adds capital expenditures to operating cash flow because capital expenditures are stored as a negative cash outflow. Maintenance and growth capital expenditures are not separated unless the issuer explicitly discloses that split.
+
+### TTM Earnings Reconciliations
+
+{% for bridge in ttm_earnings_bridges %}
+**{{ bridge.label }}**
+
+| Reconciliation leg | Amount |
+|---|---:|
+| {{ bridge.fy_period }} full-year amount | {{ fmt_number_en(bridge.fy_value, 1) }} million USD |
+{% if not bridge.latest_is_annual %}| Add: {{ bridge.current_period }} YTD amount | {{ fmt_number_en(bridge.current_ytd_value, 1) }} million USD |
+| Less: {{ bridge.prior_period }} comparable YTD amount | {{ fmt_number_en(bridge.prior_ytd_value, 1) }} million USD |
+{% endif %}| **Calculated TTM amount** | **{{ fmt_number_en(bridge.calculated_ttm, 1) }} million USD** |
+
+This {% if bridge.reconciled %}reconciles exactly{% else %}does not fully reconcile{% endif %} to the {{ fmt_number_en(bridge.valuation_value, 1) if bridge.valuation_value is not none else 'unavailable' }} million USD valuation operand in Section 6. {% if bridge.latest_is_annual %}The most recent financial basis is the {{ bridge.fy_period }} annual period itself, so the trailing twelve months are that fiscal year and no year-to-date legs apply.{% else %}Formula: {{ fmt_number_en(bridge.fy_value, 1) }} + {{ fmt_number_en(bridge.current_ytd_value, 1) }} − {{ fmt_number_en(bridge.prior_ytd_value, 1) }} = {{ fmt_number_en(bridge.calculated_ttm, 1) }} million USD.{% endif %}
+
+{% endfor %}
+
+{% if ttm_fcf_bridge %}
+### TTM Free Cash Flow Reconciliation
+
+| Reconciliation leg | Amount |
+|---|---:|
+| {{ ttm_fcf_bridge.fy_period }} free cash flow | {{ fmt_number_en(ttm_fcf_bridge.fy_fcf, 1) }} million USD |
+{% if not ttm_fcf_bridge.latest_is_annual %}| Add: {{ ttm_fcf_bridge.current_period }} YTD free cash flow | {{ fmt_number_en(ttm_fcf_bridge.current_ytd_fcf, 1) }} million USD |
+| Less: {{ ttm_fcf_bridge.prior_period }} comparable YTD free cash flow | {{ fmt_number_en(ttm_fcf_bridge.prior_ytd_fcf, 1) }} million USD |
+{% endif %}| **Raw consolidated TTM free cash flow** | **{{ fmt_number_en(ttm_fcf_bridge.raw_ttm_fcf, 1) }} million USD** |
+{% if ttm_fcf_bridge.valuation_fcf is not none %}| Parent-attribution adjustment | {{ fmt_number_en(ttm_fcf_bridge.attribution_adjustment, 1) }} million USD |
+| **Parent-attributed TTM free cash flow proxy used in Section 6** | **{{ fmt_number_en(ttm_fcf_bridge.valuation_fcf, 1) }} million USD** |
+{% endif %}
+
+{% if ttm_fcf_bridge.latest_is_annual %}The most recent financial basis is the {{ ttm_fcf_bridge.fy_period }} annual period itself, so the trailing twelve months are that fiscal year and no year-to-date legs apply.{% else %}The bridge follows FY plus current YTD minus prior-year comparable YTD: {{ fmt_number_en(ttm_fcf_bridge.fy_fcf, 1) }} + {{ fmt_number_en(ttm_fcf_bridge.current_ytd_fcf, 1) }} − ({{ fmt_number_en(ttm_fcf_bridge.prior_ytd_fcf, 1) }}) = {{ fmt_number_en(ttm_fcf_bridge.raw_ttm_fcf, 1) }} million USD.{% endif %}
+
+{% if ttm_fcf_bridge.attribution_ratio is not none %}The parent-attribution proxy is TTM parent net income / TTM consolidated net income: {{ fmt_number_en(ttm_fcf_bridge.ttm_parent_income, 1) }} / {{ fmt_number_en(ttm_fcf_bridge.ttm_total_income, 1) }} = {{ fmt_ratio_percent_en(ttm_fcf_bridge.attribution_ratio, 2) }}. Therefore {{ fmt_number_en(ttm_fcf_bridge.raw_ttm_fcf, 1) }} × {{ fmt_ratio_percent_en(ttm_fcf_bridge.attribution_ratio, 2) }} = {{ fmt_number_en(ttm_fcf_bridge.valuation_fcf, 1) }} million USD. This is a disclosed proxy methodology, not a GAAP-reported parent FCF measure.{% endif %}
+
+{% if not ttm_fcf_bridge.latest_is_annual and ttm_fcf_bridge.current_ytd_cfo is not none and ttm_fcf_bridge.current_ytd_capex is not none %}
+| YTD FCF component | Current YTD | Comparable prior-year YTD |
+|---|---:|---:|
+| Operating cash flow | {{ fmt_number_en(ttm_fcf_bridge.current_ytd_cfo, 1) }} million USD | {{ fmt_number_en(ttm_fcf_bridge.prior_ytd_cfo, 1) }} million USD |
+| Capital expenditures | {{ fmt_number_en(ttm_fcf_bridge.current_ytd_capex, 1) }} million USD | {{ fmt_number_en(ttm_fcf_bridge.prior_ytd_capex, 1) }} million USD |
+| Free cash flow | {{ fmt_number_en(ttm_fcf_bridge.current_ytd_fcf, 1) }} million USD | {{ fmt_number_en(ttm_fcf_bridge.prior_ytd_fcf, 1) }} million USD |
+
+{% if ttm_fcf_bridge.prior_ytd_was_negative %}Because comparable prior-year YTD free cash flow was negative, subtracting it increases the mechanical TTM amount. The report does not classify that change as recurring or forecast it forward.{% endif %}
+{% endif %}
+{% endif %}
+
+### Capital Returns
+
+* **Cash dividends paid during {{ fy_financials.period }}:** {{ fmt_record_en(fy_lookup.get('cf_dividends_paid') if fy_lookup.is_available('cf_dividends_paid') else none) }}
+* **Cash paid for share repurchases during {{ fy_financials.period }}:** {{ fmt_record_en(fy_lookup.get('cf_share_repurchases') if fy_lookup.is_available('cf_share_repurchases') else none) }}
+
+Dividends and repurchases are shown with the statement-of-cash-flows sign convention; a negative amount is a cash outflow.
+
+## 5. Market Value, Capital Structure, Debt and Leases
+
+All balance-sheet amounts in this section are as of {{ fmt_date_en(latest_financials.period_end) }} and shown in millions of USD unless explicitly stated otherwise.
+
+* **Market capitalization:** {{ fmt_amount_millions_en(ledger['comp-market-cap'].amount) }}
+{% if share_count_summary %}* **Spot basic shares outstanding:** {{ fmt_number_en(share_count_summary.shares_millions, 1) }} million shares, effective {{ fmt_date_en(share_count_summary.effective_date) }} ({{ share_count_summary.derivation_method }})
+{% endif %}
+* **Current financial debt:** {{ fmt_amount_millions_en(ledger['comp-debt-current'].amount) }}
+* **Current portion of long-term debt:** {{ fmt_amount_millions_en(ledger['comp-debt-current-portion'].amount) }}
+* **Noncurrent financial debt:** {{ fmt_amount_millions_en(ledger['comp-debt-noncurrent'].amount) }}
+* **Cash and cash equivalents:** {{ fmt_amount_millions_en(ledger['comp-cash-0'].amount) }}
+* **Current lease liabilities:** {{ fmt_amount_millions_en(ledger['comp-lease-current'].amount) }}
+* **Noncurrent lease liabilities:** {{ fmt_amount_millions_en(ledger['comp-lease-noncurrent'].amount) }}
+{% if latest_available_annual_leases %}* **Latest separately reported annual lease carrying amounts:** current {{ fmt_number_en(latest_available_annual_leases.current, 1) }} million USD and noncurrent {{ fmt_number_en(latest_available_annual_leases.noncurrent, 1) }} million USD as of {{ fmt_date_en(latest_available_annual_leases.period_end) }} ({{ latest_available_annual_leases.source_id }}). These stale annual amounts are supplementary only and are not substituted into the current-period EV bridge.
+{% endif %}
+* **Parent shareholders' equity:** {{ fmt_record_en(latest_lookup.get('equity_attributable_to_parent') if latest_lookup.is_available('equity_attributable_to_parent') else none) }}
+* **Total current assets:** {{ fmt_record_en(latest_lookup.get('total_current_assets') if latest_lookup.is_available('total_current_assets') else none) }}
+* **Total current liabilities:** {{ fmt_record_en(latest_lookup.get('total_current_liabilities') if latest_lookup.is_available('total_current_liabilities') else none) }}
+{% if latest_lookup.is_available('total_current_assets') and latest_lookup.is_available('total_current_liabilities') %}* **Current ratio cross-check:** {{ fmt_number_en(latest_lookup.value('total_current_assets') / latest_lookup.value('total_current_liabilities'), 2) }}x
+{% endif %}
+
+{% if ev_bridge %}
+* **Internally calculated net financial debt (excluding leases and noncontrolling interests):** {{ fmt_number_en(ev_bridge.calculated_net_debt / 1000000, 1) }} million USD{% if latest_lookup.is_available('net_financial_debt') == false %} — shown separately because an issuer-reported net-debt APM was not available{% endif %}
+
+### Enterprise Value Reconciliation
+
+| Lease-exclusive EV component | Amount |
+|---|---:|
+{% for row in ev_bridge.rows %}| {{ row.label }} | {{ fmt_number_en(row.amount / 1000000, 1) }} million USD |
+{% endfor %}| **Lease-exclusive enterprise value** | **{{ fmt_number_en(ev_bridge.lease_exclusive_ev / 1000000, 1) }} million USD** |
+
+The bridge {% if ev_bridge.lease_exclusive_reconciled %}reconciles exactly{% else %}does not fully reconcile{% endif %} to the lease-exclusive EV used by the valuation engine{% if ev_bridge.reported_lease_exclusive_ev is not none %} ({{ fmt_number_en(ev_bridge.reported_lease_exclusive_ev / 1000000, 1) }} million USD){% endif %}.
+
+{% if ev_bridge.lease_liabilities is not none %}Adding {{ fmt_number_en(ev_bridge.lease_liabilities / 1000000, 1) }} million USD of reported lease liabilities produces a lease-inclusive EV of {{ fmt_number_en(ev_bridge.lease_inclusive_ev / 1000000, 1) }} million USD.{% else %}A lease-inclusive EV was not produced because current and noncurrent lease-liability carrying amounts were not both available. Undiscounted lease-payment schedules, when shown below, are not substituted for carrying amounts.{% endif %}
+{% endif %}
+
+{% if latest_debt_profile %}
+{% set debt = latest_debt_profile %}
+### Debt and ASC 842 Note Detail
+
+* **Refinancing-pressure diagnostic:** {{ debt.diagnostics.refinancing_pressure.level if debt.diagnostics.refinancing_pressure.status == 'available' else 'insufficient data' }}
+* **Extraction method:** {{ extraction_method_en(debt.extraction_method) }}
+
+The diagnostic is high when cash covers less than 25% of near-term debt or at least 40% of total debt is near term; medium when cash coverage is below 75% or the near-term share is at least 25%; otherwise it is low. It uses current balance-sheet debt and cash, not the maturity schedule, and is a mechanical liquidity screen rather than a credit rating. Missing maturity buckets limit the separate long-horizon refinancing view.
+
+{% set maturity_rows = debt.maturity_profile | selectattr('status', 'equalto', 'reported') | list %}
+{% if maturity_rows %}
+| Liability scope | Maturity bucket | Amount (source scale) |
+|---|---|---:|
+{% for row in maturity_rows %}| {{ row.liability_scope }} | {{ row.maturity_bucket }} | {{ fmt_scaled_amount_en(row.value, row.currency, row.scale) }} |
+{% endfor %}
+{% else %}
+No structured maturity schedule was extracted from the controlling filing.
+{% endif %}
+
+The long-term-debt rows are principal-repayment buckets; lease rows are undiscounted contractual payments. They therefore do not reconcile directly to the balance-sheet carrying amounts above.
+
+{% if maturity_schedule_source %}The maturity schedule comes from {{ maturity_schedule_source.source_id }}, the latest structured annual note available to this report. It can differ from the later {{ fmt_date_en(latest_financials.period_end) }} balance sheet because of issuances, repayments, reclassifications, and elapsed time; the rows must not be added to current debt again.{% endif %}
+
+{% if maturity_coverage_notes %}**Schedule coverage notes:**
+{% for note in maturity_coverage_notes %}
+* {{ note }}
+{% endfor %}
+{% endif %}
+
+{% set rate_rows = debt.interest_profile.weighted_average_rates | selectattr('status', 'equalto', 'reported') | list %}
+{% if rate_rows %}
+**Reported weighted-average rates:**
+{% for row in rate_rows %}
+* {{ row.debt_type }}{% if row.currency %} / {{ row.currency }}{% endif %}: {{ fmt_number_en(row.rate_pct, 2) }}%
+{% endfor %}
+{% endif %}
+
+{% set currency_rows = debt.currency_profile | selectattr('status', 'equalto', 'reported') | list %}
+{% if currency_rows %}
+**Reported debt-instrument face amounts by currency (partial disclosed-instrument coverage, not a full debt reconciliation):**
+{% for row in currency_rows %}
+* {{ row.debt_currency }}: {{ fmt_scaled_amount_en(row.value, row.currency, row.scale) }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+### Issuer-Reported Non-GAAP Measures
+
+{% for metric in issuer_operational.metrics %}
+* **{{ metric.name }}:** {% if metric.status == 'available' %}{{ fmt_number_en(metric.value, 1) }} million USD — {{ metric.notes }}{% else %}not disclosed. {{ reason_text_en(metric.reason) }}{% endif %}
+{% else %}
+No accession-specific issuer-reported EBITDA or net-debt APM artifact was available.
+{% endfor %}
+
+## 6. Current Valuation Methods
+
+Net-income, EBIT, and free-cash-flow operands use TTM bases ending {{ fmt_date_en(latest_financials.period_end) }} and reconcile in Section 4. Market-capitalization and enterprise-value operands use the {{ fmt_date_en(price_session_date) }} closing-price basis. Amounts below are shown in millions of USD.
+
+{% for method_id, method in methods.items() %}
+### {{ method_label_en(method_id) }}
+* **Status:** {{ method.status }}
+{% if method.status == 'available' %}
+* **Result:** {{ fmt_metric_en(method.canonical_value) }}
+* **Numerator:** {{ fmt_amount_millions_en(method.numerator.amount) }} — {{ operand_basis_en(method.numerator) }}
+* **Denominator:** {{ fmt_amount_millions_en(method.denominator.amount) }} — {{ operand_basis_en(method.denominator) }}
+{% if method_id == 'val.method.fcf_yield.standard_equity' %}* **Proxy limitation:** the numerator is consolidated TTM FCF attributed to parent shareholders using the TTM parent-net-income / consolidated-net-income ratio. It is not a GAAP-reported parent cash-flow measure.
+{% if ttm_fcf_bridge and ttm_fcf_bridge.prior_ytd_was_negative %}* **Base-effect limitation:** the comparable prior-year YTD FCF was negative, so subtracting it mechanically increases TTM FCF; this yield is unnormalized, requires review, and must not be treated as a recurring run-rate forecast.
+{% endif %}
+{% endif %}{% if method_id == 'val.method.earnings_yield.reported_parent' %}* **Evidence dependency:** P/E and Earnings Yield use the same TTM parent-attributable earnings claim; treat them as one valuation observation, not two independent confirmations.
+{% endif %}{% if method_id == 'val.method.ev_to_ebit.core' %}* **Lease-basis limitation:** this is a lease-exclusive EV / reported operating income diagnostic. Lease-inclusive EV is not paired with EBIT because rent remains within operating expenses; cross-company comparability is limited when lease intensity differs.
+{% endif %}
+{% else %}
+* **Why unavailable:** {% for reason in method.reason_records %}{{ reason_text_en(reason.code) }}{% if not loop.last %} {% endif %}{% else %}No supported value was disclosed.{% endfor %}
+{% endif %}
+
+{% endfor %}
+
+## 7. Method Coverage and Limitations
+
+Section 6 lists every engine output, including unavailable or inapplicable methods. Missing inputs remain missing rather than being replaced with zero or an estimate.
+
+## 8. Peer Comparisons and Strategy Diagnostics
+
+**Peer cohort:** {{ peer_group_label }} — {{ peer_tickers | join(', ') }}.
+
+**Median basis:** {{ (peer_tickers | length) - 1 }} external peers; {{ ticker }} is excluded from its own median. Fiscal calendars may differ.
+
+**Comparable metrics:** Current Ratio uses each issuer's latest balance sheet; Earnings Yield uses TTM parent-attributable net income.
+
+**Omitted metrics:** Gross Margin, Consolidated Net Margin, and Free Cash Flow Margin are excluded because period and accounting bases are not sufficiently standardized.
+
+**Decision weight:** Peer and strategy diagnostics are secondary to the reconciled financial and valuation inputs in Sections 3–6.
+
+{% for comparison in comparisons %}
+{% if comparison.comparison_type == 'piotroski_diagnostic' %}
+### Piotroski F-Score: {{ comparison.statistics_or_matrix.total if comparison.statistics_or_matrix.total is not none else 'not available' }}/9
+
+{% if comparison.statistics_or_matrix.total is none %}Only {{ comparison.statistics_or_matrix.available_component_count }}/9 components were available, so no aggregate score was produced.
+{% endif %}
+
+| Component | Result |
+|---|---:|
+{% for component in comparison.statistics_or_matrix.components %}| {{ piotroski_label_en(component.component_id) }} | {{ 'Pass' if component.binary_value == 1 else ('Fail' if component.binary_value == 0 else 'not available') }} |
+{% endfor %}
+{% elif comparison.comparison_type == 'magic_formula_diagnostic' %}
+### Magic Formula Diagnostic
+
+* **EBIT / lease-exclusive enterprise value:** {% if comparison.statistics_or_matrix.earnings_yield.raw_value.status == 'available' %}{{ fmt_ratio_percent_en(comparison.statistics_or_matrix.earnings_yield.raw_value.value, 2) }}{% else %}not available{% endif %}
+* **EBIT / tangible operating capital:** {% if comparison.statistics_or_matrix.return_on_capital.raw_value.status == 'available' %}{% if magic_formula_capital and magic_formula_capital.small_denominator %}raw mechanical output {{ fmt_ratio_percent_en(comparison.statistics_or_matrix.return_on_capital.raw_value.value, 2) }} — **not comparable because the denominator is small**{% else %}{{ fmt_ratio_percent_en(comparison.statistics_or_matrix.return_on_capital.raw_value.value, 2) }}{% endif %}{% else %}not available{% endif %}
+
+This is a formula diagnostic, not a cross-company rank.
+
+Tangible operating capital is defined as operating net working capital plus net property, plant and equipment. The ratio can become unusually high when that denominator is small; no cap or normalization is applied.
+{% if magic_formula_capital %}
+* **Operating net working capital:** {{ fmt_number_en(magic_formula_capital.net_working_capital, 1) }} million USD
+* **Net operating property, plant and equipment:** {{ fmt_number_en(magic_formula_capital.net_operating_fixed_assets, 1) }} million USD
+* **Tangible operating capital denominator:** {{ fmt_number_en(magic_formula_capital.tangible_operating_capital, 1) }} million USD
+{% if magic_formula_capital.small_denominator %}
+
+The small denominator makes this return-on-capital output an extreme mechanical value. It is retained only for formula auditability and must not be interpreted as a strong positive performance signal or used for direct cross-company comparison.
+{% endif %}
+{% endif %}
+{% elif comparison.comparison_type == 'sector_peer' %}
+{% set peer_scope_id = comparison.method_or_dimension_scope.scope_id %}
+{% set peer_stats = comparison.statistics_or_matrix %}
+* **Sector peer comparison — {{ peer_label_en(peer_scope_id) }}:** subject {{ fmt_peer_value_en(peer_scope_id, peer_stats.subject_value.value if peer_stats.subject_value.status == 'available' else none) }}, peer median {{ fmt_peer_value_en(peer_scope_id, peer_stats.median) }}, coverage {{ peer_stats.eligible_peer_count }}/{{ peer_stats.approved_primary_cohort_count }}.
+{% endif %}
+{% endfor %}
+
+## 9. Technical Snapshot
+
+{% if technical and technical.indicators %}
+* **Adjusted close used by the technical series:** {{ fmt_number_en(market_snapshot.price_observation.price, 2) }} USD on {{ fmt_date_en(price_session_date) }}
+* **Price versus 50-day / 200-day averages:** {{ technical.indicators.price_vs_sma_50.value if technical.indicators.price_vs_sma_50.status == 'available' else 'not available' }} / {{ technical.indicators.price_vs_sma_200.value if technical.indicators.price_vs_sma_200.status == 'available' else 'not available' }}
+{% for metric_id in ['sma_50', 'sma_200', 'rsi_14', 'avg_volume_20d', 'avg_volume_60d', 'support_63d', 'resistance_63d'] %}
+{% set indicator = technical.indicators[metric_id] %}
+* **{{ technical_label_en(metric_id) }}:** {{ fmt_number_en(indicator.value, 2) if indicator.status == 'available' else 'not available' }}
+{% endfor %}
+{% else %}
+Technical analysis was not available for this report date.
+{% endif %}
+
+These indicators are mechanical historical price and volume descriptors and carry lower decision weight than filing-backed fundamentals.
+
+## 10. Deterministic Financial Signals
+
+{% set summary = latest_summaries.summaries.company_fundamentals_summary %}
+Classification reflects the signal engine's stated threshold only; it is not an investment direction. Base-effect review overrides a favorable classification when the comparable period is negative.
+
+{% if has_financial_signals %}
+| Signal | Classification | Evidence |
+|---|---|---|
+{% for signal_id in positive_signal_ids %}| {{ signal_details[signal_id].label }} | favorable threshold result | {{ signal_details[signal_id].explanation }} |
+{% endfor %}{% for signal_id in review_signal_ids %}| {{ signal_details[signal_id].label }} | base-effect review required | {{ signal_details[signal_id].explanation }} The negative comparable base makes the direction mechanical rather than evidence of a recurring trend. |
+{% endfor %}{% for signal_id in negative_signal_ids %}| {{ signal_details[signal_id].label }} | adverse threshold result | {{ signal_details[signal_id].explanation }} |
+{% endfor %}
+{% else %}
+No deterministic financial signal was emitted for this period.
+{% endif %}
+
+## 11. Interpretation Constraints
+
+* Debt, lease, EBITDA, and non-GAAP net-debt fields are shown only when supported by an accession-specific SEC filing or exhibit.
+* An internally calculated EBITDA or net-debt amount is not labeled as issuer-reported.
+* Technical indicators, threshold signals, peer statistics, Piotroski, and Magic Formula are mechanical descriptors with lower decision weight than reconciled filing and valuation inputs.
+
+## 12. Source Summary
+
+| Report use | Period / date | Controlling source |
+|---|---|---|
+| Latest financial snapshot | {{ fiscal_period_label(latest_financials) }} | SEC accession {{ latest_source.source_id | replace('sec-', '') }} |
+| Fiscal-year earnings and FCF base | {{ fiscal_period_label(fy_financials) }} | SEC accession {{ fy_source.source_id | replace('sec-', '') }} |
+| TTM earnings and Free Cash Flow valuation operands | FY plus current YTD minus comparable prior YTD, ending {{ fmt_date_en(latest_financials.period_end) }} | Latest and fiscal-year SEC snapshots above |
+| Market values | Closing price on {{ fmt_date_en(price_session_date) }} | Adjusted-close EOD market observation |

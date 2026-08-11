@@ -1,0 +1,336 @@
+{
+  "schema_version": 2,
+  "ticker": "NWL",
+  "period": "2026-Q2",
+  "signals": [
+    {
+      "signal_id": "revenue_growth_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "neutral",
+      "score": 0,
+      "components": {},
+      "evidence": {
+        "current_value": 3543,
+        "current_comparison_value": 3501
+      },
+      "reason_code": "growth_neutral",
+      "reason_params": {
+        "growth_pct": 1.2
+      },
+      "reason": "Değer yıllık bazda +%1,2 değişmiştir; büyüme kuralı v1 eşikleri (±%5) içinde yatay kabul edilir.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2.json"
+    },
+    {
+      "signal_id": "operating_profit_before_investment_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 2,
+      "components": {},
+      "evidence": {
+        "current_value": 317,
+        "current_comparison_value": 192
+      },
+      "reason_code": "growth_positive",
+      "reason_params": {
+        "growth_pct": 65.1
+      },
+      "reason": "Değer yıllık bazda +%65,1 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2.json"
+    },
+    {
+      "signal_id": "operating_profit_including_investments_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 2,
+      "components": {},
+      "evidence": {
+        "current_value": 317,
+        "current_comparison_value": 192
+      },
+      "reason_code": "growth_positive",
+      "reason_params": {
+        "growth_pct": 65.1
+      },
+      "reason": "Değer yıllık bazda +%65,1 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2.json"
+    },
+    {
+      "signal_id": "net_profit_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 2,
+      "components": {},
+      "evidence": {
+        "current_value": 73,
+        "current_comparison_value": 9
+      },
+      "reason_code": "growth_positive",
+      "reason_params": {
+        "growth_pct": 711.1
+      },
+      "reason": "Değer yıllık bazda +%711,1 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2.json"
+    },
+    {
+      "signal_id": "operating_cash_flow_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "mixed",
+      "score": 1,
+      "components": {},
+      "evidence": {
+        "current_value": -204,
+        "current_comparison_value": -271
+      },
+      "reason_code": "loss_narrowing",
+      "reason_params": {
+        "narrowed_pct": 24.7,
+        "current": -204,
+        "previous": -271
+      },
+      "reason": "Zarar -271'den -204'e daralmıştır (+%24,7 daralma; zarar daralma kuralı v1: ≥ %20 daralma 'mixed').",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2.json"
+    },
+    {
+      "signal_id": "free_cash_flow_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "mixed",
+      "score": 1,
+      "components": {},
+      "evidence": {
+        "current_value": -288.0,
+        "current_comparison_value": -389.0
+      },
+      "reason_code": "loss_narrowing",
+      "reason_params": {
+        "narrowed_pct": 26.0,
+        "current": -288.0,
+        "previous": -389.0
+      },
+      "reason": "Zarar -389,0'den -288,0'e daralmıştır (+%26,0 daralma; zarar daralma kuralı v1: ≥ %20 daralma 'mixed').",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2-derived-ratios.json"
+    },
+    {
+      "signal_id": "gross_margin_trend",
+      "rule_id": "margin_change_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 1,
+      "components": {},
+      "evidence": {
+        "margin_value": 37.4,
+        "margin_comparison_value": 33.93
+      },
+      "reason_code": "margin_positive",
+      "reason_params": {
+        "change_pp": 3.47
+      },
+      "reason": "Marj değişimi +3,5 yüzde puan ile pozitif eşiğin (≥ +0,5 puan) üzerindedir.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2-derived-ratios.json",
+      "context": {
+        "direction": "improving",
+        "absolute_state": "positive",
+        "presentation_status": "positive",
+        "required_data_complete": true,
+        "reason_code": "signal_context_raw_preserved",
+        "reason": "Ham sinyal ek bir bağlam kısıtı olmadan sunulabilir."
+      }
+    },
+    {
+      "signal_id": "operating_margin_trend",
+      "rule_id": "margin_change_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 1,
+      "components": {},
+      "evidence": {
+        "margin_value": 8.95,
+        "margin_comparison_value": 5.48
+      },
+      "reason_code": "margin_positive",
+      "reason_params": {
+        "change_pp": 3.47
+      },
+      "reason": "Marj değişimi +3,5 yüzde puan ile pozitif eşiğin (≥ +0,5 puan) üzerindedir.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2-derived-ratios.json",
+      "context": {
+        "direction": "improving",
+        "absolute_state": "positive",
+        "presentation_status": "positive",
+        "required_data_complete": true,
+        "reason_code": "signal_context_raw_preserved",
+        "reason": "Ham sinyal ek bir bağlam kısıtı olmadan sunulabilir."
+      }
+    },
+    {
+      "signal_id": "net_margin_trend",
+      "rule_id": "margin_change_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 1,
+      "components": {},
+      "evidence": {
+        "margin_value": 2.06,
+        "margin_comparison_value": 0.26
+      },
+      "reason_code": "margin_positive",
+      "reason_params": {
+        "change_pp": 1.8
+      },
+      "reason": "Marj değişimi +1,8 yüzde puan ile pozitif eşiğin (≥ +0,5 puan) üzerindedir.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2-derived-ratios.json",
+      "context": {
+        "direction": "improving",
+        "absolute_state": "positive",
+        "presentation_status": "positive",
+        "required_data_complete": true,
+        "reason_code": "signal_context_raw_preserved",
+        "reason": "Ham sinyal ek bir bağlam kısıtı olmadan sunulabilir."
+      }
+    },
+    {
+      "signal_id": "cash_conversion_trend",
+      "rule_id": "cash_conversion_ratio_change",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 1,
+      "components": {},
+      "evidence": {
+        "ratio_value": -2.79,
+        "ratio_comparison_value": -30.11
+      },
+      "reason_code": "cash_conversion_improved",
+      "reason_params": {
+        "change": 27.32
+      },
+      "reason": "İşletme nakit akışı / net kâr oranı 27,3 oran puanı artmıştır.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2-derived-ratios.json"
+    },
+    {
+      "signal_id": "liquidity_trend",
+      "rule_id": "liquidity_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {
+        "current_ratio_value": 1.111,
+        "current_ratio_comparison_value": null,
+        "cash_ratio_value": null,
+        "cash_ratio_comparison_value": null
+      },
+      "reason_code": "liquidity_unavailable",
+      "reason_params": {},
+      "reason": "Likidite karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2-derived-ratios.json"
+    },
+    {
+      "signal_id": "leverage_trend",
+      "rule_id": "leverage_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {
+        "liability_ratio_value": null,
+        "liability_ratio_comparison_value": null
+      },
+      "reason_code": "leverage_unavailable",
+      "reason_params": {},
+      "reason": "Kaldıraç karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2-derived-ratios.json",
+      "context": {
+        "direction": "unavailable",
+        "absolute_state": "unknown",
+        "presentation_status": "unavailable",
+        "required_data_complete": false,
+        "reason_code": "signal_context_unavailable",
+        "reason": "Ham sinyal hesaplanamadığı için bağlamsal sınıflandırma yapılamamıştır."
+      }
+    },
+    {
+      "signal_id": "lease_burden_trend",
+      "rule_id": "lease_burden_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {
+        "lease_liability_value": 536.0,
+        "lease_liability_comparison_value": null
+      },
+      "reason_code": "lease_burden_unavailable",
+      "reason_params": {},
+      "reason": "Kira yükü karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2-derived-ratios.json",
+      "context": {
+        "direction": "unavailable",
+        "absolute_state": "unknown",
+        "presentation_status": "unavailable",
+        "required_data_complete": false,
+        "reason_code": "signal_context_unavailable",
+        "reason": "Ham sinyal hesaplanamadığı için bağlamsal sınıflandırma yapılamamıştır."
+      }
+    },
+    {
+      "signal_id": "deferred_revenue_trend",
+      "rule_id": "deferred_revenue_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {},
+      "reason_code": "deferred_revenue_unavailable",
+      "reason_params": {},
+      "reason": "Ertelenmiş gelir karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/NWL/2026-Q2.json"
+    }
+  ]
+}

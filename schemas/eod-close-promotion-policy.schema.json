@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/eod-close-promotion-policy.schema.json",
+  "title": "EOD-close promotion policy",
+  "description": "Governs the generic EOD-close-to-T70-observation promotion bridge: the selected price field, the economic price mode, the timestamp-proxy rules for published_at/available_at, and the maximum fallback lag. Deliberately does NOT govern a local closing-auction time -- effective_at_source is fixed to 'explicit_cli_argument' because no BIST regular-session close convention has been verified from an official source in the implementing environment (see effective_at_verification_note and docs/yfinance-eod-pilot.md).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "policy_id",
+    "policy_version",
+    "exchange",
+    "timezone",
+    "effective_at_source",
+    "effective_at_verification_note",
+    "max_fallback_lag_days",
+    "selected_price_field",
+    "price_mode",
+    "timestamp_proxy_rules"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "eod_close_promotion_policy"
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "exchange": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timezone": {
+      "type": "string",
+      "minLength": 1
+    },
+    "effective_at_source": {
+      "const": "explicit_cli_argument"
+    },
+    "effective_at_verification_note": {
+      "type": "string",
+      "minLength": 1
+    },
+    "max_fallback_lag_days": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "selected_price_field": {
+      "const": "close"
+    },
+    "price_mode": {
+      "const": "official_close"
+    },
+    "timestamp_proxy_rules": {
+      "type": "object",
+      "required": [
+        "available_at_source",
+        "published_at_source"
+      ],
+      "properties": {
+        "available_at_source": {
+          "const": "provider_extract.retrieved_at"
+        },
+        "published_at_source": {
+          "const": "provider_extract.retrieved_at"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

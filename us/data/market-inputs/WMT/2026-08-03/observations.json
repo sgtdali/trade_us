@@ -1,0 +1,34 @@
+{
+  "observations": [
+    {
+      "observation_id": "wmt-close-2026-07-31",
+      "observation_type": "price",
+      "instrument_or_pair": "WMT",
+      "value": "111.19999694824219",
+      "unit": "USD",
+      "currency": "USD",
+      "price_mode": "official_close",
+      "effective_at": "2026-07-31T20:00:00Z",
+      "published_at": "2026-08-03T11:06:25Z",
+      "available_at": "2026-08-03T11:06:25Z",
+      "source_manifest_id": "wmt-yfinance-eod-v1",
+      "source_record_ref": "yfinance:WMT:2026-07-31:close",
+      "revision_status": "unknown",
+      "ingested_at": "2026-08-03T11:06:25Z"
+    },
+    {
+      "observation_id": "wmt-sec-outstanding-0000104169-26-000102",
+      "observation_type": "share_count",
+      "instrument_or_pair": "WMT:spot_basic_shares_outstanding",
+      "value": "7958079155",
+      "unit": "shares",
+      "effective_at": "2026-05-27T00:00:00Z",
+      "published_at": "2026-08-03T11:06:25Z",
+      "available_at": "2026-08-03T11:06:25Z",
+      "source_manifest_id": "wmt-sec-shares-v1",
+      "source_record_ref": "sec:0000104169-26-000102:{http://xbrl.sec.gov/dei/2025}EntityCommonStockSharesOutstanding#c-11",
+      "revision_status": "original",
+      "ingested_at": "2026-08-03T11:06:25Z"
+    }
+  ]
+}

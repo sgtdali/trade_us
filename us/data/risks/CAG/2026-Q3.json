@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "ticker": "CAG",
+  "period": "2026-Q3",
+  "as_of": "2026-04-01",
+  "scope_note": "10-Q Item 1A risk metninden deterministik olarak çıkarılmıştır; önem derecesi ve parasal etki tahmin edilmemiştir.",
+  "analysis_status": "available",
+  "unavailable_reason_code": null,
+  "validation_findings": [],
+  "risks": [
+    {
+      "risk_id": "regulation_and_litigation",
+      "category": "regulatory",
+      "title": "Düzenleyici ve Hukuki Riskler",
+      "description": "Şirket, düzenleme, vergi veya hukuki süreçlerdeki değişimlerin maliyet ve faaliyet sonuçlarını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001104659-26-038548-risk-factors",
+          "source_file": "raw/sec-filings/CAG/0001104659-26-038548-risk-factors.txt",
+          "page": null,
+          "summary": "…10b5-1 trading arrangement” or a “non-Rule 10b5-1 trading arrangement,” as each term is defined in Item 408 of Regulation S-K, during the Company's fiscal quarter ended February 22, 2026.​ITEM 6."
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    }
+  ]
+}

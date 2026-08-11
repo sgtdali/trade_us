@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "ticker": "GIS",
+  "sources": [
+    {
+      "source_id": "sec-0001193125-25-147079",
+      "path": "raw/sec-filings/GIS/0001193125-25-147079.json",
+      "source_type": "sec_inline_xbrl",
+      "language": "en",
+      "publication_date": "2025-06-26",
+      "periods_covered": [
+        "2025-FY",
+        "2024-FY"
+      ],
+      "currency": "USD",
+      "scale": "million",
+      "consolidation": "consolidated",
+      "audit_status": "audited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "c7facc9b4f907264fb04ec6e93acadf4e346dfdca5bf7b60a987b0878554bd4d",
+      "notes": "SEC accession 0001193125-25-147079; source archive hash 51c3787f7fc9a790e34aee564a60de2156dc937f4bf9d58d7d24dd68699d3b0d."
+    },
+    {
+      "source_id": "sec-0001193125-25-147079-risk-factors",
+      "path": "raw/sec-filings/GIS/0001193125-25-147079-risk-factors.txt",
+      "source_type": "sec_filing_text",
+      "language": "en",
+      "publication_date": "2025-06-26",
+      "periods_covered": [],
+      "currency": null,
+      "scale": null,
+      "consolidation": "consolidated",
+      "audit_status": "audited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "32db0c5fbeb4e92ab9b56dca35de760187242098353fc65457cf7b1c1adbd382",
+      "notes": "SEC 10-K Item 1A risk-factor text snapshot; accession 0001193125-25-147079."
+    },
+    {
+      "source_id": "sec-0001628280-26-019398",
+      "path": "raw/sec-filings/GIS/0001628280-26-019398.json",
+      "source_type": "sec_inline_xbrl",
+      "language": "en",
+      "publication_date": "2026-03-18",
+      "periods_covered": [
+        "2026-Q3",
+        "2025-Q3"
+      ],
+      "currency": "USD",
+      "scale": "million",
+      "consolidation": "consolidated",
+      "audit_status": "unaudited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "6e9c11c364a67eac109f7c36c158e0434d5bbba1e6c505beee463ee7cd375d58",
+      "notes": "SEC accession 0001628280-26-019398; source archive hash f7f96a6bc5ba8077b4c1616f7e5215af4b15f3c0593130ea0a17b5c02c124e8c."
+    },
+    {
+      "source_id": "sec-0001628280-26-046466",
+      "path": "raw/sec-filings/GIS/0001628280-26-046466.json",
+      "source_type": "sec_inline_xbrl",
+      "language": "en",
+      "publication_date": "2026-07-01",
+      "periods_covered": [
+        "2026-FY",
+        "2025-FY"
+      ],
+      "currency": "USD",
+      "scale": "million",
+      "consolidation": "consolidated",
+      "audit_status": "audited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "4dfd374f0cad35201675dc51b3fa721321a774fd366b36a11e7490566a60e75c",
+      "notes": "SEC accession 0001628280-26-046466; source archive hash 691e40d1b9338dc89fb5b449e6779418e0df9f424a13b63779fcdc75d2a6cacb."
+    },
+    {
+      "source_id": "sec-0001628280-26-046466-risk-factors",
+      "path": "raw/sec-filings/GIS/0001628280-26-046466-risk-factors.txt",
+      "source_type": "sec_filing_text",
+      "language": "en",
+      "publication_date": "2026-07-01",
+      "periods_covered": [],
+      "currency": null,
+      "scale": null,
+      "consolidation": "consolidated",
+      "audit_status": "audited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "e1af692d62aefb236273869cb429ec55f572086e3a8b3d76496d75a87b6b08ad",
+      "notes": "SEC 10-K Item 1A risk-factor text snapshot; accession 0001628280-26-046466."
+    }
+  ]
+}

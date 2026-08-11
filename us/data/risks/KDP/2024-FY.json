@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "ticker": "KDP",
+  "period": "2024-FY",
+  "as_of": "2025-02-25",
+  "scope_note": "10-K Item 1A risk metninden deterministik olarak çıkarılmıştır; önem derecesi ve parasal etki tahmin edilmemiştir.",
+  "analysis_status": "available",
+  "unavailable_reason_code": null,
+  "validation_findings": [],
+  "risks": [
+    {
+      "risk_id": "competition_and_demand",
+      "category": "market",
+      "title": "Rekabet ve Tüketici Talebi Riski",
+      "description": "Şirket, rekabet koşulları veya tüketici talebindeki değişimlerin faaliyet sonuçlarını olumsuz etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001418135-25-000013-risk-factors",
+          "source_file": "raw/sec-filings/KDP/0001418135-25-000013-risk-factors.txt",
+          "page": null,
+          "summary": "In addition, price decreases in commodities that we have effectively hedged could also increase our cost of goods sold for mark-to-market changes in the derivative instruments."
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "supply_chain_and_inputs",
+      "category": "operational",
+      "title": "Tedarik Zinciri ve Girdi Maliyeti Riski",
+      "description": "Şirket, tedarik zinciri kesintileri veya girdi maliyetlerindeki değişimlerin operasyonlarını ve marjlarını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001418135-25-000013-risk-factors",
+          "source_file": "raw/sec-filings/KDP/0001418135-25-000013-risk-factors.txt",
+          "page": null,
+          "summary": "…Disruption of our manufacturing and distribution operations or supply chain, including increased commodity, raw material, packaging, energy, transportation, and other input costs may adversely affect our financial condition or results…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "cybersecurity_and_systems",
+      "category": "operational",
+      "title": "Siber Güvenlik ve Bilgi Sistemleri Riski",
+      "description": "Şirket, siber olayların veya bilgi sistemi kesintilerinin operasyonları ve itibarı üzerinde olumsuz etki yaratabileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001418135-25-000013-risk-factors",
+          "source_file": "raw/sec-filings/KDP/0001418135-25-000013-risk-factors.txt",
+          "page": null,
+          "summary": "We have experienced delays related to the production equipment contained within our manufacturing facilities, including delays in receiving the equipment or in operating the equipment according to specifications outlined by…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "regulation_and_litigation",
+      "category": "regulatory",
+      "title": "Düzenleyici ve Hukuki Riskler",
+      "description": "Şirket, düzenleme, vergi veya hukuki süreçlerdeki değişimlerin maliyet ve faaliyet sonuçlarını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001418135-25-000013-risk-factors",
+          "source_file": "raw/sec-filings/KDP/0001418135-25-000013-risk-factors.txt",
+          "page": null,
+          "summary": "…to the environment or to effectively respond to regulatory requirements concerning climate change can lead to adverse publicity, which could result in reduced demand for our products, damage to our…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "foreign_currency_and_macro",
+      "category": "financial",
+      "title": "Döviz ve Makroekonomik Riskler",
+      "description": "Şirket, döviz, enflasyon, faiz veya genel ekonomik koşullardaki değişimlerin sonuçlarını olumsuz etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001418135-25-000013-risk-factors",
+          "source_file": "raw/sec-filings/KDP/0001418135-25-000013-risk-factors.txt",
+          "page": null,
+          "summary": "…flow. We cannot predict how current or future economic conditions will affect our business partners, including financial institutions with whom we do business, and any negative impact on any of…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    },
+    {
+      "risk_id": "climate_and_environment",
+      "category": "regulatory",
+      "title": "İklim ve Çevresel Düzenleme Riski",
+      "description": "Şirket, iklim olayları veya çevresel düzenlemelerin operasyon ve maliyet yapısını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001418135-25-000013-risk-factors",
+          "source_file": "raw/sec-filings/KDP/0001418135-25-000013-risk-factors.txt",
+          "page": null,
+          "summary": "Climate change may increase the frequency or severity of natural disasters and other extreme weather conditions, which could pose physical risks to our facilities, impair our production capabilities, disrupt our…"
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    }
+  ]
+}

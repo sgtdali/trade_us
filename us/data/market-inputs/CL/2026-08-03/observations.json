@@ -1,0 +1,34 @@
+{
+  "observations": [
+    {
+      "observation_id": "cl-close-2026-07-31",
+      "observation_type": "price",
+      "instrument_or_pair": "CL",
+      "value": "91.30000305175781",
+      "unit": "USD",
+      "currency": "USD",
+      "price_mode": "official_close",
+      "effective_at": "2026-07-31T20:00:00Z",
+      "published_at": "2026-08-03T11:05:31Z",
+      "available_at": "2026-08-03T11:05:31Z",
+      "source_manifest_id": "cl-yfinance-eod-v1",
+      "source_record_ref": "yfinance:CL:2026-07-31:close",
+      "revision_status": "unknown",
+      "ingested_at": "2026-08-03T11:05:31Z"
+    },
+    {
+      "observation_id": "cl-sec-outstanding-0000021665-26-000042",
+      "observation_type": "share_count",
+      "instrument_or_pair": "CL:spot_basic_shares_outstanding",
+      "value": "797172829",
+      "unit": "shares",
+      "effective_at": "2026-06-30T00:00:00Z",
+      "published_at": "2026-08-03T11:05:31Z",
+      "available_at": "2026-08-03T11:05:31Z",
+      "source_manifest_id": "cl-sec-shares-v1",
+      "source_record_ref": "sec:0000021665-26-000042:{http://xbrl.sec.gov/dei/2026}EntityCommonStockSharesOutstanding#c-7",
+      "revision_status": "original",
+      "ingested_at": "2026-08-03T11:05:31Z"
+    }
+  ]
+}

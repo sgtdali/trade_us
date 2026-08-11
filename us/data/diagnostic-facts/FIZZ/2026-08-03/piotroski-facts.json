@@ -1,0 +1,61 @@
+{
+  "roa_t": {
+    "status": "available",
+    "value": "0.240928"
+  },
+  "roa_t1": {
+    "status": "available",
+    "value": "0.258932"
+  },
+  "cfo_t": {
+    "status": "available",
+    "value": "181.254000"
+  },
+  "cfoa_t": {
+    "status": "available",
+    "value": "0.212828"
+  },
+  "leverage_t": {
+    "status": "unavailable"
+  },
+  "leverage_t1": {
+    "status": "unavailable"
+  },
+  "current_ratio_t": {
+    "status": "available",
+    "value": "4.386077"
+  },
+  "current_ratio_t1": {
+    "status": "available",
+    "value": "2.896243"
+  },
+  "equity_issuance_amount_t": {
+    "status": "available",
+    "value": "0.000000"
+  },
+  "gross_margin_t": {
+    "status": "available",
+    "value": "0.370388"
+  },
+  "gross_margin_t1": {
+    "status": "available",
+    "value": "0.369534"
+  },
+  "asset_turnover_t": {
+    "status": "available",
+    "value": "1.386199"
+  },
+  "asset_turnover_t1": {
+    "status": "available",
+    "value": "1.785444"
+  },
+  "current_refs": [
+    "data/financial/FIZZ/2026-FY.json"
+  ],
+  "prior_refs": [
+    "data/financial/FIZZ/2025-FY.json"
+  ],
+  "opening_balance_refs": [
+    "data/financial/FIZZ/2024-FY.json"
+  ]
+}

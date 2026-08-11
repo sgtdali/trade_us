@@ -1,0 +1,11 @@
+{
+  "description": "Deterministic debt-profile diagnostics. These thresholds describe observable refinancing pressure; they do not predict refinancing success or default.",
+  "cash_coverage": {
+    "high_pressure_below": 0.25,
+    "medium_pressure_below": 0.50
+  },
+  "near_term_debt_share": {
+    "high_pressure_at_or_above": 0.40
+  },
+  "cross_check_tolerance": 0.02
+}

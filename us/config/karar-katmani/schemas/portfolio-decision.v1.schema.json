@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "US pilot portfolio decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "karar_turu", "pozisyonlar", "nakit_orani", "nakit_gerekcesi",
+    "reddedilen_adaylar", "itiraz_edilen_elemeler", "guven",
+    "portfoy_gerekcesi"
+  ],
+  "properties": {
+    "karar_turu": {"enum": ["ilk_olusum"]},
+    "pozisyonlar": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ticker", "agirlik", "karar", "gerekce", "tez", "izleme_kosullari"],
+        "properties": {
+          "ticker": {"type": "string"},
+          "agirlik": {"type": "number", "enum": [0.5]},
+          "karar": {"enum": ["ekle"]},
+          "gerekce": {"type": "string"},
+          "tez": {"type": "string"},
+          "izleme_kosullari": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "nakit_orani": {"type": "number", "enum": [0.0, 0.5, 1.0]},
+    "nakit_gerekcesi": {"type": ["string", "null"]},
+    "reddedilen_adaylar": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ticker", "gerekce"],
+        "properties": {
+          "ticker": {"type": "string"},
+          "gerekce": {"type": "string"}
+        }
+      }
+    },
+    "itiraz_edilen_elemeler": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ticker", "gerekce"],
+        "properties": {
+          "ticker": {"type": "string"},
+          "gerekce": {"type": "string"}
+        }
+      }
+    },
+    "guven": {"enum": ["dusuk", "orta", "yuksek"]},
+    "portfoy_gerekcesi": {"type": "string"}
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "ticker": "SILVR",
+  "as_of_date": "2026-07-30",
+  "cutoff_instant": "2026-08-01T14:06:48Z",
+  "reporting_currency": "TRY",
+  "share_count_basis": "spot_basic_shares_outstanding",
+  "primary_price_mode": "official_close",
+  "purpose": "current_valuation",
+  "financial_period_refs": [
+    "2026-Q1",
+    "2025-FY"
+  ]
+}

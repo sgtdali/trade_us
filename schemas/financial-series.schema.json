@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fundemental-trading/schemas/financial-series.schema.json",
+  "title": "Multi-period historical financial series",
+  "type": "object",
+  "required": ["schema_version", "ticker", "currency", "accounting_context_defaults", "default_source_id", "periods"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1, "maximum": 1},
+    "ticker": {"type": "string", "pattern": "^[A-Z0-9.\\-]+$"},
+    "coverage": {"type": "string"},
+    "currency": {"type": "string"},
+    "source": {"type": ["string", "object"]},
+    "period_note": {"type": "string"},
+    "default_source_id": {
+      "type": "string", "minLength": 1,
+      "description": "Manifest source_id backing every period's metrics unless a metric's own provenance.source_id overrides it."
+    },
+    "accounting_context_defaults": {
+      "type": "object",
+      "required": ["scale", "consolidation", "accounting_basis", "inflation_adjustment", "restatement"],
+      "properties": {
+        "scale": {"type": "string", "enum": ["unit", "thousand", "million", "billion"]},
+        "consolidation": {"type": "string"},
+        "accounting_basis": {"type": "string", "enum": ["IFRS", "TFRS", "US_GAAP", "other", "undetermined"]},
+        "inflation_adjustment": {
+          "type": "object", "required": ["status"],
+          "properties": {"status": {"type": "string", "enum": ["applied", "not_applied", "not_applicable", "undetermined"]}, "standard": {"type": ["string", "null"]}},
+          "additionalProperties": false
+        },
+        "restatement": {
+          "type": "object", "required": ["status"],
+          "properties": {"status": {"type": "string", "enum": ["original", "restated", "not_applicable", "undetermined"]}, "restated_from_publication_date": {"type": ["string", "null"]}},
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["period", "period_type", "metrics"],
+        "properties": {
+          "period": {"type": "string"},
+          "period_type": {"type": "string", "enum": ["annual", "quarterly", "half_year", "nine_month", "monthly"]},
+          "accounting_context": {
+            "type": "object",
+            "description": "Optional per-period override of accounting_context_defaults; only the fields that actually differ need to be named.",
+            "properties": {
+              "scale": {"type": "string", "enum": ["unit", "thousand", "million", "billion"]},
+              "consolidation": {"type": "string"},
+              "accounting_basis": {"type": "string", "enum": ["IFRS", "TFRS", "US_GAAP", "other", "undetermined"]},
+              "inflation_adjustment": {"type": "object"},
+              "restatement": {"type": "object"}
+            },
+            "additionalProperties": false
+          },
+          "metrics": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["value", "unit"],
+              "properties": {
+                "value": {"type": ["number", "null"]},
+                "unit": {"type": "string"},
+                "provenance": {"type": "object"}
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

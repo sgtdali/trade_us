@@ -1,0 +1,132 @@
+{
+  "yargi": "tez_var",
+  "alinmaz_nedeni": null,
+  "tez": "Dollar General presents a defensible investment thesis supported by solid earnings growth, attractive cash flow yields, and robust fundamental health. TTM parent-attributed free cash flow yield of 7.84% and a P/E of 17.96x offer reasonable valuation backing, complemented by a strong Piotroski F-Score of 7/9 and low short-term refinancing risk. While fiscal Q1 2026 operating cash flow experienced a temporary year-over-year contraction of 15.5%, core operating income grew 10.8% and net income grew 13.3%, indicating solid underlying operational profitability.",
+  "tez_testleri": [
+    {
+      "metric_id": "operating_profit_growth",
+      "baseline": 10.8,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "operating_profit_growth falls below 0.0"
+    },
+    {
+      "metric_id": "gross_margin",
+      "baseline": 31.62,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "gross_margin falls below 30.0"
+    },
+    {
+      "metric_id": "operating_cash_flow_growth",
+      "baseline": -15.5,
+      "expected_direction": "increase",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "operating_cash_flow_growth remains below 0.0"
+    },
+    {
+      "metric_id": "current_ratio",
+      "baseline": 1.169,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "current_ratio falls below 1.0"
+    }
+  ],
+  "belirleyici_veriler": [
+    {
+      "tur": "sayisal",
+      "reported_value": 7.84,
+      "report_section": "1",
+      "aciklama": "Parent-attributed free cash flow yield proxy stands at 7.84%."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 17.96,
+      "report_section": "1",
+      "aciklama": "Price to earnings ratio is 17.96x based on TTM earnings."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 638.5,
+      "report_section": "3",
+      "aciklama": "Reported operating income reached 638.5 million USD in fiscal Q1 2026 YTD."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 7,
+      "report_section": "8",
+      "aciklama": "Piotroski F-Score is 7 out of 9, reflecting solid fundamental health."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": -15.5,
+      "report_section": "10",
+      "aciklama": "Operating cash flow declined by 15.5% year-over-year."
+    }
+  ],
+  "tezi_bozacak_kosullar": [
+    "Continued contraction in operating cash flow leading to liquidity pressure.",
+    "Deterioration of gross margin below 30.0% due to cost inflation or markdown pressures.",
+    "Significant decline in operating income growth turning negative."
+  ],
+  "belirsizlik": [
+    "Structured maturity schedules for long-term debt and operating leases were not disclosed or extracted.",
+    "Issuer-reported EBITDA and Net Debt APM figures were not disclosed.",
+    "Cash paid for share repurchases during 2025-FY was not available."
+  ],
+  "guven": "orta",
+  "validation": {
+    "numeric_evidence": [
+      {
+        "evidence_index": 0,
+        "reported_value": 7.84,
+        "report_section": "1",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 1,
+        "reported_value": 17.96,
+        "report_section": "1",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 2,
+        "reported_value": 638.5,
+        "report_section": "3",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 3,
+        "reported_value": 7,
+        "report_section": "8",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 4,
+        "reported_value": -15.5,
+        "report_section": "10",
+        "status": "not_verified",
+        "reason": "numeric value not found at the displayed scale in the cited section"
+      }
+    ]
+  },
+  "provenance": {
+    "layer": 1,
+    "market": "US",
+    "ticker": "DG",
+    "as_of": "2026-08-03",
+    "model_key": "agy",
+    "model_id": "gemini-3.6-flash-medium",
+    "prompt_version": "us-layer1.v1",
+    "prompt_sha256": "3e157022e47c2b034ed4140a439862fa81e98629eea5cb59cf2aab52cf9a098e",
+    "attempt_count": 1,
+    "report_sha256": "cc4003cec5fc781ab130fff77ef98282f40cd32d7a235b2e4fdf200b8e610ffb",
+    "generated_at": "2026-08-04T07:06:06.563223+00:00",
+    "repo_commit_sha": "82f5e00d089fb2791b8ed3866790beb38d2f12c5",
+    "stderr_tail": ""
+  }
+}

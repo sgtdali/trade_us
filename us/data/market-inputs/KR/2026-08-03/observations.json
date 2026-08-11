@@ -1,0 +1,34 @@
+{
+  "observations": [
+    {
+      "observation_id": "kr-close-2026-08-03",
+      "observation_type": "price",
+      "instrument_or_pair": "KR",
+      "value": "58.4",
+      "unit": "USD",
+      "currency": "USD",
+      "price_mode": "official_close",
+      "effective_at": "2026-08-03T20:00:00Z",
+      "published_at": "2026-08-04T06:08:06Z",
+      "available_at": "2026-08-04T06:08:06Z",
+      "source_manifest_id": "kr-yfinance-eod-v1",
+      "source_record_ref": "yfinance:KR:2026-08-03:close",
+      "revision_status": "unknown",
+      "ingested_at": "2026-08-04T06:08:06Z"
+    },
+    {
+      "observation_id": "kr-sec-outstanding-0001104659-26-078236",
+      "observation_type": "share_count",
+      "instrument_or_pair": "KR:spot_basic_shares_outstanding",
+      "value": "612647282",
+      "unit": "shares",
+      "effective_at": "2026-06-24T00:00:00Z",
+      "published_at": "2026-08-04T06:08:06Z",
+      "available_at": "2026-08-04T06:08:06Z",
+      "source_manifest_id": "kr-sec-shares-v1",
+      "source_record_ref": "sec:0001104659-26-078236:{http://xbrl.sec.gov/dei/2025}EntityCommonStockSharesOutstanding#As_Of_6_24_2026_lmmVzOylZUKoKYUVBYRfJw",
+      "revision_status": "original",
+      "ingested_at": "2026-08-04T06:08:06Z"
+    }
+  ]
+}

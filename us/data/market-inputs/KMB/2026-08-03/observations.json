@@ -1,0 +1,34 @@
+{
+  "observations": [
+    {
+      "observation_id": "kmb-close-2026-08-03",
+      "observation_type": "price",
+      "instrument_or_pair": "KMB",
+      "value": "108",
+      "unit": "USD",
+      "currency": "USD",
+      "price_mode": "official_close",
+      "effective_at": "2026-08-03T20:00:00Z",
+      "published_at": "2026-08-04T06:07:39Z",
+      "available_at": "2026-08-04T06:07:39Z",
+      "source_manifest_id": "kmb-yfinance-eod-v1",
+      "source_record_ref": "yfinance:KMB:2026-08-03:close",
+      "revision_status": "unknown",
+      "ingested_at": "2026-08-04T06:07:39Z"
+    },
+    {
+      "observation_id": "kmb-sec-outstanding-0001628280-26-027800",
+      "observation_type": "share_count",
+      "instrument_or_pair": "KMB:spot_basic_shares_outstanding",
+      "value": "331940357",
+      "unit": "shares",
+      "effective_at": "2026-04-21T00:00:00Z",
+      "published_at": "2026-08-04T06:07:39Z",
+      "available_at": "2026-08-04T06:07:39Z",
+      "source_manifest_id": "kmb-sec-shares-v1",
+      "source_record_ref": "sec:0001628280-26-027800:{http://xbrl.sec.gov/dei/2025}EntityCommonStockSharesOutstanding#c-2",
+      "revision_status": "original",
+      "ingested_at": "2026-08-04T06:07:39Z"
+    }
+  ]
+}

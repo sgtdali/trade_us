@@ -1,0 +1,17 @@
+{
+  "provider_id": "yfinance",
+  "provider_library": "yfinance",
+  "pinned_library_version": "1.5.1",
+  "adjustment_policy": "auto_adjust_disabled_provider_supplies_both_close_and_adjusted_close_no_recomputation",
+  "revision_policy": "no_automatic_repair_provider_row_revisions_are_replayed_and_diffed_never_silently_overwritten",
+  "fx_pair_mappings": [
+    {
+      "pair_id": "USD/TRY",
+      "provider_symbol": "TRY=X",
+      "base_currency": "USD",
+      "quote_currency": "TRY",
+      "rate_convention": "quote_currency_per_base_currency",
+      "active": true
+    }
+  ]
+}

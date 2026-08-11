@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "ticker": "FIZZ",
+  "period": "2026-Q3",
+  "as_of": "2026-03-12",
+  "scope_note": "10-Q Item 1A risk metninden deterministik olarak çıkarılmıştır; önem derecesi ve parasal etki tahmin edilmemiştir.",
+  "analysis_status": "available",
+  "unavailable_reason_code": null,
+  "validation_findings": [],
+  "risks": [
+    {
+      "risk_id": "regulation_and_litigation",
+      "category": "regulatory",
+      "title": "Düzenleyici ve Hukuki Riskler",
+      "description": "Şirket, düzenleme, vergi veya hukuki süreçlerdeki değişimlerin maliyet ve faaliyet sonuçlarını etkileyebileceğini bildiriyor.",
+      "direction": "negative",
+      "severity": "medium",
+      "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+      "time_horizon": "long",
+      "evidence": [
+        {
+          "source_id": "sec-0001437749-26-007987-risk-factors",
+          "source_file": "raw/sec-filings/FIZZ/0001437749-26-007987-risk-factors.txt",
+          "page": null,
+          "summary": "…director or Section 16 officer adopted, modified, or terminated any “Rule 10b5-1 trading arrangement” or “non-Rule 10b5-1 trading arrangement” (in each case, as defined in Item 408(a) of Regulation S-K)."
+        }
+      ],
+      "mitigants": null,
+      "quantified_effect": null,
+      "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+    }
+  ]
+}

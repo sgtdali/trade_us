@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/market-observation-merge-manifest.schema.json",
+  "title": "Market observation bundle merge manifest",
+  "description": "Governed result of merging two or more market-observation-bundle.schema.json files (e.g. a price+share-count promotion bundle and a separate FX promotion bundle) into one combined observation bundle for T70 snapshot generation. Merge is a pure set-union keyed on observation_id -- it never mutates, drops, or reorders an input observation, and a duplicate observation_id across inputs (byte-identical or not) is always a blocking finding, never silently deduplicated by 'last one wins'.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "merge_id",
+    "input_bundles",
+    "output_bundle",
+    "total_observation_count",
+    "overall_status",
+    "finding_counts"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "market_observation_merge_manifest"
+    },
+    "merge_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_bundles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "relative_path",
+          "observation_count"
+        ],
+        "properties": {
+          "relative_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observation_count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "output_bundle": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "relative_path"
+          ],
+          "properties": {
+            "relative_path": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "total_observation_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "overall_status": {
+      "type": "string",
+      "enum": [
+        "valid",
+        "invalid"
+      ]
+    },
+    "finding_counts": {
+      "type": "object",
+      "required": [
+        "blocker",
+        "error",
+        "warning",
+        "info"
+      ],
+      "properties": {
+        "blocker": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warning": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "info": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "const": "valid"
+          }
+        },
+        "required": [
+          "overall_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "output_bundle": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "const": "invalid"
+          }
+        },
+        "required": [
+          "overall_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "output_bundle": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

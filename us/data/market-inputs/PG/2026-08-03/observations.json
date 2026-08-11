@@ -1,0 +1,34 @@
+{
+  "observations": [
+    {
+      "observation_id": "pg-close-2026-07-31",
+      "observation_type": "price",
+      "instrument_or_pair": "PG",
+      "value": "144.49000549316406",
+      "unit": "USD",
+      "currency": "USD",
+      "price_mode": "official_close",
+      "effective_at": "2026-07-31T20:00:00Z",
+      "published_at": "2026-08-03T11:06:09Z",
+      "available_at": "2026-08-03T11:06:09Z",
+      "source_manifest_id": "pg-yfinance-eod-v1",
+      "source_record_ref": "yfinance:PG:2026-07-31:close",
+      "revision_status": "unknown",
+      "ingested_at": "2026-08-03T11:06:09Z"
+    },
+    {
+      "observation_id": "pg-sec-outstanding-0000080424-26-000060",
+      "observation_type": "share_count",
+      "instrument_or_pair": "PG:spot_basic_shares_outstanding",
+      "value": "2328598978",
+      "unit": "shares",
+      "effective_at": "2026-03-31T00:00:00Z",
+      "published_at": "2026-08-03T11:06:09Z",
+      "available_at": "2026-08-03T11:06:09Z",
+      "source_manifest_id": "pg-sec-shares-v1",
+      "source_record_ref": "sec:0000080424-26-000060:{http://xbrl.sec.gov/dei/2025}EntityCommonStockSharesOutstanding#c-20",
+      "revision_status": "original",
+      "ingested_at": "2026-08-03T11:06:09Z"
+    }
+  ]
+}

@@ -1,0 +1,367 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/fx-provider-extract.schema.json",
+  "title": "FX provider extract (YFinance internal-valuation capture)",
+  "description": "A deterministic canonical capture of the tabular FX rate values returned by the YFinance library for one fetch run. Structurally parallel to eod-provider-extract.schema.json (same providerRow/fieldValue shape, reusing the same fetch/normalize models) but keyed on FX pairs rather than equity tickers. 'series[].internal_ticker' holds the canonical 'BASE/QUOTE' pair identity (docs/valuation-t07-currency-fx-contract.md Section 3.1), not an equity ticker -- this is NOT, and must never be represented as, the original Yahoo HTTP payload.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "provider",
+    "request",
+    "retrieved_at",
+    "series"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "fx_provider_extract"
+    },
+    "provider": {
+      "$ref": "#/$defs/providerMetadata"
+    },
+    "request": {
+      "$ref": "#/$defs/requestMetadata"
+    },
+    "retrieved_at": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+    },
+    "provider_timezone": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "series": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/providerSeries"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "providerMetadata": {
+      "type": "object",
+      "description": "Metadata identifying the fixed YFinance source used for this extract.",
+      "required": [
+        "provider_id",
+        "provider_library",
+        "provider_library_version"
+      ],
+      "properties": {
+        "provider_id": {
+          "const": "yfinance"
+        },
+        "provider_library": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provider_library_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "requestMetadata": {
+      "type": "object",
+      "description": "Every economically relevant YFinance call option, made explicit -- identical fixed contract to EOD ingestion (docs/yfinance-eod-pilot.md), reused unchanged for FX.",
+      "required": [
+        "requested_pairs",
+        "resolved_provider_symbols",
+        "resolved_pair_currencies",
+        "start_date_inclusive",
+        "end_date_exclusive",
+        "interval",
+        "auto_adjust",
+        "actions",
+        "repair",
+        "keepna",
+        "rounding",
+        "prepost",
+        "timeout",
+        "request_order"
+      ],
+      "properties": {
+        "requested_pairs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}/[A-Z]{3}$"
+          }
+        },
+        "resolved_provider_symbols": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "resolved_pair_currencies": {
+          "description": "pair_id -> {base_currency, quote_currency}, captured from the provider mapping at fetch time so replay never needs to re-read the mapping config.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "base_currency",
+              "quote_currency"
+            ],
+            "properties": {
+              "base_currency": {
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              },
+              "quote_currency": {
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "start_date_inclusive": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "end_date_exclusive": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "interval": {
+          "const": "1d"
+        },
+        "auto_adjust": {
+          "const": false
+        },
+        "actions": {
+          "const": true
+        },
+        "repair": {
+          "const": false
+        },
+        "keepna": {
+          "const": true
+        },
+        "rounding": {
+          "const": false
+        },
+        "prepost": {
+          "const": false
+        },
+        "timeout": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "request_order": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}/[A-Z]{3}$"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "fieldValue": {
+      "description": "A single provider-reported field paired with an explicit availability status. status='available' requires 'value' (a canonical decimal string); status='unavailable' forbids 'value' and requires 'reason_code'. Missing is never represented as 0/NaN/empty string.",
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "available",
+            "unavailable"
+          ]
+        },
+        "value": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+        },
+        "reason_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "available"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "value"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unavailable"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "value"
+              ]
+            },
+            "required": [
+              "reason_code"
+            ]
+          }
+        }
+      ]
+    },
+    "providerRow": {
+      "type": "object",
+      "required": [
+        "trade_date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "adjusted_close",
+        "volume",
+        "dividend",
+        "stock_split"
+      ],
+      "properties": {
+        "trade_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "open": {
+          "$ref": "#/$defs/fieldValue"
+        },
+        "high": {
+          "$ref": "#/$defs/fieldValue"
+        },
+        "low": {
+          "$ref": "#/$defs/fieldValue"
+        },
+        "close": {
+          "$ref": "#/$defs/fieldValue"
+        },
+        "adjusted_close": {
+          "$ref": "#/$defs/fieldValue"
+        },
+        "volume": {
+          "$ref": "#/$defs/fieldValue"
+        },
+        "dividend": {
+          "$ref": "#/$defs/fieldValue"
+        },
+        "stock_split": {
+          "$ref": "#/$defs/fieldValue"
+        }
+      },
+      "additionalProperties": false
+    },
+    "providerSeries": {
+      "description": "One requested FX pair's isolated fetch outcome. 'internal_ticker' holds the canonical 'BASE/QUOTE' pair identity (the field name is reused unchanged from the EOD ingestion model to satisfy the 'do not duplicate the network adapter' reuse boundary). status='failed' means this specific pair's provider call/conversion failed; it never silently promotes another pair's success into an overall run success.",
+      "type": "object",
+      "required": [
+        "internal_ticker",
+        "provider_symbol",
+        "status",
+        "rows",
+        "warnings"
+      ],
+      "properties": {
+        "internal_ticker": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}/[A-Z]{3}$"
+        },
+        "provider_symbol": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "failed"
+          ]
+        },
+        "error_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/providerRow"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "failed"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "error_reason"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "error_reason"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

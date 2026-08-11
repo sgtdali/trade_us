@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/valuation-peer-universe.schema.json",
+  "title": "Authored valuation_peer_universe artifact (T74-A)",
+  "description": "An authored, versioned peer cohort for sector_peer comparison (docs/valuation-t66-08-comparison-specification.md Section 8, docs/valuation-t67-06-comparison-ranking-policy-catalog.md Section 6). owner_type is always 'authored'. Lifecycle and review are descriptive metadata; effective dates determine comparison eligibility. Carries no calculated value, percentile or rank -- the generator can never approve a universe or add/remove a member.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "artifact_id",
+    "owner_type",
+    "universe_id",
+    "universe_version",
+    "sector_family",
+    "method_family_ids",
+    "effective_from",
+    "effective_to",
+    "members",
+    "inclusion_policy_ref",
+    "review",
+    "lifecycle",
+    "supersedes_ref",
+    "lineage"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "valuation_peer_universe"
+    },
+    "artifact_id": {
+      "type": "string",
+      "pattern": "^valuation-peer-universe:[a-z0-9][a-z0-9_.\\-]{0,63}:[0-9]+$"
+    },
+    "owner_type": {
+      "const": "authored"
+    },
+    "universe_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "universe_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "sector_family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "method_family_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "effective_from": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+    },
+    "effective_to": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        }
+      ]
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "member_id",
+          "ticker",
+          "cohort_tier",
+          "inclusion_rationale_code",
+          "classification_refs",
+          "effective_from",
+          "effective_to",
+          "applicable_method_family_ids"
+        ],
+        "properties": {
+          "member_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ticker": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/ticker"
+          },
+          "cohort_tier": {
+            "type": "string",
+            "enum": [
+              "primary",
+              "secondary_diagnostic"
+            ]
+          },
+          "inclusion_rationale_code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "classification_refs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "effective_from": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+          },
+          "effective_to": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+              }
+            ]
+          },
+          "applicable_method_family_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "is_subject": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "inclusion_policy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "methodology_version": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+        },
+        "rationale_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_review",
+        "approved",
+        "superseded"
+      ]
+    },
+    "supersedes_ref": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "lineage": {
+      "type": "object",
+      "required": [
+        "dag"
+      ],
+      "properties": {
+        "dag": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/lineageDag"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

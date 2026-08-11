@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "ticker": "CLX",
+  "period": "2024-FY",
+  "filing": {
+    "cik": "0000021076",
+    "accession": "0000021076-24-000030",
+    "form": "10-K",
+    "filing_date": "2024-08-08",
+    "report_date": "2024-06-30",
+    "primary_document": "clx-20240630.htm",
+    "is_amendment": false
+  },
+  "selected_facts": []
+}

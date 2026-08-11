@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fundemental-trading/schemas/company.schema.json",
+  "title": "Company configuration",
+  "type": "object",
+  "required": ["schema_version", "ticker", "exchange", "pipeline", "is_active", "version"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1, "maximum": 1},
+    "ticker": {"type": "string", "pattern": "^[A-Z0-9.\\-]+$"},
+    "exchange": {"type": "string", "minLength": 1},
+    "company_name": {"type": ["string", "null"]},
+    "reporting_locale": {"type": "string", "pattern": "^[a-z]{2}-[A-Z]{2}$"},
+    "classification": {
+      "type": "object",
+      "properties": {
+        "source": {"type": ["string", "null"]},
+        "official_sector": {"type": ["string", "null"]},
+        "official_industry": {"type": ["string", "null"]},
+        "official_subindustry": {"type": ["string", "null"]},
+        "actual_activity": {"type": ["string", "null"]},
+        "classification_date": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "pipeline": {
+      "type": "object",
+      "required": ["company_type", "sector_module"],
+      "properties": {
+        "company_type": {"type": "string", "enum": ["standard_corporate", "bank", "insurance", "reit", "holding"]},
+        "sector_module": {"type": "string", "enum": ["generic", "aviation"]}
+      },
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "object",
+      "properties": {
+        "identity_source": {"type": ["string", "null"]},
+        "classification_source": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "share_capital": {
+      "type": "object",
+      "properties": {
+        "statutory_nominal_value_per_legal_share_try": {"type": ["number", "null"]},
+        "source_note": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "version": {"type": "integer", "minimum": 1},
+    "is_active": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

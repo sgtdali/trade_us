@@ -1,0 +1,128 @@
+{
+  "yargi": "tez_var",
+  "alinmaz_nedeni": null,
+  "tez": "Costco's fiscal Q3 2026 YTD and TTM filings show broad-based, double-digit-adjacent growth across every deterministic signal (revenue +9.7%, operating income +12.0%, net income +13.5%, operating cash flow +17.6%, free cash flow +16.3%), a Piotroski score of 7/9, and a conservative capital structure (noncurrent financial debt of only 5,670.0 million USD against 18,946.0 million USD of cash). The mechanism is a high-quality, defensively positioned retailer converting consistent top-line growth into expanding cash generation (OCF/net income of 1.79x, operating cash flow margin of 5.37%), which supports paying a premium multiple (P/E 47.76x, earnings yield 2.09%) as long as growth and cash conversion persist; the position is a quality/growth holding rather than a value entry, so the thesis stands on continuation of the growth and liquidity trends rather than on any margin-of-safety in the price.",
+  "tez_testleri": [
+    {
+      "metric_id": "revenue_growth",
+      "baseline": 9.7,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q2",
+      "failure_condition": "revenue_growth falls below 5% year-over-year"
+    },
+    {
+      "metric_id": "operating_margin",
+      "baseline": 3.8,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q2",
+      "failure_condition": "operating_margin falls below 3.0%"
+    },
+    {
+      "metric_id": "ocf_to_net_profit",
+      "baseline": 1.79,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q2",
+      "failure_condition": "ocf_to_net_profit falls below 1.0, indicating earnings are no longer fully cash-backed"
+    },
+    {
+      "metric_id": "current_ratio",
+      "baseline": 1.072,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q2",
+      "failure_condition": "current_ratio falls below 0.95"
+    }
+  ],
+  "belirleyici_veriler": [
+    {
+      "tur": "sayisal",
+      "reported_value": 47.76,
+      "report_section": "6",
+      "aciklama": "Price/Earnings of 47.76x on TTM parent net income reflects a substantial growth/quality premium priced into the shares."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 4.61,
+      "report_section": "8",
+      "aciklama": "Peer median earnings yield of 4.61% versus COST's 2.09% shows the subject trades materially richer than its retail peer set on this metric."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 17.6,
+      "report_section": "10",
+      "aciklama": "Operating cash flow grew 17.6% year over year, the strongest of the five deterministic growth signals, supporting the cash-conversion leg of the thesis."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 18946.0,
+      "report_section": "5",
+      "aciklama": "Cash and cash equivalents of 18,946.0 million USD comfortably exceed total reported financial debt, underscoring balance-sheet resilience despite a tight current ratio."
+    },
+    {
+      "tur": "anlatimsal",
+      "reported_value": null,
+      "report_section": "8",
+      "aciklama": "Piotroski F-Score: 7/9, with the only failing components being 'No increase in shares outstanding' and 'Improving asset turnover'."
+    }
+  ],
+  "tezi_bozacak_kosullar": [
+    "Revenue or operating income growth decelerates toward or below the mid-single digits, removing the justification for the current premium multiple.",
+    "Operating cash flow conversion weakens (ocf_to_net_profit drifts toward or below 1.0), signaling earnings quality deterioration.",
+    "Continued or accelerating share issuance erodes per-share value, compounding the existing Piotroski flag on shares outstanding.",
+    "Liquidity tightens further (current ratio or cash coverage of current liabilities declines) without an offsetting improvement in the refinancing-pressure diagnostic, which is currently rated insufficient data.",
+    "A sustained de-rating of the earnings yield relative to peers without a corresponding growth premium would indicate the market has stopped rewarding the quality thesis."
+  ],
+  "belirsizlik": [
+    "Current financial debt and current lease liabilities are both marked not available, limiting a precise near-term liquidity/refinancing assessment beyond the mechanical current ratio.",
+    "Cash paid for share repurchases during FY2025 is not available, so the capital-return picture (dividends only, at -2,183.0 million USD) is incomplete.",
+    "Issuer-reported EBITDA and net-debt APM are both not disclosed, and the refinancing-pressure diagnostic is explicitly flagged as insufficient data.",
+    "The debt/lease maturity schedule is sourced from the FY2025 annual note (stale relative to the May 10, 2026 balance sheet) and must not be treated as current."
+  ],
+  "guven": "orta",
+  "validation": {
+    "numeric_evidence": [
+      {
+        "evidence_index": 0,
+        "reported_value": 47.76,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 1,
+        "reported_value": 4.61,
+        "report_section": "8",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 2,
+        "reported_value": 17.6,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 3,
+        "reported_value": 18946.0,
+        "report_section": "5",
+        "status": "verified",
+        "reason": null
+      }
+    ]
+  },
+  "provenance": {
+    "layer": 1,
+    "market": "US",
+    "ticker": "COST",
+    "as_of": "2026-08-03",
+    "model_key": "claude",
+    "model_id": "sonnet",
+    "prompt_version": "us-layer1.v1",
+    "prompt_sha256": "5d0d06b35ee5a993cb6676d890b590ebbef36c10abb56b4559abdff52bc0ee6b",
+    "attempt_count": 1,
+    "report_sha256": "116cbf9df5f971fe5f6b01808f84c1bdc36bc85d6e715146c312d8093885a574",
+    "generated_at": "2026-08-04T07:05:56.572982+00:00",
+    "repo_commit_sha": "82f5e00d089fb2791b8ed3866790beb38d2f12c5",
+    "stderr_tail": ""
+  }
+}

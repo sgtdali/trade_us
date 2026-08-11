@@ -1,0 +1,49 @@
+{
+  "roa_t": {
+    "status": "unavailable"
+  },
+  "roa_t1": {
+    "status": "unavailable"
+  },
+  "cfo_t": {
+    "status": "unavailable"
+  },
+  "cfoa_t": {
+    "status": "unavailable"
+  },
+  "leverage_t": {
+    "status": "unavailable"
+  },
+  "leverage_t1": {
+    "status": "unavailable"
+  },
+  "current_ratio_t": {
+    "status": "unavailable"
+  },
+  "current_ratio_t1": {
+    "status": "unavailable"
+  },
+  "equity_issuance_amount_t": {
+    "status": "available",
+    "value": "0.000000"
+  },
+  "gross_margin_t": {
+    "status": "unavailable"
+  },
+  "gross_margin_t1": {
+    "status": "unavailable"
+  },
+  "asset_turnover_t": {
+    "status": "unavailable"
+  },
+  "asset_turnover_t1": {
+    "status": "unavailable"
+  },
+  "current_refs": [
+    "data/financial/CLX/2025-FY.json"
+  ],
+  "prior_refs": [
+    "data/financial/CLX/2024-FY.json"
+  ],
+  "opening_balance_refs": []
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "technical_snapshot",
+  "artifact_id": "technical-snapshot:CHD:2026-08-03",
+  "owner_type": "generated",
+  "ticker": "CHD",
+  "as_of_date": "2026-08-03",
+  "generated_at": "2026-08-04T06:28:11Z",
+  "engine_version": "1.0.0",
+  "indicators": {
+    "sma_50": {
+      "status": "available",
+      "value": "97.0863998413085944"
+    },
+    "sma_200": {
+      "status": "available",
+      "value": "92.6755501556396485"
+    },
+    "price_vs_sma_50": {
+      "status": "unavailable",
+      "reason_codes": [
+        {
+          "code": "technical.indicator_dependency_unavailable",
+          "severity": "warning"
+        }
+      ]
+    },
+    "price_vs_sma_200": {
+      "status": "unavailable",
+      "reason_codes": [
+        {
+          "code": "technical.indicator_dependency_unavailable",
+          "severity": "warning"
+        }
+      ]
+    },
+    "sma_50_vs_sma_200": {
+      "status": "available",
+      "value": "above"
+    },
+    "rsi_14": {
+      "status": "available",
+      "value": "53.64326216569103606843733043"
+    },
+    "avg_volume_20d": {
+      "status": "available",
+      "value": "1807238.15"
+    },
+    "avg_volume_60d": {
+      "status": "available",
+      "value": "1949911.05"
+    },
+    "volume_trend": {
+      "status": "available",
+      "value": "yatay"
+    },
+    "support_63d": {
+      "status": "available",
+      "value": "90.05000305175781"
+    },
+    "resistance_63d": {
+      "status": "available",
+      "value": "102.23999786376953"
+    }
+  },
+  "provenance": {
+    "price_series_length": 275,
+    "lookback_start_date": "2025-06-29",
+    "lookback_end_date": "2026-08-03",
+    "price_field_used": "adjusted_close",
+    "yfinance_ticker": "CHD"
+  }
+}

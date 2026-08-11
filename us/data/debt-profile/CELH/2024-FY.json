@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "ticker": "CELH",
+  "period": "2024-FY",
+  "period_end": "2024-12-31",
+  "currency": "USD",
+  "scale": "million",
+  "extracted_at": "2025-03-03",
+  "extraction_method": "sec_xbrl",
+  "source_documents": [
+    {
+      "source_id": "sec-0001341766-25-000024",
+      "source_file": "raw/sec-filings/CELH/0001341766-25-000024.json"
+    }
+  ],
+  "debt_totals": {
+    "short_term_financial_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "current_portion_long_term_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "long_term_financial_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "lease_liabilities_current": {
+      "value": 3.265,
+      "raw_quoted_value": "3.265",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001341766-25-000024",
+        "source_file": "raw/sec-filings/CELH/0001341766-25-000024.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2024}OperatingLeaseLiabilityCurrent#c-5"
+      }
+    },
+    "lease_liabilities_noncurrent": {
+      "value": 16.674,
+      "raw_quoted_value": "16.674",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001341766-25-000024",
+        "source_file": "raw/sec-filings/CELH/0001341766-25-000024.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2024}OperatingLeaseLiabilityNoncurrent#c-5"
+      }
+    },
+    "cash_and_cash_equivalents": {
+      "value": 890.19,
+      "raw_quoted_value": "890.19",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001341766-25-000024",
+        "source_file": "raw/sec-filings/CELH/0001341766-25-000024.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2024}CashAndCashEquivalentsAtCarryingValue#c-5"
+      }
+    }
+  },
+  "maturity_profile": [],
+  "currency_profile": [],
+  "interest_profile": {
+    "fixed_rate_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "floating_rate_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "weighted_average_rates": []
+  },
+  "risk_sensitivities": {
+    "fx_sensitivity": [],
+    "interest_rate_sensitivity": []
+  },
+  "liquidity_support": {
+    "undrawn_credit_facilities": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "committed_facilities": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "covenants_or_defaults": {
+      "value": null,
+      "status": "not_disclosed",
+      "evidence": null
+    }
+  },
+  "refinancing_disclosures": [],
+  "diagnostics": {
+    "total_financial_debt": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "source_scale"
+    },
+    "near_term_financial_debt": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "source_scale"
+    },
+    "cash_to_near_term_debt": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "ratio"
+    },
+    "near_term_debt_share": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "ratio"
+    },
+    "floating_rate_debt_share": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "ratio"
+    },
+    "refinancing_pressure": {
+      "status": "insufficient_data",
+      "level": null,
+      "confidence": "low",
+      "reason_codes": [
+        "insufficient_xbrl_debt_components"
+      ]
+    }
+  }
+}

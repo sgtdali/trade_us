@@ -1,0 +1,14 @@
+{
+  "ticker": "EREGL",
+  "as_of_date": "2026-07-18",
+  "cutoff_instant": "2026-07-18T23:59:59Z",
+  "reporting_currency": "USD",
+  "share_count_basis": "spot_basic_shares_outstanding",
+  "primary_price_mode": "official_close",
+  "purpose": "current_valuation",
+  "financial_period_refs": [
+    "2026-Q1",
+    "2025-FY"
+  ],
+  "catalog_lock_hash": "sha256:84d4498c10b6061987ec072a283123aa47744fcbd15f57f5784efd69b46c4dab"
+}

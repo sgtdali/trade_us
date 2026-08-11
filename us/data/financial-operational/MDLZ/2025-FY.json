@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "ticker": "MDLZ",
+  "period": "2025-FY",
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "period_type": "annual",
+  "currency": "USD",
+  "default_source_id": "sec-0001628280-26-005345",
+  "metrics": [
+    {
+      "metric_id": "ebitda_amount",
+      "name": "Issuer-Reported EBITDA",
+      "value": null,
+      "unit": "million_usd",
+      "data_type": "direct",
+      "status": "unavailable",
+      "reason": "issuer_reported_ebitda_not_found",
+      "notes": "No unique issuer-reported fact was found in accession-specific SEC 8-K exhibits."
+    },
+    {
+      "metric_id": "net_debt_apm_amount",
+      "name": "Issuer-Reported Net Debt APM",
+      "value": null,
+      "unit": "million_usd",
+      "data_type": "direct",
+      "status": "unavailable",
+      "reason": "issuer_reported_net_debt_apm_not_found",
+      "notes": "No unique issuer-reported fact was found in accession-specific SEC 8-K exhibits."
+    }
+  ]
+}

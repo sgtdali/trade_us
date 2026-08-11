@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/valuation-common.schema.json",
+  "title": "Valuation shared definitions",
+  "$defs": {
+    "ticker": {
+      "type": "string",
+      "pattern": "^[A-Z0-9][A-Z0-9.\\-]{0,31}$"
+    },
+    "isoDate": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+    },
+    "utcInstant": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,6})?Z$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "contextId": {
+      "type": "string",
+      "pattern": "^ctx-[0-9a-f]{24}$"
+    },
+    "artifactType": {
+      "type": "string",
+      "enum": ["market_snapshot", "valuation_inputs", "market_source_manifest", "scenario_set"]
+    },
+    "artifactId": {
+      "type": "string",
+      "pattern": "^(market-snapshot|valuation-inputs|scenario-set):[A-Z0-9][A-Z0-9.\\-]{0,31}:[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]):ctx-[0-9a-f]{24}$|^market-source-manifest:[A-Z0-9][A-Z0-9.\\-]{0,31}:[^:]+$"
+    },
+    "catalogId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "decimalString": {
+      "description": "Canonical exact decimal string: no leading zero (except the integer 0 itself), no trailing fractional zero, no binary float. The '-0\\.[0-9]*[1-9]' alternative exists because the primary alternative's integer-part group ('0' or '-?[1-9][0-9]*') has no way to spell a negative magnitude strictly between -1 and 0 (e.g. exact -1/10 canonicalizes to '-0.1') -- '-0' alone (negative zero) still never matches either alternative.",
+      "pattern": "^(0|-?[1-9][0-9]*)(\\.[0-9]*[1-9])?$|^-0\\.[0-9]*[1-9]$",
+      "type": "string"
+    },
+    "nonNegativeDecimalString": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]*[1-9])?$"
+    },
+    "relativePath": {
+      "description": "Structural surface check only ('/'-separated, no leading/trailing slash, no empty segments, no '..', no backslash). The authoritative safety check (root containment, symlink-escape resolution) is performed at runtime by fundamental_pipeline.valuation.references.safe_relative_path, not by this pattern alone.",
+      "type": "string",
+      "pattern": "^(?!/)(?!.*//)(?!.*\\.\\.)(?!.*/$)[^\\\\]+$"
+    },
+    "artifactReference": {
+      "type": "object",
+      "required": ["artifact_id", "artifact_type", "relative_path"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/artifactId"},
+        "artifact_type": {"$ref": "#/$defs/artifactType"},
+        "relative_path": {"$ref": "#/$defs/relativePath"}
+      },
+      "additionalProperties": false
+    },
+    "dependencyReferenceList": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifactReference"}
+    },
+    "reasonCode": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+    },
+    "reasonCodeRef": {
+      "type": "object",
+      "required": ["code", "severity"],
+      "properties": {
+        "code": {"$ref": "#/$defs/reasonCode"},
+        "severity": {"type": "string", "enum": ["info", "warning", "error", "blocker"]},
+        "message_params": {"type": "object"}
+      },
+      "additionalProperties": false
+    },
+    "availabilityStatus": {
+      "type": "string",
+      "enum": ["available", "not_applicable", "not_meaningful", "unavailable", "calculation_blocked", "insufficient_data", "not_comparable"]
+    },
+    "decimalEnvelope": {
+      "description": "A domain decimal value paired with an explicit availability status. status='available' requires 'value'; every other status forbids 'value' and requires at least one reason_code entry -- missing is never represented as zero.",
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"$ref": "#/$defs/availabilityStatus"},
+        "value": {"$ref": "#/$defs/decimalString"},
+        "unit": {"type": "string"},
+        "currency": {"type": "string"},
+        "scale": {"type": "string", "enum": ["units", "thousands", "millions", "billions"]},
+        "reason_codes": {"type": "array", "items": {"$ref": "#/$defs/reasonCodeRef"}}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "available"}}, "required": ["status"]},
+          "then": {"required": ["value"]}
+        },
+        {
+          "if": {"not": {"properties": {"status": {"const": "available"}}, "required": ["status"]}},
+          "then": {"not": {"required": ["value"]}, "required": ["reason_codes"], "properties": {"reason_codes": {"minItems": 1}}}
+        }
+      ]
+    },
+    "evidenceRef": {
+      "type": "object",
+      "required": ["source_id", "effective_at"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "source_revision_id": {"type": ["string", "null"]},
+        "effective_at": {"$ref": "#/$defs/utcInstant"},
+        "location": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "lineageRef": {
+      "type": "object",
+      "required": ["node_id", "node_type", "relation"],
+      "properties": {
+        "node_id": {"type": "string", "minLength": 1},
+        "node_type": {"type": "string"},
+        "relation": {
+          "type": "string",
+          "enum": ["observed_from", "selected_from", "converted_by", "normalized_by", "calculated_from", "reviewed_from", "supersedes"]
+        },
+        "artifact_ref": {"$ref": "#/$defs/artifactReference"}
+      },
+      "additionalProperties": false
+    },
+    "currencyMetadata": {
+      "type": "object",
+      "required": ["currency"],
+      "properties": {
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "scale": {"type": "string", "enum": ["units", "thousands", "millions", "billions"]}
+      },
+      "additionalProperties": false
+    },
+    "schemaVersionRef": {
+      "type": "object",
+      "required": ["schema_id", "schema_version"],
+      "properties": {
+        "schema_id": {"type": "string", "minLength": 1},
+        "schema_version": {"$ref": "#/$defs/semver"}
+      },
+      "additionalProperties": false
+    },
+    "catalogVersionRef": {
+      "type": "object",
+      "required": ["catalog_id", "catalog_version"],
+      "properties": {
+        "catalog_id": {"$ref": "#/$defs/catalogId"},
+        "catalog_version": {"$ref": "#/$defs/semver"}
+      },
+      "additionalProperties": false
+    },
+    "freshnessState": {
+      "type": "string",
+      "enum": ["fresh", "acceptable", "stale", "expired", "unknown", "not_applicable"]
+    },
+    "confidenceLevel": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "insufficient"]
+    },
+    "lineageDag": {
+      "description": "Shared node/edge lineage DAG shape, factored out for T72 reuse. valuation-results.schema.json (T71, frozen) declares its own equivalent inline rather than referencing this def, to avoid any byte change to that already-committed schema resource.",
+      "type": "object",
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["node_id", "node_type", "owner_type"],
+            "properties": {
+              "node_id": {"type": "string", "minLength": 1},
+              "node_type": {"type": "string", "minLength": 1},
+              "artifact_ref": {"$ref": "#/$defs/artifactReference"},
+              "owner_type": {"type": "string", "enum": ["authored", "ingestion_generated", "generated"]}
+            },
+            "additionalProperties": false
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["edge_id", "from_node_id", "to_node_id", "relation", "criticality"],
+            "properties": {
+              "edge_id": {"type": "string", "minLength": 1},
+              "from_node_id": {"type": "string", "minLength": 1},
+              "to_node_id": {"type": "string", "minLength": 1},
+              "relation": {
+                "type": "string",
+                "enum": [
+                  "observed_from", "selected_from", "converted_by", "normalized_by",
+                  "calculated_from", "assumed_from", "reviewed_from", "supersedes",
+                  "compares_to", "blocked_by"
+                ]
+              },
+              "transformation_ref": {"type": "string"},
+              "criticality": {"type": "string", "enum": ["critical", "contextual"]}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

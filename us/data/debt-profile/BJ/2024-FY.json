@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "ticker": "BJ",
+  "period": "2024-FY",
+  "period_end": "2025-02-01",
+  "currency": "USD",
+  "scale": "million",
+  "extracted_at": "2025-03-14",
+  "extraction_method": "sec_xbrl",
+  "source_documents": [
+    {
+      "source_id": "sec-0001531152-25-000013",
+      "source_file": "raw/sec-filings/BJ/0001531152-25-000013.json"
+    }
+  ],
+  "debt_totals": {
+    "short_term_financial_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "current_portion_long_term_debt": {
+      "value": 175,
+      "raw_quoted_value": "175",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001531152-25-000013",
+        "source_file": "raw/sec-filings/BJ/0001531152-25-000013.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2024}LongTermDebtCurrent#c-4"
+      }
+    },
+    "long_term_financial_debt": {
+      "value": 398.807,
+      "raw_quoted_value": "398.807",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001531152-25-000013",
+        "source_file": "raw/sec-filings/BJ/0001531152-25-000013.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2024}LongTermDebtNoncurrent#c-4"
+      }
+    },
+    "lease_liabilities_current": {
+      "value": 192.528,
+      "raw_quoted_value": "192.528",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001531152-25-000013",
+        "source_file": "raw/sec-filings/BJ/0001531152-25-000013.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2024}OperatingLeaseLiabilityCurrent#c-4"
+      }
+    },
+    "lease_liabilities_noncurrent": {
+      "value": 2013.962,
+      "raw_quoted_value": "2013.962",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001531152-25-000013",
+        "source_file": "raw/sec-filings/BJ/0001531152-25-000013.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2024}OperatingLeaseLiabilityNoncurrent#c-4"
+      }
+    },
+    "cash_and_cash_equivalents": {
+      "value": 28.272,
+      "raw_quoted_value": "28.272",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001531152-25-000013",
+        "source_file": "raw/sec-filings/BJ/0001531152-25-000013.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2024}CashAndCashEquivalentsAtCarryingValue#c-4"
+      }
+    }
+  },
+  "maturity_profile": [],
+  "currency_profile": [
+    {
+      "value": 400.0,
+      "raw_quoted_value": "400000000.0",
+      "currency": "USD",
+      "debt_currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0001531152-25-000013",
+        "source_file": "raw/sec-filings/BJ/0001531152-25-000013.json",
+        "page": null,
+        "quoted_text": "Aggregate of 1 SEC Inline XBRL DebtInstrumentFaceAmount facts"
+      },
+      "liability_scope": "Debt instruments with disclosed face amount"
+    }
+  ],
+  "interest_profile": {
+    "fixed_rate_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "floating_rate_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "weighted_average_rates": []
+  },
+  "risk_sensitivities": {
+    "fx_sensitivity": [],
+    "interest_rate_sensitivity": []
+  },
+  "liquidity_support": {
+    "undrawn_credit_facilities": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "committed_facilities": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "covenants_or_defaults": {
+      "value": null,
+      "status": "not_disclosed",
+      "evidence": null
+    }
+  },
+  "refinancing_disclosures": [],
+  "diagnostics": {
+    "total_financial_debt": {
+      "status": "available",
+      "value": 573.807,
+      "unit": "source_scale"
+    },
+    "near_term_financial_debt": {
+      "status": "available",
+      "value": 175.0,
+      "unit": "source_scale"
+    },
+    "cash_to_near_term_debt": {
+      "status": "available",
+      "value": 0.1615542857142857,
+      "unit": "ratio"
+    },
+    "near_term_debt_share": {
+      "status": "available",
+      "value": 0.3049805945204572,
+      "unit": "ratio"
+    },
+    "floating_rate_debt_share": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "ratio"
+    },
+    "refinancing_pressure": {
+      "status": "available",
+      "level": "high",
+      "confidence": "medium",
+      "reason_codes": [
+        "cash_covers_less_than_25pct_of_near_term_debt"
+      ]
+    }
+  }
+}

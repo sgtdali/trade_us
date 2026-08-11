@@ -1,0 +1,58 @@
+{
+  "roa_t": {
+    "status": "available",
+    "value": "0.019967"
+  },
+  "roa_t1": {
+    "status": "unavailable"
+  },
+  "cfo_t": {
+    "status": "available",
+    "value": "7311.000000"
+  },
+  "cfoa_t": {
+    "status": "available",
+    "value": "0.146358"
+  },
+  "leverage_t": {
+    "status": "available",
+    "value": "0.290453"
+  },
+  "leverage_t1": {
+    "status": "available",
+    "value": "0.300384"
+  },
+  "current_ratio_t": {
+    "status": "available",
+    "value": "0.801027"
+  },
+  "current_ratio_t1": {
+    "status": "available",
+    "value": "0.958156"
+  },
+  "equity_issuance_amount_t": {
+    "status": "available",
+    "value": "0.000000"
+  },
+  "gross_margin_t": {
+    "status": "unavailable"
+  },
+  "gross_margin_t1": {
+    "status": "unavailable"
+  },
+  "asset_turnover_t": {
+    "status": "available",
+    "value": "2.955618"
+  },
+  "asset_turnover_t1": {
+    "status": "available",
+    "value": "2.796165"
+  },
+  "current_refs": [
+    "data/financial/KR/2025-FY.json"
+  ],
+  "prior_refs": [
+    "data/financial/KR/2024-FY.json"
+  ],
+  "opening_balance_refs": []
+}

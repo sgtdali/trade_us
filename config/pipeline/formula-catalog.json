@@ -1,0 +1,304 @@
+{
+  "schema_version": 1,
+  "formulas": [
+    {
+      "formula_id": "revenue_growth", "version": 1, "output_metric_id": "revenue_growth",
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "direct:revenue_total"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Year-over-year total revenue growth."
+    },
+    {
+      "formula_id": "passenger_revenue_growth", "version": 1, "output_metric_id": "passenger_revenue_growth",
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "direct:revenue_passenger_total"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"],
+      "description": "Year-over-year passenger revenue growth."
+    },
+    {
+      "formula_id": "cargo_revenue_growth", "version": 1, "output_metric_id": "cargo_revenue_growth",
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "direct:revenue_cargo_total"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"],
+      "description": "Year-over-year cargo revenue growth."
+    },
+    {
+      "formula_id": "technical_revenue_growth", "version": 1, "output_metric_id": "technical_revenue_growth",
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "direct:revenue_technical"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"],
+      "description": "Year-over-year technical/MRO revenue growth."
+    },
+    {
+      "formula_id": "gross_profit_growth", "version": 1, "output_metric_id": "gross_profit_growth",
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "direct:gross_profit"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Year-over-year gross profit growth."
+    },
+    {
+      "formula_id": "operating_profit_growth", "version": 1, "output_metric_id": "operating_profit_growth",
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "direct:operating_profit"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Year-over-year growth of IFRS operating profit including investment income/expense and equity-method share."
+    },
+    {
+      "formula_id": "net_profit_growth", "version": 1, "output_metric_id": "net_profit_growth",
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "direct:net_profit_for_period"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Year-over-year net profit growth; returns not_comparable when the comparison period was a loss (sign transition, not ordinary growth)."
+    },
+    {
+      "formula_id": "operating_cash_flow_growth", "version": 1, "output_metric_id": "operating_cash_flow_growth",
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "direct:cf_net_operating_activities"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Year-over-year net operating cash flow growth."
+    },
+    {
+      "formula_id": "ask_growth", "version": 1,
+      "output_metric_id_by_period_kind": {"quarterly": "ask_growth_quarterly", "annual": "ask_growth_annual"},
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "finops:ask"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"],
+      "description": "Year-over-year available-seat-kilometer (capacity) growth."
+    },
+    {
+      "formula_id": "passenger_growth", "version": 1,
+      "output_metric_id_by_period_kind": {"quarterly": "passenger_growth_quarterly", "annual": "passenger_growth_annual"},
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "finops:passenger_count"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"],
+      "description": "Year-over-year passenger count growth."
+    },
+    {
+      "formula_id": "cargo_tonnage_growth", "version": 1,
+      "output_metric_id_by_period_kind": {"quarterly": "cargo_tonnage_growth_quarterly", "annual": "cargo_tonnage_growth_annual"},
+      "category": "growth", "evaluator": "growth_pct", "inputs": {"ref": "finops:cargo_tonnage"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"],
+      "description": "Year-over-year cargo tonnage growth."
+    },
+    {
+      "formula_id": "gross_margin", "version": 1, "output_metric_id": "gross_margin",
+      "category": "margins", "evaluator": "margin_pct",
+      "inputs": {"numerator": [{"ref": "direct:gross_profit", "sign": 1}], "denominator": [{"ref": "direct:revenue_total", "sign": 1}]},
+      "output_unit": "percent", "rounding": 2, "change_policy": "percentage_point",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Gross profit as a percentage of total revenue."
+    },
+    {
+      "formula_id": "operating_margin_pre_investment", "version": 1, "output_metric_id": "operating_margin_pre_investment",
+      "category": "margins", "evaluator": "margin_pct",
+      "inputs": {"numerator": [{"ref": "direct:operating_profit_before_investment_activities", "sign": 1}], "denominator": [{"ref": "direct:revenue_total", "sign": 1}]},
+      "output_unit": "percent", "rounding": 2, "change_policy": "percentage_point",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Operating margin before investment income/expense and equity-method share (core operating activity only)."
+    },
+    {
+      "formula_id": "operating_margin", "version": 1, "output_metric_id": "operating_margin",
+      "category": "margins", "evaluator": "margin_pct",
+      "inputs": {"numerator": [{"ref": "direct:operating_profit", "sign": 1}], "denominator": [{"ref": "direct:revenue_total", "sign": 1}]},
+      "output_unit": "percent", "rounding": 2, "change_policy": "percentage_point",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "IFRS operating profit margin, including investment income/expense and equity-method share."
+    },
+    {
+      "formula_id": "ebitdar_margin", "version": 1, "output_metric_id": "ebitdar_margin",
+      "category": "margins", "evaluator": "margin_pct",
+      "inputs": {"numerator": [{"ref": "finops:ebitdar_amount", "sign": 1}], "denominator": [{"ref": "direct:revenue_total", "sign": 1}]},
+      "output_unit": "percent", "rounding": 2, "change_policy": "percentage_point",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"],
+      "description": "EBITDAR as a percentage of total revenue."
+    },
+    {
+      "formula_id": "net_margin", "version": 1, "output_metric_id": "net_margin",
+      "category": "margins", "evaluator": "margin_pct",
+      "inputs": {"numerator": [{"ref": "direct:net_profit_for_period", "sign": 1}], "denominator": [{"ref": "direct:revenue_total", "sign": 1}]},
+      "output_unit": "percent", "rounding": 2, "change_policy": "percentage_point",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Net profit as a percentage of total revenue."
+    },
+    {
+      "formula_id": "operating_cash_flow_margin", "version": 1, "output_metric_id": "operating_cash_flow_margin",
+      "category": "margins", "evaluator": "margin_pct",
+      "inputs": {"numerator": [{"ref": "direct:cf_net_operating_activities", "sign": 1}], "denominator": [{"ref": "direct:revenue_total", "sign": 1}]},
+      "output_unit": "percent", "rounding": 2, "change_policy": "percentage_point",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Net operating cash flow as a percentage of total revenue."
+    },
+    {
+      "formula_id": "free_cash_flow_margin", "version": 1, "output_metric_id": "free_cash_flow_margin",
+      "category": "margins", "evaluator": "margin_pct",
+      "inputs": {"numerator": [{"ref": "derived:free_cash_flow", "sign": 1}], "denominator": [{"ref": "direct:revenue_total", "sign": 1}]},
+      "output_unit": "percent", "rounding": 2, "change_policy": "percentage_point",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Standard free cash flow as a percentage of total revenue."
+    },
+    {
+      "formula_id": "current_ratio", "version": 1, "output_metric_id": "current_ratio",
+      "category": "liquidity", "evaluator": "ratio",
+      "inputs": {"numerator": [{"ref": "direct:total_current_assets", "sign": 1}], "denominator": [{"ref": "direct:total_current_liabilities", "sign": 1}]},
+      "output_unit": "ratio", "rounding": 3, "change_policy": "ratio_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Total current assets divided by total current liabilities."
+    },
+    {
+      "formula_id": "cash_and_st_investments_to_current_liabilities", "version": 1, "output_metric_id": "cash_and_st_investments_to_current_liabilities",
+      "category": "liquidity", "evaluator": "ratio",
+      "inputs": {"numerator": [{"ref": "direct:cash_and_equivalents", "sign": 1}, {"ref": "direct:financial_investments_current", "sign": 1}], "denominator": [{"ref": "direct:total_current_liabilities", "sign": 1}]},
+      "output_unit": "ratio", "rounding": 3, "change_policy": "ratio_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Cash and short-term financial investments divided by total current liabilities."
+    },
+    {
+      "formula_id": "net_working_capital", "version": 1, "output_metric_id": "net_working_capital",
+      "category": "liquidity", "evaluator": "linear_combination",
+      "inputs": [{"ref": "direct:total_current_assets", "sign": 1}, {"ref": "direct:total_current_liabilities", "sign": -1}],
+      "output_unit": "million_usd", "rounding": 1, "change_policy": "money_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Total current assets minus total current liabilities."
+    },
+    {
+      "formula_id": "financial_debt", "version": 1, "output_metric_id": "financial_debt",
+      "category": "leverage", "evaluator": "linear_combination",
+      "inputs": [{"ref": "direct:borrowings_short_term", "sign": 1}, {"ref": "direct:borrowings_long_term_current_portion", "sign": 1}, {"ref": "direct:borrowings_long_term", "sign": 1}],
+      "output_unit": "million_usd", "rounding": 1, "change_policy": "money_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Interest-bearing financial debt, excluding lease liabilities."
+    },
+    {
+      "formula_id": "lease_liability_total", "version": 1, "output_metric_id": "lease_liability_total",
+      "category": "leverage", "evaluator": "linear_combination",
+      "inputs": [{"ref": "direct:lease_liabilities_short_term", "sign": 1}, {"ref": "direct:lease_liabilities_long_term", "sign": 1}],
+      "output_unit": "million_usd", "rounding": 1, "change_policy": "money_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Total lease liabilities (current plus non-current)."
+    },
+    {
+      "formula_id": "total_financial_liability_incl_lease", "version": 1, "output_metric_id": "total_financial_liability_incl_lease",
+      "category": "leverage", "evaluator": "linear_combination",
+      "inputs": [{"ref": "derived:financial_debt", "sign": 1}, {"ref": "derived:lease_liability_total", "sign": 1}],
+      "output_unit": "million_usd", "rounding": 1, "change_policy": "money_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Financial debt plus total lease liabilities."
+    },
+    {
+      "formula_id": "net_financial_debt", "version": 1, "output_metric_id": "net_financial_debt",
+      "category": "leverage", "evaluator": "linear_combination",
+      "inputs": [{"ref": "derived:financial_debt", "sign": 1}, {"ref": "direct:cash_and_equivalents", "sign": -1}, {"ref": "direct:financial_investments_current", "sign": -1}, {"ref": "direct:financial_investments_noncurrent", "sign": -1}],
+      "output_unit": "million_usd", "rounding": 1, "change_policy": "money_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Financial debt minus cash and financial investments (excludes lease liabilities)."
+    },
+    {
+      "formula_id": "net_financial_liability_incl_lease", "version": 1, "output_metric_id": "net_financial_liability_incl_lease",
+      "category": "leverage", "evaluator": "linear_combination",
+      "inputs": [{"ref": "derived:total_financial_liability_incl_lease", "sign": 1}, {"ref": "direct:cash_and_equivalents", "sign": -1}, {"ref": "direct:financial_investments_current", "sign": -1}, {"ref": "direct:financial_investments_noncurrent", "sign": -1}],
+      "output_unit": "million_usd", "rounding": 1, "change_policy": "money_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Total financial liability including leases minus cash and financial investments."
+    },
+    {
+      "formula_id": "debt_to_equity", "version": 1, "output_metric_id": "debt_to_equity",
+      "category": "leverage", "evaluator": "ratio",
+      "inputs": {"numerator": [{"ref": "derived:financial_debt", "sign": 1}], "denominator": [{"ref": "direct:total_equity", "sign": 1}]},
+      "output_unit": "ratio", "rounding": 3, "change_policy": "ratio_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Financial debt (excluding leases) divided by total equity."
+    },
+    {
+      "formula_id": "liability_incl_lease_to_equity", "version": 1, "output_metric_id": "liability_incl_lease_to_equity",
+      "category": "leverage", "evaluator": "ratio",
+      "inputs": {"numerator": [{"ref": "derived:total_financial_liability_incl_lease", "sign": 1}], "denominator": [{"ref": "direct:total_equity", "sign": 1}]},
+      "output_unit": "ratio", "rounding": 3, "change_policy": "ratio_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Total financial liability including leases divided by total equity."
+    },
+    {
+      "formula_id": "net_debt_to_ebitdar", "version": 1,
+      "output_metric_id_by_period_kind": {"quarterly": "net_debt_to_ebitdar_ttm", "annual": "net_debt_to_ebitdar"},
+      "category": "leverage", "evaluator": "net_debt_to_ebitdar_ratio",
+      "inputs": {"net_debt_ref": "derived:net_financial_liability_incl_lease", "ebitdar_annual_ref": "finops:ebitdar_amount", "ebitdar_series_metric_id": "ebitdar"},
+      "output_unit": "ratio", "rounding": 2, "change_policy": "ratio_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["aviation"],
+      "description": "Net financial liability including leases divided by EBITDAR. Quarterly periods use a trailing-twelve-month EBITDAR assembled from four consecutive discrete quarters in the historical series; annual periods use full-year EBITDAR directly."
+    },
+    {
+      "formula_id": "roa", "version": 1, "output_metric_id": "roa",
+      "category": "returns", "evaluator": "return_on_average_base",
+      "inputs": {"numerator_ref": "direct:net_profit_for_period", "base_ref": "direct:total_assets"},
+      "output_unit": "percent", "rounding": 2, "change_policy": "none",
+      "applicable_period_kinds": ["annual"],
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Net profit for the period divided by the average of period-start and period-end total assets. Only computed for annual periods; interim periods are marked unavailable rather than annualized."
+    },
+    {
+      "formula_id": "roe", "version": 1, "output_metric_id": "roe",
+      "category": "returns", "evaluator": "return_on_average_base",
+      "inputs": {"numerator_ref": "direct:net_profit_attributable_parent", "base_ref": "direct:equity_attributable_to_parent"},
+      "output_unit": "percent", "rounding": 2, "change_policy": "none",
+      "applicable_period_kinds": ["annual"],
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Net profit attributable to parent divided by the average of period-start and period-end equity attributable to parent. Annual periods only."
+    },
+    {
+      "formula_id": "roic", "version": 1, "output_metric_id": "roic",
+      "category": "returns", "evaluator": "roic_ratio",
+      "inputs": {
+        "operating_profit_pre_investment_ref": "direct:operating_profit_before_investment_activities",
+        "tax_expense_ref": "direct:tax_expense",
+        "profit_before_tax_ref": "direct:profit_before_tax",
+        "equity_ref": "direct:total_equity",
+        "net_financial_liability_incl_lease_ref": "derived:net_financial_liability_incl_lease"
+      },
+      "output_unit": "percent", "rounding": 2, "change_policy": "none",
+      "applicable_period_kinds": ["annual"],
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "NOPAT (pre-investment operating profit taxed at the period's effective tax rate) divided by average invested capital (total equity plus net financial liability including leases, averaged period-start to period-end). Annual periods only."
+    },
+    {
+      "formula_id": "ocf_to_net_profit", "version": 1, "output_metric_id": "ocf_to_net_profit",
+      "category": "cash_generation", "evaluator": "ratio",
+      "inputs": {"numerator": [{"ref": "direct:cf_net_operating_activities", "sign": 1}], "denominator": [{"ref": "direct:net_profit_for_period", "sign": 1}]},
+      "require_positive_denominator": true,
+      "output_unit": "ratio", "rounding": 2, "change_policy": "none",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Net operating cash flow divided by net profit for the period. Undefined (unavailable) when net profit is not positive."
+    },
+    {
+      "formula_id": "capex_to_revenue", "version": 1, "output_metric_id": "capex_to_revenue",
+      "category": "cash_generation", "evaluator": "abs_ratio_pct",
+      "inputs": {"numerator_ref": "direct:cf_capex_ppe_intangible", "denominator_ref": "direct:revenue_total"},
+      "output_unit": "percent", "rounding": 1, "change_policy": "percentage_point",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Absolute cash capital expenditure as a percentage of total revenue."
+    },
+    {
+      "formula_id": "free_cash_flow", "version": 1, "output_metric_id": "free_cash_flow",
+      "category": "cash_generation", "evaluator": "standard_fcf",
+      "inputs": {"ocf_ref": "direct:cf_net_operating_activities", "capex_ref": "direct:cf_capex_ppe_intangible"},
+      "output_unit": "million_usd", "rounding": 1, "change_policy": "money_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Net operating cash flow plus signed capex cash outflow. Excludes non-cash, directly lease-financed fleet/right-of-use asset additions, which never pass through operating or investing cash flow."
+    },
+    {
+      "formula_id": "free_cash_flow_after_lease_payments", "version": 1, "output_metric_id": "free_cash_flow_after_lease_payments",
+      "category": "cash_generation", "evaluator": "add_signed",
+      "inputs": [{"ref": "derived:free_cash_flow"}, {"ref": "direct:cf_lease_payments"}],
+      "output_unit": "million_usd", "rounding": 1, "change_policy": "money_points",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "Standard free cash flow plus signed cash lease payments (an alternative FCF definition that treats lease payments as an operating-like cash outflow)."
+    },
+    {
+      "formula_id": "deferred_revenue_change_contribution", "version": 1, "output_metric_id": "deferred_revenue_change_contribution",
+      "category": "cash_generation", "evaluator": "passthrough_with_percent_change",
+      "inputs": {"ref": "direct:cf_deferred_revenue_change"},
+      "output_unit": "million_usd", "rounding": 1, "change_policy": "percent_of_prior",
+      "applicable_company_types": ["standard_corporate"], "applicable_sector_modules": ["generic", "aviation"],
+      "description": "The deferred-revenue change line item from the cash flow statement, carried through as-is with its own year-over-year percent change."
+    }
+  ]
+}

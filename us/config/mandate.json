@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "updated": "2026-08-09",
+  "note": "Bu bir veri degil, KARAR dosyasidir. Kullanici belirler, LLM degil. us_pei_pack.py bunu instructions.md'nin basina koyar; skill aksi halde varsayim uretip 'state assumptions' der (idea-generation/references/workflow.md Bolum 1).",
+
+  "mandate": "long_only",
+  "direction": "long",
+  "geography": "US listed",
+  "sectors": "all sectors eligible; no exclusions",
+  "position_count": null,
+  "position_count_note": "The screen decides how many names clear the bar. Note the consequence rather than working around it: fewer positions widen the band inside which luck alone explains the result.",
+
+  "horizon": {
+    "review_cadence": "weekly",
+    "rebalance_cadence": "monthly",
+    "change_required": false,
+    "note": "A weekly review or a monthly rebalance may change the portfolio but neither is obliged to. Holding through both is a valid outcome."
+  },
+
+  "liquidity_floor": {
+    "applies": false,
+    "reason": "Measured on this universe 2026-08-09: the least liquid name trades USD 17m a day and the median USD 669m. A retail-sized position is well under a tenth of a percent of daily volume, so a liquidity screen would exclude nothing and only add a false constraint."
+  },
+
+  "instruments": "common equity only; no options, no leverage, no shorting",
+  "benchmark": null,
+  "benchmark_note": "No benchmark set yet. Do not assume one, and do not frame results as active weight against an index.",
+
+  "known_tension": "The plugin's default fundamental horizon is 3-18 months while this mandate rebalances monthly. Measured in this repo: monthly decisions rest on data averaging 46 days old, and in 32% of company-months a new 10-Q or 10-K lands within 30 days of the decision. Filing-driven timing is the alternative; next_events carries the dates."
+}

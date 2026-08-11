@@ -1,0 +1,99 @@
+{
+  "yargi": "alinmaz",
+  "alinmaz_nedeni": "degerleme_desteksiz",
+  "tez": "",
+  "tez_testleri": [],
+  "belirleyici_veriler": [
+    {
+      "tur": "sayisal",
+      "reported_value": 47.76,
+      "report_section": "6",
+      "aciklama": "The P/E is 47.76x on reconciled TTM parent-attributable earnings."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 2.09,
+      "report_section": "6",
+      "aciklama": "The parent-attributed free-cash-flow yield proxy is only 2.09%."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 36.42,
+      "report_section": "6",
+      "aciklama": "Lease-exclusive EV to reported operating income is 36.42x."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 9.7,
+      "report_section": "10",
+      "aciklama": "Revenue increased 9.7% year over year, which is positive but does not by itself substantiate the reported valuation multiples."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 17.6,
+      "report_section": "10",
+      "aciklama": "Operating cash flow increased 17.6% year over year, supporting operating momentum but not offsetting the low current cash-flow yield."
+    }
+  ],
+  "tezi_bozacak_kosullar": [],
+  "belirsizlik": [
+    "The report contains no forward estimates or explicit earnings and cash-flow outlook needed to support the valuation premium.",
+    "Parent-attributed free cash flow is a disclosed proxy rather than a GAAP-reported parent cash-flow measure.",
+    "Issuer-reported EBITDA is unavailable, limiting an additional valuation cross-check."
+  ],
+  "guven": "orta",
+  "validation": {
+    "numeric_evidence": [
+      {
+        "evidence_index": 0,
+        "reported_value": 47.76,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 1,
+        "reported_value": 2.09,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 2,
+        "reported_value": 36.42,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 3,
+        "reported_value": 9.7,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 4,
+        "reported_value": 17.6,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      }
+    ]
+  },
+  "provenance": {
+    "layer": 1,
+    "market": "US",
+    "ticker": "COST",
+    "as_of": "2026-08-03",
+    "model_key": "codex",
+    "model_id": "gpt-5.6-terra",
+    "prompt_version": "us-layer1.v1",
+    "prompt_sha256": "5d0d06b35ee5a993cb6676d890b590ebbef36c10abb56b4559abdff52bc0ee6b",
+    "attempt_count": 1,
+    "report_sha256": "116cbf9df5f971fe5f6b01808f84c1bdc36bc85d6e715146c312d8093885a574",
+    "generated_at": "2026-08-04T07:05:25.230713+00:00",
+    "repo_commit_sha": "82f5e00d089fb2791b8ed3866790beb38d2f12c5",
+    "stderr_tail": "g an additional valuation cross-check.\"],\"guven\":\"orta\"}\n2026-08-04T07:05:24.669585Z  WARN codex_mcp::rmcp_client: failed to initialize MCP client during shutdown: MCP startup failed: handshaking with MCP server failed: Send message error Transport [rmcp::transport::worker::WorkerTransport<rmcp::transport::streamable_http_client::StreamableHttpClientWorker<codex_rmcp_client::http_client_adapter::StreamableHttpClientAdapter>>] error: Auth required, when send initialize request\ntokens used\n17.605\n"
+  }
+}

@@ -1,0 +1,281 @@
+{
+  "provider_id": "yfinance",
+  "provider_library": "yfinance",
+  "pinned_library_version": "1.5.1",
+  "adjustment_policy": "auto_adjust_disabled_provider_supplies_both_close_and_adjusted_close_no_recomputation",
+  "revision_policy": "provider_repair_enabled_repaired_rows_are_explicitly_recorded_and_validated_before_promotion",
+  "ticker_mappings": [
+    {
+      "internal_ticker": "THYAO",
+      "provider_symbol": "THYAO.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "EREGL",
+      "provider_symbol": "EREGL.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "AEFES",
+      "provider_symbol": "AEFES.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "ARCLK",
+      "provider_symbol": "ARCLK.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "VESTL",
+      "provider_symbol": "VESTL.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "ASELS",
+      "provider_symbol": "ASELS.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "ALTNY",
+      "provider_symbol": "ALTNY.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "ALARK",
+      "provider_symbol": "ALARK.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "KCHOL",
+      "provider_symbol": "KCHOL.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "AKSA",
+      "provider_symbol": "AKSA.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "AKSEN",
+      "provider_symbol": "AKSEN.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "ASTOR",
+      "provider_symbol": "ASTOR.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "BIMAS",
+      "provider_symbol": "BIMAS.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "BSOKE",
+      "provider_symbol": "BSOKE.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "BTCIM",
+      "provider_symbol": "BTCIM.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "ALCAR",
+      "provider_symbol": "ALCAR.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "ARZUM",
+      "provider_symbol": "ARZUM.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "IHEVA",
+      "provider_symbol": "IHEVA.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "KLMSN",
+      "provider_symbol": "KLMSN.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "SILVR",
+      "provider_symbol": "SILVR.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "VESBE",
+      "provider_symbol": "VESBE.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "FROTO",
+      "provider_symbol": "FROTO.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "TOASO",
+      "provider_symbol": "TOASO.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "TUPRS",
+      "provider_symbol": "TUPRS.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "SASA",
+      "provider_symbol": "SASA.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "SISE",
+      "provider_symbol": "SISE.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "TCELL",
+      "provider_symbol": "TCELL.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "PETKM",
+      "provider_symbol": "PETKM.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "MGROS",
+      "provider_symbol": "MGROS.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "ULKER",
+      "provider_symbol": "ULKER.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "OTKAR",
+      "provider_symbol": "OTKAR.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "BRSAN",
+      "provider_symbol": "BRSAN.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "CANTE",
+      "provider_symbol": "CANTE.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    },
+    {
+      "internal_ticker": "CCOLA",
+      "provider_symbol": "CCOLA.IS",
+      "exchange": "BIST",
+      "trading_currency": "TRY",
+      "instrument_type": "ordinary_share",
+      "active": true
+    }
+  ]
+}

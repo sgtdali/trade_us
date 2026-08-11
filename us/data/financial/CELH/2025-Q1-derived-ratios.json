@@ -1,0 +1,611 @@
+{
+  "schema_version": 1,
+  "ticker": "CELH",
+  "period": "2025-Q1",
+  "growth": [
+    {
+      "metric_id": "revenue_growth",
+      "name": "Gelir Büyümesi",
+      "value": null,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "revenue_growth",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:revenue_total"
+      ],
+      "formula_description": "Year-over-year total revenue growth.",
+      "status": "unavailable",
+      "reason": "current or comparison value is unavailable"
+    },
+    {
+      "metric_id": "gross_profit_growth",
+      "name": "Brüt Kâr Büyümesi",
+      "value": null,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "gross_profit_growth",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:gross_profit"
+      ],
+      "formula_description": "Year-over-year gross profit growth.",
+      "status": "unavailable",
+      "reason": "current or comparison value is unavailable"
+    },
+    {
+      "metric_id": "operating_profit_growth",
+      "name": "Faaliyet Kâr Büyümesi",
+      "value": null,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "operating_profit_growth",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:operating_profit"
+      ],
+      "formula_description": "Year-over-year growth of IFRS operating profit including investment income/expense and equity-method share.",
+      "status": "unavailable",
+      "reason": "current or comparison value is unavailable"
+    },
+    {
+      "metric_id": "net_profit_growth",
+      "name": "Net Kâr Büyümesi",
+      "value": null,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "net_profit_growth",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:net_profit_for_period"
+      ],
+      "formula_description": "Year-over-year net profit growth; returns not_comparable when the comparison period was a loss (sign transition, not ordinary growth).",
+      "status": "unavailable",
+      "reason": "current or comparison value is unavailable"
+    },
+    {
+      "metric_id": "operating_cash_flow_growth",
+      "name": "Faaliyet Nakit Akışı Büyümesi",
+      "value": null,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "operating_cash_flow_growth",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:cf_net_operating_activities"
+      ],
+      "formula_description": "Year-over-year net operating cash flow growth.",
+      "status": "unavailable",
+      "reason": "current or comparison value is unavailable"
+    }
+  ],
+  "margins": [
+    {
+      "metric_id": "gross_margin",
+      "name": "Brüt Marjı",
+      "value": 52.35,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "gross_margin",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:gross_profit",
+        "direct:revenue_total"
+      ],
+      "formula_description": "Gross profit as a percentage of total revenue."
+    },
+    {
+      "metric_id": "operating_margin_pre_investment",
+      "name": "Faaliyet Marjı Pre Yatırım",
+      "value": 15.8,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "operating_margin_pre_investment",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:operating_profit_before_investment_activities",
+        "direct:revenue_total"
+      ],
+      "formula_description": "Operating margin before investment income/expense and equity-method share (core operating activity only)."
+    },
+    {
+      "metric_id": "operating_margin",
+      "name": "Faaliyet Marjı",
+      "value": 15.8,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "operating_margin",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:operating_profit",
+        "direct:revenue_total"
+      ],
+      "formula_description": "IFRS operating profit margin, including investment income/expense and equity-method share."
+    },
+    {
+      "metric_id": "net_margin",
+      "name": "Net Marjı",
+      "value": 13.49,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "net_margin",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:net_profit_for_period",
+        "direct:revenue_total"
+      ],
+      "formula_description": "Net profit as a percentage of total revenue."
+    },
+    {
+      "metric_id": "operating_cash_flow_margin",
+      "name": "Faaliyet Nakit Akışı Marjı",
+      "value": 31.39,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "operating_cash_flow_margin",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:cf_net_operating_activities",
+        "direct:revenue_total"
+      ],
+      "formula_description": "Net operating cash flow as a percentage of total revenue."
+    },
+    {
+      "metric_id": "free_cash_flow_margin",
+      "name": "Serbest Nakit Akışı Marjı",
+      "value": 29.28,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "free_cash_flow_margin",
+      "formula_version": 1,
+      "formula_inputs": [
+        "derived:free_cash_flow",
+        "direct:revenue_total"
+      ],
+      "formula_description": "Standard free cash flow as a percentage of total revenue."
+    }
+  ],
+  "liquidity": [
+    {
+      "metric_id": "current_ratio",
+      "name": "Cari Oranı",
+      "value": null,
+      "unit": "ratio",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "current_ratio",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:total_current_assets",
+        "direct:total_current_liabilities"
+      ],
+      "formula_description": "Total current assets divided by total current liabilities.",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    },
+    {
+      "metric_id": "cash_and_st_investments_to_current_liabilities",
+      "name": "Nakit ve Kısa Vadeli Yatırımlar To Cari Yükümlülükler",
+      "value": null,
+      "unit": "ratio",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "cash_and_st_investments_to_current_liabilities",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:cash_and_equivalents",
+        "direct:financial_investments_current",
+        "direct:total_current_liabilities"
+      ],
+      "formula_description": "Cash and short-term financial investments divided by total current liabilities.",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    },
+    {
+      "metric_id": "net_working_capital",
+      "name": "Net İşletme Sermayesi",
+      "value": null,
+      "unit": "million_usd",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "net_working_capital",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:total_current_assets",
+        "direct:total_current_liabilities"
+      ],
+      "formula_description": "Total current assets minus total current liabilities.",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    }
+  ],
+  "leverage": [
+    {
+      "metric_id": "financial_debt",
+      "name": "Finansal Borç",
+      "value": null,
+      "unit": "million_usd",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "financial_debt",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:borrowings_short_term",
+        "direct:borrowings_long_term_current_portion",
+        "direct:borrowings_long_term"
+      ],
+      "formula_description": "Interest-bearing financial debt, excluding lease liabilities.",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    },
+    {
+      "metric_id": "lease_liability_total",
+      "name": "Kira Yükümlülük Toplam",
+      "value": null,
+      "unit": "million_usd",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "lease_liability_total",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:lease_liabilities_short_term",
+        "direct:lease_liabilities_long_term"
+      ],
+      "formula_description": "Total lease liabilities (current plus non-current).",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    },
+    {
+      "metric_id": "total_financial_liability_incl_lease",
+      "name": "Toplam Finansal Yükümlülük Dahil Kira",
+      "value": null,
+      "unit": "million_usd",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "total_financial_liability_incl_lease",
+      "formula_version": 1,
+      "formula_inputs": [
+        "derived:financial_debt",
+        "derived:lease_liability_total"
+      ],
+      "formula_description": "Financial debt plus total lease liabilities.",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    },
+    {
+      "metric_id": "net_financial_debt",
+      "name": "Net Finansal Borç",
+      "value": null,
+      "unit": "million_usd",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "net_financial_debt",
+      "formula_version": 1,
+      "formula_inputs": [
+        "derived:financial_debt",
+        "direct:cash_and_equivalents",
+        "direct:financial_investments_current",
+        "direct:financial_investments_noncurrent"
+      ],
+      "formula_description": "Financial debt minus cash and financial investments (excludes lease liabilities).",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    },
+    {
+      "metric_id": "net_financial_liability_incl_lease",
+      "name": "Net Finansal Yükümlülük Dahil Kira",
+      "value": null,
+      "unit": "million_usd",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "net_financial_liability_incl_lease",
+      "formula_version": 1,
+      "formula_inputs": [
+        "derived:total_financial_liability_incl_lease",
+        "direct:cash_and_equivalents",
+        "direct:financial_investments_current",
+        "direct:financial_investments_noncurrent"
+      ],
+      "formula_description": "Total financial liability including leases minus cash and financial investments.",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    },
+    {
+      "metric_id": "debt_to_equity",
+      "name": "Borç To Özkaynak",
+      "value": null,
+      "unit": "ratio",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "debt_to_equity",
+      "formula_version": 1,
+      "formula_inputs": [
+        "derived:financial_debt",
+        "direct:total_equity"
+      ],
+      "formula_description": "Financial debt (excluding leases) divided by total equity.",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    },
+    {
+      "metric_id": "liability_incl_lease_to_equity",
+      "name": "Yükümlülük Dahil Kira To Özkaynak",
+      "value": null,
+      "unit": "ratio",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "liability_incl_lease_to_equity",
+      "formula_version": 1,
+      "formula_inputs": [
+        "derived:total_financial_liability_incl_lease",
+        "direct:total_equity"
+      ],
+      "formula_description": "Total financial liability including leases divided by total equity.",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    }
+  ],
+  "returns": [
+    {
+      "metric_id": "roa",
+      "name": "Aktif Kârlılığı (ROA)",
+      "value": null,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "roa",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:net_profit_for_period",
+        "direct:total_assets"
+      ],
+      "formula_description": "Net profit for the period divided by the average of period-start and period-end total assets. Only computed for annual periods; interim periods are marked unavailable rather than annualized.",
+      "status": "unavailable",
+      "reason": "return ratios are only computed for annual periods without a TTM engine for the numerator"
+    },
+    {
+      "metric_id": "roe",
+      "name": "Özkaynak Kârlılığı (ROE)",
+      "value": null,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "roe",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:net_profit_attributable_parent",
+        "direct:equity_attributable_to_parent"
+      ],
+      "formula_description": "Net profit attributable to parent divided by the average of period-start and period-end equity attributable to parent. Annual periods only.",
+      "status": "unavailable",
+      "reason": "return ratios are only computed for annual periods without a TTM engine for the numerator"
+    },
+    {
+      "metric_id": "roic",
+      "name": "Yatırılan Sermaye Getirisi (ROIC)",
+      "value": null,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "roic",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:operating_profit_before_investment_activities",
+        "direct:tax_expense",
+        "direct:profit_before_tax",
+        "direct:total_equity",
+        "derived:net_financial_liability_incl_lease"
+      ],
+      "formula_description": "NOPAT (pre-investment operating profit taxed at the period's effective tax rate) divided by average invested capital (total equity plus net financial liability including leases, averaged period-start to period-end). Annual periods only.",
+      "status": "unavailable",
+      "reason": "ROIC is only computed for annual periods"
+    }
+  ],
+  "cash_generation": [
+    {
+      "metric_id": "free_cash_flow",
+      "name": "Serbest Nakit Akışı",
+      "value": 96.4,
+      "unit": "million_usd",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "free_cash_flow",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:cf_net_operating_activities",
+        "direct:cf_capex_ppe_intangible"
+      ],
+      "formula_description": "Net operating cash flow plus signed capex cash outflow. Excludes non-cash, directly lease-financed fleet/right-of-use asset additions, which never pass through operating or investing cash flow."
+    },
+    {
+      "metric_id": "ocf_to_net_profit",
+      "name": "İşletme Nakit Akışı To Net Kâr",
+      "value": 2.33,
+      "unit": "ratio",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "ocf_to_net_profit",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:cf_net_operating_activities",
+        "direct:net_profit_for_period"
+      ],
+      "formula_description": "Net operating cash flow divided by net profit for the period. Undefined (unavailable) when net profit is not positive."
+    },
+    {
+      "metric_id": "capex_to_revenue",
+      "name": "Yatırım Harcaması To Gelir",
+      "value": 2.1,
+      "unit": "percent",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "capex_to_revenue",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:cf_capex_ppe_intangible",
+        "direct:revenue_total"
+      ],
+      "formula_description": "Absolute cash capital expenditure as a percentage of total revenue."
+    },
+    {
+      "metric_id": "free_cash_flow_after_lease_payments",
+      "name": "Serbest Nakit Akışı Sonrası Kira Ödemeleri",
+      "value": null,
+      "unit": "million_usd",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "free_cash_flow_after_lease_payments",
+      "formula_version": 1,
+      "formula_inputs": [
+        "derived:free_cash_flow",
+        "direct:cf_lease_payments"
+      ],
+      "formula_description": "Standard free cash flow plus signed cash lease payments (an alternative FCF definition that treats lease payments as an operating-like cash outflow).",
+      "status": "unavailable",
+      "reason": "one or more input values are unavailable"
+    },
+    {
+      "metric_id": "deferred_revenue_change_contribution",
+      "name": "Ertelenmiş Gelir Değişimi Katkısı",
+      "value": null,
+      "unit": "million_usd",
+      "period": "2025-Q1",
+      "comparison_value": null,
+      "comparison_period": null,
+      "change": null,
+      "change_unit": "not_applicable",
+      "data_type": "derived",
+      "formula_id": "deferred_revenue_change_contribution",
+      "formula_version": 1,
+      "formula_inputs": [
+        "direct:cf_deferred_revenue_change"
+      ],
+      "formula_description": "The deferred-revenue change line item from the cash flow statement, carried through as-is with its own year-over-year percent change.",
+      "status": "unavailable",
+      "reason": "value is unavailable"
+    }
+  ]
+}

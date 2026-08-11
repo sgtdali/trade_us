@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/share-count-promotion-policy.schema.json",
+  "title": "Share-count promotion policy",
+  "description": "Governs the generic share-count-ledger-to-T70-observation promotion bridge: controlled concepts, reconciliation rules, zero-handling, derivation-type priority, and the corporate-action coverage requirement for current-valuation eligibility.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "policy_id",
+    "policy_version",
+    "controlled_concepts",
+    "reconciliation",
+    "zero_handling",
+    "derivation_priority",
+    "corporate_action_coverage_policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "share_count_promotion_policy"
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "controlled_concepts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "issued_shares",
+          "treasury_shares"
+        ]
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true
+    },
+    "reconciliation": {
+      "type": "object",
+      "required": [
+        "require_issued_positive",
+        "require_treasury_nonnegative",
+        "require_treasury_lte_issued",
+        "require_outstanding_positive"
+      ],
+      "properties": {
+        "require_issued_positive": {
+          "const": true
+        },
+        "require_treasury_nonnegative": {
+          "const": true
+        },
+        "require_treasury_lte_issued": {
+          "const": true
+        },
+        "require_outstanding_positive": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "zero_handling": {
+      "type": "object",
+      "required": [
+        "treasury_zero_requires_explicit_evidence"
+      ],
+      "properties": {
+        "treasury_zero_requires_explicit_evidence": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "derivation_priority": {
+      "description": "Ordered highest-to-lowest priority of derivation_type when the same-effective-date pool contains records with different derivation types. derived_from_percentage must always be listed last (lowest priority).",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "direct_disclosure",
+          "derived_from_direct_nominal_amount",
+          "derived_from_nominal_capital",
+          "reconciled_from_components",
+          "derived_from_percentage"
+        ]
+      },
+      "minItems": 5,
+      "maxItems": 5
+    },
+    "corporate_action_coverage_policy": {
+      "type": "object",
+      "required": [
+        "current_valuation_requires_status"
+      ],
+      "properties": {
+        "current_valuation_requires_status": {
+          "const": "complete"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "controlled_concepts"
+        ]
+      },
+      "then": {
+        "properties": {
+          "controlled_concepts": {
+            "contains": {
+              "const": "issued_shares"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "controlled_concepts"
+        ]
+      },
+      "then": {
+        "properties": {
+          "controlled_concepts": {
+            "contains": {
+              "const": "treasury_shares"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "derivation_priority"
+        ]
+      },
+      "then": {
+        "properties": {
+          "derivation_priority": {
+            "items": {
+              "enum": [
+                "direct_disclosure",
+                "derived_from_direct_nominal_amount",
+                "derived_from_nominal_capital",
+                "reconciled_from_components",
+                "derived_from_percentage"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

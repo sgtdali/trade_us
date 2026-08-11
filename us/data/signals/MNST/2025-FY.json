@@ -1,0 +1,332 @@
+{
+  "schema_version": 2,
+  "ticker": "MNST",
+  "period": "2025-FY",
+  "signals": [
+    {
+      "signal_id": "revenue_growth_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 2,
+      "components": {},
+      "evidence": {
+        "current_value": 8294.343,
+        "current_comparison_value": 7492.709
+      },
+      "reason_code": "growth_positive",
+      "reason_params": {
+        "growth_pct": 10.7
+      },
+      "reason": "Değer yıllık bazda +%10,7 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY.json"
+    },
+    {
+      "signal_id": "operating_profit_before_investment_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 2,
+      "components": {},
+      "evidence": {
+        "current_value": 2419.354,
+        "current_comparison_value": 1930.294
+      },
+      "reason_code": "growth_positive",
+      "reason_params": {
+        "growth_pct": 25.3
+      },
+      "reason": "Değer yıllık bazda +%25,3 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY.json"
+    },
+    {
+      "signal_id": "operating_profit_including_investments_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 2,
+      "components": {},
+      "evidence": {
+        "current_value": 2419.354,
+        "current_comparison_value": 1930.294
+      },
+      "reason_code": "growth_positive",
+      "reason_params": {
+        "growth_pct": 25.3
+      },
+      "reason": "Değer yıllık bazda +%25,3 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY.json"
+    },
+    {
+      "signal_id": "net_profit_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 2,
+      "components": {},
+      "evidence": {
+        "current_value": 1905.432,
+        "current_comparison_value": 1509.048
+      },
+      "reason_code": "growth_positive",
+      "reason_params": {
+        "growth_pct": 26.3
+      },
+      "reason": "Değer yıllık bazda +%26,3 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY.json"
+    },
+    {
+      "signal_id": "operating_cash_flow_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 2,
+      "components": {},
+      "evidence": {
+        "current_value": 2098.177,
+        "current_comparison_value": 1928.533
+      },
+      "reason_code": "growth_positive",
+      "reason_params": {
+        "growth_pct": 8.8
+      },
+      "reason": "Değer yıllık bazda +%8,8 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY.json"
+    },
+    {
+      "signal_id": "free_cash_flow_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 2,
+      "components": {},
+      "evidence": {
+        "current_value": 1965.9,
+        "current_comparison_value": 1664.5
+      },
+      "reason_code": "growth_positive",
+      "reason_params": {
+        "growth_pct": 18.1
+      },
+      "reason": "Değer yıllık bazda +%18,1 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY-derived-ratios.json"
+    },
+    {
+      "signal_id": "gross_margin_trend",
+      "rule_id": "margin_change_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 1,
+      "components": {},
+      "evidence": {
+        "margin_value": 55.85,
+        "margin_comparison_value": 54.04
+      },
+      "reason_code": "margin_positive",
+      "reason_params": {
+        "change_pp": 1.81
+      },
+      "reason": "Marj değişimi +1,8 yüzde puan ile pozitif eşiğin (≥ +0,5 puan) üzerindedir.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY-derived-ratios.json",
+      "context": {
+        "direction": "improving",
+        "absolute_state": "positive",
+        "presentation_status": "positive",
+        "required_data_complete": true,
+        "reason_code": "signal_context_raw_preserved",
+        "reason": "Ham sinyal ek bir bağlam kısıtı olmadan sunulabilir."
+      }
+    },
+    {
+      "signal_id": "operating_margin_trend",
+      "rule_id": "margin_change_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 1,
+      "components": {},
+      "evidence": {
+        "margin_value": 29.17,
+        "margin_comparison_value": 25.76
+      },
+      "reason_code": "margin_positive",
+      "reason_params": {
+        "change_pp": 3.41
+      },
+      "reason": "Marj değişimi +3,4 yüzde puan ile pozitif eşiğin (≥ +0,5 puan) üzerindedir.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY-derived-ratios.json",
+      "context": {
+        "direction": "improving",
+        "absolute_state": "positive",
+        "presentation_status": "positive",
+        "required_data_complete": true,
+        "reason_code": "signal_context_raw_preserved",
+        "reason": "Ham sinyal ek bir bağlam kısıtı olmadan sunulabilir."
+      }
+    },
+    {
+      "signal_id": "net_margin_trend",
+      "rule_id": "margin_change_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "positive",
+      "score": 1,
+      "components": {},
+      "evidence": {
+        "margin_value": 22.97,
+        "margin_comparison_value": 20.14
+      },
+      "reason_code": "margin_positive",
+      "reason_params": {
+        "change_pp": 2.83
+      },
+      "reason": "Marj değişimi +2,8 yüzde puan ile pozitif eşiğin (≥ +0,5 puan) üzerindedir.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY-derived-ratios.json",
+      "context": {
+        "direction": "improving",
+        "absolute_state": "positive",
+        "presentation_status": "positive",
+        "required_data_complete": true,
+        "reason_code": "signal_context_raw_preserved",
+        "reason": "Ham sinyal ek bir bağlam kısıtı olmadan sunulabilir."
+      }
+    },
+    {
+      "signal_id": "cash_conversion_trend",
+      "rule_id": "cash_conversion_ratio_change",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "negative",
+      "score": -1,
+      "components": {},
+      "evidence": {
+        "ratio_value": 1.1,
+        "ratio_comparison_value": 1.28
+      },
+      "reason_code": "cash_conversion_deteriorated",
+      "reason_params": {
+        "change": -0.18
+      },
+      "reason": "İşletme nakit akışı / net kâr oranı -0,2 oran puanı gerilemiştir.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY-derived-ratios.json"
+    },
+    {
+      "signal_id": "liquidity_trend",
+      "rule_id": "liquidity_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {
+        "current_ratio_value": 3.703,
+        "current_ratio_comparison_value": 3.318,
+        "cash_ratio_value": 1.91,
+        "cash_ratio_comparison_value": null
+      },
+      "reason_code": "liquidity_unavailable",
+      "reason_params": {},
+      "reason": "Likidite karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY-derived-ratios.json"
+    },
+    {
+      "signal_id": "leverage_trend",
+      "rule_id": "leverage_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {
+        "liability_ratio_value": null,
+        "liability_ratio_comparison_value": null
+      },
+      "reason_code": "leverage_unavailable",
+      "reason_params": {},
+      "reason": "Kaldıraç karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY-derived-ratios.json",
+      "context": {
+        "direction": "unavailable",
+        "absolute_state": "unknown",
+        "presentation_status": "unavailable",
+        "required_data_complete": false,
+        "reason_code": "signal_context_unavailable",
+        "reason": "Ham sinyal hesaplanamadığı için bağlamsal sınıflandırma yapılamamıştır."
+      }
+    },
+    {
+      "signal_id": "lease_burden_trend",
+      "rule_id": "lease_burden_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {
+        "lease_liability_value": null,
+        "lease_liability_comparison_value": null
+      },
+      "reason_code": "lease_burden_unavailable",
+      "reason_params": {},
+      "reason": "Kira yükü karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY-derived-ratios.json",
+      "context": {
+        "direction": "unavailable",
+        "absolute_state": "unknown",
+        "presentation_status": "unavailable",
+        "required_data_complete": false,
+        "reason_code": "signal_context_unavailable",
+        "reason": "Ham sinyal hesaplanamadığı için bağlamsal sınıflandırma yapılamamıştır."
+      }
+    },
+    {
+      "signal_id": "deferred_revenue_trend",
+      "rule_id": "deferred_revenue_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {},
+      "reason_code": "deferred_revenue_unavailable",
+      "reason_params": {},
+      "reason": "Ertelenmiş gelir karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/MNST/2025-FY.json"
+    }
+  ]
+}

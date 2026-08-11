@@ -1,0 +1,246 @@
+{
+ "schema_version": 1,
+ "provider": "yfinance",
+ "ticker_mappings": [
+  {
+   "internal_ticker": "AAPL",
+   "provider_symbol": "AAPL"
+  },
+  {
+   "internal_ticker": "ABBV",
+   "provider_symbol": "ABBV"
+  },
+  {
+   "internal_ticker": "ABT",
+   "provider_symbol": "ABT"
+  },
+  {
+   "internal_ticker": "ADBE",
+   "provider_symbol": "ADBE"
+  },
+  {
+   "internal_ticker": "ADI",
+   "provider_symbol": "ADI"
+  },
+  {
+   "internal_ticker": "AMD",
+   "provider_symbol": "AMD"
+  },
+  {
+   "internal_ticker": "AVGO",
+   "provider_symbol": "AVGO"
+  },
+  {
+   "internal_ticker": "BDX",
+   "provider_symbol": "BDX"
+  },
+  {
+   "internal_ticker": "BJ",
+   "provider_symbol": "BJ"
+  },
+  {
+   "internal_ticker": "BMY",
+   "provider_symbol": "BMY"
+  },
+  {
+   "internal_ticker": "BSX",
+   "provider_symbol": "BSX"
+  },
+  {
+   "internal_ticker": "CAG",
+   "provider_symbol": "CAG"
+  },
+  {
+   "internal_ticker": "CAT",
+   "provider_symbol": "CAT"
+  },
+  {
+   "internal_ticker": "CELH",
+   "provider_symbol": "CELH"
+  },
+  {
+   "internal_ticker": "CHD",
+   "provider_symbol": "CHD"
+  },
+  {
+   "internal_ticker": "CL",
+   "provider_symbol": "CL"
+  },
+  {
+   "internal_ticker": "CLX",
+   "provider_symbol": "CLX"
+  },
+  {
+   "internal_ticker": "CMI",
+   "provider_symbol": "CMI"
+  },
+  {
+   "internal_ticker": "COST",
+   "provider_symbol": "COST"
+  },
+  {
+   "internal_ticker": "CPB",
+   "provider_symbol": "CPB"
+  },
+  {
+   "internal_ticker": "CSCO",
+   "provider_symbol": "CSCO"
+  },
+  {
+   "internal_ticker": "CSX",
+   "provider_symbol": "CSX"
+  },
+  {
+   "internal_ticker": "DE",
+   "provider_symbol": "DE"
+  },
+  {
+   "internal_ticker": "DELL",
+   "provider_symbol": "DELL"
+  },
+  {
+   "internal_ticker": "DG",
+   "provider_symbol": "DG"
+  },
+  {
+   "internal_ticker": "EMR",
+   "provider_symbol": "EMR"
+  },
+  {
+   "internal_ticker": "ETN",
+   "provider_symbol": "ETN"
+  },
+  {
+   "internal_ticker": "FIZZ",
+   "provider_symbol": "FIZZ"
+  },
+  {
+   "internal_ticker": "GIS",
+   "provider_symbol": "GIS"
+  },
+  {
+   "internal_ticker": "HON",
+   "provider_symbol": "HON"
+  },
+  {
+   "internal_ticker": "HPQ",
+   "provider_symbol": "HPQ"
+  },
+  {
+   "internal_ticker": "ITW",
+   "provider_symbol": "ITW"
+  },
+  {
+   "internal_ticker": "JNJ",
+   "provider_symbol": "JNJ"
+  },
+  {
+   "internal_ticker": "KDP",
+   "provider_symbol": "KDP"
+  },
+  {
+   "internal_ticker": "KHC",
+   "provider_symbol": "KHC"
+  },
+  {
+   "internal_ticker": "KMB",
+   "provider_symbol": "KMB"
+  },
+  {
+   "internal_ticker": "KO",
+   "provider_symbol": "KO"
+  },
+  {
+   "internal_ticker": "KR",
+   "provider_symbol": "KR"
+  },
+  {
+   "internal_ticker": "LLY",
+   "provider_symbol": "LLY"
+  },
+  {
+   "internal_ticker": "MDLZ",
+   "provider_symbol": "MDLZ"
+  },
+  {
+   "internal_ticker": "MDT",
+   "provider_symbol": "MDT"
+  },
+  {
+   "internal_ticker": "MMM",
+   "provider_symbol": "MMM"
+  },
+  {
+   "internal_ticker": "MNST",
+   "provider_symbol": "MNST"
+  },
+  {
+   "internal_ticker": "MRK",
+   "provider_symbol": "MRK"
+  },
+  {
+   "internal_ticker": "MSFT",
+   "provider_symbol": "MSFT"
+  },
+  {
+   "internal_ticker": "NSC",
+   "provider_symbol": "NSC"
+  },
+  {
+   "internal_ticker": "NVDA",
+   "provider_symbol": "NVDA"
+  },
+  {
+   "internal_ticker": "NWL",
+   "provider_symbol": "NWL"
+  },
+  {
+   "internal_ticker": "ORCL",
+   "provider_symbol": "ORCL"
+  },
+  {
+   "internal_ticker": "PEP",
+   "provider_symbol": "PEP"
+  },
+  {
+   "internal_ticker": "PFE",
+   "provider_symbol": "PFE"
+  },
+  {
+   "internal_ticker": "PG",
+   "provider_symbol": "PG"
+  },
+  {
+   "internal_ticker": "PH",
+   "provider_symbol": "PH"
+  },
+  {
+   "internal_ticker": "SJM",
+   "provider_symbol": "SJM"
+  },
+  {
+   "internal_ticker": "SYK",
+   "provider_symbol": "SYK"
+  },
+  {
+   "internal_ticker": "TGT",
+   "provider_symbol": "TGT"
+  },
+  {
+   "internal_ticker": "TXN",
+   "provider_symbol": "TXN"
+  },
+  {
+   "internal_ticker": "UNP",
+   "provider_symbol": "UNP"
+  },
+  {
+   "internal_ticker": "WMT",
+   "provider_symbol": "WMT"
+  },
+  {
+   "internal_ticker": "ZBH",
+   "provider_symbol": "ZBH"
+  }
+ ]
+}

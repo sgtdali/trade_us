@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "ticker": "PG",
+  "period": "2026-Q3",
+  "generated_from": {
+    "signals": "data/signals/PG/2026-Q3.json",
+    "risks": "data/risks/PG/2026-Q3.json"
+  },
+  "input_completeness": {
+    "company_type": "standard_corporate",
+    "sector_module": "generic",
+    "required_metrics": {
+      "applicable": 6,
+      "available": 6,
+      "missing": 0,
+      "missing_ids": [],
+      "completeness_pct": 100.0
+    },
+    "optional_metrics": {
+      "applicable": 1,
+      "available": 1,
+      "missing": 0,
+      "missing_ids": [],
+      "completeness_pct": 100.0
+    },
+    "provenance": {
+      "applicable": 6,
+      "available": 6,
+      "missing": 0,
+      "completeness_pct": 100.0
+    }
+  },
+  "summaries": {
+    "profitability_summary": {
+      "status": "mixed",
+      "positive_signals": [
+        "net_profit_trend"
+      ],
+      "negative_signals": [
+        "gross_margin_trend",
+        "operating_margin_trend"
+      ],
+      "neutral_signals": [
+        "revenue_growth_trend",
+        "operating_profit_before_investment_trend",
+        "operating_profit_including_investments_trend",
+        "net_margin_trend"
+      ],
+      "unavailable_signals": [],
+      "missing_signals": [],
+      "key_drivers": [
+        "Değer yıllık bazda +%5,0 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+        "Marj değişimi -1,1 yüzde puan ile negatif eşiğin (≤ -0,5 puan) altındadır.",
+        "Marj değişimi -1,4 yüzde puan ile negatif eşiğin (≤ -0,5 puan) altındadır."
+      ],
+      "completeness": {
+        "section_signals": {
+          "applicable": 7,
+          "available": 7,
+          "unavailable": 0,
+          "missing": 0,
+          "completeness_pct": 100.0
+        }
+      },
+      "data_completeness": 100.0,
+      "investment_signal": false
+    },
+    "cash_flow_summary": {
+      "status": "positive",
+      "positive_signals": [
+        "operating_cash_flow_trend",
+        "free_cash_flow_trend"
+      ],
+      "negative_signals": [],
+      "neutral_signals": [
+        "cash_conversion_trend"
+      ],
+      "unavailable_signals": [
+        "deferred_revenue_trend"
+      ],
+      "missing_signals": [],
+      "key_drivers": [
+        "Değer yıllık bazda +%12,4 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+        "Değer yıllık bazda +%9,8 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde)."
+      ],
+      "completeness": {
+        "section_signals": {
+          "applicable": 4,
+          "available": 3,
+          "unavailable": 1,
+          "missing": 0,
+          "completeness_pct": 75.0
+        }
+      },
+      "data_completeness": 75.0,
+      "investment_signal": false
+    },
+    "balance_sheet_summary": {
+      "status": "insufficient_data",
+      "positive_signals": [],
+      "negative_signals": [],
+      "neutral_signals": [],
+      "unavailable_signals": [
+        "deferred_revenue_trend",
+        "lease_burden_trend",
+        "leverage_trend"
+      ],
+      "missing_signals": [],
+      "key_drivers": [],
+      "completeness": {
+        "section_signals": {
+          "applicable": 3,
+          "available": 0,
+          "unavailable": 3,
+          "missing": 0,
+          "completeness_pct": 0.0
+        }
+      },
+      "data_completeness": 0.0,
+      "investment_signal": false
+    },
+    "liquidity_summary": {
+      "status": "insufficient_data",
+      "positive_signals": [],
+      "negative_signals": [],
+      "neutral_signals": [],
+      "unavailable_signals": [
+        "liquidity_trend"
+      ],
+      "missing_signals": [],
+      "key_drivers": [],
+      "completeness": {
+        "section_signals": {
+          "applicable": 1,
+          "available": 0,
+          "unavailable": 1,
+          "missing": 0,
+          "completeness_pct": 0.0
+        }
+      },
+      "data_completeness": 0.0,
+      "investment_signal": false
+    },
+    "leverage_summary": {
+      "status": "insufficient_data",
+      "positive_signals": [],
+      "negative_signals": [],
+      "neutral_signals": [],
+      "unavailable_signals": [
+        "leverage_trend",
+        "lease_burden_trend"
+      ],
+      "missing_signals": [],
+      "key_drivers": [],
+      "completeness": {
+        "section_signals": {
+          "applicable": 2,
+          "available": 0,
+          "unavailable": 2,
+          "missing": 0,
+          "completeness_pct": 0.0
+        }
+      },
+      "data_completeness": 0.0,
+      "investment_signal": false
+    },
+    "risk_summary": {
+      "status": "negative",
+      "positive_signals": [],
+      "negative_signals": [
+        "competition_and_demand",
+        "supply_chain_and_inputs",
+        "cybersecurity_and_systems",
+        "regulation_and_litigation",
+        "foreign_currency_and_macro",
+        "climate_and_environment"
+      ],
+      "neutral_signals": [],
+      "unavailable_signals": [],
+      "missing_signals": [],
+      "key_risks": [],
+      "completeness": {
+        "section_signals": {
+          "applicable": 6,
+          "available": 6,
+          "unavailable": 0,
+          "missing": 0,
+          "completeness_pct": 100.0
+        }
+      },
+      "data_completeness": 100.0,
+      "investment_signal": false
+    },
+    "company_fundamentals_summary": {
+      "status": "mixed",
+      "positive_signals": [
+        "net_profit_trend",
+        "operating_cash_flow_trend",
+        "free_cash_flow_trend"
+      ],
+      "negative_signals": [
+        "gross_margin_trend",
+        "operating_margin_trend"
+      ],
+      "neutral_signals": [
+        "revenue_growth_trend",
+        "operating_profit_before_investment_trend",
+        "operating_profit_including_investments_trend",
+        "net_margin_trend",
+        "cash_conversion_trend"
+      ],
+      "unavailable_signals": [
+        "liquidity_trend",
+        "leverage_trend",
+        "lease_burden_trend",
+        "deferred_revenue_trend"
+      ],
+      "missing_signals": [],
+      "key_drivers": [
+        "Değer yıllık bazda +%5,0 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+        "Değer yıllık bazda +%12,4 artmıştır (büyüme kuralı v1: ≥ %5 pozitif eşiğinin üzerinde).",
+        "Marj değişimi -1,1 yüzde puan ile negatif eşiğin (≤ -0,5 puan) altındadır.",
+        "Marj değişimi -1,4 yüzde puan ile negatif eşiğin (≤ -0,5 puan) altındadır."
+      ],
+      "completeness": {
+        "section_signals": {
+          "applicable": 14,
+          "available": 10,
+          "unavailable": 4,
+          "missing": 0,
+          "completeness_pct": 71.4
+        }
+      },
+      "data_completeness": 71.4,
+      "investment_signal": false
+    }
+  }
+}

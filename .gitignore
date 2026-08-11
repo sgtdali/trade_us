@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.secrets/
+.venv/
+
+# Regenerable SEC filing archives and live run cache. Compact accession
+# manifests and normalized facts under us/data remain tracked.
+/us/raw-cache/
+
+us/guidance/*
+!us/guidance/notebooks.json
+
+# KPI aday hasadi: us_kpi_harvest.py ile yeniden uretilir
+us/pei/kpi/
+
+# Canli kosu koku: neredeyse tamami SEC belge onbellegi, us_live_history.py
+# ile yeniden uretilebilir.
+/us/live/

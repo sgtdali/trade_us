@@ -1,0 +1,320 @@
+{
+  "schema_version": 2,
+  "ticker": "CLX",
+  "period": "2026-Q3",
+  "signals": [
+    {
+      "signal_id": "revenue_growth_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "negative",
+      "score": -2,
+      "components": {},
+      "evidence": {
+        "current_value": 4772,
+        "current_comparison_value": 5116
+      },
+      "reason_code": "growth_negative",
+      "reason_params": {
+        "growth_pct": -6.7
+      },
+      "reason": "Değer yıllık bazda -%6,7 gerilemiştir (büyüme kuralı v1: ≤ -%5 negatif eşiğinin altında).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3.json"
+    },
+    {
+      "signal_id": "operating_profit_before_investment_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {},
+      "reason_code": "growth_unavailable",
+      "reason_params": {},
+      "reason": "Karşılaştırma için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3.json"
+    },
+    {
+      "signal_id": "operating_profit_including_investments_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {},
+      "reason_code": "growth_unavailable",
+      "reason_params": {},
+      "reason": "Karşılaştırma için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3.json"
+    },
+    {
+      "signal_id": "net_profit_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "negative",
+      "score": -2,
+      "components": {},
+      "evidence": {
+        "current_value": 434,
+        "current_comparison_value": 488
+      },
+      "reason_code": "growth_negative",
+      "reason_params": {
+        "growth_pct": -11.1
+      },
+      "reason": "Değer yıllık bazda -%11,1 gerilemiştir (büyüme kuralı v1: ≤ -%5 negatif eşiğinin altında).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3.json"
+    },
+    {
+      "signal_id": "operating_cash_flow_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "negative",
+      "score": -2,
+      "components": {},
+      "evidence": {
+        "current_value": 282,
+        "current_comparison_value": 687
+      },
+      "reason_code": "growth_negative",
+      "reason_params": {
+        "growth_pct": -59.0
+      },
+      "reason": "Değer yıllık bazda -%59,0 gerilemiştir (büyüme kuralı v1: ≤ -%5 negatif eşiğinin altında).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3.json"
+    },
+    {
+      "signal_id": "free_cash_flow_trend",
+      "rule_id": "growth_or_transition_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "negative",
+      "score": -2,
+      "components": {},
+      "evidence": {
+        "current_value": 161.0,
+        "current_comparison_value": 542.0
+      },
+      "reason_code": "growth_negative",
+      "reason_params": {
+        "growth_pct": -70.3
+      },
+      "reason": "Değer yıllık bazda -%70,3 gerilemiştir (büyüme kuralı v1: ≤ -%5 negatif eşiğinin altında).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3-derived-ratios.json"
+    },
+    {
+      "signal_id": "gross_margin_trend",
+      "rule_id": "margin_change_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "negative",
+      "score": -1,
+      "components": {},
+      "evidence": {
+        "margin_value": 42.75,
+        "margin_comparison_value": 44.74
+      },
+      "reason_code": "margin_negative",
+      "reason_params": {
+        "change_pp": -1.99
+      },
+      "reason": "Marj değişimi -2,0 yüzde puan ile negatif eşiğin (≤ -0,5 puan) altındadır.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3-derived-ratios.json",
+      "context": {
+        "direction": "deteriorating",
+        "absolute_state": "positive",
+        "presentation_status": "negative",
+        "required_data_complete": true,
+        "reason_code": "signal_context_raw_preserved",
+        "reason": "Ham sinyal ek bir bağlam kısıtı olmadan sunulabilir."
+      }
+    },
+    {
+      "signal_id": "operating_margin_trend",
+      "rule_id": "margin_change_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {
+        "margin_value": null,
+        "margin_comparison_value": null
+      },
+      "reason_code": "margin_unavailable",
+      "reason_params": {},
+      "reason": "Marj karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3-derived-ratios.json",
+      "context": {
+        "direction": "unavailable",
+        "absolute_state": "unknown",
+        "presentation_status": "unavailable",
+        "required_data_complete": true,
+        "reason_code": "signal_context_unavailable",
+        "reason": "Ham sinyal hesaplanamadığı için bağlamsal sınıflandırma yapılamamıştır."
+      }
+    },
+    {
+      "signal_id": "net_margin_trend",
+      "rule_id": "margin_change_band",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "neutral",
+      "score": 0,
+      "components": {},
+      "evidence": {
+        "margin_value": 9.09,
+        "margin_comparison_value": 9.54
+      },
+      "reason_code": "margin_neutral",
+      "reason_params": {
+        "change_pp": -0.45
+      },
+      "reason": "Marj değişimi -0,5 yüzde puan ile yatay kabul edilir (±0,5 puan aralığında).",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3-derived-ratios.json",
+      "context": {
+        "direction": "stable",
+        "absolute_state": "positive",
+        "presentation_status": "neutral",
+        "required_data_complete": true,
+        "reason_code": "signal_context_raw_preserved",
+        "reason": "Ham sinyal ek bir bağlam kısıtı olmadan sunulabilir."
+      }
+    },
+    {
+      "signal_id": "cash_conversion_trend",
+      "rule_id": "cash_conversion_ratio_change",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "negative",
+      "score": -1,
+      "components": {},
+      "evidence": {
+        "ratio_value": 0.65,
+        "ratio_comparison_value": 1.41
+      },
+      "reason_code": "cash_conversion_deteriorated",
+      "reason_params": {
+        "change": -0.76
+      },
+      "reason": "İşletme nakit akışı / net kâr oranı -0,8 oran puanı gerilemiştir.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3-derived-ratios.json"
+    },
+    {
+      "signal_id": "liquidity_trend",
+      "rule_id": "liquidity_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {
+        "current_ratio_value": 0.84,
+        "current_ratio_comparison_value": null,
+        "cash_ratio_value": null,
+        "cash_ratio_comparison_value": null
+      },
+      "reason_code": "liquidity_unavailable",
+      "reason_params": {},
+      "reason": "Likidite karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3-derived-ratios.json"
+    },
+    {
+      "signal_id": "leverage_trend",
+      "rule_id": "leverage_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {
+        "liability_ratio_value": null,
+        "liability_ratio_comparison_value": null
+      },
+      "reason_code": "leverage_unavailable",
+      "reason_params": {},
+      "reason": "Kaldıraç karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3-derived-ratios.json",
+      "context": {
+        "direction": "unavailable",
+        "absolute_state": "unknown",
+        "presentation_status": "unavailable",
+        "required_data_complete": false,
+        "reason_code": "signal_context_unavailable",
+        "reason": "Ham sinyal hesaplanamadığı için bağlamsal sınıflandırma yapılamamıştır."
+      }
+    },
+    {
+      "signal_id": "lease_burden_trend",
+      "rule_id": "lease_burden_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {
+        "lease_liability_value": 408.0,
+        "lease_liability_comparison_value": null
+      },
+      "reason_code": "lease_burden_unavailable",
+      "reason_params": {},
+      "reason": "Kira yükü karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3-derived-ratios.json",
+      "context": {
+        "direction": "unavailable",
+        "absolute_state": "unknown",
+        "presentation_status": "unavailable",
+        "required_data_complete": false,
+        "reason_code": "signal_context_unavailable",
+        "reason": "Ham sinyal hesaplanamadığı için bağlamsal sınıflandırma yapılamamıştır."
+      }
+    },
+    {
+      "signal_id": "deferred_revenue_trend",
+      "rule_id": "deferred_revenue_composite",
+      "rule_version": 1,
+      "sector_module": "generic",
+      "value": "unavailable",
+      "score": null,
+      "components": {},
+      "evidence": {},
+      "reason_code": "deferred_revenue_unavailable",
+      "reason_params": {},
+      "reason": "Ertelenmiş gelir karşılaştırması için gerekli değerler mevcut değil.",
+      "interpretation_scope": "financial",
+      "investment_signal": false,
+      "source_data": "data/financial/CLX/2026-Q3.json"
+    }
+  ]
+}

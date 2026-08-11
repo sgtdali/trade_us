@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "US point-in-time backtest portfolio decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_type",
+    "positions",
+    "cash_weight",
+    "cash_rationale",
+    "portfolio_rationale",
+    "rejected_companies",
+    "uncertainties",
+    "confidence"
+  ],
+  "properties": {
+    "decision_type": {
+      "enum": [
+        "initial_formation",
+        "monthly_review"
+      ]
+    },
+    "positions": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ticker",
+          "weight",
+          "action",
+          "rationale",
+          "thesis_status"
+        ],
+        "properties": {
+          "ticker": {
+            "type": "string",
+            "pattern": "^[A-Z]{1,5}$"
+          },
+          "weight": {
+            "type": "number",
+            "const": 0.1
+          },
+          "action": {
+            "enum": [
+              "add",
+              "keep"
+            ]
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "thesis_status": {
+            "enum": [
+              "intact",
+              "conditional",
+              "overridden_company_rejection"
+            ]
+          }
+        }
+      }
+    },
+    "cash_weight": {
+      "type": "number",
+      "enum": [
+        0.0,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0
+      ]
+    },
+    "cash_rationale": {
+      "type": "string"
+    },
+    "portfolio_rationale": {
+      "type": "string"
+    },
+    "rejected_companies": {
+      "type": "array",
+      "minItems": 20,
+      "maxItems": 24,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ticker",
+          "reason"
+        ],
+        "properties": {
+          "ticker": {
+            "type": "string",
+            "pattern": "^[A-Z]{1,5}$"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confidence": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
+  }
+}

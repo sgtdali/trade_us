@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/valuation-comparison-observations.schema.json",
+  "title": "Governed valuation_comparison_observations input artifact (T74-A)",
+  "description": "Offline governed local artifact of exact historical-monthly or peer-member observations used by the historical_self and sector_peer engines (docs/valuation-t74-02-comparison-schema-policy-universe-specification.md Section 10). owner_type is always 'authored'. Never contains a URL, a provider identifier, a mutable-latest selection, or a calculated rank/percentile -- those are always recomputed by the engine, never trusted from this input.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "artifact_id",
+    "owner_type",
+    "observation_set_id",
+    "observation_kind",
+    "method_family_id",
+    "method_variant_id",
+    "currency",
+    "accounting_basis",
+    "consolidation",
+    "observations",
+    "lineage"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "valuation_comparison_observations"
+    },
+    "artifact_id": {
+      "type": "string",
+      "pattern": "^valuation-comparison-observations:[a-z0-9][a-z0-9_.\\-]{0,63}:[0-9]+$"
+    },
+    "owner_type": {
+      "const": "authored"
+    },
+    "observation_set_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observation_kind": {
+      "type": "string",
+      "enum": [
+        "historical_monthly",
+        "peer_member"
+      ]
+    },
+    "method_family_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "method_variant_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "currency": {
+      "type": "string",
+      "minLength": 1
+    },
+    "accounting_basis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "consolidation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "observation_id",
+          "company_or_member_id",
+          "ticker",
+          "as_of_date",
+          "cutoff_instant",
+          "value",
+          "status",
+          "financial_anchor_ref",
+          "claim_basis",
+          "lease_basis",
+          "corporate_action_basis",
+          "formula_ref",
+          "policy_version",
+          "confidence",
+          "provenance_refs"
+        ],
+        "properties": {
+          "observation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "company_or_member_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ticker": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/ticker"
+          },
+          "as_of_date": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+          },
+          "cutoff_instant": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+          },
+          "value": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+          },
+          "status": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus"
+          },
+          "financial_anchor_ref": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          },
+          "claim_basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lease_basis": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          },
+          "corporate_action_basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formula_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "policy_version": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+          },
+          "confidence": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+          },
+          "provenance_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/observationProvenanceRef"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "required": [
+        "dag"
+      ],
+      "properties": {
+        "dag": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/lineageDag"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "observationProvenanceRef": {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "artifact_id",
+        "relative_path"
+      ],
+      "properties": {
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relative_path": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/relativePath"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

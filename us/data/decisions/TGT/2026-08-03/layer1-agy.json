@@ -1,0 +1,125 @@
+{
+  "yargi": "tez_var",
+  "alinmaz_nedeni": null,
+  "tez": "Target Corporation demonstrates resilient top-line momentum with 6.7 percent YoY revenue growth and 9.9 percent gross profit growth in fiscal Q1 2026, alongside robust operating cash flow generation of 716.0 million USD (up 160.4 percent YoY). Despite short-term operating profit compression from cost inflation, TGT maintains a solid balance sheet with 3,534.0 million USD in cash easily covering 1,133.0 million USD of current debt maturities, low refinancing risk, an above-peer-median earnings yield of 5.09 percent, and a 6/9 Piotroski F-score. The investment thesis centers on sustained revenue growth and gross margin stability expanding operating margins back toward historical levels.",
+  "tez_testleri": [
+    {
+      "metric_id": "revenue_growth",
+      "baseline": 6.7,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "revenue_growth falls below 3.0 percent"
+    },
+    {
+      "metric_id": "operating_profit_growth",
+      "baseline": -22.9,
+      "expected_direction": "increase",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "operating_profit_growth remains below 0.0 percent"
+    },
+    {
+      "metric_id": "gross_margin",
+      "baseline": 29.01,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "gross_margin falls below 28.0 percent"
+    }
+  ],
+  "belirleyici_veriler": [
+    {
+      "tur": "sayisal",
+      "reported_value": 19.63,
+      "report_section": "1",
+      "aciklama": "Target trades at a Price to Earnings ratio of 19.63x based on TTM net income attributable to parent of 3,450.0 million USD."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 6.7,
+      "report_section": "10",
+      "aciklama": "Year-over-year total revenue growth reached 6.7 percent in fiscal Q1 2026."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 160.4,
+      "report_section": "10",
+      "aciklama": "Net operating cash flow grew by 160.4 percent year-over-year to 716.0 million USD in fiscal Q1 2026."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 5.09,
+      "report_section": "8",
+      "aciklama": "Target's earnings yield of 5.09 percent significantly exceeds the sector peer median of 2.94 percent."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 3534.0,
+      "report_section": "5",
+      "aciklama": "Cash and cash equivalents of 3,534.0 million USD provide ample coverage against current debt maturities of 1,133.0 million USD."
+    }
+  ],
+  "tezi_bozacak_kosullar": [
+    "Persistent operating margin contraction driven by uncontained operating expense inflation across consecutive quarters.",
+    "Deceleration of revenue growth into negative territory, indicating market share losses in core merchandise categories.",
+    "Significant deterioration in cash conversion and operating cash flow performance."
+  ],
+  "belirsizlik": [
+    "Omission of structured debt and operating lease maturity schedules in the controlling Q1 2026 filing.",
+    "Lack of explicitly reported current lease liabilities and current financial debt breakdown on the Q1 balance sheet snapshot.",
+    "Non-disclosure of issuer-reported EBITDA and net debt APM figures."
+  ],
+  "guven": "yuksek",
+  "validation": {
+    "numeric_evidence": [
+      {
+        "evidence_index": 0,
+        "reported_value": 19.63,
+        "report_section": "1",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 1,
+        "reported_value": 6.7,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 2,
+        "reported_value": 160.4,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 3,
+        "reported_value": 5.09,
+        "report_section": "8",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 4,
+        "reported_value": 3534.0,
+        "report_section": "5",
+        "status": "verified",
+        "reason": null
+      }
+    ]
+  },
+  "provenance": {
+    "layer": 1,
+    "market": "US",
+    "ticker": "TGT",
+    "as_of": "2026-08-03",
+    "model_key": "agy",
+    "model_id": "gemini-3.6-flash-medium",
+    "prompt_version": "us-layer1.v1",
+    "prompt_sha256": "5735d732c71afd646f096a13b07e1292c98e8bc1e40272df2ab37d2e197a813f",
+    "attempt_count": 1,
+    "report_sha256": "f67489a34783386cfaf12534a3a272ca2cf32095f2cb5ea9b36d480fb3e32040",
+    "generated_at": "2026-08-04T07:06:38.331801+00:00",
+    "repo_commit_sha": "82f5e00d089fb2791b8ed3866790beb38d2f12c5",
+    "stderr_tail": ""
+  }
+}

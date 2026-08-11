@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fundemental-trading/schemas/risks.schema.json",
+  "title": "Authored structured risk records",
+  "type": "object",
+  "required": ["schema_version", "ticker", "period", "risks"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1, "maximum": 1},
+    "ticker": {"type": "string", "pattern": "^[A-Z0-9.\\-]+$"},
+    "period": {"type": "string"},
+    "as_of": {"type": ["string", "null"]},
+    "scope_note": {"type": ["string", "null"]},
+    "analysis_status": {"type": "string", "enum": ["available", "unavailable"]},
+    "unavailable_reason_code": {
+      "type": ["string", "null"],
+      "enum": [
+        "risk_not_authored",
+        "risk_extraction_failed",
+        "risk_dependency_unavailable",
+        "risk_shape_validation_failed",
+        "risk_numeric_validation_failed",
+        null
+      ]
+    },
+    "validation_findings": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["risk_id", "category", "title", "description", "direction", "severity", "time_horizon", "evidence"],
+        "properties": {
+          "risk_id": {"type": "string"},
+          "category": {"type": "string"},
+          "title": {"type": "string"},
+          "description": {"type": "string"},
+          "direction": {"type": "string", "enum": ["positive", "negative", "mixed"]},
+          "severity": {"type": "string", "enum": ["low", "medium", "high"]},
+          "severity_rationale": {"type": ["string", "null"]},
+          "time_horizon": {"type": "string", "enum": ["short", "medium", "long"]},
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["source_id", "source_file", "summary"],
+              "properties": {
+                "source_id": {
+                  "type": "string", "minLength": 1,
+                  "description": "Manifest source_id when source_file is under raw/; the source_id backing the cited file's own metrics when source_file instead references another normalized pipeline file (e.g. data/financial/TICKER/PERIOD.json)."
+                },
+                "source_file": {"type": "string"},
+                "page": {"type": ["integer", "null"]},
+                "summary": {"type": "string"}
+              },
+              "additionalProperties": false
+            }
+          },
+          "mitigants": {"type": ["array", "null"], "items": {"type": "string"}},
+          "quantified_effect": {"type": ["string", "number", "object", "null"]},
+          "notes": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

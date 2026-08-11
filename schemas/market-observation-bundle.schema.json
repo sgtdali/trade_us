@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/market-observation-bundle.schema.json",
+  "title": "Market observation bundle",
+  "description": "Mirrors the closed observation transport contract owned by fundamental_pipeline.valuation.market.observations.parse_observation_bundle -- the exact same required/optional field set, enums, and top-level '{\"observations\": [...]}' shape. This schema is a second-order contract check (used by promotion CLI/tests, and by tests/contract asserting schema and parser never silently diverge); the parser itself remains the sole runtime authority and additionally enforces numeric-sign rules (price/fx/issued_shares strictly positive, treasury_shares non-negative) and cross-observation duplicate-ID checks that are impractical to express in JSON Schema alone.",
+  "type": "object",
+  "required": ["observations"],
+  "properties": {
+    "observations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/observation"}
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "observation": {
+      "type": "object",
+      "required": [
+        "observation_id", "observation_type", "instrument_or_pair", "value", "unit",
+        "effective_at", "published_at", "available_at", "source_manifest_id"
+      ],
+      "properties": {
+        "observation_id": {"type": "string", "minLength": 1},
+        "observation_type": {"type": "string", "enum": ["price", "share_count", "fx"]},
+        "instrument_or_pair": {"type": "string", "minLength": 1},
+        "value": {"$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"},
+        "unit": {"type": "string", "minLength": 1},
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "price_mode": {"type": "string", "enum": ["official_close", "intraday", "historical_close", "diagnostic_reference"]},
+        "fx_mode": {"type": "string", "enum": ["daily_benchmark", "market_close", "intraday_spot", "historical_benchmark", "diagnostic_reference", "accounting_translation"]},
+        "effective_at": {"$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"},
+        "published_at": {"$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"},
+        "available_at": {"$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"},
+        "source_manifest_id": {"type": "string", "minLength": 1},
+        "source_record_ref": {"type": "string"},
+        "revision_id": {"type": "string"},
+        "revision_status": {"type": "string", "enum": ["original", "corrected", "restated", "withdrawn", "unknown"]},
+        "supersedes_revision_id": {"type": "string"},
+        "ingested_at": {"type": "string"}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"observation_type": {"const": "fx"}}, "required": ["observation_type"]},
+          "then": {"properties": {"instrument_or_pair": {"pattern": "^[A-Z]{3}/[A-Z]{3}$"}}}
+        },
+        {
+          "if": {"properties": {"observation_type": {"const": "share_count"}}, "required": ["observation_type"]},
+          "then": {"properties": {"instrument_or_pair": {"pattern": "(:issued_shares|:treasury_shares)$"}}}
+        },
+        {
+          "if": {"properties": {"observation_type": {"const": "price"}}, "required": ["observation_type"]},
+          "then": {"required": ["currency", "price_mode"]}
+        },
+        {
+          "if": {"not": {"properties": {"observation_type": {"const": "price"}}, "required": ["observation_type"]}},
+          "then": {"not": {"required": ["price_mode"]}}
+        },
+        {
+          "if": {"properties": {"observation_type": {"const": "fx"}}, "required": ["observation_type"]},
+          "then": {"required": ["fx_mode"]}
+        },
+        {
+          "if": {"not": {"properties": {"observation_type": {"const": "fx"}}, "required": ["observation_type"]}},
+          "then": {"not": {"required": ["fx_mode"]}}
+        },
+        {
+          "if": {"required": ["supersedes_revision_id"]},
+          "then": {"required": ["revision_id"]}
+        }
+      ]
+    }
+  }
+}

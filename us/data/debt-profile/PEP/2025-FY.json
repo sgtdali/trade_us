@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "ticker": "PEP",
+  "period": "2025-FY",
+  "period_end": "2025-12-27",
+  "currency": "USD",
+  "scale": "million",
+  "extracted_at": "2026-02-03",
+  "extraction_method": "sec_xbrl",
+  "source_documents": [
+    {
+      "source_id": "sec-0000077476-26-000007",
+      "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json"
+    }
+  ],
+  "debt_totals": {
+    "short_term_financial_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "current_portion_long_term_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "long_term_financial_debt": {
+      "value": 42321,
+      "raw_quoted_value": "42321",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LongTermDebtNoncurrent#c-23"
+      }
+    },
+    "lease_liabilities_current": {
+      "value": 719,
+      "raw_quoted_value": "719",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}OperatingLeaseLiabilityCurrent#c-23"
+      }
+    },
+    "lease_liabilities_noncurrent": {
+      "value": 3127,
+      "raw_quoted_value": "3127",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}OperatingLeaseLiabilityNoncurrent#c-23"
+      }
+    },
+    "cash_and_cash_equivalents": {
+      "value": 9159,
+      "raw_quoted_value": "9159",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}CashAndCashEquivalentsAtCarryingValue#c-23"
+      }
+    }
+  },
+  "maturity_profile": [
+    {
+      "value": 858.0,
+      "raw_quoted_value": "858000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueNextTwelveMonths#c-23"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "next 12 months"
+    },
+    {
+      "value": 750.0,
+      "raw_quoted_value": "750000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueYearTwo#c-23"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "year 2"
+    },
+    {
+      "value": 631.0,
+      "raw_quoted_value": "631000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueYearThree#c-23"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "year 3"
+    },
+    {
+      "value": 512.0,
+      "raw_quoted_value": "512000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueYearFour#c-23"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "year 4"
+    },
+    {
+      "value": 434.0,
+      "raw_quoted_value": "434000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueYearFive#c-23"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "year 5"
+    },
+    {
+      "value": 1342.0,
+      "raw_quoted_value": "1342000000",
+      "currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}LesseeOperatingLeaseLiabilityPaymentsDueAfterYearFive#c-23"
+      },
+      "liability_scope": "Operating leases",
+      "maturity_bucket": "after year 5"
+    }
+  ],
+  "currency_profile": [
+    {
+      "value": 1000.0,
+      "raw_quoted_value": "1000000000.0",
+      "currency": "EUR",
+      "debt_currency": "EUR",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "Aggregate of 2 SEC Inline XBRL DebtInstrumentFaceAmount facts"
+      },
+      "liability_scope": "Debt instruments with disclosed face amount"
+    },
+    {
+      "value": 7094.0,
+      "raw_quoted_value": "7094000000.0",
+      "currency": "USD",
+      "debt_currency": "USD",
+      "scale": "million",
+      "status": "reported",
+      "evidence": {
+        "source_id": "sec-0000077476-26-000007",
+        "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+        "page": null,
+        "quoted_text": "Aggregate of 9 SEC Inline XBRL DebtInstrumentFaceAmount facts"
+      },
+      "liability_scope": "Debt instruments with disclosed face amount"
+    }
+  ],
+  "interest_profile": {
+    "fixed_rate_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "floating_rate_debt": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "weighted_average_rates": [
+      {
+        "debt_type": "Operating leases",
+        "currency": null,
+        "rate_pct": 5.0,
+        "status": "reported",
+        "evidence": {
+          "source_id": "sec-0000077476-26-000007",
+          "source_file": "raw/sec-filings/PEP/0000077476-26-000007.json",
+          "page": null,
+          "quoted_text": "SEC Inline XBRL fact {http://fasb.org/us-gaap/2025}OperatingLeaseWeightedAverageDiscountRatePercent#c-23"
+        }
+      }
+    ]
+  },
+  "risk_sensitivities": {
+    "fx_sensitivity": [],
+    "interest_rate_sensitivity": []
+  },
+  "liquidity_support": {
+    "undrawn_credit_facilities": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "committed_facilities": {
+      "value": null,
+      "raw_quoted_value": null,
+      "currency": null,
+      "scale": null,
+      "status": "not_disclosed",
+      "evidence": null
+    },
+    "covenants_or_defaults": {
+      "value": null,
+      "status": "not_disclosed",
+      "evidence": null
+    }
+  },
+  "refinancing_disclosures": [],
+  "diagnostics": {
+    "total_financial_debt": {
+      "status": "available",
+      "value": 42321.0,
+      "unit": "source_scale"
+    },
+    "near_term_financial_debt": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "source_scale"
+    },
+    "cash_to_near_term_debt": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "ratio"
+    },
+    "near_term_debt_share": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "ratio"
+    },
+    "floating_rate_debt_share": {
+      "status": "unavailable",
+      "value": null,
+      "unit": "ratio"
+    },
+    "refinancing_pressure": {
+      "status": "insufficient_data",
+      "level": null,
+      "confidence": "low",
+      "reason_codes": [
+        "insufficient_xbrl_debt_components"
+      ]
+    }
+  }
+}

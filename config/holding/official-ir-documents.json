@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "documents": {
+    "KCHOL": [
+      {
+        "period": "2025-FY",
+        "document_type": "investor_presentation",
+        "publication_date": "2026-02-17",
+        "filename": "2026-02-17_KCHOL_FY2025_Earnings_Presentation.pdf",
+        "url": "https://cdn.koc.com.tr/cmscontainer/kocholding/media/koc/03yatirimci-iliskileri/sunumlar-ve-bultenler/finansal-sonuc-sunumlari-en/koc-holding-fy25-earnings-presentation.pdf?ext=.pdf",
+        "official_host": "cdn.koc.com.tr"
+      },
+      {
+        "period": "2026-Q1",
+        "document_type": "investor_presentation",
+        "publication_date": "2026-05-07",
+        "filename": "2026-05-07_KCHOL_Q1_2026_Earnings_Presentation.pdf",
+        "url": "https://cdn.koc.com.tr/cmscontainer/kocholding/media/koc/03yatirimci-iliskileri/sunumlar-ve-bultenler/finansal-sonuc-sunumlari/koc-holding-1c26-finansal-sonuclar-sunumu.pdf?ext=.pdf",
+        "official_host": "cdn.koc.com.tr"
+      },
+      {
+        "period": "2026-Q1",
+        "document_type": "investor_presentation",
+        "publication_date": "2026-05-31",
+        "filename": "2026-05-31_KCHOL_Investor_Presentation.pdf",
+        "url": "https://cdn.koc.com.tr/cmscontainer/kocholding/media/koc/03yatirimci-iliskileri/kocholdingirpres_may26.pdf?ext=.pdf",
+        "official_host": "cdn.koc.com.tr"
+      }
+    ]
+  }
+}

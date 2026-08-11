@@ -1,0 +1,13 @@
+{
+  "ticker": "ALTNY",
+  "as_of_date": "2026-07-24",
+  "cutoff_instant": "2026-07-27T09:19:57Z",
+  "reporting_currency": "TRY",
+  "share_count_basis": "spot_basic_shares_outstanding",
+  "primary_price_mode": "official_close",
+  "purpose": "current_valuation",
+  "financial_period_refs": [
+    "2026-Q1",
+    "2025-FY"
+  ]
+}

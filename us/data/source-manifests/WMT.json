@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "ticker": "WMT",
+  "sources": [
+    {
+      "source_id": "sec-0000104169-25-000021",
+      "path": "raw/sec-filings/WMT/0000104169-25-000021.json",
+      "source_type": "sec_inline_xbrl",
+      "language": "en",
+      "publication_date": "2025-03-14",
+      "periods_covered": [
+        "2025-FY",
+        "2024-FY"
+      ],
+      "currency": "USD",
+      "scale": "million",
+      "consolidation": "consolidated",
+      "audit_status": "audited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "b39e9095b1a08f2ae1da82375263f4e29454f73f9624aa63b93edf8ce59f6150",
+      "notes": "SEC accession 0000104169-25-000021; source archive hash 2976d7e7bdde2332eb14346c9882ff3bfb5632472cace98876703d3ad918a4bb."
+    },
+    {
+      "source_id": "sec-0000104169-25-000021-risk-factors",
+      "path": "raw/sec-filings/WMT/0000104169-25-000021-risk-factors.txt",
+      "source_type": "sec_filing_text",
+      "language": "en",
+      "publication_date": "2025-03-14",
+      "periods_covered": [],
+      "currency": null,
+      "scale": null,
+      "consolidation": "consolidated",
+      "audit_status": "audited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "ce3484eef72a7bec1d92ab193f582f05ed2473846aa46e5d95c1507bb22985cf",
+      "notes": "SEC 10-K Item 1A risk-factor text snapshot; accession 0000104169-25-000021."
+    },
+    {
+      "source_id": "sec-0000104169-26-000055",
+      "path": "raw/sec-filings/WMT/0000104169-26-000055.json",
+      "source_type": "sec_inline_xbrl",
+      "language": "en",
+      "publication_date": "2026-03-13",
+      "periods_covered": [
+        "2026-FY"
+      ],
+      "currency": "USD",
+      "scale": "million",
+      "consolidation": "consolidated",
+      "audit_status": "audited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "fcb023c8ceeb805ab909bf943df79f2757aa2db7aa427f795e3826e7c4c78970",
+      "notes": "SEC accession 0000104169-26-000055; source archive hash 917027c3e16e91e02b19da8aa7262ff21c7655ce200e84593496d7e15ad188cf."
+    },
+    {
+      "source_id": "sec-0000104169-26-000055-risk-factors",
+      "path": "raw/sec-filings/WMT/0000104169-26-000055-risk-factors.txt",
+      "source_type": "sec_filing_text",
+      "language": "en",
+      "publication_date": "2026-03-13",
+      "periods_covered": [],
+      "currency": null,
+      "scale": null,
+      "consolidation": "consolidated",
+      "audit_status": "audited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "d2a088d62e22cf59e3e32aa49342146bad9520cac42d45309f48db2ad79ad1fe",
+      "notes": "SEC 10-K Item 1A risk-factor text snapshot; accession 0000104169-26-000055."
+    },
+    {
+      "source_id": "sec-0000104169-26-000102",
+      "path": "raw/sec-filings/WMT/0000104169-26-000102.json",
+      "source_type": "sec_inline_xbrl",
+      "language": "en",
+      "publication_date": "2026-05-29",
+      "periods_covered": [
+        "2027-Q1",
+        "2026-Q1"
+      ],
+      "currency": "USD",
+      "scale": "million",
+      "consolidation": "consolidated",
+      "audit_status": "unaudited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "5a1e562afe583d2f0d9a5efc8d50c70d9ee80687d3085441fbd71eeb2068458e",
+      "notes": "SEC accession 0000104169-26-000102; source archive hash d01ce9c90e3ac3b52d1b321c1a1bc81d6bb34f410b05ad5bd969cf94d6896c8d."
+    },
+    {
+      "source_id": "sec-0000104169-26-000102-risk-factors",
+      "path": "raw/sec-filings/WMT/0000104169-26-000102-risk-factors.txt",
+      "source_type": "sec_filing_text",
+      "language": "en",
+      "publication_date": "2026-05-29",
+      "periods_covered": [],
+      "currency": null,
+      "scale": null,
+      "consolidation": "consolidated",
+      "audit_status": "unaudited",
+      "accounting_basis": "US_GAAP",
+      "is_primary": true,
+      "sha256": "d5cf0a3ccc7fe47b4342ddf0ff3335cab0d6c5d2f0b4ca00ae00a0c462ae4149",
+      "notes": "SEC 10-Q Item 1A risk-factor text snapshot; accession 0000104169-26-000102."
+    }
+  ]
+}

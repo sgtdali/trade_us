@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trade-us"
+version = "0.1.0"
+description = "US live/PEI decision pipeline: SEC-sourced valuation engine + daily pack/PEI flow"
+requires-python = ">=3.11"
+dependencies = [
+    "jsonschema>=4.18",
+    "Jinja2>=3.1",
+    "arelle-release==2.43.1",
+    "lxml>=5.0",
+    "yfinance==1.5.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-xdist>=3.5"]
+
+[project.scripts]
+us-pipeline = "fundamental_pipeline_us.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+addopts = "-n 4"

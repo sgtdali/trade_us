@@ -1,0 +1,134 @@
+{
+  "yargi": "sartli",
+  "alinmaz_nedeni": null,
+  "tez": "KR has a conditional standalone thesis: the 7.86% parent-attributed free-cash-flow-yield proxy can support value creation despite a demanding 33.98x P/E, but only if cash generation recovers and core profitability remains intact. The current quarter shows positive operating-profit growth, while sharply weaker operating cash flow and free cash flow make the valuation support dependent on a near-term normalization rather than established.",
+  "tez_testleri": [
+    {
+      "metric_id": "operating_cash_flow_growth",
+      "baseline": -17.4,
+      "expected_direction": "increase",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "operating_cash_flow_growth remains below 0 percent"
+    },
+    {
+      "metric_id": "free_cash_flow_margin",
+      "baseline": 1.04,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "free_cash_flow_margin falls below 1.0 percent"
+    },
+    {
+      "metric_id": "operating_margin",
+      "baseline": 3.05,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "operating_margin falls below 3.0 percent"
+    },
+    {
+      "metric_id": "current_ratio",
+      "baseline": 0.791,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "current_ratio falls below 0.79"
+    }
+  ],
+  "belirleyici_veriler": [
+    {
+      "tur": "sayisal",
+      "reported_value": 7.86,
+      "report_section": "6",
+      "aciklama": "The parent-attributed free-cash-flow-yield proxy provides the principal valuation support."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 33.98,
+      "report_section": "6",
+      "aciklama": "The P/E is demanding relative to the report's TTM parent-attributable earnings base."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": -17.4,
+      "report_section": "10",
+      "aciklama": "Operating cash flow declined year over year, weakening the quality of the current earnings and cash-flow case."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": -56.5,
+      "report_section": "10",
+      "aciklama": "Free cash flow declined sharply year over year, so the favorable TTM cash-flow yield requires confirmation."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 6.4,
+      "report_section": "10",
+      "aciklama": "Reported operating income grew year over year, preserving evidence of positive core profit momentum."
+    }
+  ],
+  "tezi_bozacak_kosullar": [
+    "Operating cash flow does not return to year-over-year growth by 2027-Q1.",
+    "Free-cash-flow margin falls below 1.0 percent.",
+    "Operating margin falls below 3.0 percent.",
+    "Liquidity weakens further, with the current ratio below 0.79."
+  ],
+  "belirsizlik": [
+    "The report contains no forward estimates, so future earnings and cash-flow recovery cannot be independently assessed.",
+    "Issuer-reported EBITDA and net debt are unavailable.",
+    "No structured debt or lease maturity schedules were extracted, limiting long-horizon refinancing analysis.",
+    "The parent-attributed free-cash-flow figure is a proxy rather than a GAAP-reported parent cash-flow measure."
+  ],
+  "guven": "orta",
+  "validation": {
+    "numeric_evidence": [
+      {
+        "evidence_index": 0,
+        "reported_value": 7.86,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 1,
+        "reported_value": 33.98,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 2,
+        "reported_value": -17.4,
+        "report_section": "10",
+        "status": "not_verified",
+        "reason": "numeric value not found at the displayed scale in the cited section"
+      },
+      {
+        "evidence_index": 3,
+        "reported_value": -56.5,
+        "report_section": "10",
+        "status": "not_verified",
+        "reason": "numeric value not found at the displayed scale in the cited section"
+      },
+      {
+        "evidence_index": 4,
+        "reported_value": 6.4,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      }
+    ]
+  },
+  "provenance": {
+    "layer": 1,
+    "market": "US",
+    "ticker": "KR",
+    "as_of": "2026-08-03",
+    "model_key": "codex",
+    "model_id": "gpt-5.6-terra",
+    "prompt_version": "us-layer1.v1",
+    "prompt_sha256": "3dec9b40fd483d00d82c728a8dfec2dc72deee6dfb31582ac816b63371922f9e",
+    "attempt_count": 1,
+    "report_sha256": "e72df11cb08814fb64c277c496471b4e8786502af2d1e0bff92a9b9076d5abb1",
+    "generated_at": "2026-08-04T07:06:19.227688+00:00",
+    "repo_commit_sha": "82f5e00d089fb2791b8ed3866790beb38d2f12c5",
+    "stderr_tail": "AAP-reported parent cash-flow measure.\"],\"guven\":\"orta\"}\n2026-08-04T07:06:18.828561Z  WARN codex_mcp::rmcp_client: failed to initialize MCP client during shutdown: MCP startup failed: handshaking with MCP server failed: Send message error Transport [rmcp::transport::worker::WorkerTransport<rmcp::transport::streamable_http_client::StreamableHttpClientWorker<codex_rmcp_client::http_client_adapter::StreamableHttpClientAdapter>>] error: Auth required, when send initialize request\ntokens used\n17.414\n"
+  }
+}

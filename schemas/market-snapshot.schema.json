@@ -1,0 +1,796 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/market-snapshot.schema.json",
+  "title": "Market snapshot artifact",
+  "description": "Accepted point-in-time market evidence artifact (T66.2). T70-A defines this schema only; no runtime in this PR produces or resolves market snapshots (that is T70-B).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "artifact_id",
+    "snapshot_identity",
+    "temporal_context",
+    "instrument",
+    "price_observation",
+    "share_basis",
+    "corporate_action_state",
+    "source_manifest_refs",
+    "freshness_summary",
+    "data_confidence",
+    "lineage",
+    "acceptance"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "market_snapshot"
+    },
+    "artifact_id": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/artifactId"
+    },
+    "owner_type": {
+      "const": "generated"
+    },
+    "snapshot_identity": {
+      "type": "object",
+      "required": [
+        "ticker",
+        "instrument_id",
+        "context_id",
+        "purpose"
+      ],
+      "properties": {
+        "ticker": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/ticker"
+        },
+        "instrument_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context_id": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/contextId"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "current_valuation",
+            "historical_valuation",
+            "comparison",
+            "diagnostic",
+            "retrospective_reconstruction"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "temporal_context": {
+      "type": "object",
+      "required": [
+        "as_of_date",
+        "cutoff_instant"
+      ],
+      "properties": {
+        "as_of_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "cutoff_instant": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "market_session_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "market_session_status": {
+          "type": "string",
+          "enum": [
+            "completed",
+            "open",
+            "halted",
+            "closed_holiday",
+            "unknown"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "selection_policy_ref": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/catalogVersionRef"
+    },
+    "instrument": {
+      "type": "object",
+      "required": [
+        "instrument_id",
+        "instrument_type",
+        "trading_currency",
+        "listing_status"
+      ],
+      "properties": {
+        "instrument_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instrument_type": {
+          "type": "string",
+          "enum": [
+            "ordinary_share",
+            "preferred_share",
+            "depositary_receipt",
+            "other_equity"
+          ]
+        },
+        "share_class_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "isin": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "trading_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "price_unit": {
+          "type": "string",
+          "enum": [
+            "per_share",
+            "per_depositary_receipt",
+            "per_lot"
+          ]
+        },
+        "unit_multiplier": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+        },
+        "listing_status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "suspended",
+            "delisted",
+            "unknown"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "price_observation": {
+      "type": "object",
+      "required": [
+        "observation_id",
+        "mode",
+        "price",
+        "observed_at",
+        "published_at",
+        "available_at",
+        "adjustment_basis",
+        "is_primary",
+        "status"
+      ],
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "official_close",
+            "intraday",
+            "historical_close",
+            "diagnostic_reference"
+          ]
+        },
+        "price": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+        },
+        "observed_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "published_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "available_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "session_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "adjustment_basis": {
+          "const": "unadjusted"
+        },
+        "is_primary": {
+          "const": true
+        },
+        "source_ref": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/evidenceRef"
+        },
+        "freshness": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/freshnessState"
+        },
+        "selection_reason_code": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCode"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "selected",
+            "eligible_not_selected",
+            "rejected",
+            "withdrawn"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "share_basis": {
+      "type": "object",
+      "required": [
+        "basis_id",
+        "basis_type",
+        "spot_basic_shares_outstanding",
+        "effective_date"
+      ],
+      "properties": {
+        "basis_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis_type": {
+          "const": "spot_basic_shares_outstanding"
+        },
+        "issued_shares": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+        },
+        "treasury_shares": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+        },
+        "spot_basic_shares_outstanding": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+        },
+        "effective_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "reconciliation_status": {
+          "type": "string",
+          "enum": [
+            "reconciled",
+            "unreconciled",
+            "direct_reported"
+          ]
+        },
+        "derivation_method": {
+          "type": "string",
+          "enum": [
+            "issued_minus_treasury",
+            "direct_reported"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/evidenceRef"
+          }
+        },
+        "freshness": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/freshnessState"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "issued_shares",
+            "treasury_shares"
+          ]
+        },
+        {
+          "required": [
+            "derivation_method",
+            "reconciliation_status"
+          ],
+          "properties": {
+            "derivation_method": {
+              "const": "direct_reported"
+            },
+            "reconciliation_status": {
+              "const": "direct_reported"
+            }
+          },
+          "not": {
+            "anyOf": [
+              {"required": ["issued_shares"]},
+              {"required": ["treasury_shares"]}
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "corporate_action_state": {
+      "type": "object",
+      "required": [
+        "state_id",
+        "as_of_date",
+        "events",
+        "coverage_status"
+      ],
+      "properties": {
+        "state_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "as_of_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/corporateActionEvent"
+          }
+        },
+        "coverage_status": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "gap",
+            "unknown"
+          ]
+        },
+        "unresolved_event_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "fx_observations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fxObservation"
+      }
+    },
+    "capital_claim_observations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capitalClaimObservation"
+      }
+    },
+    "source_manifest_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/artifactReference"
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/conflictEntry"
+      }
+    },
+    "freshness_summary": {
+      "type": "object",
+      "required": [
+        "current_use_state"
+      ],
+      "properties": {
+        "current_use_state": {
+          "type": "string",
+          "enum": [
+            "eligible",
+            "diagnostic_only",
+            "blocked"
+          ]
+        },
+        "limiting_component_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "data_confidence": {
+      "type": "object",
+      "required": [
+        "level"
+      ],
+      "properties": {
+        "level": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+        },
+        "limiting_dimensions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "lineage": {
+      "type": "array",
+      "items": {
+        "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/lineageRef"
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "required": [
+        "acceptance_status",
+        "current_use_eligible"
+      ],
+      "properties": {
+        "acceptance_status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "accepted",
+            "rejected",
+            "superseded",
+            "withdrawn"
+          ]
+        },
+        "accepted_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "review_reason_code": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCode"
+        },
+        "current_use_eligible": {
+          "type": "boolean"
+        },
+        "failure_bundle_allowed": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "corporateActionEvent": {
+      "type": "object",
+      "required": [
+        "event_id",
+        "event_type",
+        "effective_date",
+        "status"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "split",
+            "reverse_split",
+            "capital_increase",
+            "capital_reduction",
+            "treasury_purchase",
+            "treasury_sale",
+            "cancellation",
+            "class_conversion",
+            "depositary_ratio_change",
+            "other"
+          ]
+        },
+        "announcement_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "effective_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "announced",
+            "approved",
+            "effective",
+            "cancelled",
+            "unknown"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "fxObservation": {
+      "type": "object",
+      "required": [
+        "fx_observation_id",
+        "base_currency",
+        "quote_currency",
+        "rate",
+        "path_type",
+        "observed_at",
+        "published_at",
+        "available_at"
+      ],
+      "properties": {
+        "fx_observation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "base_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "quote_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "rate": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/nonNegativeDecimalString"
+        },
+        "path_type": {
+          "type": "string",
+          "enum": [
+            "direct",
+            "inverse",
+            "triangulated_one_pivot"
+          ]
+        },
+        "pivot_currency": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Z]{3}$"
+        },
+        "fx_mode": {
+          "type": "string",
+          "enum": [
+            "daily_benchmark",
+            "market_close",
+            "intraday_spot",
+            "historical_benchmark",
+            "diagnostic_reference",
+            "accounting_translation"
+          ]
+        },
+        "observed_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "published_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "available_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "source_ref": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/evidenceRef"
+        },
+        "freshness": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/freshnessState"
+        }
+      },
+      "additionalProperties": false
+    },
+    "conflictEntry": {
+      "type": "object",
+      "required": [
+        "conflict_id",
+        "field_path",
+        "resolution_status"
+      ],
+      "properties": {
+        "conflict_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "candidate_observation_refs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          }
+        },
+        "materiality": {
+          "type": "string",
+          "enum": [
+            "blocking",
+            "diagnostic"
+          ]
+        },
+        "resolution_status": {
+          "type": "string",
+          "enum": [
+            "resolved_by_policy",
+            "resolved_by_authority",
+            "resolved_by_override",
+            "unresolved_blocking",
+            "unresolved_diagnostic",
+            "false_independence"
+          ]
+        },
+        "selected_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resolution_policy_ref": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/catalogVersionRef"
+        },
+        "rationale_code": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCode"
+        },
+        "override": {
+          "$ref": "#/$defs/governedOverride"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "resolution_status": {
+                "const": "resolved_by_override"
+              }
+            },
+            "required": [
+              "resolution_status"
+            ]
+          },
+          "then": {
+            "required": [
+              "override"
+            ]
+          }
+        },
+        {
+          "if": {
+            "not": {
+              "properties": {
+                "resolution_status": {
+                  "const": "resolved_by_override"
+                }
+              },
+              "required": [
+                "resolution_status"
+              ]
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "override"
+              ]
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "governedOverride": {
+      "description": "Full governed manual override record per docs/valuation-t70-04-market-registry-snapshot-specification.md Section 11: a stable override ID, the target observation dimension, the replacement value/unit/currency, a reason code and free-text rationale, the approver's identity and role, an approved-at instant, an evidence reference, an expiration/review date, and every displaced candidate observation -- not merely a rationale and a single original-candidate pointer. 'approved_at not after cutoff' is a cross-field cutoff-eligibility rule this schema cannot express structurally (docs/valuation-t70-02-*.md Section 'cross-field rules'); it remains a validator/runtime rule.",
+      "type": "object",
+      "required": [
+        "override_id",
+        "target_dimension",
+        "replacement_value",
+        "replacement_unit",
+        "replacement_currency",
+        "rationale_code",
+        "rationale_note",
+        "approver_identity",
+        "approver_role",
+        "approved_at",
+        "evidence_ref",
+        "expiration_or_review_date",
+        "displaced_observation_refs"
+      ],
+      "properties": {
+        "override_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_dimension": {
+          "type": "string",
+          "minLength": 1
+        },
+        "replacement_value": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+        },
+        "replacement_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "replacement_currency": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Z]{3}$"
+        },
+        "rationale_code": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCode"
+        },
+        "rationale_note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approver_identity": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approver_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approved_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "evidence_ref": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/evidenceRef"
+        },
+        "expiration_or_review_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "displaced_observation_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "policy_ref": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/catalogVersionRef"
+        }
+      },
+      "additionalProperties": false
+    },
+    "capitalClaimObservation": {
+      "description": "An observed capital-claim component (e.g. a noncontrolling interest or preferred equity movement) captured alongside the market snapshot -- closed per the same evidence/status contract as every other observation type in this schema, never an unconstrained open object.",
+      "type": "object",
+      "required": [
+        "observation_id",
+        "claim_type",
+        "status"
+      ],
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_type": {
+          "type": "string",
+          "enum": [
+            "noncontrolling_interest",
+            "preferred_equity",
+            "other_capital_claim"
+          ]
+        },
+        "amount": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "effective_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "source_ref": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/evidenceRef"
+        },
+        "freshness": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/freshnessState"
+        },
+        "status": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/availabilityStatus"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "observations": [
+    {
+      "observation_id": "kdp-close-2026-08-03",
+      "observation_type": "price",
+      "instrument_or_pair": "KDP",
+      "value": "30.89",
+      "unit": "USD",
+      "currency": "USD",
+      "price_mode": "official_close",
+      "effective_at": "2026-08-03T20:00:00Z",
+      "published_at": "2026-08-04T06:17:42Z",
+      "available_at": "2026-08-04T06:17:42Z",
+      "source_manifest_id": "kdp-yfinance-eod-v1",
+      "source_record_ref": "yfinance:KDP:2026-08-03:close",
+      "revision_status": "unknown",
+      "ingested_at": "2026-08-04T06:17:42Z"
+    },
+    {
+      "observation_id": "kdp-sec-outstanding-0001418135-26-000026",
+      "observation_type": "share_count",
+      "instrument_or_pair": "KDP:spot_basic_shares_outstanding",
+      "value": "1360559471",
+      "unit": "shares",
+      "effective_at": "2026-04-21T00:00:00Z",
+      "published_at": "2026-08-04T06:17:42Z",
+      "available_at": "2026-08-04T06:17:42Z",
+      "source_manifest_id": "kdp-sec-shares-v1",
+      "source_record_ref": "sec:0001418135-26-000026:{http://xbrl.sec.gov/dei/2026}EntityCommonStockSharesOutstanding#c-2",
+      "revision_status": "original",
+      "ingested_at": "2026-08-04T06:17:42Z"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fundemental-trading/schemas/financial-operational.schema.json",
+  "title": "Quarterly/annual sector unit-economics KPIs",
+  "type": "object",
+  "required": ["schema_version", "ticker", "period", "metrics"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1, "maximum": 1},
+    "ticker": {"type": "string", "pattern": "^[A-Z0-9.\\-]+$"},
+    "period": {"type": "string"},
+    "period_start": {"type": ["string", "null"]},
+    "period_end": {"type": ["string", "null"]},
+    "period_type": {"type": ["string", "null"]},
+    "currency": {"type": ["string", "null"]},
+    "source": {"type": ["string", "object", "null"]},
+    "default_source_id": {
+      "type": ["string", "null"],
+      "description": "Manifest source_id backing every metric in this file unless a metric's own provenance.source_id overrides it. Required for metrics whose data_type is 'direct' to resolve an effective source_id; null only for files whose metrics are entirely derived/passthrough."
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["metric_id", "value", "unit"],
+        "properties": {
+          "metric_id": {"type": "string"},
+          "name": {"type": "string"},
+          "value": {"type": ["number", "null"]},
+          "unit": {"type": "string"},
+          "comparison_value": {"type": ["number", "null"]},
+          "comparison_period": {"type": ["string", "null"]},
+          "change": {"type": ["number", "null"]},
+          "change_unit": {"type": ["string", "null"]},
+          "constant_currency_value": {"type": ["number", "null"]},
+          "constant_currency_change": {"type": ["number", "null"]},
+          "definition": {"type": "string"},
+          "context": {"type": ["string", "object"]},
+          "formula": {"type": "string"},
+          "data_type": {"type": "string", "enum": ["direct", "derived"]},
+          "status": {"type": "string"},
+          "reason": {"type": "string"},
+          "source_data": {"type": "string"},
+          "notes": {"type": "string"},
+          "provenance": {
+            "type": "object",
+            "description": "Per-metric override of default_source_id; only needed when this metric's source differs from the file default.",
+            "properties": {
+              "source_id": {"type": "string", "minLength": 1},
+              "source_file": {"type": "string"},
+              "page": {"type": ["integer", "null"]}
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

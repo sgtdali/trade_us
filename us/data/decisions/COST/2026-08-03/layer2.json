@@ -1,0 +1,232 @@
+{
+  "yargi": "sartli",
+  "alinmaz_nedeni": null,
+  "tez": "Costco's filing-backed record in this report is uniformly strong on operations and weak on price. Every deterministic signal is positive over fiscal Q3 2026 YTD — revenue +9.7% (207,431.0 versus 189,079.0 million USD), reported operating income +12.0%, consolidated net income +13.5%, operating cash flow +17.6% (11,133.0 versus 9,468.0 million USD) and free cash flow +16.3% (6,905.0 versus 5,936.0 million USD) — with a Piotroski F-Score of 7/9 and reconciled TTM operands (parent net income 8,838.0, EBIT 11,225.0, parent-attributed FCF proxy 8,806.0 million USD) that tie exactly to the Section 6 valuation inputs, so the earnings base is auditable rather than asserted. Against that, the price embeds essentially all of it: P/E 47.76x, earnings yield 2.09% versus a retail peer median of 4.61%, lease-exclusive EV / reported operating income 36.42x, P/B 12.60x and a parent-attributed FCF yield of only 2.09%. The report carries no forward estimates by construction, so nothing in it can substantiate that premium; the only claim the evidence supports is continuation of the demonstrated growth-and-cash-conversion mechanism at roughly its current pace. The judgment is therefore conditional: the operating case is established, the entry case is not, and the thesis holds only while revenue growth, operating margin and cash conversion stay at or near their current levels — a single-digit deceleration would leave no filed evidence supporting a ~48x earnings multiple.",
+  "tez_testleri": [
+    {
+      "metric_id": "revenue_growth",
+      "baseline": 9.7,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q3",
+      "failure_condition": "revenue_growth falls below 5.0 percent year over year"
+    },
+    {
+      "metric_id": "operating_margin",
+      "baseline": 3.8,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q3",
+      "failure_condition": "operating_margin falls below 3.4 percent"
+    },
+    {
+      "metric_id": "ocf_to_net_profit",
+      "baseline": 1.79,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q3",
+      "failure_condition": "ocf_to_net_profit falls below 1.3, indicating earnings are no longer comfortably cash-backed"
+    },
+    {
+      "metric_id": "free_cash_flow_margin",
+      "baseline": 3.33,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q3",
+      "failure_condition": "free_cash_flow_margin falls below 2.5 percent"
+    }
+  ],
+  "belirleyici_veriler": [
+    {
+      "tur": "sayisal",
+      "reported_value": 47.76,
+      "report_section": "6",
+      "aciklama": "P/E of 47.76x on the reconciled TTM parent-attributable earnings operand of 8,838.0 million USD; the premium is the binding constraint on the judgment."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 4.61,
+      "report_section": "8",
+      "aciklama": "Peer median earnings yield of 4.61% against the subject's 2.09% at 5/6 coverage; the subject is priced materially richer than its authored retail cohort."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 36.42,
+      "report_section": "6",
+      "aciklama": "Lease-exclusive EV / reported operating income of 36.42x on the reconciled TTM EBIT operand of 11,225.0 million USD confirms the premium is not an artifact of the earnings measure chosen."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 17.6,
+      "report_section": "10",
+      "aciklama": "Operating cash flow up 17.6% year over year (11,133.0 versus 9,468.0 million USD), the strongest of the five deterministic signals and the core of the cash-conversion leg."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 2.09,
+      "report_section": "6",
+      "aciklama": "Parent-attributed free cash flow yield proxy of 2.09% on 8,806.0 million USD TTM FCF; disclosed as a proxy, not a GAAP parent cash-flow measure."
+    }
+  ],
+  "tezi_bozacak_kosullar": [
+    "Revenue growth decelerates below the +5% deterministic threshold, removing the only filed support for the current multiple.",
+    "Operating margin compresses from the current 3.8% level, showing the top-line growth is being bought with price or cost concessions.",
+    "Cash conversion weakens (ocf_to_net_profit trending toward 1.0), which would convert the reported earnings growth into a lower-quality signal.",
+    "Free cash flow margin falls as capital expenditure outgrows revenue; the report does not split maintenance from growth capex, so a rise in capex cannot be interpreted as investment rather than replacement.",
+    "Liquidity tightens from an already thin base — current ratio 1.07x and 42,125.0 million USD of current liabilities — while the refinancing-pressure diagnostic remains insufficient data and share count keeps rising (the failing Piotroski component) against a 12.60x price/book."
+  ],
+  "belirsizlik": [
+    "Current financial debt and current lease liabilities are both marked not available, so no complete near-term obligation figure exists and the refinancing-pressure diagnostic is explicitly insufficient data.",
+    "The debt and lease maturity schedule comes from the FY2025 annual note (accession 0000909832-25-000101) and is stale relative to the May 10, 2026 balance sheet; the report states it must not be added to current debt.",
+    "Issuer-reported EBITDA and net-debt APM are both undisclosed, so EV/EBITDA is unavailable and no issuer-defined leverage cross-check exists.",
+    "An 82-day gap separates the July 31, 2026 price observation from the May 10, 2026 financial cut-off, with no post-period adjustment estimated; and FY2025 cash paid for repurchases is not available, leaving capital return incomplete beyond -2,183.0 million USD of dividends.",
+    "The Magic Formula EBIT/tangible-operating-capital figure of 62.46% rests on a 17,972.0 million USD denominator that includes operating net working capital of -13,937.0 million USD; the report itself warns the ratio inflates when that denominator is small and applies no normalization."
+  ],
+  "guven": "orta",
+  "denetim": [
+    {
+      "etiket": "A",
+      "dogrulanan_iddialar": [
+        "Revenue +9.7% YoY to 207,431.0 million USD in fiscal Q3 2026 YTD — matches Sections 3 and 10.",
+        "Operating profit +12.0% YoY to 7,884.0 million USD — matches Sections 3 and 10.",
+        "Net profit +13.5% YoY to 6,228.0 million USD — matches Sections 3 and 10.",
+        "Operating cash flow +17.6% YoY to 11,133.0 million USD — matches Section 10 and the Section 4 YTD component table.",
+        "Cash and cash equivalents of 18,946.0 million USD and noncurrent financial debt of 5,670.0 million USD — both stated in Section 5.",
+        "Piotroski F-Score of 7/9 — matches Section 8.",
+        "P/E of 47.76x — matches Sections 1 and 6.",
+        "Free cash flow of 6,905.0 million USD for fiscal Q3 2026 YTD — matches Section 4; all three thesis-test metric_ids and baselines match the dictionary."
+      ],
+      "dogrulanamayan_iddialar": [
+        {
+          "iddia": "'Excellent liquidity' and 'substantial balance sheet flexibility'.",
+          "sorun": "Overstated against the report. Current ratio is 1.07x, current liabilities are 42,125.0 million USD against 45,177.0 million USD of current assets, and current financial debt plus current lease liabilities are both marked not available, with the refinancing-pressure diagnostic explicitly 'insufficient data'. The cash-versus-noncurrent-debt comparison omits the undisclosed current obligations and so cannot support the characterization."
+        },
+        {
+          "iddia": "'A 62.46% return on tangible operating capital'.",
+          "sorun": "Mislabels the metric. Section 8 reports 62.46% as EBIT / tangible operating capital, a Magic Formula diagnostic explicitly stated not to be a cross-company rank, on a denominator the report itself flags as distortable because operating net working capital is -13,937.0 million USD. It is not a return measure, and A cites it as one of the two pillars of the thesis."
+        },
+        {
+          "iddia": "'Durable cash generation and consistent compounding'.",
+          "sorun": "No multi-period series supports durability or compounding. The report contains one YoY comparison per signal and states forward estimates are not embedded; 'consistent compounding' is an inference beyond the evidence."
+        },
+        {
+          "iddia": "Implicit claim, via 'guven: yuksek' and a tez_var judgment, that the evidence supports an unconditional thesis.",
+          "sorun": "A cites P/E 47.76x as a supporting datum and never engages with it as a constraint, omitting the 2.09% earnings yield versus the 4.61% peer median, the 36.42x EV/EBIT and the 12.60x P/B. High confidence is not sustainable when the entire valuation side of the report is left unaddressed."
+        }
+      ],
+      "genel_not": "Every number A cites is traceable to the report, but it builds a high-confidence unconditional thesis by selecting only the operating evidence, mislabeling a formula diagnostic as a return, and overstating liquidity that the report marks as partly undisclosed."
+    },
+    {
+      "etiket": "B",
+      "dogrulanan_iddialar": [
+        "P/E of 47.76x on reconciled TTM parent-attributable earnings — matches Section 6.",
+        "Parent-attributed free cash flow yield proxy of 2.09% — matches Section 6, including the characterization as a proxy rather than a GAAP parent measure.",
+        "Lease-exclusive EV / reported operating income of 36.42x — matches Section 6.",
+        "Revenue +9.7% YoY — matches Section 10.",
+        "Operating cash flow +17.6% YoY — matches Section 10.",
+        "Issuer-reported EBITDA is unavailable, limiting a valuation cross-check — matches Sections 5 and 6."
+      ],
+      "dogrulanamayan_iddialar": [
+        {
+          "iddia": "'The report contains no forward estimates or explicit earnings and cash-flow outlook needed to support the valuation premium', listed as an uncertainty.",
+          "sorun": "Factually correct but misapplied. Section 1 states by design that forward estimates are not embedded; this is a stated scope property of every report of this type, not a company-specific information gap. Treating a universal design constraint as the decisive uncertainty converts every subject into an unsupported valuation regardless of its filings."
+        },
+        {
+          "iddia": "Implicit claim that no thesis is available, i.e. the 'degerleme_desteksiz' determination.",
+          "sorun": "B's own two operating data points (revenue +9.7%, operating cash flow +17.6%) plus the three growth signals it does not cite (operating income +12.0%, net income +13.5%, free cash flow +16.3%), the 7/9 Piotroski score and the exactly reconciled TTM operands constitute a filed, auditable operating mechanism. That evidence supports a conditional thesis; B's own record does not justify discarding it entirely rather than making the thesis contingent on the premium."
+        },
+        {
+          "iddia": "Operating cash flow growth is 'not offsetting the low current cash-flow yield'.",
+          "sorun": "Asserted without any bridge in the report between growth rate and yield. It is a plausible reading but is stated as a settled conclusion with no supporting calculation, and B supplies no threshold at which the yield would become acceptable."
+        }
+      ],
+      "genel_not": "B is numerically clean and correctly identifies the valuation premium that A ignores, but it reaches its rejection by weighting a structural absence of forward estimates that applies to every report and by declining to engage with the operating evidence it itself cites."
+    },
+    {
+      "etiket": "C",
+      "dogrulanan_iddialar": [
+        "All five deterministic signals with correct values: revenue +9.7%, operating income +12.0%, net income +13.5%, operating cash flow +17.6%, free cash flow +16.3% — match Section 10.",
+        "Piotroski 7/9 with the two failing components correctly named as 'No increase in shares outstanding' and 'Improving asset turnover' — matches Section 8.",
+        "Noncurrent financial debt of 5,670.0 million USD and cash of 18,946.0 million USD — match Section 5.",
+        "P/E 47.76x and earnings yield 2.09%, and the peer median earnings yield of 4.61% in Section 8, correctly framed as the subject trading richer than its cohort.",
+        "Current financial debt and current lease liabilities not available; FY2025 repurchases not available; issuer EBITDA and net-debt APM not disclosed; refinancing diagnostic insufficient data; maturity schedule stale relative to the May 10, 2026 balance sheet — every one of these matches Sections 5 and 11.",
+        "Dividends of -2,183.0 million USD in FY2025 — matches Section 4.",
+        "Thesis-test metric_ids revenue_growth (9.7), operating_margin (3.8), ocf_to_net_profit (1.79) and current_ratio (1.072) all carry baselines equal to the dictionary's current values."
+      ],
+      "dogrulanamayan_iddialar": [
+        {
+          "iddia": "'OCF/net income of 1.79x, operating cash flow margin of 5.37%' cited inside the thesis paragraph as report evidence.",
+          "sorun": "Neither figure appears anywhere in the report. Both are metric-dictionary values, legitimate as thesis-test baselines but not as narrative evidence drawn from the report; the report gives only a Piotroski pass/fail for 'operating cash flow exceeds net income' and no cash-flow margin at all."
+        },
+        {
+          "iddia": "Cash of 18,946.0 million USD 'comfortably exceeds total reported financial debt'.",
+          "sorun": "Total financial debt is not determinable from the report. Current financial debt is marked not available and current lease liabilities are not available; only noncurrent financial debt (5,670.0) and noncurrent lease liabilities (2,466.0) are given. C flags this same gap in its own uncertainty list, which makes the 'total' framing internally inconsistent."
+        },
+        {
+          "iddia": "'A sustained de-rating of the earnings yield relative to peers without a corresponding growth premium' listed as a thesis-breaking condition.",
+          "sorun": "Not testable against the report or the metric dictionary. Peer medians are a single point-in-time Section 8 statistic with no time series and no dictionary metric, so this condition cannot be evaluated at any future deadline."
+        }
+      ],
+      "genel_not": "C is the most disciplined of the three — it holds the growth case and the premium together, states the quality-not-value framing explicitly, and its uncertainty list is essentially complete — but it imports two dictionary ratios into the thesis narrative as if they were reported and overstates the debt comparison it elsewhere correctly qualifies."
+    }
+  ],
+  "gerekce": "The official judgment is sartli. The report establishes an unusually clean operating record — five favorable deterministic signals, a 7/9 Piotroski score, and TTM operands for net income (8,838.0), EBIT (11,225.0) and free cash flow (8,806.0 million USD) that reconcile exactly to the Section 6 valuation inputs rather than being asserted. That is sufficient to state a mechanism, so a flat alinmaz is not warranted. But every valuation method available prices that mechanism at a level the report cannot itself justify: 47.76x earnings, 36.42x lease-exclusive EV/EBIT, 12.60x book, and a 2.09% earnings yield against a 4.61% peer median at 5/6 coverage. Since Section 1 states forward estimates are not embedded, nothing in the evidence base can bridge the gap between the demonstrated growth and the price paid for it; the thesis can only be conditional on continuation, which is exactly what the four thesis tests measure. The three inputs sharpened rather than determined this. A supplied correct operating numbers but reached tez_var with high confidence by never treating the multiples as a constraint, mislabeling the Magic Formula EBIT/tangible-capital ratio as a return, and calling liquidity excellent when the current ratio is 1.07x and current debt is undisclosed — its confidence level is not supportable and its judgment is too permissive. B correctly identified the premium that A ignored, and its numeric evidence is clean, but it rested the rejection on the absence of forward estimates, which is a stated design property of every report in this format rather than a fact about this company; discarding the reconciled operating evidence B itself cites is too severe. C came closest to the record: it held both sides together, framed the position as quality-not-value, and produced an uncertainty list that matches the report's disclosed gaps almost line for line — its two lapses (importing ocf_to_net_profit 1.79 and operating cash flow margin 5.37% into the narrative as reported figures, and claiming cash exceeds 'total' financial debt it elsewhere concedes is undisclosed) are evidence-discipline errors, not judgment errors. The official position keeps C's structure but declines its tez_var label, because the premium is severe enough on three independent methods that continuation is a precondition rather than a monitoring item. Confidence is orta: the earnings base is auditable and reconciled, but current financial debt, current lease liabilities, issuer EBITDA and the refinancing diagnostic are all missing, the maturity schedule is stale, and an 82-day price-to-filing gap sits unadjusted.",
+  "divergence": "all_three",
+  "girdi_sayisi": 3,
+  "validation": {
+    "numeric_evidence": [
+      {
+        "evidence_index": 0,
+        "reported_value": 47.76,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 1,
+        "reported_value": 4.61,
+        "report_section": "8",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 2,
+        "reported_value": 36.42,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 3,
+        "reported_value": 17.6,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 4,
+        "reported_value": 2.09,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      }
+    ]
+  },
+  "provenance": {
+    "layer": 2,
+    "market": "US",
+    "ticker": "COST",
+    "as_of": "2026-08-03",
+    "model_key": "claude",
+    "model_id": "opus",
+    "prompt_version": "us-layer2.v1",
+    "prompt_sha256": "fb487cde15b6a2e59a18c446d25a3cc0a7eddb251065ec5733b26b1c0c9b495f",
+    "attempt_count": 2,
+    "report_sha256": "116cbf9df5f971fe5f6b01808f84c1bdc36bc85d6e715146c312d8093885a574",
+    "shuffle_seed": 16923176623520647137,
+    "anonymous_model_mapping": {
+      "A": "agy",
+      "B": "codex",
+      "C": "claude"
+    },
+    "generated_at": "2026-08-04T07:17:16.045046+00:00",
+    "repo_commit_sha": "82f5e00d089fb2791b8ed3866790beb38d2f12c5",
+    "stderr_tail": ""
+  }
+}

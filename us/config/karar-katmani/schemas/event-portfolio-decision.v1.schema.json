@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "US event-driven portfolio decision",
+  "description": "Olay tabanli kosunun sepet sozlesmesi: en fazla 4 pozisyon, her biri 0.25 agirlikta. backtest-portfolio-decision.v1 ile karistirilmamali; o, 10 x 0.10 tasariminindir. NOT: cash_weight'e enum konulamaz -- agy sayisal enum iceren semayi reddediyor (bkz. docs/llm-cli-kullanim.md), izin verilen kume kodda dogrulanir.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["positions", "cash_weight", "portfolio_rationale"],
+  "properties": {
+    "positions": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ticker", "weight", "action", "rationale"],
+        "properties": {
+          "ticker": {"type": "string", "pattern": "^[A-Z]{1,5}$"},
+          "weight": {"type": "number", "const": 0.25},
+          "action": {"type": "string", "enum": ["add", "keep"]},
+          "rationale": {"type": "string"}
+        }
+      }
+    },
+    "cash_weight": {"type": "number"},
+    "portfolio_rationale": {"type": "string"}
+  }
+}

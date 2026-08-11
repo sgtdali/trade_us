@@ -1,0 +1,160 @@
+{
+  "description": "Report-facing presentation metadata: display units, Turkish labels, and reason/applicability status phrases. Presentation-only -- carries no economic meaning and is not part of formula/policy catalog governance. Missing entries fall back to the raw id/a generic phrase rather than blocking report generation; add an entry here whenever a report reads a new method_id/metric_id.",
+  "display_units": {
+    "val.method.price_to_book.parent_equity": "multiple",
+    "val.method.pe.reported_parent": "multiple",
+    "val.method.ev_to_ebit.core": "multiple",
+    "val.method.ev_to_ebitda.canonical": "multiple",
+    "val.method.ev_to_ebitdar.aviation_lease_inclusive": "multiple",
+    "val.method.fcf_yield.standard_equity": "percent",
+    "val.method.fcf_yield.after_lease_equity": "percent",
+    "val.method.fcfe_yield": "percent",
+    "val.method.earnings_yield.reported_parent": "percent",
+    "val.method.ebit_yield.core": "percent",
+    "val.method.dividend_yield.cash_declared_paid": "percent"
+  },
+  "lease_standard_labels": {
+    "US_GAAP": "ASC 842",
+    "IFRS": "IFRS 16",
+    "TFRS": "TFRS 16",
+    "other": "kira muhasebesi",
+    "undetermined": "kira muhasebesi"
+  },
+  "metric_labels": {
+    "cf_share_repurchases": "Hisse Geri Alımları İçin Nakit Çıkışı",
+    "revenue_total": "Toplam Satış Gelirleri",
+    "gross_profit": "Brüt Kar",
+    "operating_profit_before_investment_activities": "Esas Faaliyet Karı (Yatırım Faaliyetleri Hariç)",
+    "operating_profit": "Faaliyet Karı (Finansman Gelir/Gider Öncesi, EBIT)",
+    "net_profit_attributable_parent": "Ana Ortaklık Net Dönem Karı",
+    "net_profit_for_period": "Toplam (Konsolide) Net Dönem Karı",
+    "current_ratio": "Cari Oran",
+    "gross_margin": "Brüt Marj",
+    "net_margin": "Net Marj",
+    "free_cash_flow_margin": "Serbest Nakit Akışı Marjı",
+    "val.method.earnings_yield.reported_parent": "Kazanç Verimi",
+    "net_financial_debt": "Net Finansal Borç (Kira Yükümlülükleri Hariç)",
+    "cf_net_operating_activities": "İşletme Faaliyetlerinden Nakit Akışı",
+    "cf_capex_ppe_intangible": "Maddi ve Maddi Olmayan Duran Varlık Yatırımları (Capex)",
+    "free_cash_flow": "Serbest Nakit Akışı",
+    "cf_proceeds_asset_sales": "Varlık Satış Gelirleri",
+    "cf_trade_receivables_change": "Ticari Alacaklardaki Değişim",
+    "cf_inventory_change": "Stoklardaki Değişim",
+    "cf_trade_payables_change": "Ticari Borçlardaki Değişim",
+    "cf_depreciation_amortisation": "Amortisman ve İtfa Payları",
+    "cf_net_profit_for_period": "Dönem Net Karı (Nakit Akışı Tablosu Başlangıcı)",
+    "cf_operating_profit_before_working_capital": "İşletme Sermayesi Değişimi Öncesi Faaliyet Karı",
+    "cf_cash_flows_from_operations": "İşletme Sermayesi Değişimi Sonrası Faaliyetlerden Nakit",
+    "cf_income_taxes_paid": "Ödenen Vergiler",
+    "piot.roa_positive": "Aktif Karlılığı (ROA) Pozitif",
+    "piot.cfo_positive": "Faaliyet Nakit Akışı Pozitif",
+    "piot.delta_roa_positive": "Aktif Karlılığı (ROA) Arttı",
+    "piot.accrual_quality": "Nakit Kârın Kalitesi (Nakit Getirisi > ROA)",
+    "piot.leverage_decreased": "Kaldıraç (UV Borç/Aktif) Azaldı",
+    "piot.current_ratio_increased": "Cari Oran Arttı",
+    "piot.no_external_equity_issuance": "Dışarıdan Sermaye Artırımı Yok",
+    "piot.gross_margin_increased": "Brüt Kâr Marjı Arttı",
+    "piot.asset_turnover_increased": "Aktif Devir Hızı Arttı",
+    "sma_50": "50 Günlük Basit Hareketli Ortalama (SMA 50)",
+    "sma_200": "200 Günlük Basit Hareketli Ortalama (SMA 200)",
+    "price_vs_sma_50": "Fiyat vs SMA 50",
+    "price_vs_sma_200": "Fiyat vs SMA 200",
+    "sma_50_vs_sma_200": "SMA 50 vs SMA 200 Kesişim Görünümü",
+    "rsi_14": "14 Günlük Göreceli Güç Endeksi (RSI 14)",
+    "avg_volume_20d": "20 Günlük Ortalama Hacim",
+    "avg_volume_60d": "60 Günlük Ortalama Hacim",
+    "volume_trend": "Hacim Trendi",
+    "support_63d": "63 Günlük Mekanik Destek (En Düşük)",
+    "resistance_63d": "63 Günlük Mekanik Direnç (En Yüksek)",
+    "short_term_financial_debt": "Kısa Vadeli Finansal Borç",
+    "current_portion_long_term_debt": "Uzun Vadeli Borcun Cari Kısmı",
+    "long_term_financial_debt": "Uzun Vadeli Finansal Borç",
+    "lease_liabilities_current": "Kısa Vadeli Kira Yükümlülüğü",
+    "lease_liabilities_noncurrent": "Uzun Vadeli Kira Yükümlülüğü",
+    "cash_and_cash_equivalents": "Nakit ve Nakit Benzerleri",
+    "ebitda_amount": "Şirketin Raporladığı Dönemsel FAVÖK (EBITDA)",
+    "ebitda_ltm_amount": "Son 12 Ay FAVÖK (EBITDA)",
+    "cash_to_near_term_debt": "Nakit / Yakın Vadeli Finansal Borç",
+    "near_term_debt_share": "Yakın Vadeli Borcun Toplam Finansal Borçtaki Payı",
+    "floating_rate_debt_share": "Değişken Faizli Borcun Toplam Finansal Borçtaki Payı"
+  },
+  "method_labels": {
+    "val.method.price_to_book.parent_equity": "Fiyat / Defter Değeri",
+    "val.method.pe.reported_parent": "Fiyat / Kazanç",
+    "val.method.ev_to_ebit.core": "Firma Değeri / EBIT",
+    "val.method.ev_to_ebitda.canonical": "Firma Değeri / Şirketin Raporladığı FAVÖK",
+    "val.method.ev_to_ebitdar.aviation_lease_inclusive": "Firma Değeri / EBITDAR",
+    "val.method.fcf_yield.standard_equity": "Serbest Nakit Akışı Verimi",
+    "val.method.fcf_yield.after_lease_equity": "Serbest Nakit Akışı Verimi (Kira Sonrası)",
+    "val.method.fcfe_yield": "Serbest Nakit Akışı Verimi (FCFE)",
+    "val.method.earnings_yield.reported_parent": "Kazanç Verimi",
+    "val.method.ebit_yield.core": "EBIT Verimi",
+    "val.method.dividend_yield.cash_declared_paid": "Temettü Verimi"
+  },
+  "operand_labels": {
+    "val.method.price_to_book.parent_equity": { "numerator": "Piyasa değeri", "denominator": "Ana ortaklık özkaynağı" },
+    "val.method.pe.reported_parent": { "numerator": "Piyasa değeri", "denominator": "Ana ortaklık net kârı" },
+    "val.method.ev_to_ebit.core": { "numerator": "Firma değeri", "denominator": "Esas Faaliyet Kârı (Core EBIT — Yatırım Faaliyetleri Hariç)" },
+    "val.method.ev_to_ebitda.canonical": { "numerator": "Firma değeri", "denominator": "Şirketin kendi tanımıyla raporladığı FAVÖK (EBITDA)" },
+    "val.method.ev_to_ebitdar.aviation_lease_inclusive": { "numerator": "Firma değeri", "denominator": "Faiz, Amortisman, Vergi ve Kira Öncesi Kâr (EBITDAR)" },
+    "val.method.fcf_yield.standard_equity": { "numerator": "Serbest nakit akışı (ana ortaklık payına atfedilen)", "denominator": "Piyasa değeri" },
+    "val.method.fcf_yield.after_lease_equity": { "numerator": "Serbest nakit akışı (Kira Sonrası, ana ortaklık payına atfedilen)", "denominator": "Piyasa değeri" },
+    "val.method.fcfe_yield": { "numerator": "Serbest nakit akışı (FCFE)", "denominator": "Piyasa değeri" },
+    "val.method.earnings_yield.reported_parent": { "numerator": "Ana ortaklık net kârı", "denominator": "Piyasa değeri" },
+    "val.method.ebit_yield.core": { "numerator": "Esas Faaliyet Kârı (Core EBIT — Yatırım Faaliyetleri Hariç)", "denominator": "Firma değeri" },
+    "val.method.dividend_yield.cash_declared_paid": { "numerator": "Hisse başı ödenen temettü", "denominator": "Güncel fiyat" }
+  },
+  "method_caveats": {
+    "val.method.ev_to_ebitda.canonical": "Bu yöntem şirketin doğrudan raporladığı alternatif performans ölçüsünü kullanır. FAVÖK tanımı ve düzeltme kapsamı şirketler arasında değişebileceğinden, sonuç şirket-içi değerleme tanılamasıdır; tek başına şirketler arası karşılaştırma ölçütü değildir."
+  },
+  "reconciliation_caveats": {
+    "reported_unreconciled": "Kaynakta FAVÖK tutarı doğrulanmıştır ancak EBIT-FAVÖK köprüsü tam açıklanmamıştır; yöntem sıralama ve şirketler arası karşılaştırma girdisi değildir."
+  },
+  "reason_code_rules": [
+    { "contains": "denominator_negative", "label_tr": "şirket zarar ettiği için ekonomik olarak anlamlı değil" },
+    { "contains": "nonpositive_total_net_income", "label_tr": "toplam net kâr negatif/sıfır olduğu için ana ortaklık payı güvenilir hesaplanamıyor" },
+    { "contains": "unresolved", "label_tr": "yöntem/eşleştirme çözülmedi (unresolved)" },
+    { "contains": "not_authored", "label_tr": "bu pipeline kapsamında henüz desteklenmiyor" },
+    { "contains": "missing", "label_tr": "veri mevcut değil" }
+  ],
+  "reason_code_default_label_tr": "veri mevcut değil",
+  "applicability_outcome_rules": [
+    { "contains": "not_applicable", "label_tr": "ŞİRKET/SEKTÖR İÇİN UYGULANAMAZ" },
+    { "contains": "excluded", "label_tr": "POLİTİKA GEREĞİ KAPSAM DIŞI" },
+    { "contains": "conditional_data", "label_tr": "VERİ EKSİKLİĞİ NEDENİYLE HESAPLANAMADI" }
+  ],
+  "applicability_outcome_default_label_tr": "KULLANILAMIYOR",
+  "status_override_by_reason_code_rules": [
+    { "contains": "denominator_negative", "label_tr": "ŞİRKET ZARAR ETTİĞİ İÇİN EKONOMİK OLARAK ANLAMLI DEĞİL" },
+    { "contains": "nonpositive_total_net_income", "label_tr": "TOPLAM NET KÂR NEGATİF/SIFIR OLDUĞU İÇİN HESAPLAMA ENGELLENDİ" }
+  ],
+  "market_freshness_caveat_tr": {
+    "stale": " (BAYAT VERİ, güncel kabul edilemez)",
+    "expired": " (SÜRESİ GEÇMİŞ VERİ, güncel kabul edilemez)",
+    "acceptable": " (kısmen bayat)",
+    "unknown": " (güncellik durumu bilinmiyor)"
+  },
+  "debt_profile_status_labels": {
+    "low": "düşük",
+    "medium": "orta",
+    "high": "yüksek",
+    "insufficient_data": "veri yetersiz"
+  },
+  "debt_profile_reason_labels": {
+    "cash_coverage_below_high_threshold": "nakit, yakın vadeli finansal borcun %25'inden azını karşılıyor",
+    "near_term_debt_share_elevated": "finansal borcun en az %40'ı yakın vadeli",
+    "cash_coverage_or_near_term_share_elevated": "nakit karşılama veya yakın vade yoğunluğu eşik üzerinde",
+    "cash_coverage_and_maturity_mix_within_thresholds": "nakit karşılama ve vade yoğunluğu tanımlı baskı eşiklerinin altında",
+    "undrawn_credit_facilities_not_disclosed": "kullanılmamış kredi limiti açıklanmadığı için değerlendirme güveni sınırlı",
+    "required_totals_missing": "zorunlu borç veya nakit toplamları eksik"
+  },
+  "risk_analysis_status_labels": {
+    "available_empty": "Belgeler tarandı; doğrulanmış bir risk maddesi çıkarılmadı.",
+    "risk_not_authored": "Bu dönem için belge kanıtlı risk analizi henüz üretilmemiştir.",
+    "risk_extraction_failed": "Risk analizi üretilemedi; bu durum risk bulunmadığı anlamına gelmez.",
+    "risk_dependency_unavailable": "Doğrulanmış borç profili bulunmadığı için risk analizi üretilmedi; bu durum risk bulunmadığı anlamına gelmez.",
+    "risk_shape_validation_failed": "Risk analizi şekil doğrulamasını geçemedi; bu durum risk bulunmadığı anlamına gelmez.",
+    "risk_numeric_validation_failed": "Risk analizindeki sayısal iddialar doğrulanamadı; bu durum risk bulunmadığı anlamına gelmez.",
+    "unavailable_default": "Risk analizi kullanılamıyor; bu durum risk bulunmadığı anlamına gelmez."
+  }
+}

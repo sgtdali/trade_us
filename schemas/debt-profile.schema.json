@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fundemental-trading/schemas/debt-profile.schema.json",
+  "title": "Period-specific debt maturity, interest, currency and refinancing profile",
+  "type": "object",
+  "required": [
+    "schema_version", "ticker", "period", "period_end", "currency", "scale",
+    "source_documents", "debt_totals", "maturity_profile", "currency_profile",
+    "interest_profile", "risk_sensitivities", "liquidity_support",
+    "refinancing_disclosures", "diagnostics"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "ticker": {"type": "string", "pattern": "^[A-Z0-9.\\-]+$"},
+    "period": {"type": "string"},
+    "period_end": {"type": "string", "format": "date"},
+    "currency": {"type": "string"},
+    "scale": {"enum": ["unit", "thousand", "million", "billion"]},
+    "extracted_at": {"type": "string"},
+    "extraction_method": {"enum": ["notebooklm", "sec_xbrl", "sec_filing_text"]},
+    "source_documents": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/sourceDocument"}
+    },
+    "debt_totals": {
+      "type": "object",
+      "required": [
+        "short_term_financial_debt", "current_portion_long_term_debt",
+        "long_term_financial_debt", "lease_liabilities_current",
+        "lease_liabilities_noncurrent", "cash_and_cash_equivalents"
+      ],
+      "properties": {
+        "short_term_financial_debt": {"$ref": "#/$defs/amountObservation"},
+        "current_portion_long_term_debt": {"$ref": "#/$defs/amountObservation"},
+        "long_term_financial_debt": {"$ref": "#/$defs/amountObservation"},
+        "lease_liabilities_current": {"$ref": "#/$defs/amountObservation"},
+        "lease_liabilities_noncurrent": {"$ref": "#/$defs/amountObservation"},
+        "cash_and_cash_equivalents": {"$ref": "#/$defs/amountObservation"}
+      },
+      "additionalProperties": false
+    },
+    "maturity_profile": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {"$ref": "#/$defs/amountObservation"},
+          {
+            "type": "object",
+            "required": ["liability_scope", "maturity_bucket"],
+            "properties": {
+              "liability_scope": {"type": ["string", "null"]},
+              "maturity_bucket": {"type": ["string", "null"]}
+            }
+          }
+        ]
+      }
+    },
+    "currency_profile": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {"$ref": "#/$defs/amountObservation"},
+          {
+            "type": "object",
+            "required": ["liability_scope", "debt_currency"],
+            "properties": {
+              "liability_scope": {"type": ["string", "null"]},
+              "debt_currency": {"type": ["string", "null"]}
+            }
+          }
+        ]
+      }
+    },
+    "interest_profile": {
+      "type": "object",
+      "required": ["fixed_rate_debt", "floating_rate_debt", "weighted_average_rates"],
+      "properties": {
+        "fixed_rate_debt": {"$ref": "#/$defs/amountObservation"},
+        "floating_rate_debt": {"$ref": "#/$defs/amountObservation"},
+        "weighted_average_rates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["debt_type", "currency", "rate_pct", "status", "evidence"],
+            "properties": {
+              "debt_type": {"type": ["string", "null"]},
+              "currency": {"type": ["string", "null"]},
+              "rate_pct": {"type": ["number", "null"]},
+              "status": {"$ref": "#/$defs/status"},
+              "evidence": {"$ref": "#/$defs/evidenceOrNull"}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "risk_sensitivities": {
+      "type": "object",
+      "required": ["fx_sensitivity", "interest_rate_sensitivity"],
+      "properties": {
+        "fx_sensitivity": {"type": "array", "items": {"$ref": "#/$defs/sensitivity"}},
+        "interest_rate_sensitivity": {"type": "array", "items": {"$ref": "#/$defs/sensitivity"}}
+      },
+      "additionalProperties": false
+    },
+    "liquidity_support": {
+      "type": "object",
+      "required": ["undrawn_credit_facilities", "committed_facilities", "covenants_or_defaults"],
+      "properties": {
+        "undrawn_credit_facilities": {"$ref": "#/$defs/amountObservation"},
+        "committed_facilities": {"$ref": "#/$defs/amountObservation"},
+        "covenants_or_defaults": {"$ref": "#/$defs/textObservation"}
+      },
+      "additionalProperties": false
+    },
+    "refinancing_disclosures": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/textObservation"}
+    },
+    "diagnostics": {
+      "type": "object",
+      "required": [
+        "total_financial_debt", "near_term_financial_debt",
+        "cash_to_near_term_debt", "near_term_debt_share",
+        "floating_rate_debt_share", "refinancing_pressure"
+      ],
+      "properties": {
+        "total_financial_debt": {"$ref": "#/$defs/diagnosticValue"},
+        "near_term_financial_debt": {"$ref": "#/$defs/diagnosticValue"},
+        "cash_to_near_term_debt": {"$ref": "#/$defs/diagnosticValue"},
+        "near_term_debt_share": {"$ref": "#/$defs/diagnosticValue"},
+        "floating_rate_debt_share": {"$ref": "#/$defs/diagnosticValue"},
+        "refinancing_pressure": {
+          "type": "object",
+          "required": ["status", "level", "confidence", "reason_codes"],
+          "properties": {
+            "status": {"enum": ["available", "insufficient_data"]},
+            "level": {"enum": ["low", "medium", "high", null]},
+            "confidence": {"enum": ["low", "medium", "high"]},
+            "reason_codes": {"type": "array", "items": {"type": "string"}}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "status": {"enum": ["reported", "not_disclosed", "not_applicable", "conflicting"]},
+    "evidence": {
+      "type": "object",
+      "required": ["source_id", "source_file", "page", "quoted_text"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "source_file": {"type": "string", "minLength": 1},
+        "page": {"type": ["integer", "null"]},
+        "quoted_text": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "evidenceOrNull": {"oneOf": [{"$ref": "#/$defs/evidence"}, {"type": "null"}]},
+    "sourceDocument": {
+      "type": "object",
+      "required": ["source_id", "source_file"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "source_file": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "amountObservation": {
+      "type": "object",
+      "required": ["value", "raw_quoted_value", "currency", "scale", "status", "evidence"],
+      "properties": {
+        "value": {"type": ["number", "null"]},
+        "raw_quoted_value": {"type": ["string", "null"]},
+        "currency": {"type": ["string", "null"]},
+        "debt_currency": {"type": ["string", "null"]},
+        "scale": {"enum": ["unit", "thousand", "million", "billion", null]},
+        "status": {"$ref": "#/$defs/status"},
+        "evidence": {"$ref": "#/$defs/evidenceOrNull"},
+        "liability_scope": {"type": ["string", "null"]},
+        "maturity_bucket": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "textObservation": {
+      "type": "object",
+      "required": ["value", "status", "evidence"],
+      "properties": {
+        "value": {"type": ["string", "null"]},
+        "status": {"$ref": "#/$defs/status"},
+        "evidence": {"$ref": "#/$defs/evidenceOrNull"}
+      },
+      "additionalProperties": false
+    },
+    "sensitivity": {
+      "type": "object",
+      "required": [
+        "shock", "profit_loss_effect", "equity_effect", "exposure_currency", "effect_currency",
+        "scale", "status", "evidence"
+      ],
+      "properties": {
+        "shock": {"type": ["string", "null"]},
+        "profit_loss_effect": {"type": ["number", "null"]},
+        "equity_effect": {"type": ["number", "null"]},
+        "exposure_currency": {"type": ["string", "null"]},
+        "effect_currency": {"type": ["string", "null"]},
+        "scale": {"enum": ["unit", "thousand", "million", "billion", null]},
+        "status": {"$ref": "#/$defs/status"},
+        "evidence": {"$ref": "#/$defs/evidenceOrNull"}
+      },
+      "additionalProperties": false
+    },
+    "diagnosticValue": {
+      "type": "object",
+      "required": ["status", "value", "unit"],
+      "properties": {
+        "status": {"enum": ["available", "unavailable"]},
+        "value": {"type": ["number", "null"]},
+        "unit": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,367 @@
+{
+ "_note": "Bu defterlerin HEPSI 2026-08-07'de SILINDI. NotebookLM hesap basina 500 defterle sinirli ve kullanicinin kendi defterleri de o kotayi paylasiyor; S&P 500 kosusu icin yer acmak gerekiyordu. Cikarilan veri us/guidance/_answers (yonlendirme) ve _actuals (gerceklesen duzeltilmis EPS) altinda durur, kaynak metinler _text altinda -- yani gerekirse yeniden yuklenebilir. Asagidaki notebook_id'ler ARTIK GECERSIZDIR, tarihsel kayit olarak birakildi.",
+ "_deleted_at": "2026-08-07",
+ "_replacement_flow": "scripts/us_guidance_sp500.py -- defter omru tek sirket: ac, yukle, sorgula, cevabi diske yaz, sil. Kalici notebook_id tutmaz.",
+ "_historical": {
+  "AAPL": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "b56425b4-b9ca-4954-8e0c-952c8e5138cf",
+   "sources": 23
+  },
+  "ABBV": {
+   "added_last_run": 39,
+   "failed": 0,
+   "notebook_id": "ec6f3021-cf4b-4828-8855-44d544d0ebfb",
+   "sources": 42
+  },
+  "ABT": {
+   "added_last_run": 0,
+   "failed": 0,
+   "notebook_id": "2a596cc0-aca9-4972-b6ef-94c379232291",
+   "sources": 23
+  },
+  "ADBE": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "baecf5de-ae81-4eef-b787-78f036cac1d2",
+   "sources": 22
+  },
+  "ADI": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "b381e212-9c04-4cea-af93-e12e449d6308",
+   "sources": 22
+  },
+  "AMD": {
+   "added_last_run": 24,
+   "failed": 0,
+   "notebook_id": "e576b143-8f17-4718-97cb-34525faeb288",
+   "sources": 24
+  },
+  "AVGO": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "c718d111-26f3-425d-ad43-1c503e48ec0c",
+   "sources": 22
+  },
+  "BDX": {
+   "added_last_run": 28,
+   "failed": 0,
+   "notebook_id": "ba6bc05a-9b48-4528-a200-ddea53e6f0b4",
+   "sources": 28
+  },
+  "BJ": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "8d9b9ce0-ff13-4f68-8da9-88b9c1735abb",
+   "sources": 22
+  },
+  "BMY": {
+   "added_last_run": 0,
+   "failed": 24,
+   "notebook_id": "1c3b6636-e880-417e-8339-f867e28f1074",
+   "sources": 24
+  },
+  "BSX": {
+   "added_last_run": 24,
+   "failed": 0,
+   "notebook_id": "b2e69be8-59c2-4a80-8f21-78c974bff03a",
+   "sources": 24
+  },
+  "CAG": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "bcba8ea9-347f-4680-b503-297166f042ec",
+   "sources": 23
+  },
+  "CAT": {
+   "added_last_run": 24,
+   "failed": 0,
+   "notebook_id": "47570090-ce05-4eee-b655-0901feaa442e",
+   "sources": 24
+  },
+  "CELH": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "9cf8bf39-c3af-4a72-932a-ce9397a60bf2",
+   "sources": 22
+  },
+  "CHD": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "42a0d310-d550-4bed-9328-95433275d289",
+   "sources": 23
+  },
+  "CL": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "d61bb638-649c-46be-afaa-c376a93eea55",
+   "sources": 22
+  },
+  "CLX": {
+   "added_last_run": 24,
+   "failed": 0,
+   "notebook_id": "32570bea-5777-4567-a43a-d5610f5393e1",
+   "sources": 24
+  },
+  "CMI": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "85531670-4003-4a1d-b9ac-51eefd88de51",
+   "sources": 23
+  },
+  "COST": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "e6bf45c9-c8e8-4376-85db-b15c428ff5c0",
+   "sources": 22
+  },
+  "CPB": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "91a77755-c14d-4492-ae8c-3cd3cd2a5891",
+   "sources": 22
+  },
+  "CSCO": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "e32459ca-d2b3-44f8-989a-781ba1d49db2",
+   "sources": 22
+  },
+  "CSX": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "b9414871-be39-4490-81f0-f73afdd4d795",
+   "sources": 23
+  },
+  "DE": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "e6321e5e-70c6-4503-8002-921ee162a8a1",
+   "sources": 22
+  },
+  "DELL": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "40b66d49-a0e7-4595-9f8b-21e785ba8d14",
+   "sources": 22
+  },
+  "DG": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "9b4f70c2-80a3-4c7f-a92d-eb4cce5e11d6",
+   "sources": 23
+  },
+  "EMR": {
+   "added_last_run": 28,
+   "failed": 0,
+   "notebook_id": "d6c13f1a-d90f-40b9-889c-df9da52c93b3",
+   "sources": 28
+  },
+  "ETN": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "efccd173-55a4-439f-a1e1-1d2a5c172b35",
+   "sources": 23
+  },
+  "FIZZ": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "327ba03e-584a-457b-bbc1-c62c315c81b1",
+   "sources": 22
+  },
+  "GIS": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "d26cb65b-5fce-43d9-ad3f-1dc494f9b216",
+   "sources": 22
+  },
+  "HON": {
+   "added_last_run": 29,
+   "failed": 0,
+   "notebook_id": "670773e7-725c-4782-a355-a94f5b99aecd",
+   "sources": 29
+  },
+  "HPQ": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "0682be50-5b78-4cac-9a02-df0912371b51",
+   "sources": 23
+  },
+  "ITW": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "6f946f19-b0f7-4249-9f47-e2d32e48d6ec",
+   "sources": 22
+  },
+  "JNJ": {
+   "added_last_run": 25,
+   "failed": 0,
+   "notebook_id": "e458c8fd-2255-448e-9a8c-1c96eac57c9b",
+   "sources": 25
+  },
+  "KDP": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "9d8cb65b-5228-4131-b7f1-ab7672611dd7",
+   "sources": 23
+  },
+  "KHC": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "cbec68df-014a-49e4-822e-fee1e836811e",
+   "sources": 23
+  },
+  "KMB": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "1238c6cb-3cef-4270-a1d2-17acabf2e385",
+   "sources": 23
+  },
+  "KO": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "5ca37009-f5c1-418c-a739-225c3907e56e",
+   "sources": 23
+  },
+  "KR": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "77608d4b-9e28-4abe-a513-e328ac05f11c",
+   "sources": 23
+  },
+  "LLY": {
+   "added_last_run": 27,
+   "failed": 0,
+   "notebook_id": "94d8d140-576e-4f2b-b8aa-bcda2566e16d",
+   "sources": 27
+  },
+  "MDLZ": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "c2cd21ff-61d8-4ff5-bc19-7ec4667dbb87",
+   "sources": 23
+  },
+  "MDT": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "c4005acc-9904-458f-bcf9-9aefc8df2140",
+   "sources": 22
+  },
+  "MMM": {
+   "added_last_run": 0,
+   "failed": 27,
+   "notebook_id": "85930489-e0b8-4345-8d16-19c5d3b5199b",
+   "sources": 27
+  },
+  "MNST": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "a6c70280-d4d3-4552-b164-49315017b33b",
+   "sources": 22
+  },
+  "MRK": {
+   "added_last_run": 24,
+   "failed": 0,
+   "notebook_id": "03d10197-1f68-4b4f-89ea-20211458d98b",
+   "sources": 24
+  },
+  "MSFT": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "a2284bdf-45fe-438f-a325-76df8e799942",
+   "sources": 23
+  },
+  "NSC": {
+   "added_last_run": 24,
+   "failed": 0,
+   "notebook_id": "0287bab1-b03c-47d2-b711-9ad697225b4e",
+   "sources": 24
+  },
+  "NVDA": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "40ccbd3e-187c-435c-8bd3-47f7f54d681f",
+   "sources": 23
+  },
+  "NWL": {
+   "added_last_run": 24,
+   "failed": 0,
+   "notebook_id": "0d72f849-4ac2-4247-be0b-2095efd2a3e3",
+   "sources": 24
+  },
+  "ORCL": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "8ce91bc7-448d-4aa1-8dd0-4d64bc7c62da",
+   "sources": 23
+  },
+  "PEP": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "6e8f470c-3147-498a-8b60-a7676b36cb9f",
+   "sources": 23
+  },
+  "PFE": {
+   "added_last_run": 26,
+   "failed": 0,
+   "notebook_id": "0a9675f3-b9d0-4128-91ee-dd5d983ecee4",
+   "sources": 26
+  },
+  "PG": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "4d96a50d-8cd4-4434-b258-529ba0fd6c31",
+   "sources": 23
+  },
+  "PH": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "41aac1c7-0e4b-4d09-8ea7-ad4719a33c47",
+   "sources": 23
+  },
+  "SJM": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "6e4037f6-bd0c-4dba-a75e-a8c221c11c84",
+   "sources": 22
+  },
+  "SYK": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "49b71fc2-b25d-4103-8dfc-82dfb62eca97",
+   "sources": 23
+  },
+  "TGT": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "2702fffc-ec68-4a0e-bc56-8df070bb861e",
+   "sources": 23
+  },
+  "TXN": {
+   "added_last_run": 23,
+   "failed": 0,
+   "notebook_id": "0be1e8be-b8d3-4e43-9ae2-b25fcda8d5fd",
+   "sources": 23
+  },
+  "UNP": {
+   "added_last_run": 24,
+   "failed": 0,
+   "notebook_id": "500f4978-0ddf-46cd-9ec5-8d9d4c43fb42",
+   "sources": 24
+  },
+  "WMT": {
+   "added_last_run": 22,
+   "failed": 0,
+   "notebook_id": "ba75e5fa-6eb3-4d75-8a83-3163278fa2cc",
+   "sources": 22
+  },
+  "ZBH": {
+   "added_last_run": 24,
+   "failed": 0,
+   "notebook_id": "94246ac4-c22e-4fa3-a493-406d0268f8f0",
+   "sources": 24
+  }
+ }
+}

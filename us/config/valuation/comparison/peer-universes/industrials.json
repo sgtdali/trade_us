@@ -1,0 +1,260 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "valuation_peer_universe",
+  "artifact_id": "valuation-peer-universe:industrials_us:1",
+  "owner_type": "authored",
+  "universe_id": "industrials_us",
+  "universe_version": 1,
+  "sector_family": "industrials",
+  "method_family_ids": [
+    "val.method.earnings_yield.reported_parent",
+    "gross_margin",
+    "net_margin",
+    "free_cash_flow_margin",
+    "current_ratio"
+  ],
+  "effective_from": "2026-01-01",
+  "effective_to": null,
+  "members": [
+    {
+      "member_id": "cat",
+      "ticker": "CAT",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsMachinery"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "cmi",
+      "ticker": "CMI",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsMachinery"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "csx",
+      "ticker": "CSX",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsTransport"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "de",
+      "ticker": "DE",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsMachinery"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "emr",
+      "ticker": "EMR",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsAutomation"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "etn",
+      "ticker": "ETN",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsAutomation"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "hon",
+      "ticker": "HON",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsAutomation"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "itw",
+      "ticker": "ITW",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsDiversified"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "mmm",
+      "ticker": "MMM",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsDiversified"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "nsc",
+      "ticker": "NSC",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsTransport"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "ph",
+      "ticker": "PH",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsDiversified"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "unp",
+      "ticker": "UNP",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.industrials_standard_corporate",
+      "classification_refs": [
+        "MODEL:IndustrialsTransport"
+      ],
+      "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    }
+  ],
+  "inclusion_policy_ref": "val.policy.peer_universe.inclusion@1.0.0",
+  "review": {
+    "author": "fundamentaltrading",
+    "reviewer": "fundamentaltrading",
+    "reviewed_at": "2026-08-05T00:00:00Z",
+    "methodology_version": "1.0.0",
+    "rationale_codes": [
+      "comparison.industrials_standard_corporate"
+    ]
+  },
+  "lifecycle": "approved",
+  "supersedes_ref": null,
+  "lineage": {
+    "dag": {
+      "nodes": [
+        {
+          "node_id": "n1",
+          "node_type": "peer_universe",
+          "owner_type": "authored"
+        }
+      ],
+      "edges": []
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "observations": [
+    {
+      "observation_id": "tgt-close-2026-08-03",
+      "observation_type": "price",
+      "instrument_or_pair": "TGT",
+      "value": "149.1",
+      "unit": "USD",
+      "currency": "USD",
+      "price_mode": "official_close",
+      "effective_at": "2026-08-03T20:00:00Z",
+      "published_at": "2026-08-04T06:09:14Z",
+      "available_at": "2026-08-04T06:09:14Z",
+      "source_manifest_id": "tgt-yfinance-eod-v1",
+      "source_record_ref": "yfinance:TGT:2026-08-03:close",
+      "revision_status": "unknown",
+      "ingested_at": "2026-08-04T06:09:14Z"
+    },
+    {
+      "observation_id": "tgt-sec-outstanding-0000027419-26-000022",
+      "observation_type": "share_count",
+      "instrument_or_pair": "TGT:spot_basic_shares_outstanding",
+      "value": "454191112",
+      "unit": "shares",
+      "effective_at": "2026-05-22T00:00:00Z",
+      "published_at": "2026-08-04T06:09:14Z",
+      "available_at": "2026-08-04T06:09:14Z",
+      "source_manifest_id": "tgt-sec-shares-v1",
+      "source_record_ref": "sec:0000027419-26-000022:{http://xbrl.sec.gov/dei/2025}EntityCommonStockSharesOutstanding#c-2",
+      "revision_status": "original",
+      "ingested_at": "2026-08-04T06:09:14Z"
+    }
+  ]
+}

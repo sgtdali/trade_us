@@ -1,0 +1,4644 @@
+{
+  "schema_version": 1,
+  "metrics": [
+    {
+      "metric_id": "aircraft_count",
+      "display_name": {
+        "tr": "Uçak Adedi",
+        "en": "Aircraft Count"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "count"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "aircraft_order_backlog_count",
+      "display_name": {
+        "tr": "Uçak Sipariş Bekleyen Sipariş Adedi",
+        "en": "Aircraft Order Backlog Count"
+      },
+      "category": "commitments",
+      "statement_section": "commitments",
+      "data_type": "direct",
+      "allowed_units": [
+        "count"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (commitments).",
+      "version": 1
+    },
+    {
+      "metric_id": "aircraft_order_backlog_list_price",
+      "display_name": {
+        "tr": "Uçak Sipariş Bekleyen Sipariş Liste Fiyatı",
+        "en": "Aircraft Order Backlog List Price"
+      },
+      "category": "commitments",
+      "statement_section": "commitments",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (commitments).",
+      "version": 1
+    },
+    {
+      "metric_id": "aircraft_prepayments_gross",
+      "display_name": {
+        "tr": "Uçak Ön Ödemeler Brüt",
+        "en": "Aircraft Prepayments Gross"
+      },
+      "category": "commitments",
+      "statement_section": "commitments",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (commitments).",
+      "version": 1
+    },
+    {
+      "metric_id": "ask",
+      "display_name": {
+        "tr": "AKK (ASK)",
+        "en": "Ask"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "billion_km"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "ask_growth_annual",
+      "display_name": {
+        "tr": "AKK (ASK) Büyümesi Yıllık",
+        "en": "Ask Growth Annual"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "ask_growth_quarterly",
+      "display_name": {
+        "tr": "AKK (ASK) Büyümesi Çeyreklik",
+        "en": "Ask Growth Quarterly"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "borrowings_long_term",
+      "display_name": {
+        "tr": "Krediler Uzun Vadeli",
+        "en": "Borrowings Long Term"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "borrowings_long_term_current_portion",
+      "display_name": {
+        "tr": "Krediler Uzun Vadeli Cari Kısmı",
+        "en": "Borrowings Long Term Current Portion"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "borrowings_short_term",
+      "display_name": {
+        "tr": "Krediler Kısa Vadeli",
+        "en": "Borrowings Short Term"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "capex_to_revenue",
+      "display_name": {
+        "tr": "Yatırım Harcaması To Gelir",
+        "en": "Capex To Revenue"
+      },
+      "category": "derived_ratio",
+      "statement_section": "cash_generation",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_generation).",
+      "version": 1
+    },
+    {
+      "metric_id": "cargo_revenue_growth",
+      "display_name": {
+        "tr": "Kargo Gelir Büyümesi",
+        "en": "Cargo Revenue Growth"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational, growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "cargo_tonnage",
+      "display_name": {
+        "tr": "Kargo Tonaj",
+        "en": "Cargo Tonnage"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "thousand_ton"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "cargo_tonnage_growth_annual",
+      "display_name": {
+        "tr": "Kargo Tonaj Büyümesi Yıllık",
+        "en": "Cargo Tonnage Growth Annual"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "cargo_tonnage_growth_quarterly",
+      "display_name": {
+        "tr": "Kargo Tonaj Büyümesi Çeyreklik",
+        "en": "Cargo Tonnage Growth Quarterly"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "cash_and_equivalents",
+      "display_name": {
+        "tr": "Nakit ve Nakit Benzerleri",
+        "en": "Cash And Equivalents"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "cash_and_st_investments_to_current_liabilities",
+      "display_name": {
+        "tr": "Nakit ve Kısa Vadeli Yatırımlar To Cari Yükümlülükler",
+        "en": "Cash And St Investments To Current Liabilities"
+      },
+      "category": "derived_ratio",
+      "statement_section": "liquidity",
+      "data_type": "derived",
+      "allowed_units": [
+        "ratio"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (liquidity).",
+      "version": 1
+    },
+    {
+      "metric_id": "cask",
+      "display_name": {
+        "tr": "Birim Gider (CASK)",
+        "en": "Cask"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "usc"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "cask2_adjusted_cargo_capacity",
+      "display_name": {
+        "tr": "Cask2 Düzeltilmiş Kargo Kapasitesi",
+        "en": "Cask2 Adjusted Cargo Capacity"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "usc"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_capex_ppe_intangible",
+      "display_name": {
+        "tr": "Nakit Akışı Yatırım Harcaması MDV/MODV Maddi Olmayan Duran Varlık",
+        "en": "Cf Capex Ppe Intangible"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_cash_beginning_period",
+      "display_name": {
+        "tr": "Nakit Akışı Nakit Dönem Başı Dönem",
+        "en": "Cf Cash Beginning Period"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_cash_end_period",
+      "display_name": {
+        "tr": "Nakit Akışı Nakit Dönem Sonu Dönem",
+        "en": "Cf Cash End Period"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_cash_flows_from_operations",
+      "display_name": {
+        "tr": "Nakit Akışı Nakit Flows From Operations",
+        "en": "Cf Cash Flows From Operations"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_deferred_revenue_change",
+      "display_name": {
+        "tr": "Nakit Akışı Ertelenmiş Gelir Değişimi",
+        "en": "Cf Deferred Revenue Change"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_depreciation_amortisation",
+      "display_name": {
+        "tr": "Nakit Akışı Amortisman İtfa",
+        "en": "Cf Depreciation Amortisation"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_dividends_paid",
+      "display_name": {
+        "tr": "Nakit Akışı Temettü Ödenen",
+        "en": "Cf Dividends Paid"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_financial_asset_purchases_sales",
+      "display_name": {
+        "tr": "Nakit Akışı Finansal Asset Purchases Satış",
+        "en": "Cf Financial Asset Purchases Sales"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_share_repurchases",
+      "display_name": {
+        "tr": "Hisse Geri Alımları İçin Nakit Çıkışı",
+        "en": "Cash Paid for Share Repurchases"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Cash paid to repurchase common shares, normalized as a signed cash outflow.",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_fx_effect_on_cash",
+      "display_name": {
+        "tr": "Nakit Akışı Kur Etkisi Etkisi Nakit",
+        "en": "Cf Fx Effect On Cash"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_inflation_effect_on_cash",
+      "display_name": {
+        "tr": "Nakit ve Nakit Benzerleri Üzerindeki Enflasyon Etkisi",
+        "en": "Inflation Effect On Cash"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_try"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "IAS 29 net monetary and purchasing-power restatement effect applied specifically to cash and cash equivalents within the cash-flow reconciliation bridge; distinct from cf_fx_effect_on_cash currency translation and the income-statement monetary_gain metric.",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_income_taxes_paid",
+      "display_name": {
+        "tr": "Nakit Akışı Gelir Vergiler Ödenen",
+        "en": "Cf Income Taxes Paid"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_interest_paid",
+      "display_name": {
+        "tr": "Nakit Akışı Faiz Ödenen",
+        "en": "Cf Interest Paid"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_interest_received_financing",
+      "display_name": {
+        "tr": "Nakit Akışı Faiz Alınan Finansman",
+        "en": "Cf Interest Received Financing"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_interest_received_investing",
+      "display_name": {
+        "tr": "Nakit Akışı Faiz Alınan Yatırım Faaliyeti",
+        "en": "Cf Interest Received Investing"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_inventory_change",
+      "display_name": {
+        "tr": "Nakit Akışı Inventory Değişimi",
+        "en": "Cf Inventory Change"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_lease_payments",
+      "display_name": {
+        "tr": "Nakit Akışı Kira Ödemeleri",
+        "en": "Cf Lease Payments"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_loan_proceeds",
+      "display_name": {
+        "tr": "Nakit Akışı Kredi Girişleri",
+        "en": "Cf Loan Proceeds"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_loan_repayments",
+      "display_name": {
+        "tr": "Nakit Akışı Kredi Geri Ödemeleri",
+        "en": "Cf Loan Repayments"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_net_change_before_fx",
+      "display_name": {
+        "tr": "Nakit Akışı Net Değişimi Öncesi Kur Etkisi",
+        "en": "Cf Net Change Before Fx"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_net_change_in_cash",
+      "display_name": {
+        "tr": "Nakit Akışı Net Değişimi In Nakit",
+        "en": "Cf Net Change In Cash"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_net_financing_activities",
+      "display_name": {
+        "tr": "Nakit Akışı Net Finansman Faaliyetleri",
+        "en": "Cf Net Financing Activities"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_net_investing_activities",
+      "display_name": {
+        "tr": "Nakit Akışı Net Yatırım Faaliyeti Faaliyetleri",
+        "en": "Cf Net Investing Activities"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_net_operating_activities",
+      "display_name": {
+        "tr": "Nakit Akışı Net Faaliyet Faaliyetleri",
+        "en": "Cf Net Operating Activities"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_net_profit_for_period",
+      "display_name": {
+        "tr": "Nakit Akışı Net Kâr Dönem",
+        "en": "Cf Net Profit For Period"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_operating_profit_before_working_capital",
+      "display_name": {
+        "tr": "Nakit Akışı Faaliyet Kâr Öncesi İşletme Sermayesi",
+        "en": "Cf Operating Profit Before Working Capital"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_proceeds_asset_sales",
+      "display_name": {
+        "tr": "Nakit Akışı Girişleri Asset Satış",
+        "en": "Cf Proceeds Asset Sales"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_trade_payables_change",
+      "display_name": {
+        "tr": "Nakit Akışı Ticari Borçlar Değişimi",
+        "en": "Cf Trade Payables Change"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cf_trade_receivables_change",
+      "display_name": {
+        "tr": "Nakit Akışı Ticari Alacaklar Değişimi",
+        "en": "Cf Trade Receivables Change"
+      },
+      "category": "cash_flow",
+      "statement_section": "cash_flow_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_cash_flow_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_flow_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_air_traffic_control",
+      "display_name": {
+        "tr": "Maliyet Air Trafik Kontrolü",
+        "en": "Cost Air Traffic Control"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_aircraft_maintenance",
+      "display_name": {
+        "tr": "Maliyet Uçak Bakım",
+        "en": "Cost Aircraft Maintenance"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_airport",
+      "display_name": {
+        "tr": "Maliyet Havalimanı",
+        "en": "Cost Airport"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_depreciation_amortisation",
+      "display_name": {
+        "tr": "Maliyet Amortisman İtfa",
+        "en": "Cost Depreciation Amortisation"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_fuel",
+      "display_name": {
+        "tr": "Maliyet Akaryakıt",
+        "en": "Cost Fuel"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_ground_services",
+      "display_name": {
+        "tr": "Maliyet Yer Hizmetleri",
+        "en": "Cost Ground Services"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_of_sales",
+      "display_name": {
+        "tr": "Maliyet Satış",
+        "en": "Cost Of Sales"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_other_cos",
+      "display_name": {
+        "tr": "Maliyet Diğer SMM",
+        "en": "Cost Other Cos"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_passenger_services_catering",
+      "display_name": {
+        "tr": "Maliyet Yolcu Hizmetleri İkram",
+        "en": "Cost Passenger Services Catering"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_personnel",
+      "display_name": {
+        "tr": "Maliyet Personel",
+        "en": "Cost Personnel"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "cost_wet_lease",
+      "display_name": {
+        "tr": "Maliyet Islak Kiralama (Wet Lease) Kira",
+        "en": "Cost Wet Lease"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "current_income_tax_assets",
+      "display_name": {
+        "tr": "Cari Gelir Vergi Varlıklar",
+        "en": "Current Income Tax Assets"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "current_income_tax_provision",
+      "display_name": {
+        "tr": "Cari Gelir Vergi Karşılığı",
+        "en": "Current Income Tax Provision"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "current_ratio",
+      "display_name": {
+        "tr": "Cari Oranı",
+        "en": "Current Ratio"
+      },
+      "category": "derived_ratio",
+      "statement_section": "liquidity",
+      "data_type": "derived",
+      "allowed_units": [
+        "ratio"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (liquidity).",
+      "version": 1
+    },
+    {
+      "metric_id": "current_tax_expense",
+      "display_name": {
+        "tr": "Cari Vergi Gider",
+        "en": "Current Tax Expense"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "debt_to_equity",
+      "display_name": {
+        "tr": "Borç To Özkaynak",
+        "en": "Debt To Equity"
+      },
+      "category": "derived_ratio",
+      "statement_section": "leverage",
+      "data_type": "derived",
+      "allowed_units": [
+        "ratio"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (leverage).",
+      "version": 1
+    },
+    {
+      "metric_id": "deferred_revenue_change_contribution",
+      "display_name": {
+        "tr": "Ertelenmiş Gelir Değişimi Katkısı",
+        "en": "Deferred Revenue Change Contribution"
+      },
+      "category": "derived_ratio",
+      "statement_section": "cash_generation",
+      "data_type": "derived",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_generation).",
+      "version": 1
+    },
+    {
+      "metric_id": "deferred_revenue_current",
+      "display_name": {
+        "tr": "Ertelenmiş Gelir Cari",
+        "en": "Deferred Revenue Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "deferred_revenue_noncurrent",
+      "display_name": {
+        "tr": "Ertelenmiş Gelir Duran",
+        "en": "Deferred Revenue Noncurrent"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "deferred_tax_assets",
+      "display_name": {
+        "tr": "Ertelenmiş Vergi Varlıklar",
+        "en": "Deferred Tax Assets"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "deferred_tax_income",
+      "display_name": {
+        "tr": "Ertelenmiş Vergi Gelir",
+        "en": "Deferred Tax Income"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "deferred_tax_income_expense",
+      "display_name": {
+        "tr": "Ertelenmiş Vergi Gelir Gider",
+        "en": "Deferred Tax Income Expense"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "deferred_tax_liabilities",
+      "display_name": {
+        "tr": "Ertelenmiş Vergi Yükümlülükler",
+        "en": "Deferred Tax Liabilities"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "derivative_financial_assets",
+      "display_name": {
+        "tr": "Türev Finansal Varlıklar",
+        "en": "Derivative Financial Assets"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "derivative_financial_liabilities",
+      "display_name": {
+        "tr": "Türev Finansal Yükümlülükler",
+        "en": "Derivative Financial Liabilities"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "destination_count",
+      "display_name": {
+        "tr": "Destinasyon Adedi",
+        "en": "Destination Count"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "count"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "ebitda_amount",
+      "display_name": {
+        "tr": "FAVÖK (EBITDA) Tutarı",
+        "en": "Ebitda Amount"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "ebitda_margin",
+      "display_name": {
+        "tr": "FAVÖK (EBITDA) Marjı",
+        "en": "Ebitda Margin"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "ebitdar_amount",
+      "display_name": {
+        "tr": "FAVÖKKG (EBITDAR) Tutarı",
+        "en": "Ebitdar Amount"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "ebitdar_margin",
+      "display_name": {
+        "tr": "FAVÖKKG (EBITDAR) Marjı",
+        "en": "Ebitdar Margin"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational, margins).",
+      "version": 1
+    },
+    {
+      "metric_id": "eps_basic_usc",
+      "display_name": {
+        "tr": "Hisse Başına Kâr Adi USc",
+        "en": "Eps Basic Usc"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "us_cent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "eps_diluted_usc",
+      "display_name": {
+        "tr": "Hisse Başına Kâr Sulandırılmış USc",
+        "en": "Eps Diluted Usc"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "us_cent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "equity_attributable_to_parent",
+      "display_name": {
+        "tr": "Özkaynak İsabet Eden To Ana Ortaklık",
+        "en": "Equity Attributable To Parent"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "equity_method_investment_profit_share",
+      "display_name": {
+        "tr": "Özkaynak Yöntemi Yatırım Kâr Payı",
+        "en": "Equity Method Investment Profit Share"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "equity_method_investments",
+      "display_name": {
+        "tr": "Özkaynak Yöntemi Yatırımlar",
+        "en": "Equity Method Investments"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "ex_fuel_cask",
+      "display_name": {
+        "tr": "Hariç Akaryakıt Birim Gider (CASK)",
+        "en": "Ex Fuel Cask"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "usc"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "ex_fuel_cask2_adjusted_cargo_capacity",
+      "display_name": {
+        "tr": "Hariç Akaryakıt Cask2 Düzeltilmiş Kargo Kapasitesi",
+        "en": "Ex Fuel Cask2 Adjusted Cargo Capacity"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "usc"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "financial_debt",
+      "display_name": {
+        "tr": "Finansal Borç",
+        "en": "Financial Debt"
+      },
+      "category": "derived_ratio",
+      "statement_section": "leverage",
+      "data_type": "derived",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (leverage).",
+      "version": 1
+    },
+    {
+      "metric_id": "financial_expense",
+      "display_name": {
+        "tr": "Finansal Gider",
+        "en": "Financial Expense"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "financial_income",
+      "display_name": {
+        "tr": "Finansal Gelir",
+        "en": "Financial Income"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "financial_investments_current",
+      "display_name": {
+        "tr": "Finansal Yatırımlar Cari",
+        "en": "Financial Investments Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "financial_investments_noncurrent",
+      "display_name": {
+        "tr": "Finansal Yatırımlar Duran",
+        "en": "Financial Investments Noncurrent"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "free_cash_flow",
+      "display_name": {
+        "tr": "Serbest Nakit Akışı",
+        "en": "Free Cash Flow"
+      },
+      "category": "derived_ratio",
+      "statement_section": "cash_generation",
+      "data_type": "derived",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_generation).",
+      "version": 1
+    },
+    {
+      "metric_id": "free_cash_flow_after_lease_payments",
+      "display_name": {
+        "tr": "Serbest Nakit Akışı Sonrası Kira Ödemeleri",
+        "en": "Free Cash Flow After Lease Payments"
+      },
+      "category": "derived_ratio",
+      "statement_section": "cash_generation",
+      "data_type": "derived",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_generation).",
+      "version": 1
+    },
+    {
+      "metric_id": "free_cash_flow_margin",
+      "display_name": {
+        "tr": "Serbest Nakit Akışı Marjı",
+        "en": "Free Cash Flow Margin"
+      },
+      "category": "derived_ratio",
+      "statement_section": "margins",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (margins).",
+      "version": 1
+    },
+    {
+      "metric_id": "fuel_consumption",
+      "display_name": {
+        "tr": "Akaryakıt Tüketimi",
+        "en": "Fuel Consumption"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "thousand_ton"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "fuel_expense_share",
+      "display_name": {
+        "tr": "Akaryakıt Gider Payı",
+        "en": "Fuel Expense Share"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "fuel_total_expense",
+      "display_name": {
+        "tr": "Akaryakıt Toplam Gider",
+        "en": "Fuel Total Expense"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "fuel_unit_cost",
+      "display_name": {
+        "tr": "Akaryakıt Birim Maliyet",
+        "en": "Fuel Unit Cost"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "usd_per_ton"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "goodwill",
+      "display_name": {
+        "tr": "Şerefiye",
+        "en": "Goodwill"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "gross_margin",
+      "display_name": {
+        "tr": "Brüt Marjı",
+        "en": "Gross Margin"
+      },
+      "category": "derived_ratio",
+      "statement_section": "margins",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (margins).",
+      "version": 1
+    },
+    {
+      "metric_id": "gross_profit",
+      "display_name": {
+        "tr": "Brüt Kâr",
+        "en": "Gross Profit"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "gross_profit_growth",
+      "display_name": {
+        "tr": "Brüt Kâr Büyümesi",
+        "en": "Gross Profit Growth"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "intangible_assets_other",
+      "display_name": {
+        "tr": "Maddi Olmayan Duran Varlık Varlıklar Diğer",
+        "en": "Intangible Assets Other"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "inventories",
+      "display_name": {
+        "tr": "Stoklar",
+        "en": "Inventories"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "investment_expense",
+      "display_name": {
+        "tr": "Yatırım Gider",
+        "en": "Investment Expense"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "investment_income",
+      "display_name": {
+        "tr": "Yatırım Gelir",
+        "en": "Investment Income"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "investment_property",
+      "display_name": {
+        "tr": "Yatırım Maddi Duran Varlık",
+        "en": "Investment Property"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "lease_liabilities_long_term",
+      "display_name": {
+        "tr": "Kira Yükümlülükler Uzun Vadeli",
+        "en": "Lease Liabilities Long Term"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "lease_liabilities_long_term_related",
+      "display_name": {
+        "tr": "İlişkili Taraf Uzun Vadeli Kira Yükümlülükleri",
+        "en": "Non-current Lease Liabilities to Related Parties"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "KAP XBRL ilişkili taraf uzun vadeli kiralama borcu bileşeni; kanonik toplamın kaynak parçasıdır.",
+      "version": 1
+    },
+    {
+      "metric_id": "lease_liabilities_long_term_unrelated",
+      "display_name": {
+        "tr": "İlişkili Olmayan Taraf Uzun Vadeli Kira Yükümlülükleri",
+        "en": "Non-current Lease Liabilities to Unrelated Parties"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "KAP XBRL ilişkili olmayan taraf uzun vadeli kiralama borcu bileşeni; kanonik toplamın kaynak parçasıdır.",
+      "version": 1
+    },
+    {
+      "metric_id": "lease_liabilities_short_term",
+      "display_name": {
+        "tr": "Kira Yükümlülükler Kısa Vadeli",
+        "en": "Lease Liabilities Short Term"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "lease_liability_total",
+      "display_name": {
+        "tr": "Kira Yükümlülük Toplam",
+        "en": "Lease Liability Total"
+      },
+      "category": "derived_ratio",
+      "statement_section": "leverage",
+      "data_type": "derived",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (leverage).",
+      "version": 1
+    },
+    {
+      "metric_id": "liability_incl_lease_to_equity",
+      "display_name": {
+        "tr": "Yükümlülük Dahil Kira To Özkaynak",
+        "en": "Liability Incl Lease To Equity"
+      },
+      "category": "derived_ratio",
+      "statement_section": "leverage",
+      "data_type": "derived",
+      "allowed_units": [
+        "ratio"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (leverage).",
+      "version": 1
+    },
+    {
+      "metric_id": "monetary_gain",
+      "display_name": {
+        "tr": "Parasal Kazanç",
+        "en": "Monetary Gain"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "net_debt_to_ebitdar",
+      "display_name": {
+        "tr": "Net Borç To FAVÖKKG (EBITDAR)",
+        "en": "Net Debt To Ebitdar"
+      },
+      "category": "derived_ratio",
+      "statement_section": "leverage",
+      "data_type": "derived",
+      "allowed_units": [
+        "ratio"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (leverage).",
+      "version": 1
+    },
+    {
+      "metric_id": "net_debt_to_ebitdar_ttm",
+      "display_name": {
+        "tr": "Net Borç To FAVÖKKG (EBITDAR) Son 12 Ay (TTM)",
+        "en": "Net Debt To Ebitdar Ttm"
+      },
+      "category": "derived_ratio",
+      "statement_section": "leverage",
+      "data_type": "derived",
+      "allowed_units": [
+        "ratio"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (leverage).",
+      "version": 1
+    },
+    {
+      "metric_id": "net_financial_debt",
+      "display_name": {
+        "tr": "Net Finansal Borç",
+        "en": "Net Financial Debt"
+      },
+      "category": "derived_ratio",
+      "statement_section": "leverage",
+      "data_type": "derived",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (leverage).",
+      "version": 1
+    },
+    {
+      "metric_id": "net_financial_liability_incl_lease",
+      "display_name": {
+        "tr": "Net Finansal Yükümlülük Dahil Kira",
+        "en": "Net Financial Liability Incl Lease"
+      },
+      "category": "derived_ratio",
+      "statement_section": "leverage",
+      "data_type": "derived",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (leverage).",
+      "version": 1
+    },
+    {
+      "metric_id": "net_margin",
+      "display_name": {
+        "tr": "Net Marjı",
+        "en": "Net Margin"
+      },
+      "category": "derived_ratio",
+      "statement_section": "margins",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (margins).",
+      "version": 1
+    },
+    {
+      "metric_id": "net_profit_attributable_noncontrolling",
+      "display_name": {
+        "tr": "Net Kâr İsabet Eden Kontrol Gücü Olmayan",
+        "en": "Net Profit Attributable Noncontrolling"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "net_profit_attributable_parent",
+      "display_name": {
+        "tr": "Net Kâr İsabet Eden Ana Ortaklık",
+        "en": "Net Profit Attributable Parent"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "net_profit_for_period",
+      "display_name": {
+        "tr": "Net Kâr Dönem",
+        "en": "Net Profit For Period"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "net_profit_growth",
+      "display_name": {
+        "tr": "Net Kâr Büyümesi",
+        "en": "Net Profit Growth"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "net_working_capital",
+      "display_name": {
+        "tr": "Net İşletme Sermayesi",
+        "en": "Net Working Capital"
+      },
+      "category": "derived_ratio",
+      "statement_section": "liquidity",
+      "data_type": "derived",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (liquidity).",
+      "version": 1
+    },
+    {
+      "metric_id": "noncontrolling_interests",
+      "display_name": {
+        "tr": "Kontrol Gücü Olmayan Interests",
+        "en": "Noncontrolling Interests"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "ocf_to_net_profit",
+      "display_name": {
+        "tr": "İşletme Nakit Akışı To Net Kâr",
+        "en": "Ocf To Net Profit"
+      },
+      "category": "derived_ratio",
+      "statement_section": "cash_generation",
+      "data_type": "derived",
+      "allowed_units": [
+        "ratio"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (cash_generation).",
+      "version": 1
+    },
+    {
+      "metric_id": "operating_cash_flow_growth",
+      "display_name": {
+        "tr": "Faaliyet Nakit Akışı Büyümesi",
+        "en": "Operating Cash Flow Growth"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "operating_cash_flow_margin",
+      "display_name": {
+        "tr": "Faaliyet Nakit Akışı Marjı",
+        "en": "Operating Cash Flow Margin"
+      },
+      "category": "derived_ratio",
+      "statement_section": "margins",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (margins).",
+      "version": 1
+    },
+    {
+      "metric_id": "operating_margin",
+      "display_name": {
+        "tr": "Faaliyet Marjı",
+        "en": "Operating Margin"
+      },
+      "category": "derived_ratio",
+      "statement_section": "margins",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (margins).",
+      "version": 1
+    },
+    {
+      "metric_id": "operating_margin_pre_investment",
+      "display_name": {
+        "tr": "Faaliyet Marjı Pre Yatırım",
+        "en": "Operating Margin Pre Investment"
+      },
+      "category": "derived_ratio",
+      "statement_section": "margins",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (margins).",
+      "version": 1
+    },
+    {
+      "metric_id": "operating_profit",
+      "display_name": {
+        "tr": "Faaliyet Kâr",
+        "en": "Operating Profit"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "operating_profit_before_investment_activities",
+      "display_name": {
+        "tr": "Faaliyet Kâr Öncesi Yatırım Faaliyetleri",
+        "en": "Operating Profit Before Investment Activities"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "operating_profit_growth",
+      "display_name": {
+        "tr": "Faaliyet Kâr Büyümesi",
+        "en": "Operating Profit Growth"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "opex_general_administrative",
+      "display_name": {
+        "tr": "Faaliyet Gideri Genel Yönetim",
+        "en": "Opex General Administrative"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "opex_selling_marketing",
+      "display_name": {
+        "tr": "Faaliyet Gideri Satış Pazarlama",
+        "en": "Opex Selling Marketing"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_current_assets",
+      "display_name": {
+        "tr": "Diğer Cari Varlıklar",
+        "en": "Other Current Assets"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_current_liabilities",
+      "display_name": {
+        "tr": "Diğer Cari Yükümlülükler",
+        "en": "Other Current Liabilities"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_noncurrent_liabilities",
+      "display_name": {
+        "tr": "Diğer Duran Yükümlülükler",
+        "en": "Other Noncurrent Liabilities"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_operating_expense",
+      "display_name": {
+        "tr": "Diğer Faaliyet Gider",
+        "en": "Other Operating Expense"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_operating_income",
+      "display_name": {
+        "tr": "Diğer Faaliyet Gelir",
+        "en": "Other Operating Income"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_payables_related_current",
+      "display_name": {
+        "tr": "Diğer Borçlar İlişkili Taraf Cari",
+        "en": "Other Payables Related Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_payables_third_current",
+      "display_name": {
+        "tr": "Diğer Borçlar Üçüncü Taraf Cari",
+        "en": "Other Payables Third Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_payables_third_noncurrent",
+      "display_name": {
+        "tr": "Diğer Borçlar Üçüncü Taraf Duran",
+        "en": "Other Payables Third Noncurrent"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_provisions_noncurrent",
+      "display_name": {
+        "tr": "Diğer Karşılıkları Duran",
+        "en": "Other Provisions Noncurrent"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_receivables_related_current",
+      "display_name": {
+        "tr": "Diğer Alacaklar İlişkili Taraf Cari",
+        "en": "Other Receivables Related Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_receivables_related_noncurrent",
+      "display_name": {
+        "tr": "Diğer Alacaklar İlişkili Taraf Duran",
+        "en": "Other Receivables Related Noncurrent"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_receivables_third_current",
+      "display_name": {
+        "tr": "Diğer Alacaklar Üçüncü Taraf Cari",
+        "en": "Other Receivables Third Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "other_receivables_third_noncurrent",
+      "display_name": {
+        "tr": "Diğer Alacaklar Üçüncü Taraf Duran",
+        "en": "Other Receivables Third Noncurrent"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "paid_in_capital",
+      "display_name": {
+        "tr": "Ödenmiş Sermaye",
+        "en": "Paid-In Capital"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd",
+        "million_try"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Nominal (statutory) paid-in share capital, from the equity section of the balance sheet. Tracked primarily as a change-detector for the share-count ledger (katman 6): a jump between periods signals a capital increase/decrease event requiring a new share-count-ledger record, derived as paid_in_capital / nominal_value_per_share (see formula share_count.nominal_to_quote_units.v1, already used in the EREGL ledger). Not itself a share count.",
+      "version": 1
+    },
+    {
+      "metric_id": "passenger_count",
+      "display_name": {
+        "tr": "Yolcu Adedi",
+        "en": "Passenger Count"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "million"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "passenger_growth_annual",
+      "display_name": {
+        "tr": "Yolcu Büyümesi Yıllık",
+        "en": "Passenger Growth Annual"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "passenger_growth_quarterly",
+      "display_name": {
+        "tr": "Yolcu Büyümesi Çeyreklik",
+        "en": "Passenger Growth Quarterly"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "passenger_load_factor_annual",
+      "display_name": {
+        "tr": "Yolcu Doluluk Oranı Yıllık",
+        "en": "Passenger Load Factor Annual"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "passenger_load_factor_quarterly",
+      "display_name": {
+        "tr": "Yolcu Doluluk Oranı Çeyreklik",
+        "en": "Passenger Load Factor Quarterly"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "passenger_rask",
+      "display_name": {
+        "tr": "Yolcu Birim Gelir (RASK)",
+        "en": "Passenger Rask"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "usc"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "passenger_revenue_growth",
+      "display_name": {
+        "tr": "Yolcu Gelir Büyümesi",
+        "en": "Passenger Revenue Growth"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational, growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "passenger_yield",
+      "display_name": {
+        "tr": "Yolcu Birim Gelir (Yield)",
+        "en": "Passenger Yield"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "usc"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "payables_employee_benefits",
+      "display_name": {
+        "tr": "Borçlar Çalışan Yan Hakları",
+        "en": "Payables Employee Benefits"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "prepaid_expenses_current",
+      "display_name": {
+        "tr": "Peşin Ödenmiş Giderler Cari",
+        "en": "Prepaid Expenses Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "prepaid_expenses_noncurrent",
+      "display_name": {
+        "tr": "Peşin Ödenmiş Giderler Duran",
+        "en": "Prepaid Expenses Noncurrent"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "profit_before_tax",
+      "display_name": {
+        "tr": "Kâr Öncesi Vergi",
+        "en": "Profit Before Tax"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "lease_liabilities_current_borrowings_related",
+      "display_name": {
+        "tr": "İlişkili Taraf Kısa Vadeli Kiralama Borçları",
+        "en": "Current Lease Liabilities to Related Parties"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "KAP XBRL ilişkili taraf kısa vadeli kiralama borcu; kanonik kısa vadeli toplamın kaynak bileşenidir.",
+      "version": 1
+    },
+    {
+      "metric_id": "lease_liabilities_current_borrowings_unrelated",
+      "display_name": {
+        "tr": "İlişkili Olmayan Taraf Kısa Vadeli Kiralama Borçları",
+        "en": "Current Lease Liabilities to Unrelated Parties"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "KAP XBRL ilişkili olmayan taraf kısa vadeli kiralama borcu; kanonik kısa vadeli toplamın kaynak bileşenidir.",
+      "version": 1
+    },
+    {
+      "metric_id": "lease_liabilities_current_portion_long_term_related",
+      "display_name": {
+        "tr": "İlişkili Taraf Uzun Vadeli Kiralama Borçlarının Kısa Vadeli Kısmı",
+        "en": "Current Portion of Long-Term Lease Liabilities to Related Parties"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "KAP XBRL ilişkili taraf uzun vadeli kiralama borçlarının kısa vadeli kısmı; kanonik kısa vadeli toplamın kaynak bileşenidir.",
+      "version": 1
+    },
+    {
+      "metric_id": "lease_liabilities_current_portion_long_term_unrelated",
+      "display_name": {
+        "tr": "İlişkili Olmayan Taraf Uzun Vadeli Kiralama Borçlarının Kısa Vadeli Kısmı",
+        "en": "Current Portion of Long-Term Lease Liabilities to Unrelated Parties"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "KAP XBRL ilişkili olmayan taraf uzun vadeli kiralama borçlarının kısa vadeli kısmı; kanonik kısa vadeli toplamın kaynak bileşenidir.",
+      "version": 1
+    },
+    {
+      "metric_id": "profit_loss_from_discontinued_operations",
+      "display_name": {
+        "tr": "Durdurulan Faaliyetlerden Kâr/Zarar",
+        "en": "Profit or Loss from Discontinued Operations"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Source-reported discontinued-operations result included in total net profit but outside continuing-operations profit before tax.",
+      "version": 1
+    },
+    {
+      "metric_id": "gross_profit_finance_sector_operations",
+      "display_name": {
+        "tr": "Finans Sektörü Faaliyetlerinden Brüt Kâr/Zarar",
+        "en": "Gross Profit/Loss from Finance Sector Operations"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Source-reported gross profit/loss from a consolidated captive finance subsidiary (e.g. an OEM's in-house financing arm), reported separately from commercial-operations gross profit and summed into total gross_profit.",
+      "version": 1
+    },
+    {
+      "metric_id": "property_and_equipment",
+      "display_name": {
+        "tr": "Maddi Duran Varlık ve Equipment",
+        "en": "Property And Equipment"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "provisions_employee_termination_noncurrent",
+      "display_name": {
+        "tr": "Karşılıkları Çalışan Kıdem Tazminatı Duran",
+        "en": "Provisions Employee Termination Noncurrent"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "rask_adjusted_cargo_capacity",
+      "display_name": {
+        "tr": "Birim Gelir (RASK) Düzeltilmiş Kargo Kapasitesi",
+        "en": "Rask Adjusted Cargo Capacity"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "usc"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_cargo_by_cargo_aircraft",
+      "display_name": {
+        "tr": "Gelir Kargo Kargo Uçak",
+        "en": "Revenue Cargo By Cargo Aircraft"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_cargo_by_passenger_aircraft",
+      "display_name": {
+        "tr": "Gelir Kargo Yolcu Uçak",
+        "en": "Revenue Cargo By Passenger Aircraft"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_cargo_total",
+      "display_name": {
+        "tr": "Gelir Kargo Toplam",
+        "en": "Revenue Cargo Total"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_growth",
+      "display_name": {
+        "tr": "Gelir Büyümesi",
+        "en": "Revenue Growth"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_other",
+      "display_name": {
+        "tr": "Gelir Diğer",
+        "en": "Revenue Other"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_passenger_and_cargo_total",
+      "display_name": {
+        "tr": "Gelir Yolcu ve Kargo Toplam",
+        "en": "Revenue Passenger And Cargo Total"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_passenger_scheduled",
+      "display_name": {
+        "tr": "Gelir Yolcu Tarifeli",
+        "en": "Revenue Passenger Scheduled"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_passenger_total",
+      "display_name": {
+        "tr": "Gelir Yolcu Toplam",
+        "en": "Revenue Passenger Total"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_passenger_unscheduled",
+      "display_name": {
+        "tr": "Gelir Yolcu Tarifesiz",
+        "en": "Revenue Passenger Unscheduled"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_technical",
+      "display_name": {
+        "tr": "Gelir Teknik",
+        "en": "Revenue Technical"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "revenue_total",
+      "display_name": {
+        "tr": "Gelir Toplam",
+        "en": "Revenue Total"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "right_of_use_assets",
+      "display_name": {
+        "tr": "Kullanım Hakkı Varlıklar",
+        "en": "Right Of Use Assets"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "roa",
+      "display_name": {
+        "tr": "Aktif Kârlılığı (ROA)",
+        "en": "Roa"
+      },
+      "category": "derived_ratio",
+      "statement_section": "returns",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (returns).",
+      "version": 1
+    },
+    {
+      "metric_id": "roe",
+      "display_name": {
+        "tr": "Özkaynak Kârlılığı (ROE)",
+        "en": "Roe"
+      },
+      "category": "derived_ratio",
+      "statement_section": "returns",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (returns).",
+      "version": 1
+    },
+    {
+      "metric_id": "roic",
+      "display_name": {
+        "tr": "Yatırılan Sermaye Getirisi (ROIC)",
+        "en": "Roic"
+      },
+      "category": "derived_ratio",
+      "statement_section": "returns",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (returns).",
+      "version": 1
+    },
+    {
+      "metric_id": "rpk",
+      "display_name": {
+        "tr": "ÜKK (RPK)",
+        "en": "Rpk"
+      },
+      "category": "sector_operational",
+      "statement_section": "aviation_operational",
+      "data_type": "direct",
+      "allowed_units": [
+        "billion_km"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (aviation_operational).",
+      "version": 1
+    },
+    {
+      "metric_id": "short_term_provisions_employee_benefits",
+      "display_name": {
+        "tr": "Kısa Vadeli Karşılıkları Çalışan Yan Hakları",
+        "en": "Short Term Provisions Employee Benefits"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "short_term_provisions_other",
+      "display_name": {
+        "tr": "Kısa Vadeli Karşılıkları Diğer",
+        "en": "Short Term Provisions Other"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "tax_expense",
+      "display_name": {
+        "tr": "Vergi Gider",
+        "en": "Tax Expense"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "tax_income_expense",
+      "display_name": {
+        "tr": "Vergi Gelir Gider",
+        "en": "Tax Income Expense"
+      },
+      "category": "income_statement",
+      "statement_section": "income_statement",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (income_statement).",
+      "version": 1
+    },
+    {
+      "metric_id": "technical_revenue_growth",
+      "display_name": {
+        "tr": "Teknik Gelir Büyümesi",
+        "en": "Technical Revenue Growth"
+      },
+      "category": "derived_ratio",
+      "statement_section": "growth",
+      "data_type": "derived",
+      "allowed_units": [
+        "percent"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (growth).",
+      "version": 1
+    },
+    {
+      "metric_id": "treasury_shares_nominal",
+      "display_name": {
+        "tr": "Geri Alınmış Paylar (Nominal)",
+        "en": "Treasury Shares (Nominal Value)"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd",
+        "million_try"
+      ],
+      "sign_semantics": "signed_statement_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Nominal value of treasury (bought-back) shares, from the equity section of the balance sheet (\"Geri Alınmış Paylar (-)\"). Tracked alongside paid_in_capital as a change-detector for the share-count ledger (katman 6): a change signals a buyback event requiring a new share-count-ledger record and, per company disclosure, a matching \"Payların Geri Alınmasına İlişkin Bildirim\" KAP notification.",
+      "version": 1
+    },
+    {
+      "metric_id": "total_assets",
+      "display_name": {
+        "tr": "Toplam Varlıklar",
+        "en": "Total Assets"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "total_current_assets",
+      "display_name": {
+        "tr": "Toplam Cari Varlıklar",
+        "en": "Total Current Assets"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "total_current_liabilities",
+      "display_name": {
+        "tr": "Toplam Cari Yükümlülükler",
+        "en": "Total Current Liabilities"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "total_equity",
+      "display_name": {
+        "tr": "Toplam Özkaynak",
+        "en": "Total Equity"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "total_financial_liability_incl_lease",
+      "display_name": {
+        "tr": "Toplam Finansal Yükümlülük Dahil Kira",
+        "en": "Total Financial Liability Incl Lease"
+      },
+      "category": "derived_ratio",
+      "statement_section": "leverage",
+      "data_type": "derived",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (leverage).",
+      "version": 1
+    },
+    {
+      "metric_id": "total_liabilities",
+      "display_name": {
+        "tr": "Toplam Yükümlülükler",
+        "en": "Total Liabilities"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "total_noncurrent_assets",
+      "display_name": {
+        "tr": "Toplam Duran Varlıklar",
+        "en": "Total Noncurrent Assets"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "total_noncurrent_liabilities",
+      "display_name": {
+        "tr": "Toplam Duran Yükümlülükler",
+        "en": "Total Noncurrent Liabilities"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "trade_payables_related_current",
+      "display_name": {
+        "tr": "Ticari Borçlar İlişkili Taraf Cari",
+        "en": "Trade Payables Related Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "trade_payables_third_current",
+      "display_name": {
+        "tr": "Ticari Borçlar Üçüncü Taraf Cari",
+        "en": "Trade Payables Third Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "trade_receivables_related_current",
+      "display_name": {
+        "tr": "Ticari Alacaklar İlişkili Taraf Cari",
+        "en": "Trade Receivables Related Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    },
+    {
+      "metric_id": "trade_receivables_third_current",
+      "display_name": {
+        "tr": "Ticari Alacaklar Üçüncü Taraf Cari",
+        "en": "Trade Receivables Third Current"
+      },
+      "category": "balance_sheet",
+      "statement_section": "balance_sheet",
+      "data_type": "direct",
+      "allowed_units": [
+        "million_usd"
+      ],
+      "sign_semantics": "positive_value",
+      "applicable_company_types": [
+        "standard_corporate"
+      ],
+      "applicable_sector_modules": [
+        "generic",
+        "aviation"
+      ],
+      "description": "Auto-cataloged from production data (balance_sheet).",
+      "version": 1
+    }
+  ]
+}

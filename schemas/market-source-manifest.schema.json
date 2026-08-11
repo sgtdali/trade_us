@@ -1,0 +1,404 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/market-source-manifest.schema.json",
+  "title": "Market source manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "source_authority",
+    "dataset_identity",
+    "allowed_use",
+    "license_evidence",
+    "retention_policy",
+    "revision_policy",
+    "lifecycle_status",
+    "effective_from"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "manifest_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "manifest_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ticker": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/ticker"
+    },
+    "instrument_identity": {
+      "type": "object",
+      "required": [
+        "instrument_id",
+        "instrument_type",
+        "trading_currency"
+      ],
+      "properties": {
+        "instrument_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instrument_type": {
+          "type": "string",
+          "enum": [
+            "ordinary_share",
+            "preferred_share",
+            "depositary_receipt",
+            "other_equity"
+          ]
+        },
+        "isin": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "trading_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "pair_identity": {
+      "description": "FX subject identity (dataset_kind=fx only). Canonical pair convention BASE/QUOTE: 1 BASE = rate x QUOTE (docs/valuation-t07-currency-fx-contract.md Section 3.1). Never present alongside ticker/instrument_identity/instrument_mapping -- see this schema's root allOf discriminator.",
+      "type": "object",
+      "required": [
+        "pair_id",
+        "base_currency",
+        "quote_currency"
+      ],
+      "properties": {
+        "pair_id": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}/[A-Z]{3}$"
+        },
+        "base_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "quote_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "provider_mapping": {
+      "description": "FX provider-symbol mapping (dataset_kind=fx only). rate_convention is always explicit -- pair direction is never inferred from provider symbol order or numeric magnitude.",
+      "type": "object",
+      "required": [
+        "provider_symbol",
+        "provider_base_currency",
+        "provider_quote_currency",
+        "rate_convention"
+      ],
+      "properties": {
+        "provider_symbol": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provider_base_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "provider_quote_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "rate_convention": {
+          "type": "string",
+          "enum": [
+            "quote_currency_per_base_currency"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_authority": {
+      "type": "object",
+      "required": [
+        "authority_class",
+        "provider_id"
+      ],
+      "properties": {
+        "authority_class": {
+          "type": "string",
+          "enum": [
+            "primary_official",
+            "regulated_market",
+            "governed_benchmark",
+            "issuer_official",
+            "licensed_vendor",
+            "secondary_reference",
+            "manual_exception"
+          ]
+        },
+        "provider_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "underlying_authority_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "dataset_identity": {
+      "type": "object",
+      "required": [
+        "dataset_id",
+        "dataset_kind"
+      ],
+      "properties": {
+        "dataset_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dataset_kind": {
+          "type": "string",
+          "enum": [
+            "price",
+            "share_count",
+            "fx",
+            "corporate_action"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "instrument_mapping": {
+      "type": "object",
+      "required": [
+        "venue_id"
+      ],
+      "properties": {
+        "venue_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "share_class_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "allowed_use": {
+      "type": "object",
+      "required": [
+        "scope"
+      ],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": [
+            "internal_research_only",
+            "internal_valuation",
+            "not_licensed"
+          ]
+        },
+        "redistribution_allowed": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "license_evidence": {
+      "type": "object",
+      "required": [
+        "evidence_ref"
+      ],
+      "properties": {
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recorded_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        }
+      },
+      "additionalProperties": false
+    },
+    "retention_policy": {
+      "type": "object",
+      "required": [
+        "policy_id"
+      ],
+      "properties": {
+        "policy_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retention_days": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "revision_policy": {
+      "type": "object",
+      "required": [
+        "policy_id"
+      ],
+      "properties": {
+        "policy_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision_status_values": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "original",
+              "corrected",
+              "restated",
+              "withdrawn",
+              "unknown"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated",
+        "retired"
+      ]
+    },
+    "effective_from": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+    },
+    "effective_to": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "temporary_use_exception": {
+      "$ref": "#/$defs/temporaryUseException"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "temporaryUseException": {
+      "description": "An optional, explicit exception record for future governance workflows. Its presence or absence does not affect manifest authorization or authority_class rank.",
+      "type": "object",
+      "required": [
+        "exception_id",
+        "decision_ref",
+        "approved_at",
+        "review_on",
+        "replacement_required"
+      ],
+      "properties": {
+        "exception_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision_ref": {
+          "description": "Repository-relative path to the authored decision document.",
+          "type": "string",
+          "minLength": 1
+        },
+        "approved_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "review_on": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "replacement_required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "description": "Discriminated subject identity: dataset_kind=fx requires pair_identity+provider_mapping and forbids the equity-oriented ticker/instrument_identity/instrument_mapping fields; every other dataset_kind requires the equity fields and forbids the FX fields. The two identity branches are never present simultaneously, and a price/share/corporate-action manifest may never carry only a pair identity (docs/valuation-t08-market-data-provenance-contract.md Section 3).",
+      "if": {
+        "properties": {
+          "dataset_identity": {
+            "type": "object",
+            "properties": {
+              "dataset_kind": {
+                "const": "fx"
+              }
+            },
+            "required": [
+              "dataset_kind"
+            ]
+          }
+        },
+        "required": [
+          "dataset_identity"
+        ]
+      },
+      "then": {
+        "required": [
+          "pair_identity",
+          "provider_mapping"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "ticker"
+              ]
+            },
+            {
+              "required": [
+                "instrument_identity"
+              ]
+            },
+            {
+              "required": [
+                "instrument_mapping"
+              ]
+            }
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "ticker",
+          "instrument_identity",
+          "instrument_mapping"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "pair_identity"
+              ]
+            },
+            {
+              "required": [
+                "provider_mapping"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

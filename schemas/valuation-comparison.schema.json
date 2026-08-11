@@ -1,0 +1,1539 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "valuation-pipeline:schemas/valuation-comparison.schema.json",
+  "title": "Generated valuation_comparison artifact (T74-A)",
+  "description": "Discriminated union of four comparison/diagnostic result variants (docs/valuation-t66-08-comparison-specification.md): historical_self, sector_peer, piotroski_diagnostic, magic_formula_diagnostic. owner_type is always 'generated'. Never contains a cross-variant total, a global company rank, a winner, a preferred ticker, a recommendation, a human decision, or a portfolio field -- additionalProperties:false is enforced recursively at every governed nesting level specifically so these fields are structurally impossible, not merely discouraged.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "artifact_id",
+    "owner_type",
+    "comparison_identity",
+    "comparison_type",
+    "temporal_context",
+    "subject_refs",
+    "method_or_dimension_scope",
+    "eligibility_records",
+    "observations",
+    "statistics_or_matrix",
+    "ranking_records",
+    "confidence",
+    "coverage",
+    "status",
+    "comparison_refs",
+    "lineage"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+    },
+    "artifact_type": {
+      "const": "valuation_comparison"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/comparisonArtifactId"
+    },
+    "owner_type": {
+      "const": "generated"
+    },
+    "comparison_identity": {
+      "type": "object",
+      "required": [
+        "comparison_id",
+        "purpose",
+        "as_of_date",
+        "comparison_policy_ref",
+        "methodology_bundle_ref"
+      ],
+      "properties": {
+        "comparison_id": {
+          "$ref": "#/$defs/comparisonArtifactId"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "current_valuation",
+            "historical_valuation",
+            "comparison",
+            "diagnostic",
+            "retrospective_reconstruction"
+          ]
+        },
+        "as_of_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "comparison_currency": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comparison_policy_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "universe_version_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/universeArtifactRef"
+            }
+          ]
+        },
+        "methodology_bundle_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "comparison_type": {
+      "type": "string",
+      "enum": [
+        "historical_self",
+        "sector_peer",
+        "piotroski_diagnostic",
+        "magic_formula_diagnostic"
+      ]
+    },
+    "temporal_context": {
+      "type": "object",
+      "required": [
+        "as_of_date",
+        "generated_at"
+      ],
+      "properties": {
+        "as_of_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "generated_at": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/utcInstant"
+        },
+        "as_of_gap_record": {
+          "type": "object",
+          "required": [
+            "subject_a_as_of",
+            "subject_b_as_of",
+            "gap_within_policy"
+          ],
+          "properties": {
+            "subject_a_as_of": {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+            },
+            "subject_b_as_of": {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+            },
+            "gap_within_policy": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "subject_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/comparisonSubjectRef"
+      }
+    },
+    "universe_ref": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/universeArtifactRef"
+        }
+      ]
+    },
+    "method_or_dimension_scope": {
+      "type": "object",
+      "required": [
+        "scope_id",
+        "direction"
+      ],
+      "properties": {
+        "scope_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method_family": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method_variant": {
+          "type": "string",
+          "minLength": 1
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "higher_is_more_attractive",
+            "lower_is_more_attractive",
+            "neutral_contextual",
+            "not_rankable"
+          ]
+        },
+        "is_stock_method": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "eligibility_records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "subject_ref",
+          "method_or_dimension_id",
+          "eligibility_state",
+          "reason_codes",
+          "data_confidence",
+          "model_confidence",
+          "ranking_confidence",
+          "current_use_eligible",
+          "included_in_statistic"
+        ],
+        "properties": {
+          "subject_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "method_or_dimension_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "eligibility_state": {
+            "$ref": "#/$defs/eligibilityState"
+          },
+          "reason_codes": {
+            "type": "array",
+            "items": {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+            }
+          },
+          "data_confidence": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+          },
+          "model_confidence": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+          },
+          "ranking_confidence": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+          },
+          "current_use_eligible": {
+            "type": "boolean"
+          },
+          "included_in_statistic": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "observation_id",
+          "subject_ref",
+          "method_or_dimension_id",
+          "value_or_state",
+          "eligibility_ref",
+          "lineage_node_refs"
+        ],
+        "properties": {
+          "observation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "subject_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "method_or_dimension_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value_or_state": {
+            "oneOf": [
+              {
+                "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "state"
+                ],
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          },
+          "direction_interpretation": {
+            "type": "string",
+            "enum": [
+              "higher_is_more_attractive",
+              "lower_is_more_attractive",
+              "neutral_contextual",
+              "not_rankable"
+            ]
+          },
+          "period_or_as_of": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+          },
+          "financial_anchor_ref": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          },
+          "method_variant_ref": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          },
+          "currency_basis_ref": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          },
+          "corporate_action_basis_ref": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          },
+          "eligibility_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lineage_node_refs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "statistics_or_matrix": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/historicalStatistics"
+        },
+        {
+          "$ref": "#/$defs/peerStatistics"
+        },
+        {
+          "$ref": "#/$defs/piotroskiComponents"
+        },
+        {
+          "$ref": "#/$defs/magicAxes"
+        }
+      ]
+    },
+    "ranking_records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "subject_ref",
+          "scope_id",
+          "sample_size",
+          "coverage_ratio",
+          "direction",
+          "eligibility_ref",
+          "ranking_confidence",
+          "provisional"
+        ],
+        "properties": {
+          "subject_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scope_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rank": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+              }
+            ]
+          },
+          "percentile": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+              }
+            ]
+          },
+          "tie_group_id": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          },
+          "sample_size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "coverage_ratio": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+              }
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "higher_is_more_attractive",
+              "lower_is_more_attractive",
+              "neutral_contextual",
+              "not_rankable"
+            ]
+          },
+          "eligibility_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ranking_confidence": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+          },
+          "provisional": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "required": [
+        "sample_size_confidence",
+        "method_coverage_confidence",
+        "comparability_confidence",
+        "source_confidence",
+        "overall_ranking_confidence",
+        "limiting_refs"
+      ],
+      "properties": {
+        "sample_size_confidence": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+        },
+        "method_coverage_confidence": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+        },
+        "comparability_confidence": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+        },
+        "source_confidence": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+        },
+        "overall_ranking_confidence": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/confidenceLevel"
+        },
+        "limiting_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "candidate_count",
+        "eligible_count",
+        "provisional_count",
+        "excluded_count",
+        "coverage_numerator",
+        "coverage_denominator",
+        "coverage_ratio"
+      ],
+      "properties": {
+        "candidate_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "eligible_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "provisional_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excluded_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "coverage_numerator": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "coverage_denominator": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "coverage_ratio": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "calendar_span_months": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer",
+              "minimum": 0
+            }
+          ]
+        },
+        "distinct_financial_anchor_count": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "integer",
+              "minimum": 0
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "type": "object",
+      "required": [
+        "state",
+        "reason_records",
+        "canonical_statistic_available",
+        "ranking_available",
+        "publication_eligible",
+        "current_use_eligible"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "available",
+            "provisional",
+            "insufficient_data",
+            "not_comparable",
+            "calculation_blocked",
+            "diagnostic_only"
+          ]
+        },
+        "reason_records": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+          }
+        },
+        "canonical_statistic_available": {
+          "type": "boolean"
+        },
+        "ranking_available": {
+          "type": "boolean"
+        },
+        "publication_eligible": {
+          "type": "boolean"
+        },
+        "current_use_eligible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "comparison_refs": {
+      "type": "array",
+      "maxItems": 0,
+      "description": "T74 MVP invariant: always exactly empty. A comparison result is never itself an input to another comparison in the same generation run -- structural half of the no-same-run-feedback-cycle guarantee."
+    },
+    "lineage": {
+      "type": "object",
+      "required": [
+        "engine_version",
+        "comparison_schema_version",
+        "supersedes",
+        "dag"
+      ],
+      "properties": {
+        "engine_version": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+        },
+        "comparison_schema_version": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/semver"
+        },
+        "supersedes": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/comparisonArtifactRef"
+            }
+          ]
+        },
+        "dag": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/lineageDag"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "comparison_type": {
+            "const": "historical_self"
+          }
+        },
+        "required": [
+          "comparison_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "subject_refs": {
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "statistics_or_matrix": {
+            "required": [
+              "variant_kind"
+            ],
+            "properties": {
+              "variant_kind": {
+                "const": "historical_self"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "comparison_type": {
+            "const": "sector_peer"
+          }
+        },
+        "required": [
+          "comparison_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "universe_ref"
+        ],
+        "properties": {
+          "subject_refs": {
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "statistics_or_matrix": {
+            "required": [
+              "variant_kind"
+            ],
+            "properties": {
+              "variant_kind": {
+                "const": "sector_peer"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "comparison_type": {
+            "const": "piotroski_diagnostic"
+          }
+        },
+        "required": [
+          "comparison_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "subject_refs": {
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "statistics_or_matrix": {
+            "required": [
+              "variant_kind"
+            ],
+            "properties": {
+              "variant_kind": {
+                "const": "piotroski_diagnostic"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "comparison_type": {
+            "const": "magic_formula_diagnostic"
+          }
+        },
+        "required": [
+          "comparison_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "subject_refs": {
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "statistics_or_matrix": {
+            "required": [
+              "variant_kind"
+            ],
+            "properties": {
+              "variant_kind": {
+                "const": "magic_formula_diagnostic"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "properties": {
+            "comparison_type": {
+              "const": "sector_peer"
+            }
+          },
+          "required": [
+            "comparison_type"
+          ]
+        }
+      },
+      "then": {
+        "properties": {
+          "universe_ref": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "comparisonArtifactId": {
+      "type": "string",
+      "pattern": "^valuation-comparison:(historical_self|sector_peer|piotroski_diagnostic|magic_formula_diagnostic):ctx-[0-9a-f]{24}$"
+    },
+    "comparisonArtifactRef": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "artifact_type",
+        "relative_path"
+      ],
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/comparisonArtifactId"
+        },
+        "artifact_type": {
+          "const": "valuation_comparison"
+        },
+        "relative_path": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/relativePath"
+        }
+      },
+      "additionalProperties": false
+    },
+    "universeArtifactId": {
+      "type": "string",
+      "pattern": "^valuation-peer-universe:[a-z0-9][a-z0-9_.\\-]{0,63}:[0-9]+$"
+    },
+    "universeArtifactRef": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "artifact_type",
+        "relative_path"
+      ],
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/universeArtifactId"
+        },
+        "artifact_type": {
+          "const": "valuation_peer_universe"
+        },
+        "relative_path": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/relativePath"
+        }
+      },
+      "additionalProperties": false
+    },
+    "eligibilityState": {
+      "type": "string",
+      "enum": [
+        "eligible",
+        "provisional",
+        "excluded_insufficient_data"
+      ]
+    },
+    "genericArtifactRef": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "artifact_type",
+        "relative_path"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relative_path": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/relativePath"
+        }
+      },
+      "additionalProperties": false
+    },
+    "embeddedRecordRef": {
+      "type": "object",
+      "required": [
+        "parent_artifact_ref",
+        "json_pointer",
+        "record_id",
+        "record_type"
+      ],
+      "properties": {
+        "parent_artifact_ref": {
+          "$ref": "#/$defs/genericArtifactRef"
+        },
+        "json_pointer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "record_type": {
+          "type": "string",
+          "enum": [
+            "method_result",
+            "scenario_result",
+            "weighted_scenario_result"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "comparisonSubjectRef": {
+      "type": "object",
+      "required": [
+        "subject_ref_id",
+        "subject_kind",
+        "ticker"
+      ],
+      "properties": {
+        "subject_ref_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_kind": {
+          "type": "string",
+          "enum": [
+            "assessment",
+            "valuation_result",
+            "embedded_method_result",
+            "fundamental_source"
+          ]
+        },
+        "ticker": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/ticker"
+        },
+        "as_of_date": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/genericArtifactRef"
+        },
+        "embedded_record_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/embeddedRecordRef"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "regimeSegmentRecord": {
+      "type": "object",
+      "required": [
+        "regime_id",
+        "formula_or_policy_version",
+        "observation_ids"
+      ],
+      "properties": {
+        "regime_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formula_or_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "historicalStatistics": {
+      "type": "object",
+      "required": [
+        "variant_kind",
+        "sampling_cadence",
+        "window_start",
+        "window_end",
+        "eligible_count",
+        "calendar_span_months",
+        "distinct_financial_anchor_count",
+        "methodology_regimes",
+        "current_observation_ref",
+        "current_value",
+        "raw_percentile",
+        "attractiveness_percentile",
+        "median",
+        "range_low",
+        "range_high",
+        "quartiles"
+      ],
+      "properties": {
+        "variant_kind": {
+          "const": "historical_self"
+        },
+        "sampling_cadence": {
+          "type": "string",
+          "enum": [
+            "canonical_monthly"
+          ]
+        },
+        "window_start": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "window_end": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/isoDate"
+        },
+        "eligible_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "calendar_span_months": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "distinct_financial_anchor_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "methodology_regimes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/regimeSegmentRecord"
+          }
+        },
+        "current_observation_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "current_value": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "raw_percentile": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "attractiveness_percentile": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "median": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "range_low": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "range_high": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "quartiles": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "q1",
+                "q3",
+                "method"
+              ],
+              "properties": {
+                "q1": {
+                  "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+                },
+                "q3": {
+                  "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+                },
+                "method": {
+                  "const": "type_7"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "peerMemberRecord": {
+      "type": "object",
+      "required": [
+        "member_ref",
+        "eligibility_state",
+        "reason_codes"
+      ],
+      "properties": {
+        "member_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eligibility_state": {
+          "$ref": "#/$defs/eligibilityState"
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "peerStatistics": {
+      "type": "object",
+      "required": [
+        "variant_kind",
+        "approved_primary_cohort_count",
+        "eligible_peer_count",
+        "members",
+        "coverage_ratio",
+        "subject_value",
+        "raw_percentile",
+        "attractiveness_percentile",
+        "midrank",
+        "median",
+        "range_low",
+        "range_high",
+        "quartiles"
+      ],
+      "properties": {
+        "variant_kind": {
+          "const": "sector_peer"
+        },
+        "approved_primary_cohort_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "eligible_peer_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/peerMemberRecord"
+          }
+        },
+        "coverage_ratio": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+        },
+        "subject_value": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "raw_percentile": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "attractiveness_percentile": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "midrank": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "median": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "range_low": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "range_high": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "quartiles": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "q1",
+                "q3",
+                "method"
+              ],
+              "properties": {
+                "q1": {
+                  "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+                },
+                "q3": {
+                  "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+                },
+                "method": {
+                  "const": "type_7"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "piotroskiComponentResult": {
+      "type": "object",
+      "required": [
+        "component_id",
+        "applicability",
+        "status",
+        "binary_value",
+        "current_refs",
+        "prior_refs",
+        "opening_balance_refs",
+        "formula_ref",
+        "policy_ref",
+        "reason_codes"
+      ],
+      "properties": {
+        "component_id": {
+          "type": "string",
+          "enum": [
+            "piot.roa_positive",
+            "piot.cfo_positive",
+            "piot.delta_roa_positive",
+            "piot.accrual_quality",
+            "piot.leverage_decreased",
+            "piot.current_ratio_increased",
+            "piot.no_external_equity_issuance",
+            "piot.gross_margin_increased",
+            "piot.asset_turnover_increased"
+          ]
+        },
+        "applicability": {
+          "type": "string",
+          "enum": [
+            "applicable",
+            "not_applicable",
+            "adapter_required"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "missing",
+            "blocked",
+            "not_applicable"
+          ]
+        },
+        "binary_value": {
+          "oneOf": [
+            {
+              "const": 0
+            },
+            {
+              "const": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "current_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "prior_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "opening_balance_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "formula_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "policy_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "piotroskiComponents": {
+      "type": "object",
+      "required": [
+        "variant_kind",
+        "diagnostic_id",
+        "components",
+        "available_component_count",
+        "total"
+      ],
+      "properties": {
+        "variant_kind": {
+          "const": "piotroski_diagnostic"
+        },
+        "diagnostic_id": {
+          "const": "val.diagnostic.piotroski_f_score.standard_9"
+        },
+        "components": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": {
+            "$ref": "#/$defs/piotroskiComponentResult"
+          }
+        },
+        "available_component_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9
+        },
+        "total": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "magicAxisResult": {
+      "type": "object",
+      "required": [
+        "formula_ref",
+        "raw_value",
+        "eligibility",
+        "percentile",
+        "rank",
+        "reason_codes"
+      ],
+      "properties": {
+        "formula_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "raw_value": {
+          "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalEnvelope"
+        },
+        "eligibility": {
+          "$ref": "#/$defs/eligibilityState"
+        },
+        "percentile": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "rank": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "magicCombinedResult": {
+      "type": "object",
+      "required": [
+        "eligibility",
+        "rank_sum",
+        "universe_ref",
+        "reason_codes"
+      ],
+      "properties": {
+        "eligibility": {
+          "$ref": "#/$defs/eligibilityState"
+        },
+        "rank_sum": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/decimalString"
+            }
+          ]
+        },
+        "universe_ref": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/universeArtifactRef"
+            }
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "$ref": "valuation-pipeline:schemas/valuation-common.schema.json#/$defs/reasonCodeRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "magicAxes": {
+      "type": "object",
+      "required": [
+        "variant_kind",
+        "earnings_yield",
+        "return_on_capital",
+        "combined"
+      ],
+      "properties": {
+        "variant_kind": {
+          "const": "magic_formula_diagnostic"
+        },
+        "earnings_yield": {
+          "$ref": "#/$defs/magicAxisResult"
+        },
+        "return_on_capital": {
+          "$ref": "#/$defs/magicAxisResult"
+        },
+        "combined": {
+          "$ref": "#/$defs/magicCombinedResult"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

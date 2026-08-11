@@ -1,0 +1,61 @@
+{
+  "roa_t": {
+    "status": "available",
+    "value": "0.215205"
+  },
+  "roa_t1": {
+    "status": "available",
+    "value": "0.173398"
+  },
+  "cfo_t": {
+    "status": "available",
+    "value": "2098.177000"
+  },
+  "cfoa_t": {
+    "status": "available",
+    "value": "0.210050"
+  },
+  "leverage_t": {
+    "status": "unavailable"
+  },
+  "leverage_t1": {
+    "status": "unavailable"
+  },
+  "current_ratio_t": {
+    "status": "available",
+    "value": "3.702969"
+  },
+  "current_ratio_t1": {
+    "status": "available",
+    "value": "3.317942"
+  },
+  "equity_issuance_amount_t": {
+    "status": "available",
+    "value": "5111838.000000"
+  },
+  "gross_margin_t": {
+    "status": "available",
+    "value": "0.558476"
+  },
+  "gross_margin_t1": {
+    "status": "available",
+    "value": "0.540376"
+  },
+  "asset_turnover_t": {
+    "status": "available",
+    "value": "0.830352"
+  },
+  "asset_turnover_t1": {
+    "status": "available",
+    "value": "0.970673"
+  },
+  "current_refs": [
+    "data/financial/MNST/2025-FY.json"
+  ],
+  "prior_refs": [
+    "data/financial/MNST/2024-FY.json"
+  ],
+  "opening_balance_refs": [
+    "data/financial/MNST/2023-FY.json"
+  ]
+}

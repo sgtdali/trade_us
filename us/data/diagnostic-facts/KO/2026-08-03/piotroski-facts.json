@@ -1,0 +1,63 @@
+{
+  "roa_t": {
+    "status": "available",
+    "value": "0.127938"
+  },
+  "roa_t1": {
+    "status": "available",
+    "value": "0.107429"
+  },
+  "cfo_t": {
+    "status": "available",
+    "value": "7408.000000"
+  },
+  "cfoa_t": {
+    "status": "available",
+    "value": "0.070676"
+  },
+  "leverage_t": {
+    "status": "available",
+    "value": "0.401838"
+  },
+  "leverage_t1": {
+    "status": "available",
+    "value": "0.421436"
+  },
+  "current_ratio_t": {
+    "status": "available",
+    "value": "1.458766"
+  },
+  "current_ratio_t1": {
+    "status": "available",
+    "value": "1.029625"
+  },
+  "equity_issuance_amount_t": {
+    "status": "available",
+    "value": "0.000000"
+  },
+  "gross_margin_t": {
+    "status": "available",
+    "value": "0.616257"
+  },
+  "gross_margin_t1": {
+    "status": "available",
+    "value": "0.610633"
+  },
+  "asset_turnover_t": {
+    "status": "available",
+    "value": "0.457382"
+  },
+  "asset_turnover_t1": {
+    "status": "available",
+    "value": "0.468040"
+  },
+  "current_refs": [
+    "data/financial/KO/2025-FY.json"
+  ],
+  "prior_refs": [
+    "data/financial/KO/2024-FY.json"
+  ],
+  "opening_balance_refs": [
+    "data/financial/KO/2023-FY.json"
+  ]
+}

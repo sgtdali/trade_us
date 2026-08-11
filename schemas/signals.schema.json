@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fundemental-trading/schemas/signals.schema.json",
+  "title": "Rule-based interpreted signals",
+  "type": "object",
+  "required": ["schema_version", "ticker", "period", "signals"],
+  "properties": {
+    "schema_version": {"type": "integer", "minimum": 1, "maximum": 2},
+    "ticker": {"type": "string", "pattern": "^[A-Z0-9.\\-]+$"},
+    "period": {"type": "string"},
+    "signals": {"type": "array", "items": {"$ref": "#/$defs/signal"}}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "signal": {
+      "type": "object",
+      "required": [
+        "signal_id", "rule_id", "rule_version", "sector_module", "value", "score",
+        "components", "evidence", "reason_code", "reason_params", "reason",
+        "interpretation_scope", "investment_signal", "source_data"
+      ],
+      "properties": {
+        "signal_id": {"type": "string"},
+        "rule_id": {"type": "string"},
+        "rule_version": {"type": "integer", "minimum": 1},
+        "sector_module": {"type": "string", "enum": ["generic", "aviation"]},
+        "value": {"type": "string", "enum": ["positive", "negative", "neutral", "mixed", "unavailable"]},
+        "score": {"type": ["integer", "null"]},
+        "components": {"type": "object"},
+        "evidence": {"type": "object"},
+        "reason_code": {"type": "string"},
+        "reason_params": {"type": "object"},
+        "reason": {"type": "string"},
+        "interpretation_scope": {"type": "string", "enum": ["financial", "financial_operational"]},
+        "investment_signal": {"type": "boolean", "const": false},
+        "source_data": {"type": "string"},
+        "context": {
+          "type": "object",
+          "required": [
+            "direction", "absolute_state", "presentation_status",
+            "required_data_complete", "reason_code", "reason"
+          ],
+          "properties": {
+            "direction": {
+              "type": "string",
+              "enum": ["improving", "deteriorating", "stable", "mixed", "unavailable"]
+            },
+            "absolute_state": {
+              "type": "string",
+              "enum": ["positive", "negative", "neutral", "unknown"]
+            },
+            "presentation_status": {
+              "type": "string",
+              "enum": ["positive", "negative", "neutral", "mixed", "unavailable"]
+            },
+            "required_data_complete": {"type": "boolean"},
+            "reason_code": {"type": "string"},
+            "reason": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"value": {"const": "unavailable"}}},
+          "then": {"properties": {"score": {"type": "null"}}}
+        },
+        {
+          "if": {"properties": {"value": {"not": {"const": "unavailable"}}}},
+          "then": {"properties": {"score": {"type": "integer"}}}
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_type": "valuation_comparison_observations",
+  "artifact_id": "valuation-comparison-observations:durable_consumer_goods_tr_earnings_yield.reported_parent:1",
+  "owner_type": "authored",
+  "observation_set_id": "durable_consumer_goods_tr_earnings_yield.reported_parent",
+  "observation_kind": "peer_member",
+  "method_family_id": "val.method.earnings_yield.reported_parent",
+  "method_variant_id": "standard",
+  "currency": "TRY",
+  "accounting_basis": "reported",
+  "consolidation": "consolidated",
+  "observations": [
+    {
+      "ticker": "ALCAR",
+      "as_of_date": "2026-07-30",
+      "cutoff_instant": "2026-08-01T13:52:03Z",
+      "value": {
+        "status": "available",
+        "value": "-0.068792438697318007662835249042145593869731800766284"
+      },
+      "status": "available",
+      "financial_anchor_ref": null,
+      "claim_basis": "reported",
+      "lease_basis": null,
+      "corporate_action_basis": "none",
+      "formula_ref": "val.formula.method.earnings_yield.reported_parent",
+      "policy_version": "1.0.0",
+      "confidence": "high",
+      "provenance_refs": [
+        {
+          "artifact_type": "valuation_results",
+          "artifact_id": "valuation-results:ALCAR:2026-07-30:ctx-9e39bcd4e9a9a36ab91d5521",
+          "relative_path": "data/valuation-results/ALCAR/2026-07-30/ctx-9e39bcd4e9a9a36ab91d5521/current.json"
+        }
+      ],
+      "observation_id": "obs-alcar",
+      "company_or_member_id": "alcar"
+    },
+    {
+      "ticker": "ARCLK",
+      "as_of_date": "2026-07-30",
+      "cutoff_instant": "2026-08-01T13:53:34Z",
+      "value": {
+        "status": "available",
+        "value": "-0.069125674921298831654520574573269262021241802809841"
+      },
+      "status": "available",
+      "financial_anchor_ref": null,
+      "claim_basis": "reported",
+      "lease_basis": null,
+      "corporate_action_basis": "none",
+      "formula_ref": "val.formula.method.earnings_yield.reported_parent",
+      "policy_version": "1.0.0",
+      "confidence": "high",
+      "provenance_refs": [
+        {
+          "artifact_type": "valuation_results",
+          "artifact_id": "valuation-results:ARCLK:2026-07-30:ctx-5022769388529967940b0cbe",
+          "relative_path": "data/valuation-results/ARCLK/2026-07-30/ctx-5022769388529967940b0cbe/current.json"
+        }
+      ],
+      "observation_id": "obs-arclk",
+      "company_or_member_id": "arclk"
+    },
+    {
+      "ticker": "SILVR",
+      "as_of_date": "2026-07-30",
+      "cutoff_instant": "2026-08-01T14:06:48Z",
+      "value": {
+        "status": "available",
+        "value": "-0.31672155142300517592120159549424089824581559826145"
+      },
+      "status": "available",
+      "financial_anchor_ref": null,
+      "claim_basis": "reported",
+      "lease_basis": null,
+      "corporate_action_basis": "none",
+      "formula_ref": "val.formula.method.earnings_yield.reported_parent",
+      "policy_version": "1.0.0",
+      "confidence": "high",
+      "provenance_refs": [
+        {
+          "artifact_type": "valuation_results",
+          "artifact_id": "valuation-results:SILVR:2026-07-30:ctx-937748164dc18f95d339b07c",
+          "relative_path": "data/valuation-results/SILVR/2026-07-30/ctx-937748164dc18f95d339b07c/current.json"
+        }
+      ],
+      "observation_id": "obs-silvr",
+      "company_or_member_id": "silvr"
+    },
+    {
+      "ticker": "VESBE",
+      "as_of_date": "2026-07-30",
+      "cutoff_instant": "2026-08-01T14:07:43Z",
+      "value": {
+        "status": "available",
+        "value": "-0.71990609282594789042606699058551571434489156238174"
+      },
+      "status": "available",
+      "financial_anchor_ref": null,
+      "claim_basis": "reported",
+      "lease_basis": null,
+      "corporate_action_basis": "none",
+      "formula_ref": "val.formula.method.earnings_yield.reported_parent",
+      "policy_version": "1.0.0",
+      "confidence": "high",
+      "provenance_refs": [
+        {
+          "artifact_type": "valuation_results",
+          "artifact_id": "valuation-results:VESBE:2026-07-30:ctx-a4c19bc92971859b73b99d6b",
+          "relative_path": "data/valuation-results/VESBE/2026-07-30/ctx-a4c19bc92971859b73b99d6b/current.json"
+        }
+      ],
+      "observation_id": "obs-vesbe",
+      "company_or_member_id": "vesbe"
+    },
+    {
+      "ticker": "VESTL",
+      "as_of_date": "2026-07-30",
+      "cutoff_instant": "2026-08-01T14:08:06Z",
+      "value": {
+        "status": "available",
+        "value": "-3.5407911441883575336570870035597502321062453794474"
+      },
+      "status": "available",
+      "financial_anchor_ref": null,
+      "claim_basis": "reported",
+      "lease_basis": null,
+      "corporate_action_basis": "none",
+      "formula_ref": "val.formula.method.earnings_yield.reported_parent",
+      "policy_version": "1.0.0",
+      "confidence": "high",
+      "provenance_refs": [
+        {
+          "artifact_type": "valuation_results",
+          "artifact_id": "valuation-results:VESTL:2026-07-30:ctx-1326ef2d1476c64aca8d9a92",
+          "relative_path": "data/valuation-results/VESTL/2026-07-30/ctx-1326ef2d1476c64aca8d9a92/current.json"
+        }
+      ],
+      "observation_id": "obs-vestl",
+      "company_or_member_id": "vestl"
+    },
+    {
+      "ticker": "ARZUM",
+      "as_of_date": "2026-07-30",
+      "cutoff_instant": "2026-08-01T14:03:16Z",
+      "value": {
+        "status": "available",
+        "value": "-0.91353498157002300051851625390725611171167608652624"
+      },
+      "status": "available",
+      "financial_anchor_ref": null,
+      "claim_basis": "reported",
+      "lease_basis": null,
+      "corporate_action_basis": "none",
+      "formula_ref": "val.formula.method.earnings_yield.reported_parent",
+      "policy_version": "1.0.0",
+      "confidence": "high",
+      "provenance_refs": [
+        {
+          "artifact_type": "valuation_results",
+          "artifact_id": "valuation-results:ARZUM:2026-07-30:ctx-e2972e55b8ede148d2371f1b",
+          "relative_path": "data/valuation-results/ARZUM/2026-07-30/ctx-e2972e55b8ede148d2371f1b/current.json"
+        }
+      ],
+      "observation_id": "obs-arzum",
+      "company_or_member_id": "arzum"
+    },
+    {
+      "ticker": "IHEVA",
+      "as_of_date": "2026-07-30",
+      "cutoff_instant": "2026-08-01T14:04:25Z",
+      "value": {
+        "status": "available",
+        "value": "-0.01583763979772717756672039401096069426517356070079"
+      },
+      "status": "available",
+      "financial_anchor_ref": null,
+      "claim_basis": "reported",
+      "lease_basis": null,
+      "corporate_action_basis": "none",
+      "formula_ref": "val.formula.method.earnings_yield.reported_parent",
+      "policy_version": "1.0.0",
+      "confidence": "high",
+      "provenance_refs": [
+        {
+          "artifact_type": "valuation_results",
+          "artifact_id": "valuation-results:IHEVA:2026-07-30:ctx-84d8f93a48610119f1172cdc",
+          "relative_path": "data/valuation-results/IHEVA/2026-07-30/ctx-84d8f93a48610119f1172cdc/current.json"
+        }
+      ],
+      "observation_id": "obs-iheva",
+      "company_or_member_id": "iheva"
+    },
+    {
+      "ticker": "KLMSN",
+      "as_of_date": "2026-07-30",
+      "cutoff_instant": "2026-08-01T14:06:10Z",
+      "value": {
+        "status": "available",
+        "value": "-0.18556239690129425711223727131390567618190201799474"
+      },
+      "status": "available",
+      "financial_anchor_ref": null,
+      "claim_basis": "reported",
+      "lease_basis": null,
+      "corporate_action_basis": "none",
+      "formula_ref": "val.formula.method.earnings_yield.reported_parent",
+      "policy_version": "1.0.0",
+      "confidence": "high",
+      "provenance_refs": [
+        {
+          "artifact_type": "valuation_results",
+          "artifact_id": "valuation-results:KLMSN:2026-07-30:ctx-cdc723c34dbfd103a1226537",
+          "relative_path": "data/valuation-results/KLMSN/2026-07-30/ctx-cdc723c34dbfd103a1226537/current.json"
+        }
+      ],
+      "observation_id": "obs-klmsn",
+      "company_or_member_id": "klmsn"
+    }
+  ],
+  "lineage": {
+    "dag": {
+      "nodes": [
+        {
+          "node_id": "n1",
+          "node_type": "observation_set",
+          "owner_type": "authored"
+        }
+      ],
+      "edges": []
+    }
+  }
+}

@@ -1,0 +1,248 @@
+{
+  "yargi": "sartli",
+  "alinmaz_nedeni": null,
+  "tez": "Dollar General's reconciled TTM figures support a conditional thesis rather than an unqualified one. On the accrual side the evidence is real: Q1 2026 YTD reported operating income rose 10.8% to 638.5 million USD, net income rose 13.3% to 444.1 million USD, and gross margin improved 0.7 percentage points, all on the same 13-week comparable basis. The valuation against those reconciled operands is moderate — 17.96x TTM parent earnings, 3.18x parent book equity, 13.82x lease-exclusive EV to TTM reported EBIT — with a 7.84% parent-attributed FCF yield proxy and a 5.57% earnings yield against a 2.94% peer median, indicating no growth premium is being paid. Liquidity screens favorably as well: current ratio 1.17x versus a 0.79x peer median, positive net working capital, and a low refinancing-pressure diagnostic. The condition is cash conversion. Three of six deterministic signals are adverse and all three describe one phenomenon: operating cash flow fell to 716.2 from 847.2 million USD, free cash flow fell to 364.6 from 556.2 million USD on capex that rose to 351.6 million, and the OCF-to-net-income ratio declined 0.55x. The FCF yield carrying most of the valuation case rests on a TTM base whose newest quarter contributed materially less cash than the quarter it displaced, so the thesis holds only if the earnings improvement converts back into cash rather than the divergence proving structural. One quarter of YTD data cannot distinguish working-capital or capex timing from a trend, which is precisely why this is conditional and not tez_var.",
+  "tez_testleri": [
+    {
+      "metric_id": "operating_cash_flow_growth",
+      "baseline": -15.5,
+      "expected_direction": "increase",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "operating_cash_flow_growth remains below 0 percent at the next comparable Q1 reading"
+    },
+    {
+      "metric_id": "free_cash_flow_margin",
+      "baseline": 3.38,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "free_cash_flow_margin falls below 3.38 percent"
+    },
+    {
+      "metric_id": "ocf_to_net_profit",
+      "baseline": 1.61,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "ocf_to_net_profit falls below 1.0, meaning reported earnings stop being backed by operating cash"
+    },
+    {
+      "metric_id": "operating_profit_growth",
+      "baseline": 10.8,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "operating_profit_growth falls below 5 percent, removing the accrual-side justification for the multiple"
+    },
+    {
+      "metric_id": "gross_margin",
+      "baseline": 31.62,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "gross_margin falls below 31.62 percent, reversing the improvement the Piotroski component records"
+    },
+    {
+      "metric_id": "current_ratio",
+      "baseline": 1.169,
+      "expected_direction": "stay_above",
+      "deadline_period": "2027-Q1",
+      "failure_condition": "current_ratio falls below 1.0"
+    }
+  ],
+  "belirleyici_veriler": [
+    {
+      "tur": "sayisal",
+      "reported_value": 7.84,
+      "report_section": "6",
+      "aciklama": "Parent-attributed TTM free cash flow yield proxy of 7.84% on a 2,201.7 million USD numerator; the strongest valuation support and also the operand most exposed to the cash-conversion condition."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 17.96,
+      "report_section": "6",
+      "aciklama": "P/E of 17.96x, 28,098.3 million USD market capitalization over 1,564.5 million USD TTM parent net income reconciled in Section 4."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 364.6,
+      "report_section": "10",
+      "aciklama": "Q1 2026 YTD free cash flow of 364.6 million USD against 556.2 million USD in the comparable prior-year YTD — the adverse signal that makes the thesis conditional."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 716.2,
+      "report_section": "10",
+      "aciklama": "Q1 2026 YTD operating cash flow of 716.2 million USD against 847.2 million USD prior year, an adverse threshold result recorded alongside a declining cash-conversion ratio."
+    },
+    {
+      "tur": "sayisal",
+      "reported_value": 1.17,
+      "report_section": "8",
+      "aciklama": "Current ratio of 1.17x versus a 0.79x median across 5 external retail peers, coverage 5/6, alongside an earnings yield of 5.57% against a 2.94% peer median."
+    }
+  ],
+  "tezi_bozacak_kosullar": [
+    "Operating and free cash flow keep declining year over year while reported earnings continue to grow, establishing the accrual-to-cash divergence as structural rather than a working-capital or capex timing effect.",
+    "The OCF-to-net-income ratio continues its 0.55x decline toward or below 1.0, invalidating the cash basis under the 7.84% FCF yield.",
+    "Capital expenditure intensity keeps rising above the 3.3% of revenue seen in Q1 2026 without a corresponding operating-cash-flow response.",
+    "Operating income or net income growth decelerates below the report's own +5% favorable threshold, removing the earnings-growth justification for a 17.96x multiple.",
+    "Gross margin gives back the 0.7-point improvement, indicating the margin gain was promotional or mix timing.",
+    "Current ratio falls below 1.0, eliminating the liquidity advantage over the 0.79x peer median; the Piotroski component already records the current ratio as deteriorating."
+  ],
+  "belirsizlik": [
+    "No structured maturity schedule was disclosed or extracted for long-term debt, operating leases, or finance leases, so the low refinancing diagnostic rests on a current-balance-sheet screen and the long-horizon view is unassessable.",
+    "Issuer-reported EBITDA and net-debt APM are not disclosed, so EV/EBITDA is unavailable and the leverage picture rests on internally calculated figures plus 11,222.0 million USD of total lease liabilities that the EV/EBIT method explicitly excludes.",
+    "Cash paid for 2025-FY share repurchases is not available, so total capital return beyond the 519.5 million USD of dividends cannot be sized — relevant because the Piotroski score flags an increase in shares outstanding.",
+    "The 94-day gap between the May 1, 2026 financial cut-off and the August 3, 2026 price observation is not adjusted for, and the price sits near the upper end of its 63-day 99.57–130.96 range.",
+    "Whether the FCF and OCF decline reflects one-off capex or working-capital timing versus a durable trend cannot be determined from one quarter of YTD data; the report embeds no forward estimates.",
+    "Maintenance and growth capital expenditures are not separated, so the sustainable cash-generation level underlying the FCF yield is unknown.",
+    "The parent-attribution factor is exactly 100.00% because parent and consolidated net income are identical, so the FCF proxy is a labeling convention here rather than a substantive adjustment, and it is not a GAAP-reported parent cash-flow measure.",
+    "Peer medians draw on 5 external issuers whose fiscal calendars may differ, and gross margin, net margin, and FCF margin were omitted from peer comparison for lack of standardization."
+  ],
+  "denetim": [
+    {
+      "etiket": "A",
+      "dogrulanan_iddialar": [
+        "P/E of 17.96x and parent-attributed FCF yield of 7.84% — both match Sections 1 and 6.",
+        "Q1 2026 YTD reported operating income of 638.5 million USD — matches Section 3.",
+        "Piotroski F-Score of 7/9 — matches Section 8.",
+        "Operating income up 10.8% and net income up 13.3% year over year — match the Section 10 signal table.",
+        "Low short-term refinancing risk — matches the 'low' refinancing-pressure diagnostic in Section 5, though A repeats it without the report's caveat that it is a mechanical screen with no maturity schedule behind it.",
+        "The three stated uncertainties (no maturity schedules, no issuer-reported EBITDA or net-debt APM, no repurchase figure) are all explicitly stated in the report."
+      ],
+      "dogrulanamayan_iddialar": [
+        {
+          "iddia": "Operating cash flow declined by 15.5% year-over-year (cited as -15.5 in Section 10).",
+          "sorun": "Direction and magnitude are correct, but the code check did not find -15.5 at the displayed scale: Section 10 states 'Down 15.5%', a positive magnitude with direction carried in the word 'Down'. A sign-convention encoding mismatch, not a substantive error."
+        },
+        {
+          "iddia": "The operating cash flow contraction is 'temporary'.",
+          "sorun": "Nothing in the report supports temporariness. The report embeds no forward estimates and provides one quarter of YTD comparison; it explicitly cannot distinguish timing from trend. This unsupported characterization does real work, since it is what converts a conditional case into an unconditional one."
+        },
+        {
+          "iddia": "'Robust fundamental health' and 'solid underlying operational profitability' asserted with Piotroski 7/9 as primary support.",
+          "sorun": "Sections 8 and 11 both state Piotroski is a mechanical descriptor carrying lower decision weight than reconciled filing inputs. A elevates it to a headline pillar."
+        },
+        {
+          "iddia": "Thesis and uncertainty list omit the Free Cash Flow Trend (down 34.4%) and Cash Conversion Trend (down 0.55x) adverse signals entirely.",
+          "sorun": "Not a false claim but a material omission: A acknowledges one of three adverse cash signals and labels it temporary, so its evidence base is selectively favorable relative to Section 10."
+        },
+        {
+          "iddia": "'Core operating income grew 10.8%.'",
+          "sorun": "The report labels this line 'Reported Operating Income' in Sections 3 and 10; 'Core Operating Profit (EBIT)' is the Section 4 TTM reconciliation label for a different, TTM-basis operand (2,266.1 million USD). Minor label conflation across two distinct bases."
+        }
+      ],
+      "genel_not": "Numerically accurate on every figure it cites, but the evidence selection is one-sided — it labels the cash-flow deterioration 'temporary' without any report basis and drops two of three adverse cash signals, which is what makes its tez_var reachable."
+    },
+    {
+      "etiket": "B",
+      "dogrulanan_iddialar": [
+        "P/E of 17.96x on TTM parent net income — matches Section 6.",
+        "Current ratio of 1.17x against a 0.79x median across 5 external peers — matches Section 8.",
+        "Net income up 13.3% (444.1 versus 391.9 million USD), a favorable threshold result — matches Section 10 exactly, including the operands.",
+        "Gross margin expanding — supported by the Section 10 signal (improved 0.7 percentage points) and the Piotroski 'Improving gross margin' pass.",
+        "Piotroski 7/9 failing exactly on 'Improving current ratio' and 'No increase in shares outstanding' — matches the Section 8 component table precisely.",
+        "Parent-attributed FCF yield of 7.84% — matches Sections 1 and 6.",
+        "All four stated uncertainties, including the explicit acknowledgment that one quarter of YTD data cannot separate timing from trend, are grounded in the report."
+      ],
+      "dogrulanamayan_iddialar": [
+        {
+          "iddia": "'Compounding revenue in the low single digits (3.4% YoY).'",
+          "sorun": "The 3.4% figure appears nowhere in the report. Section 3 gives Q1 2026 revenue of 10,787.0 million USD but no prior-year comparable, and Section 10 has no revenue-trend signal. The number is imported from outside the report, which the source discipline forbids even though it happens to match the metric dictionary."
+        },
+        {
+          "iddia": "'TTM free cash flow and operating cash flow both declining double digits year over year'; evidence labels -34.4% as a TTM free cash flow decline.",
+          "sorun": "Period mismatch. The 364.6 versus 556.2 million USD comparison in Section 10 is Q1 YTD (13 weeks) versus prior-year comparable YTD, not TTM. TTM free cash flow is 2,201.7 million USD in Section 4 with no prior-year TTM figure given, so no TTM growth rate is computable. The code check also flagged -34.4 as not found at the displayed scale."
+        },
+        {
+          "iddia": "'A leverage profile that... compares favorably to the retail peer median.'",
+          "sorun": "Section 8 provides exactly two peer comparisons — current ratio and earnings yield. No leverage metric is compared to peers anywhere. The Piotroski 'Lower long-term leverage' pass is a self-comparison over time, not a peer comparison, and carries lower decision weight per Section 11."
+        }
+      ],
+      "genel_not": "The most complete evidence base of the three and the only one to explicitly name the timing-versus-structural ambiguity, but it undercuts itself with an imported revenue figure, a TTM-versus-YTD period conflation on its central risk metric, and an invented peer-leverage comparison."
+    },
+    {
+      "etiket": "C",
+      "dogrulanan_iddialar": [
+        "Parent-attributed TTM free cash flow proxy yield of 7.84%, correctly cited to Section 6 and correctly described as a proxy rather than a GAAP measure.",
+        "Operating income up 10.8% year over year in Q1 2026 — matches Section 10.",
+        "Current ratio of 1.17x versus a reported peer median of 0.79x — matches Section 8.",
+        "Positive working capital — supported by Section 5 (current assets 8,467.5 versus current liabilities 7,243.0 million USD).",
+        "Operating cash flow and free cash flow declined materially year over year, correctly scoped to Q1 rather than TTM — the only assessment of the three to state this period correctly.",
+        "All five uncertainties are drawn directly from report text: no forward estimates, no maintenance/growth capex split, the FCF proxy limitation, no maturity schedule, no issuer-reported EBITDA or net debt."
+      ],
+      "dogrulanamayan_iddialar": [
+        {
+          "iddia": "Operating cash flow declined 15.5% and free cash flow declined 34.4% year over year (encoded as -15.5 and -34.4 in Section 10).",
+          "sorun": "Both magnitudes and directions are correct against Section 10, but the code check did not find the negative-signed values at the displayed scale, because the report renders them as 'Down 15.5%' and 'Down 34.4%'. A sign-convention encoding mismatch, not a factual error."
+        },
+        {
+          "iddia": "free_cash_flow_margin failure condition set at 'falls below 3.38 percent', identical to the baseline.",
+          "sorun": "Not a report-fidelity problem but a test-construction weakness: any decline whatsoever, however immaterial, trips the condition, so the test carries no tolerance and will fire on noise."
+        }
+      ],
+      "genel_not": "The most disciplined of the three — every claim traces to report text, periods are correctly scoped, and the proxy and no-forward-estimate limitations are stated rather than glossed; its only flaws are a sign-encoding artifact and one zero-tolerance threshold."
+    }
+  ],
+  "gerekce": "The official judgment is sartli, which coincides with C but was reached from the report rather than by counting. The report holds two internally consistent bodies of evidence pointing in opposite directions, and neither cancels the other. On the accrual side, three of six deterministic signals are favorable, the TTM operands reconcile exactly in Section 4, and the valuation is moderate — 17.96x earnings, 3.18x book, 13.82x lease-exclusive EV/EBIT, with an earnings yield roughly double the peer median. On the cash side, the other three signals are adverse and are not independent observations: falling operating cash flow, falling free cash flow, and a 0.55x drop in cash conversion are three views of one phenomenon, namely that the reported earnings improvement did not arrive as cash in the most recent quarter. That weighs more than a one-in-six count suggests, because the 7.84% FCF yield is the report's most attractive figure and rests on a TTM base whose newest quarter contributed 364.6 million USD where the quarter it displaced contributed 556.2 million USD. A thesis leaning on that yield while the quarter feeding it deteriorated is conditional by construction. tez_var would require asserting the divergence is timing, which the report explicitly cannot support — no forward estimates, one YTD comparison. alinmaz is equally unsupported: the accrual growth is real, reconciled, and cheap relative to peers, liquidity exceeds the peer median with positive net working capital, and the refinancing diagnostic is low. The three inputs affected this specifically. A and B both reached tez_var, and examining how each got there reinforced rather than weakened the conditional call: A relied on the word 'temporary,' which has no basis in the report, and omitted the free-cash-flow and cash-conversion signals entirely — strip that adjective and A's own evidence describes a conditional case. B got there more honestly, naming the cash divergence in its thesis sentence and the timing-versus-structural ambiguity in its uncertainties, which is effectively a conditional thesis filed under an unconditional label, but it also imported a revenue growth figure absent from the report, described a YTD comparison as TTM, and asserted a peer leverage comparison the report never makes. C survived audit nearly intact and correctly scoped the cash declines to Q1, confirming the period reading underlying this judgment. Beyond C's four tests, two were added: ocf_to_net_profit, because cash conversion is the most direct measurement of the exact condition being imposed and none of the three tested it, and gross_margin, because the 0.7-point improvement is a passing Piotroski component and a real part of the accrual case that should be held to account. Deadlines are set to 2027-Q1 rather than C's 2027-Q2 so each test lands on a like-for-like 13-week comparable, matching the basis on which every Section 10 figure was computed. Confidence is orta: the filing-backed inputs reconcile cleanly and are internally consistent, but the decisive question — whether the cash divergence is timing or trend — is one the report states outright it cannot answer, and the missing maturity schedules, missing issuer EBITDA, and unavailable repurchase figure leave the capital-structure and capital-return picture partly dark.",
+  "guven": "orta",
+  "divergence": "kismi",
+  "girdi_sayisi": 3,
+  "validation": {
+    "numeric_evidence": [
+      {
+        "evidence_index": 0,
+        "reported_value": 7.84,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 1,
+        "reported_value": 17.96,
+        "report_section": "6",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 2,
+        "reported_value": 364.6,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 3,
+        "reported_value": 716.2,
+        "report_section": "10",
+        "status": "verified",
+        "reason": null
+      },
+      {
+        "evidence_index": 4,
+        "reported_value": 1.17,
+        "report_section": "8",
+        "status": "verified",
+        "reason": null
+      }
+    ]
+  },
+  "provenance": {
+    "layer": 2,
+    "market": "US",
+    "ticker": "DG",
+    "as_of": "2026-08-03",
+    "model_key": "claude",
+    "model_id": "opus",
+    "prompt_version": "us-layer2.v1",
+    "prompt_sha256": "e34af2e4e850b90f2478b269451f5e8c911968dec08928ec95b77fe397c0c689",
+    "attempt_count": 2,
+    "report_sha256": "cc4003cec5fc781ab130fff77ef98282f40cd32d7a235b2e4fdf200b8e610ffb",
+    "shuffle_seed": 13780975299250247474,
+    "anonymous_model_mapping": {
+      "A": "agy",
+      "B": "claude",
+      "C": "codex"
+    },
+    "generated_at": "2026-08-04T07:20:17.492495+00:00",
+    "repo_commit_sha": "82f5e00d089fb2791b8ed3866790beb38d2f12c5",
+    "stderr_tail": ""
+  }
+}
