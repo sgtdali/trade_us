@@ -1015,7 +1015,9 @@ def flag_price_drift(pack: dict, consensus_as_of: str) -> tuple[int, float]:
             "gap_pct": round(gap, 2),
             "note": ("Every multiple in `valuation` uses multiples_computed_from. "
                      "If you quote a multiple, quote that price and that date. "
-                     "Do not recompute multiples against the consensus-block price."),
+                     "Do not recompute multiples against the consensus-block price "
+                     "yourself -- see `price_refresh.valuation_at_price_now` for the "
+                     "already-rescaled figures."),
         }
         if abs(gap) >= 5:
             drifted += 1
@@ -1157,24 +1159,23 @@ belongs to the web layer, not to the pack.
 price on {execution}; the consensus block carries its own later price from
 {consensus_as_of}. `price_reconciliation` shows both and the gap. {drift_line}
 
-Quote the {execution} price beside any multiple you cite, and never mix the two
-prices inside one comparison.
+Quote the {execution} price beside any figure from `valuation`, and never mix
+the two prices inside one comparison.
 
-**Updating a multiple to the later price is exact, not an estimate.** Earnings,
-book value and cash flow do not move in a few days; only the price does. So for
-any price-based multiple:
-
-    multiple_at_later_price = multiple x (consensus_block_price / multiples_computed_from)
-
-and for a yield, divide instead of multiply. Both prices sit in
-`price_reconciliation`. Do this when the later price matters to a conclusion,
-show the arithmetic, and label the result with the later date. What you must not
-do is rebuild a multiple from your own earnings figure.
+**Already rescaled to the later price -- do not recompute.** `price_refresh`
+carries `valuation_at_price_now`: every price- or yield-based multiple from
+`valuation`, exactly rescaled to the later price (a price multiple by the
+price ratio, a yield by its inverse -- earnings, book value and cash flow do
+not move in a few days, only price does). Quote from there, not from your own
+arithmetic. Enterprise-value multiples (listed in `price_refresh.not_rescaled`)
+are deliberately left at the {execution} price: EV = market cap + net debt, and
+debt did not move, so a price-ratio rescale would be wrong for them, not
+approximate.
 
 The gap is not a defect in the numbers. The financials-to-price gap is
 point-in-time discipline: decide on what was known at the cutoff, transact at
-the next open. The price-to-consensus gap is a data lag on our side, and the
-rescale above closes it.
+the next open. The price-to-consensus gap is a data lag on our side, and
+`price_refresh` closes it.
 
 ## Names that reported after the cutoff -- read this before ranking
 
