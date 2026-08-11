@@ -1109,19 +1109,9 @@ It satisfies the `market_data_estimates` and `company_filings_ir` source
 categories. Treat it as the user-named source and prefer it over web retrieval
 for those categories.
 
-## Deliverable surface -- Markdown, not HTML
+## Deliverable surface
 
-I am requesting Markdown as the presentation surface. Treat that as the
-deliverable-intake answer and do not ask again.
-
-No standalone HTML report, no dashboard, no `public_equity_investing_dashboard`
-payload, no rendered artifact, and no headless-browser screenshot pass. Those
-steps do not apply here and skipping them is not a reduction in scope.
-
-Keep the full analytical depth the workflow calls for -- the same sections, the
-same tables, the same evidence discipline -- just written as Markdown. Tables as
-Markdown tables. If a chart would have carried the point, say it in a table or a
-sentence instead.
+Markdown only -- no HTML report, dashboard, or screenshot pass.
 
 ## Source-of-truth rule
 
@@ -1166,38 +1156,31 @@ would be wrong, not approximate.
 
 {stale_line}
 
-For those names the financials here are not the latest ones. Some are a full
-quarter behind: the pack holds Q1 while the company has already printed Q2.
-Each affected company carries `announced_but_not_filed` with the filing dates
-and the age of what we hold.
-
-This one does not rescale away. Either source the newer print and label it as
-web-sourced, or say plainly that the pack predates it. What you must not do is
-drop a newer headline number into a ratio built from the older statements, or
-rank a stale company against a current one without saying so.
+Affected companies carry `announced_but_not_filed` (filing dates, data age) --
+some are a full quarter behind. This does not rescale away: source the newer
+print and label it web-sourced, or say plainly the pack predates it. Do not
+fold a newer headline number into a ratio built from older statements, and do
+not rank a stale company against a current one without saying so.
 
 ## Corporate events -- three blocks, and what they are
 
-These record facts from the SEC filing index. What they mean for a company is
-yours to judge; I am not routing anything.
+Facts from the SEC filing index; what they mean for a company is yours to judge.
 
-`special_situations` -- a completed acquisition, disposition or spin, a
-restatement, or an amended 10-Q/10-K in the last two years, with dates and
-8-K item numbers.
+`special_situations` -- a completed acquisition, disposition, spin,
+restatement, or amended 10-Q/10-K in the last two years (dates, 8-K item
+numbers).
 
-`fundamentals_comparability` -- present when such an event is dated inside the
-twelve months a company's growth rates span. It names the affected `*_growth`
-fields. Those fields put the current period beside a prior-year figure that
-does not cover the same set of businesses, and neither period was restated
-here. Single-period ratios compare nothing and are unaffected.
+`fundamentals_comparability` -- present when such an event falls inside the
+twelve months a company's growth rates span. Names the affected `*_growth`
+fields: they compare periods covering different businesses, neither restated.
+Single-period ratios are unaffected.
 
-`pending_transaction` -- the company filed 425, S-4 or a merger proxy in the
-window, and no completion filing appears. It carries the form mix, the count,
-the dates, and which side of a transaction the forms place the company on: a
-merger proxy solicits its own shareholders, an S-4 registers shares it would
-issue, and 425 alone leaves the role unknown, which the block says. **Deal
-terms, consideration, counterparty, timetable and regulatory status are not in
-the pack.** Neither is the outcome; the filing count is a count.
+`pending_transaction` -- a 425, S-4 or merger proxy filed with no completion
+filing yet. Carries form mix, count, dates, and which side of the deal the
+company is on (merger proxy = soliciting its own shareholders; S-4 =
+registering shares it would issue; 425 alone = role unknown). **Deal terms,
+consideration, counterparty, timetable, regulatory status and outcome are not
+in the pack** -- the filing count is a count.
 
 ## What is deliberately NOT in the pack
 
@@ -1206,7 +1189,8 @@ short interest and positioning, private-company transactions, and the terms of
 any M&A deal. I have no source for these. Fill them from public sources if you
 can and mark them as such; where you cannot, state the limitation and carry on.
 
-{mandate}## Task
+{mandate}
+## Task
 
 {task}
 """
