@@ -25,7 +25,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-GUIDANCE = REPO / "us" / "guidance"
+GUIDANCE = REPO / "guidance"
 LEDGER = GUIDANCE / "notebooks.json"
 
 PROMPT = """Go through EVERY source document in this notebook, one at a time, \

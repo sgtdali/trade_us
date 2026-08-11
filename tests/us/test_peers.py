@@ -16,10 +16,10 @@ def test_every_peer_universe_member_has_a_company_and_a_price_symbol():
     ancak sonra duz sembole geri donuyordu -- calisiyor gorunen ama her cagride
     bosa istek yapan bir yol."""
     root = Path(__file__).resolve().parents[2]
-    universe_root = root / "us" / "config" / "valuation" / "comparison" / "peer-universes"
-    companies = {path.stem for path in (root / "us" / "config" / "companies").glob("*.json")}
+    universe_root = root / "config" / "valuation" / "comparison" / "peer-universes"
+    companies = {path.stem for path in (root / "config" / "companies").glob("*.json")}
     provider = json.loads((
-        root / "us" / "config" / "market-data" / "providers" / "yfinance.json"
+        root / "config" / "market-data" / "providers" / "yfinance.json"
     ).read_text(encoding="utf-8"))
     provider_tickers = {row["internal_ticker"] for row in provider["ticker_mappings"]}
 

@@ -8,7 +8,7 @@ Kasitli olarak muhafazakar: emin olunmayan cikarilmaz. Kapsama orani sonucun
 bir parcasidir, doldurulacak bir eksik degil."""
 import pathlib, re, html, json, statistics, collections
 
-R = pathlib.Path("us/guidance")
+R = pathlib.Path("guidance")
 MONEY = re.compile(r"\$\s?(\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?)")
 RANGE = re.compile(r"\$\s?(\d+\.\d{2})\s*(?:to|-|–|—|and)\s*\$?\s?(\d+\.\d{2})")
 EPS = re.compile(r"(?i)\b(eps|earnings per share|earnings per diluted share|"

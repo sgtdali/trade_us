@@ -63,7 +63,7 @@ def initialize_backtest(
     ozel bir varsayim yok."""
     if not run_id or any(char not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_" for char in run_id):
         raise UsPipelineError("run_id may contain only letters, numbers, dash and underscore")
-    base = parent.resolve() if parent else (repo_root.resolve() / "us" / "backtests")
+    base = parent.resolve() if parent else (repo_root.resolve() / "backtests")
     root = base / run_id
     if root.exists():
         config = read_json(root / "run-config.json")
@@ -75,7 +75,7 @@ def initialize_backtest(
         )
         return root
 
-    source_config = repo_root.resolve() / "us" / "config"
+    source_config = repo_root.resolve() / "config"
     root.mkdir(parents=True)
     _copytree(source_config, root / "workspace" / "config")
     _activate_frozen_peer_universe(

@@ -48,11 +48,11 @@ from fundamental_pipeline_us.live_pack import build_pack_from_artifacts  # noqa:
 # idi ve --no-refresh verildiginde paket sessizce olcum kanitindan
 # kuruluyordu: aylar once dondurulmus fiyat ve finansallarla. Bu akis
 # backtest'lerden bagimsiz olmali.
-SOURCE_RUN = REPO / "us" / live_refresh.LIVE_PARENT / live_refresh.RUN_ID
-GUIDANCE = REPO / "us" / "guidance"
+SOURCE_RUN = REPO / live_refresh.LIVE_PARENT / live_refresh.RUN_ID
+GUIDANCE = REPO / "guidance"
 CONSENSUS_DIR = REPO / "data" / "consensus"
-PEERS = REPO / "us" / "config" / "valuation" / "comparison" / "peer-universes"
-OUT_ROOT = REPO / "us" / "pei"
+PEERS = REPO / "config" / "valuation" / "comparison" / "peer-universes"
+OUT_ROOT = REPO / "pei"
 
 CARRY = ("earnings_estimate", "revenue_estimate", "eps_trend",
          "eps_revisions", "price_targets")
@@ -798,9 +798,9 @@ def attach_quarterly_series(pack: dict, source_run: Path,
     # Canli kok tek kesim icin kuruldu ve sirket basina ~5 donem tasiyor;
     # ceyreklik seri icin yetmez. Donmus kosu kokleri yillarca birikmis
     # donemleri tasiyor. Ikisi birlestirilir, cakisan donemde CANLI kazanir.
-    roots = [source_run] + [REPO / "us" / "backtests" / name
+    roots = [source_run] + [REPO / "backtests" / name
                             for name in ("ic-2024-v1", "ic-2021-v1")
-                            if (REPO / "us" / "backtests" / name) != source_run]
+                            if (REPO / "backtests" / name) != source_run]
     ok = skipped = 0
     for entry in pack["companies"]:
         periods: dict[str, dict] = {}
@@ -942,7 +942,7 @@ def flag_superseded(pack: dict, source_run: Path) -> tuple[int, list[str]]:
     if not ledger_path.is_file():
         return 0, []
     ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
-    text_root = REPO / "us" / "guidance" / "_text"
+    text_root = REPO / "guidance" / "_text"
     hit, names = 0, []
     for entry in pack["companies"]:
         ticker = entry["ticker"]
@@ -1050,7 +1050,7 @@ def peer_block(pack: dict, ticker: str, sectors: dict[str, str]) -> dict:
     return {
         "status": "available",
         "peer_group": group,
-        "peer_group_source": "us/config/valuation/comparison/peer-universes",
+        "peer_group_source": "config/valuation/comparison/peer-universes",
         "peer_count": len(members),
         "medians": medians,
         "median_caveat": (
@@ -1067,7 +1067,7 @@ def peer_block(pack: dict, ticker: str, sectors: dict[str, str]) -> dict:
 
 def mandate_block() -> str:
     """Mandat VERI degil KARAR. Yazilmazsa skill kendi varsayimini uretir."""
-    path = REPO / "us" / "config" / "mandate.json"
+    path = REPO / "config" / "mandate.json"
     if not path.is_file():
         return ""
     m = json.loads(path.read_text(encoding="utf-8"))
@@ -1384,7 +1384,7 @@ def main() -> int:
             started = time.time()
             proc = subprocess.run(
                 [sys.executable, str(REPO / "scripts" / helper),
-                 "--universe", str(REPO / "us" / "config" / "universes" / "us60.json")],
+                 "--universe", str(REPO / "config" / "universes" / "us60.json")],
                 capture_output=True, text=True)
             tail = (proc.stdout or "").strip().splitlines()
             print(f"{helper:28} ({time.time()-started:.0f} sn) "

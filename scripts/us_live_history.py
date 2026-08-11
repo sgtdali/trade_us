@@ -43,7 +43,7 @@ def main() -> int:
                     help="koku sil ve kronolojik yeniden kur")
     args = ap.parse_args()
 
-    root = REPO / "us" / LIVE_PARENT / RUN_ID
+    root = REPO / LIVE_PARENT / RUN_ID
     if args.rebuild and root.exists():
         # Workspace ILERIYE dogru kuruldugunda (once 2026-08, sonra 2024-09)
         # degerleme sonucunun icine yazilan girdi yolu ile yeniden hesaplanan
@@ -56,7 +56,7 @@ def main() -> int:
         agent = sec_user_agent(REPO)
         root = initialize_backtest(repo_root=REPO, run_id=RUN_ID,
                                    start_date=START_DATE, end_date=END_DATE,
-                                   parent=REPO / "us" / LIVE_PARENT)
+                                   parent=REPO / LIVE_PARENT)
         sync_config(repo_root=REPO, run_root=root)
         print("kok kuruldu, defterler donduruluyor...", flush=True)
         started = time.time()

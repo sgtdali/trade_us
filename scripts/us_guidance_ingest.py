@@ -129,11 +129,11 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-root", default=None, help="evreni buradan okur")
     ap.add_argument("--universe", default=None,
-                    help="us/config/universes/*.json -- CIK'ler dosyada, SEC'e "
+                    help="config/universes/*.json -- CIK'ler dosyada, SEC'e "
                          "ticker cozumu icin ayrica gidilmez")
     ap.add_argument("--min-free-gb", type=float, default=3.0,
                     help="bu esigin altina inince temiz durur")
-    ap.add_argument("--out", default=str(REPO / "us" / "guidance"))
+    ap.add_argument("--out", default=str(REPO / "guidance"))
     ap.add_argument("--since", default="2021-01-01")
     ap.add_argument("--log", required=True)
     ap.add_argument("--interim", action="store_true",

@@ -118,7 +118,7 @@ def sync_config(*, repo_root: Path, run_root: Path) -> list[str]:
     Emsal evreni DISARIDA birakilir: initialize_backtest onu kosunun
     baslangicina gore etkinlestiriyor ve ustune yazmak o cipayi bozar.
     """
-    source = repo_root / "us" / "config"
+    source = repo_root / "config"
     target = run_root / "workspace" / "config"
     changed: list[str] = []
     for path in source.rglob("*"):
@@ -228,7 +228,7 @@ def refresh(*, repo_root: Path, log: Callable[[str], None] = print,
 
     root = initialize_backtest(repo_root=repo_root, run_id=RUN_ID,
                                start_date=START_DATE, end_date=END_DATE,
-                               parent=repo_root / "us" / LIVE_PARENT)
+                               parent=repo_root / LIVE_PARENT)
 
     # initialize_backtest kok olusturulurken us/config'i KOPYALAR ve kosu o
     # kopyayi okur. Backtest icin dogru: donmus config, tekrarlanabilir sonuc.

@@ -265,7 +265,7 @@ def build_parser() -> argparse.ArgumentParser:
     fetch.add_argument("--cik")
     fetch.add_argument("--as-of", required=True)
     fetch.add_argument("--accession", required=True)
-    fetch.add_argument("--workspace", default="us")
+    fetch.add_argument("--workspace", default=".")
     fetch.set_defaults(func=cmd_fetch)
 
     ingest = sub.add_parser("ingest")
@@ -273,13 +273,13 @@ def build_parser() -> argparse.ArgumentParser:
     ingest.add_argument("--cik")
     ingest.add_argument("--as-of", required=True)
     ingest.add_argument("--accession", required=True)
-    ingest.add_argument("--workspace", default="us")
+    ingest.add_argument("--workspace", default=".")
     ingest.set_defaults(func=cmd_ingest)
 
     analyze = sub.add_parser("analyze")
     analyze.add_argument("--ticker", required=True)
     analyze.add_argument("--period", required=True)
-    analyze.add_argument("--workspace", default="us")
+    analyze.add_argument("--workspace", default=".")
     analyze.set_defaults(func=cmd_analyze)
 
     value = sub.add_parser("value")
@@ -292,14 +292,14 @@ def build_parser() -> argparse.ArgumentParser:
     value.add_argument("--latest-period-end", required=True)
     value.add_argument("--fy-period", required=True)
     value.add_argument("--fy-period-end", required=True)
-    value.add_argument("--workspace", default="us")
+    value.add_argument("--workspace", default=".")
     value.set_defaults(func=cmd_value)
 
     run_company = sub.add_parser("run-company")
     run_company.add_argument("--ticker", required=True)
     run_company.add_argument("--as-of", required=True)
     run_company.add_argument("--cutoff-instant", required=True)
-    run_company.add_argument("--workspace", default="us")
+    run_company.add_argument("--workspace", default=".")
     run_company.add_argument(
         "--enrich-peers",
         action="store_true",
@@ -310,13 +310,13 @@ def build_parser() -> argparse.ArgumentParser:
     run_pilot = sub.add_parser("run-pilot")
     run_pilot.add_argument("--as-of", required=True)
     run_pilot.add_argument("--cutoff-instant", required=True)
-    run_pilot.add_argument("--workspace", default="us")
+    run_pilot.add_argument("--workspace", default=".")
     run_pilot.set_defaults(func=cmd_run_pilot)
 
     enrich_peers = sub.add_parser("enrich-peers")
     enrich_peers.add_argument("--as-of", required=True)
     enrich_peers.add_argument("--generated-at", required=True)
-    enrich_peers.add_argument("--workspace", default="us")
+    enrich_peers.add_argument("--workspace", default=".")
     enrich_peers.set_defaults(func=cmd_enrich_peers)
 
     return parser

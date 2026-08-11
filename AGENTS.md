@@ -15,7 +15,7 @@ tek hat. `fundamentaltrading` reposunun ABD hattından 2026-08-11'de ayrıldı.
 
 ## Kodlama Ajanı Verimlilik İlkesi
 
-- Sadece görevle ilgili dosyaları oku; `us/raw-cache/`, `us/live/` (git dışı,
+- Sadece görevle ilgili dosyaları oku; `raw-cache/`, `live/` (git dışı,
   regenerable) rekürsif taranmaz.
 - Hedefli test çalıştır (`pytest -q tests/us/...`); tüm suite'i her
   seferinde koşma.

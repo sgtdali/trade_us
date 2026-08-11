@@ -23,7 +23,7 @@ sys.path.insert(0, str(REPO / "src"))
 
 from fundamental_pipeline_us.point_in_time import _tree_hash  # noqa: E402
 
-ROOTS = [REPO / "us" / "live"]
+ROOTS = [REPO / "live"]
 
 
 def file_hashes(root: Path) -> dict[str, str]:
@@ -53,11 +53,11 @@ def main() -> int:
                     help="degisen dosyalari tek tek listele")
     args = ap.parse_args()
 
-    source = REPO / "us" / "config"
+    source = REPO / "config"
     current_hash = _tree_hash(source)
     current_files = file_hashes(source)
     current_metrics = metric_ids(source / "sec" / "metric-map.json")
-    print(f"su anki us/config       {current_hash[:16]}   "
+    print(f"su anki config          {current_hash[:16]}   "
           f"{len(current_files)} dosya, {len(current_metrics)} metrik\n")
 
     runs = []
@@ -85,7 +85,7 @@ def main() -> int:
             if not bits:
                 bits.append("metrik listesi ayni, baska dosya farkli")
             note = "; ".join(bits)
-        label = root.relative_to(REPO).as_posix().replace("us/", "")
+        label = root.relative_to(REPO).as_posix()
         print(f"{label:26}{stamp[:16]:>18}{('AYNI' if same else 'FARKLI'):>12}   {note}")
         if args.verbose and not same:
             own_files = file_hashes(own)

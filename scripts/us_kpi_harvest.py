@@ -25,8 +25,8 @@ import re
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-TEXT_ROOT = REPO / "us" / "guidance" / "_text"
-OUT_ROOT = REPO / "us" / "pei" / "kpi"
+TEXT_ROOT = REPO / "guidance" / "_text"
+OUT_ROOT = REPO / "pei" / "kpi"
 
 SCALE = {"trillion": 1_000_000.0, "billion": 1_000.0, "million": 1.0}
 
@@ -148,7 +148,7 @@ def harvest(text: str, source_id: str, limit: int) -> list[dict]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--universe",
-                    default=str(REPO / "us" / "config" / "universes" / "us60.json"))
+                    default=str(REPO / "config" / "universes" / "us60.json"))
     ap.add_argument("--only", default=None, help="tek ticker")
     ap.add_argument("--limit", type=int, default=400, help="dosya basina aday tavani")
     ap.add_argument("--head", type=int, default=14000,
