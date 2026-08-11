@@ -1141,10 +1141,6 @@ news, events, management commentary, earnings call content, what the market is
 currently debating, and sector or macro context. That layer is the one I cannot
 produce.
 
-**If you have no web access, that is fine and not a reason to stop.** The pack
-is self-contained. Do the analysis from it, and list what you would have checked
-online as an open item.
-
 ## As-of dates -- these differ and it matters
 
 | layer | as of |
