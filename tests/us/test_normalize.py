@@ -2,9 +2,9 @@ from datetime import date
 
 import pytest
 
-from fundamental_pipeline_us.errors import FactSelectionError
-from fundamental_pipeline_us.models import SecFact
-from fundamental_pipeline_us.normalize import (
+from adapter.errors import FactSelectionError
+from adapter.models import SecFact
+from adapter.normalize import (
     _coherence_violation,
     _include_derived_gross_profit,
     _include_temporary_equity,
@@ -431,7 +431,7 @@ def test_comparison_window_picks_the_one_year_anniversary_not_an_adoption_balanc
     at 2019-01-01 beside the 2018-12-31 close, with different amounts), which
     made every affected quarter fail as an ambiguous fact."""
     from datetime import date as _date
-    from fundamental_pipeline_us.normalize import _closest_to_one_year_prior
+    from adapter.normalize import _closest_to_one_year_prior
 
     def instant(end: _date, value: str) -> SecFact:
         return SecFact(
@@ -467,7 +467,7 @@ def _income(metric_id: str, value: float, *, derived: bool = False) -> dict:
 
 def _uncosted_call(facts, gross_derived=False):
     from datetime import date as _date
-    from fundamental_pipeline_us.normalize import _include_uncosted_revenue
+    from adapter.normalize import _include_uncosted_revenue
 
     statements = {"income_statement": [
         _income("revenue_total", 35069.0), _income("cost_of_sales", -30623.0),
@@ -535,14 +535,14 @@ def test_mezzanine_combination_closes_a_gap_only_together():
     residual. KHC's 2015 column is 8,343 short with 8,320 of preferred stock
     beside 23 of redeemable noncontrolling interest, so testing each candidate
     alone rejected both and left the year unbalanced."""
-    from fundamental_pipeline_us.normalize import _closing_combination
+    from adapter.normalize import _closing_combination
 
     by_id = _bs(122973.0, 56737.0, 57893.0)
     assert _closing_combination(by_id, [23.0, 8320.0], field="value") == {0, 1}
 
 
 def test_single_mezzanine_line_is_selected_alone():
-    from fundamental_pipeline_us.normalize import _closing_combination
+    from adapter.normalize import _closing_combination
 
     by_id = _bs(100.0, 60.0, 39.0)
     assert _closing_combination(by_id, [1.0, 7.0], field="value") == {0}
@@ -551,14 +551,14 @@ def test_single_mezzanine_line_is_selected_alone():
 def test_a_balanced_sheet_takes_no_mezzanine_adjustment():
     """PEP's 2017 column balances on its own; carrying its 41 of preferred
     stock across from the following year overstated it by exactly that."""
-    from fundamental_pipeline_us.normalize import _closing_combination
+    from adapter.normalize import _closing_combination
 
     by_id = _bs(79804.0, 68823.0, 10981.0)
     assert _closing_combination(by_id, [41.0], field="value") == set()
 
 
 def test_an_unexplained_gap_applies_nothing():
-    from fundamental_pipeline_us.normalize import _closing_combination
+    from adapter.normalize import _closing_combination
 
     by_id = _bs(100.0, 60.0, 30.0)
     assert _closing_combination(by_id, [3.0, 4.0], field="value") == set()

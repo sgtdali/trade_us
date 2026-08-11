@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from fundamental_pipeline_us.errors import SecRequestError
-from fundamental_pipeline_us.sec_client import SecClient
+from adapter.errors import SecRequestError
+from adapter.sec_client import SecClient
 
 
 def test_get_json_uses_declared_user_agent():

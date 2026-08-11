@@ -23,15 +23,15 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from fundamental_pipeline_us.point_in_time import (  # noqa: E402
+from adapter.point_in_time import (  # noqa: E402
     build_month_plans, freeze_price_ledger, freeze_sec_discovery_ledger,
     initialize_backtest, materialize_month_cutoff, read_json,
 )
-from fundamental_pipeline_us.live_refresh import (  # noqa: E402
+from adapter.live_refresh import (  # noqa: E402
     END_DATE, LIVE_PARENT, RUN_ID, START_DATE, month_is_complete,
     run_live_month, sec_user_agent, sync_config,
 )
-from fundamental_pipeline_us.sec_client import SecClient  # noqa: E402
+from adapter.sec_client import SecClient  # noqa: E402
 
 
 def main() -> int:

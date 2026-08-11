@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fundamental_pipeline_us.non_gaap import build_financial_operational_artifact
+from adapter.non_gaap import build_financial_operational_artifact
 
 
 def test_non_gaap_artifact_does_not_invent_issuer_reported_values(tmp_path: Path):

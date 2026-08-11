@@ -19,7 +19,7 @@ dependencies = [
 dev = ["pytest>=8.0", "pytest-xdist>=3.5"]
 
 [project.scripts]
-us-pipeline = "fundamental_pipeline_us.cli:main"
+us-pipeline = "adapter.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

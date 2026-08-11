@@ -33,8 +33,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from fundamental_pipeline_us.discovery import resolve_cik  # noqa: E402
-from fundamental_pipeline_us.sec_client import SecClient  # noqa: E402
+from adapter.discovery import resolve_cik  # noqa: E402
+from adapter.sec_client import SecClient  # noqa: E402
 
 TICKER_URL = "https://www.sec.gov/files/company_tickers.json"
 EARNINGS_ITEM = "2.02"

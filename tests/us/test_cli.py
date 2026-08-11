@@ -4,9 +4,9 @@ from types import SimpleNamespace
 
 import pytest
 
-import fundamental_pipeline_us.cli as cli
-from fundamental_pipeline_us.cli import _peer_ready_tickers, build_parser
-from fundamental_pipeline_us.errors import UsPipelineError
+import adapter.cli as cli
+from adapter.cli import _peer_ready_tickers, build_parser
+from adapter.errors import UsPipelineError
 
 
 def _write_universe(workspace: Path, tickers: list[str]) -> None:
@@ -93,11 +93,11 @@ def test_run_company_wires_peer_enrichment_into_single_result(
 
     monkeypatch.setattr(cli, "_client", lambda args: object())
     monkeypatch.setattr(
-        "fundamental_pipeline_us.workflow.run_company_workflow",
+        "adapter.workflow.run_company_workflow",
         lambda **kwargs: {"ticker": kwargs["ticker"]},
     )
     monkeypatch.setattr(
-        "fundamental_pipeline_us.peers.generate_us_peer_comparisons",
+        "adapter.peers.generate_us_peer_comparisons",
         lambda **kwargs: {"ticker_count": len(kwargs["tickers"])},
     )
     args = SimpleNamespace(

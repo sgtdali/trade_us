@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from fundamental_pipeline_us.cache import cache_filing, _resolve_facts_document, facts_document_path
-from fundamental_pipeline_us.errors import SecDataError
-from fundamental_pipeline_us.models import FilingRef
+from adapter.cache import cache_filing, _resolve_facts_document, facts_document_path
+from adapter.errors import SecDataError
+from adapter.models import FilingRef
 
 
 def _zip_bytes(name="issuer.htm", content=b"filing"):
@@ -101,8 +101,8 @@ def test_fact_cache_round_trips_and_invalidates(tmp_path: Path, monkeypatch):
     invalidate when the parser changes -- a stale artifact silently reused is
     how a wrong diagnosis gets made."""
     from datetime import date as _date
-    from fundamental_pipeline_us import fact_cache
-    from fundamental_pipeline_us.models import SecFact
+    from adapter import fact_cache
+    from adapter.models import SecFact
 
     document = tmp_path / "doc.htm"
     document.write_text("<html/>", encoding="utf-8")
@@ -119,7 +119,7 @@ def test_fact_cache_round_trips_and_invalidates(tmp_path: Path, monkeypatch):
         calls.append(path)
         return produced
 
-    monkeypatch.setattr("fundamental_pipeline_us.xbrl.load_facts", fake_load)
+    monkeypatch.setattr("adapter.xbrl.load_facts", fake_load)
     root = tmp_path / "cache"
 
     assert fact_cache.load_facts_cached(document, root) == produced
@@ -134,14 +134,14 @@ def test_fact_cache_round_trips_and_invalidates(tmp_path: Path, monkeypatch):
 
 def test_fact_cache_discards_a_corrupt_entry(tmp_path: Path, monkeypatch):
     from datetime import date as _date
-    from fundamental_pipeline_us import fact_cache
-    from fundamental_pipeline_us.models import SecFact
+    from adapter import fact_cache
+    from adapter.models import SecFact
 
     document = tmp_path / "doc.htm"
     document.write_text("<html/>", encoding="utf-8")
     produced = (SecFact(namespace="ns", concept="Assets", value="2", unit="USD",
                         context_id="c", start_date=None, end_date=_date(2024, 12, 31)),)
-    monkeypatch.setattr("fundamental_pipeline_us.xbrl.load_facts", lambda path: produced)
+    monkeypatch.setattr("adapter.xbrl.load_facts", lambda path: produced)
     root = tmp_path / "cache"
     fact_cache.load_facts_cached(document, root)
     next(root.iterdir()).write_text("{ bozuk", encoding="utf-8")

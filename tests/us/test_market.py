@@ -4,16 +4,16 @@ from types import SimpleNamespace
 
 import pytest
 
-from fundamental_pipeline.valuation.catalogs import load_catalog_registry
-from fundamental_pipeline_us.errors import FactSelectionError
-from fundamental_pipeline_us.market import (
+from engine.valuation.catalogs import load_catalog_registry
+from adapter.errors import FactSelectionError
+from adapter.market import (
     direct_share_count_as_int,
     generate_us_market_snapshot,
     select_direct_outstanding_shares,
     valuation_context_projection,
 )
-from fundamental_pipeline_us.models import SecFact
-from fundamental_pipeline_us.xbrl import _canonical_unit
+from adapter.models import SecFact
+from adapter.xbrl import _canonical_unit
 
 
 def _share_fact(value="4302549243", end_date=date(2026, 7, 27), context_id="c-21"):
@@ -55,12 +55,12 @@ def test_direct_share_count_accepts_integral_decimal_lexical_form():
 
 def test_generate_us_market_snapshot_supports_sec_direct_share_basis(tmp_path, monkeypatch):
     monkeypatch.setattr(
-        "fundamental_pipeline_us.market._fetch_latest_close",
+        "adapter.market._fetch_latest_close",
         lambda ticker, as_of: SimpleNamespace(
             trade_date="2026-07-31", close=SimpleNamespace(status="available", value="87.59")
         ),
     )
-    monkeypatch.setattr("fundamental_pipeline_us.market._utc_now", lambda: "2026-08-03T12:00:00Z")
+    monkeypatch.setattr("adapter.market._utc_now", lambda: "2026-08-03T12:00:00Z")
     snapshot_path = generate_us_market_snapshot(
         workspace=tmp_path, ticker="KO", exchange="NYSE", as_of_date="2026-08-03",
         cutoff_instant="2026-08-03T23:59:59Z", accession="0001628280-26-050503",
@@ -77,7 +77,7 @@ def test_generate_us_market_snapshot_supports_sec_direct_share_basis(tmp_path, m
     assert snapshot["price_observation"]["price"] == "87.59"
 
     monkeypatch.setattr(
-        "fundamental_pipeline_us.market._fetch_latest_close",
+        "adapter.market._fetch_latest_close",
         lambda *_args: pytest.fail("a pinned historical market input must be reused without refetching"),
     )
     rerun_path = generate_us_market_snapshot(

@@ -3,8 +3,8 @@ from pathlib import Path
 
 import jsonschema
 
-from fundamental_pipeline_us.models import FilingRef, SecFact
-from fundamental_pipeline_us.qualitative import (
+from adapter.models import FilingRef, SecFact
+from adapter.qualitative import (
     _extract_debt_and_lease_note_details,
     _extract_item_1a,
     _keyword_centered_excerpt,

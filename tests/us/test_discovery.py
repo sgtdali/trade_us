@@ -2,8 +2,8 @@ from datetime import date
 
 import pytest
 
-from fundamental_pipeline_us.discovery import list_filings, resolve_cik
-from fundamental_pipeline_us.errors import SecDataError
+from adapter.discovery import list_filings, resolve_cik
+from adapter.errors import SecDataError
 
 
 class _Client:

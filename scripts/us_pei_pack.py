@@ -41,8 +41,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from fundamental_pipeline_us import live_refresh  # noqa: E402
-from fundamental_pipeline_us.live_pack import build_pack_from_artifacts  # noqa: E402
+from adapter import live_refresh  # noqa: E402
+from adapter.live_pack import build_pack_from_artifacts  # noqa: E402
 
 # Kaynak CANLI koktur, donmus backtest kokleri degil. Onceden ic-2024-v1
 # idi ve --no-refresh verildiginde paket sessizce olcum kanitindan

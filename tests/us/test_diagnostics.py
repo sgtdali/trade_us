@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from fundamental_pipeline_us.diagnostics import _magic_facts, _piotroski_facts
+from adapter.diagnostics import _magic_facts, _piotroski_facts
 
 
 def _financial(year: int, assets: int) -> dict:

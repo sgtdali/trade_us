@@ -2,8 +2,8 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from fundamental_pipeline.valuation.comparison.build_peer_observations import build_observations
-from fundamental_pipeline_us.peers import _single_result_path
+from engine.valuation.comparison.build_peer_observations import build_observations
+from adapter.peers import _single_result_path
 
 
 def test_every_peer_universe_member_has_a_company_and_a_price_symbol():

@@ -21,22 +21,26 @@ sinyal, değerleme ve raporlama motorlarını değiştirmeden değerleme raporu 
 
 ## Dizin ve sahiplik
 
+> **Not (2026-08-11):** Bu bölüm, `us/` bir workspace olarak BIST'in yanında
+> yaşadığı `fundamentaltrading` reposu için yazıldı. `trade_us` reposuna
+> taşındıktan sonra `us/` sarmalayıcısı kaldırıldı (tüm repo zaten ABD hattı)
+> ve paketler `fundamental_pipeline`/`fundamental_pipeline_us` yerine
+> `engine`/`adapter` olarak adlandırıldı. Aşağıdaki ağaç bugünkü karşılığı
+> gösteriyor; tasarım gerekçesi (neden ayrı bir workspace/motor kopyası
+> seçildiği) hâlâ geçerli, sadece yol ve isimler güncel.
+
 ```text
-us/
-  config/companies/               # ABD şirket kimliği ve routing kayıtları
-  config/sec/                     # CIK ve kanonik metrik eşlemeleri
-  raw-cache/sec/                  # git dışı, yeniden indirilebilir SEC cache'i
-  raw/sec-filings/                # seçilmiş fact'lerin küçük, kalıcı kaynak snapshot'ları
-  data/                           # kanonik/authored ve generated artifact'lar
-  reports/                        # ABD raporları
-src/fundamental_pipeline_us/      # SEC adaptörü ve ABD orkestratörü
-tests/us/                          # yalnız ABD adaptörü/orkestratörü testleri
+config/companies/                 # ABD şirket kimliği ve routing kayıtları
+config/sec/                       # CIK ve kanonik metrik eşlemeleri
+raw-cache/sec/                    # git dışı, yeniden indirilebilir SEC cache'i
+raw/sec-filings/                  # seçilmiş fact'lerin küçük, kalıcı kaynak snapshot'ları
+data/                             # kanonik/authored ve generated artifact'lar
+src/engine/                       # ortak motor (oran/sinyal/değerleme), vendored kopya
+src/adapter/                      # SEC adaptörü ve ABD orkestratörü
+tests/us/                         # yalnız adaptör/orkestratör testleri
 ```
 
-`us/` bir artifact köküdür; ikinci bir analiz motoru değildir.
-`fundamental_pipeline_us`, `fundamental_pipeline` paketinin açık
-`data_root`/`root` sözleşmelerini kullanır. BIST'e özel `tools/kap-bildirim`
-ve `scripts/batch_ingest.py` kodlarını içe aktarmaz.
+`adapter`, `engine` paketinin açık `data_root`/`root` sözleşmelerini kullanır.
 
 ## Veri akışı
 

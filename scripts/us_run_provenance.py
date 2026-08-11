@@ -21,7 +21,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from fundamental_pipeline_us.point_in_time import _tree_hash  # noqa: E402
+from adapter.point_in_time import _tree_hash  # noqa: E402
 
 ROOTS = [REPO / "live"]
 

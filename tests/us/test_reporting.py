@@ -3,7 +3,7 @@ from pathlib import Path
 
 from jinja2 import Environment
 
-from fundamental_pipeline_us.reporting import (
+from adapter.reporting import (
     _build_ev_bridge,
     _build_ttm_earnings_bridges,
     _build_ttm_fcf_bridge,
