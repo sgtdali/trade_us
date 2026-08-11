@@ -33,14 +33,6 @@ def test_run_company_accepts_peer_enrichment_flag():
     assert args.enrich_peers is True
 
 
-def test_run_portfolio_accepts_ticker_universe():
-    args = build_parser().parse_args([
-        "run-portfolio", "--as-of", "2026-08-03",
-        "--tickers", "BJ", "COST", "DG", "KR", "TGT", "WMT",
-    ])
-    assert args.tickers == ["BJ", "COST", "DG", "KR", "TGT", "WMT"]
-
-
 def test_peer_ready_tickers_skip_unprocessed_universe_members(tmp_path: Path):
     workspace = tmp_path / "us"
     _write_universe(workspace, ["KO", "PEP", "ADM"])

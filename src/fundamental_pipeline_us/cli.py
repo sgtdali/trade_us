@@ -248,30 +248,6 @@ def cmd_enrich_peers(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_run_decisions(args: argparse.Namespace) -> int:
-    from .decisions import run_decisions
-
-    result = run_decisions(
-        workspace=Path(args.workspace), as_of=args.as_of,
-        tickers=[ticker.upper() for ticker in args.tickers],
-        max_workers=args.max_workers, timeout_seconds=args.timeout_seconds,
-    )
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0
-
-
-def cmd_run_portfolio(args: argparse.Namespace) -> int:
-    from .decisions import run_portfolio_decision
-
-    result = run_portfolio_decision(
-        workspace=Path(args.workspace), as_of=args.as_of,
-        tickers=[ticker.upper() for ticker in args.tickers],
-        timeout_seconds=args.timeout_seconds,
-    )
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="us-pipeline")
     parser.add_argument("--sec-user-agent")
@@ -342,21 +318,6 @@ def build_parser() -> argparse.ArgumentParser:
     enrich_peers.add_argument("--generated-at", required=True)
     enrich_peers.add_argument("--workspace", default="us")
     enrich_peers.set_defaults(func=cmd_enrich_peers)
-
-    run_decisions = sub.add_parser("run-decisions")
-    run_decisions.add_argument("--as-of", required=True)
-    run_decisions.add_argument("--tickers", nargs="+", required=True)
-    run_decisions.add_argument("--workspace", default="us")
-    run_decisions.add_argument("--max-workers", type=int, default=3)
-    run_decisions.add_argument("--timeout-seconds", type=int, default=900)
-    run_decisions.set_defaults(func=cmd_run_decisions)
-
-    run_portfolio = sub.add_parser("run-portfolio")
-    run_portfolio.add_argument("--as-of", required=True)
-    run_portfolio.add_argument("--tickers", nargs="+", required=True)
-    run_portfolio.add_argument("--workspace", default="us")
-    run_portfolio.add_argument("--timeout-seconds", type=int, default=900)
-    run_portfolio.set_defaults(func=cmd_run_portfolio)
 
     return parser
 
