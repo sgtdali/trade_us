@@ -1542,7 +1542,10 @@ def main() -> int:
         drift_line = (f"For {ticker} the two prices differ by {gap:+.1f}%."
                       if gap is not None else
                       "No second price is available for this name.")
-        scope = f"It contains one company, {ticker}, plus its sector peer group."
+        scope = (f"It contains one company, {ticker}, plus its sector peer group."
+                 if peers is not None else
+                 f"It contains one company, {ticker}. This step's source "
+                 f"categories do not include a sector peer group.")
         hit_n = 1 if entry["consensus_estimates"]["status"] == "available" else 0
         guidance_n = int(entry["latest_earnings_release"]
                          .get("guidance", {}).get("status") == "available")
