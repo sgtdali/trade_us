@@ -15,12 +15,13 @@ tek hat. `fundamentaltrading` reposunun ABD hattından 2026-08-11'de ayrıldı.
   reposundan **kopyalandı**, bağımlı değil. İki repo arasında hiçbir
   bağlantı yok — motorda bir düzeltme yapılırsa iki yere de elle taşınması
   gerekir, otomatik yansımaz.
-- **Araştırma/ölçüm scriptleri kısmen yok.** `docs/` altındaki
-  preregistration/result çiftleri (skor-IC, overreaction, mekanik tarama,
-  vb.) referans olarak taşındı ama onları üreten scriptler (`us_score_ic_*`,
-  `us_overreaction.py`, `us_mechanical_families.py`, `us_guidance_*forecast*`
-  gibi) `fundamentaltrading`'de kaldı — bunlar dondurulmuş backtest köklerine
-  bağımlıydı.
+- **Araştırma/ölçüm yok.** Preregistration/result çiftleri (skor-IC,
+  overreaction, mekanik tarama, vb.) ve onları üreten scriptler
+  (`us_score_ic_*`, `us_overreaction.py`, `us_mechanical_families.py`,
+  `us_guidance_*forecast*` gibi) `fundamentaltrading`'de kaldı — hem
+  dondurulmuş backtest köklerine bağımlıydı hem de PEI/canlı akışın parçası
+  değil. `docs/` yalnız üç dosya taşıyor: `pei-workflow.md`,
+  `pei-akis-diyagram.md`, `us-market-pipeline.md`.
 
 ## Önce buraya bak
 
