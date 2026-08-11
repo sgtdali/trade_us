@@ -1,12 +1,12 @@
 from ..errors import ConfigError, UnimplementedModuleError
 from ..io import read_json
-from ..modules.company_types import bank, holding, insurance, reit, standard_corporate
+from ..modules.company_types import standard_corporate
 from ..modules.company_types.base import CompanyTypeModule
 from ..paths import repo_path
 
 _MODULES: dict[str, CompanyTypeModule] = {
     m.module_id: m
-    for m in (standard_corporate.MODULE, bank.MODULE, insurance.MODULE, reit.MODULE, holding.MODULE)
+    for m in (standard_corporate.MODULE,)
 }
 
 

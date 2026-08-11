@@ -6,11 +6,6 @@
       "id": "generic",
       "name": "Generic",
       "description": "Özel sektör KPI modülü gerektirmeyen standart şirketler"
-    },
-    {
-      "id": "aviation",
-      "name": "Aviation",
-      "description": "Havayolu ve havacılık işletmeleri için sektörel analiz modülü"
     }
   ]
 }

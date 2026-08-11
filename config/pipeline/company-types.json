@@ -4,22 +4,6 @@
     {
       "id": "standard_corporate",
       "status": "implemented"
-    },
-    {
-      "id": "bank",
-      "status": "not_implemented"
-    },
-    {
-      "id": "insurance",
-      "status": "not_implemented"
-    },
-    {
-      "id": "reit",
-      "status": "not_implemented"
-    },
-    {
-      "id": "holding",
-      "status": "not_implemented"
     }
   ]
 }

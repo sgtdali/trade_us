@@ -1,10 +1,10 @@
 from ..errors import ConfigError
 from ..io import read_json
-from ..modules.sectors import aviation, generic
+from ..modules.sectors import generic
 from ..modules.sectors.base import SectorModule
 from ..paths import repo_path
 
-_MODULES: dict[str, SectorModule] = {m.module_id: m for m in (generic.MODULE, aviation.MODULE)}
+_MODULES: dict[str, SectorModule] = {m.module_id: m for m in (generic.MODULE,)}
 
 
 def get_sector_module(sector_module_id: str) -> dict:
