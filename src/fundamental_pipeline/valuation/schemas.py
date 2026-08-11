@@ -40,23 +40,9 @@ SCHEMA_FILES: dict[str, str] = {
     "eod-close-promotion-validation": "eod-close-promotion-validation.schema.json",
     "eod-close-promotion-manifest": "eod-close-promotion-manifest.schema.json",
     "share-count-ledger": "share-count-ledger.schema.json",
-    "corporate-action-bundle": "corporate-action-bundle.schema.json",
-    "share-count-promotion-policy": "share-count-promotion-policy.schema.json",
-    "share-count-promotion-validation": "share-count-promotion-validation.schema.json",
-    "share-count-promotion-manifest": "share-count-promotion-manifest.schema.json",
-    "fx-provider-extract": "fx-provider-extract.schema.json",
-    "fx-rate-series": "fx-rate-series.schema.json",
-    "fx-ingestion-validation": "fx-ingestion-validation.schema.json",
-    "fx-ingestion-bundle": "fx-ingestion-bundle.schema.json",
-    "fx-close-promotion-policy": "fx-close-promotion-policy.schema.json",
-    "fx-close-promotion-validation": "fx-close-promotion-validation.schema.json",
-    "fx-close-promotion-manifest": "fx-close-promotion-manifest.schema.json",
     "market-observation-merge-manifest": "market-observation-merge-manifest.schema.json",
     "market-observation-merge-validation": "market-observation-merge-validation.schema.json",
     "technical-snapshot": "technical-snapshot.schema.json",
-    "holding-assets": "holding-assets.schema.json",
-    "holding-valuation-inputs": "holding-valuation-inputs.schema.json",
-    "holding-valuation-results": "holding-valuation-results.schema.json",
 }
 
 #: Artifact-bearing schema keys (as opposed to supporting-definition schemas).
@@ -65,13 +51,9 @@ ARTIFACT_SCHEMA_KEYS = (
     "valuation-comparison", "valuation-peer-universe", "valuation-comparison-observations",
     "eod-provider-extract", "eod-price-series", "eod-ingestion-validation", "eod-ingestion-bundle",
     "market-observation-bundle", "eod-close-promotion-policy", "eod-close-promotion-validation",
-    "eod-close-promotion-manifest", "share-count-ledger", "corporate-action-bundle",
-    "share-count-promotion-policy", "share-count-promotion-validation", "share-count-promotion-manifest",
-    "fx-provider-extract", "fx-rate-series", "fx-ingestion-validation", "fx-ingestion-bundle",
-    "fx-close-promotion-policy", "fx-close-promotion-validation", "fx-close-promotion-manifest",
+    "eod-close-promotion-manifest", "share-count-ledger",
     "market-observation-merge-manifest", "market-observation-merge-validation",
-    "technical-snapshot", "holding-assets", "holding-valuation-inputs",
-    "holding-valuation-results",
+    "technical-snapshot",
 )
 
 _ALLOWED_ID_SCHEME = "valuation-pipeline"
