@@ -28,10 +28,11 @@ def sha256_path(path: Path) -> str:
 
 def write_text_atomic(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    safe_text = text.encode("utf-8", errors="replace").decode("utf-8")
     fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
-            handle.write(text)
+        with os.fdopen(fd, "w", encoding="utf-8", errors="replace", newline="\n") as handle:
+            handle.write(safe_text)
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temporary, path)
@@ -713,6 +714,214 @@ def attach_result(
     )
     append_events([approve_system_event(event)], repo_root=repo_root)
     return target
+
+
+AGY_MODEL = "gemini-3.6-flash-medium"
+# Windows komut satiri sinirinin (~32767 kar) altinda kalmak icin guvenli tavan.
+AGY_MAX_INLINE_CHARS = 24000
+
+
+def extract_candidates_via_agy(
+    repo_root: Path,
+    result_text: str,
+    *,
+    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> list[dict[str, Any]]:
+    """Idea-generation serbest metnini agy (Gemini CLI) ile semaya zorlayarak yapilandirir.
+
+    Regex/tablo ayrıştırma yerine gercek bir LLM cagrisi -- ChatGPT'nin cevabi
+    tablo olsun ya da duzyazi olsun calisir. `--json-schema` ile agy'nin kendi
+    strict semasi zorlanir; sonuc `structured_output` alanindan okunur
+    (`response` alani agy'nin kendi onarim denemelerini de icerebilir, guvenilmez).
+    """
+    if len(result_text) > AGY_MAX_INLINE_CHARS:
+        raise PeiWorkflowError(
+            f"Sonuc metni cok uzun ({len(result_text)} karakter, sinir "
+            f"{AGY_MAX_INLINE_CHARS}). agy komut satiri sinirini asiyor; "
+            "sonucu bolup ayri ayri isleyin."
+        )
+
+    schema_path = repo_root / "schemas" / "pei-idea-screen-extraction.schema.json"
+    if not schema_path.is_file():
+        raise PeiWorkflowError(f"idea screen extraction semasi bulunamadi: {schema_path}")
+
+    prompt = (
+        "Asagidaki metin bir idea-generation hisse taramasi ciktisidir. "
+        "Icindeki HER aday sirket icin, semaya uygun JSON uret. Yalniz "
+        "metinde acikca yazan bilgiyi cikar, yorum ekleme; bir alan metinde "
+        "yoksa null birak, uydurma.\n\n---\n" + result_text
+    )
+
+    try:
+        completed = runner(
+            [
+                "agy", "--model", AGY_MODEL, "--output-format", "json",
+                "--json-schema", str(schema_path), f"--print={prompt}",
+            ],
+            capture_output=True, text=True, encoding="utf-8", timeout=120,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise PeiWorkflowError(f"agy CLI calistirilamadi: {exc}") from exc
+
+    if completed.returncode != 0:
+        raise PeiWorkflowError(
+            f"agy CLI basarisiz (exit {completed.returncode}): "
+            f"{(completed.stderr or completed.stdout).strip()[:500]}"
+        )
+
+    try:
+        parsed = json.loads(completed.stdout)
+    except json.JSONDecodeError as exc:
+        raise PeiWorkflowError(f"agy ciktisi JSON degil: {exc}") from exc
+
+    if parsed.get("status") != "SUCCESS":
+        raise PeiWorkflowError(f"agy hata dondurdu: {parsed.get('error') or parsed}")
+
+    structured = parsed.get("structured_output")
+    if not isinstance(structured, dict) or not isinstance(structured.get("candidates"), list):
+        raise PeiWorkflowError("agy structured_output beklenen sekilde degil")
+
+    return structured["candidates"]
+
+
+WORKFLOW_MAP = {
+    "long-short-pitch": "pitch",
+    "pitch": "pitch",
+    "earnings-preview": "earnings_preview",
+    "preview": "earnings_preview",
+    "earnings-deep-dive": "earnings_deep_dive",
+    "deep-dive": "earnings_deep_dive",
+    "deepdive": "earnings_deep_dive",
+    "comps-valuation": "comps",
+    "comps": "comps",
+    "company-tearsheet": "tearsheet",
+    "tearsheet": "tearsheet",
+    "thesis-tracker": "thesis_tracker",
+}
+
+
+def generate_draft_events(
+    repo_root: Path,
+    run_id: str,
+    work_item_id: str | None = None,
+) -> dict[str, Any]:
+    events = read_events(repo_root)
+    projection = project(events)
+    catalog = load_catalog(repo_root)["workflows"]
+
+    # Locate result artifact
+    result_path: Path | None = None
+    target_ticker: str | None = None
+    target_workflow: str = "idea"
+
+    if work_item_id:
+        work_item = projection["work_items"].get(work_item_id)
+        if work_item:
+            target_ticker = work_item["ticker"]
+            target_workflow = work_item["workflow"]
+            target_dir = safe_repo_path(repo_root, work_item["artifact_dir"])
+            result_path = target_dir / "result.md"
+    else:
+        run = projection["runs"].get(run_id)
+        if run and run.get("artifact_dir"):
+            target_dir = safe_repo_path(repo_root, run["artifact_dir"])
+            result_path = target_dir / "result.md"
+
+    # Also check dashboard scratch
+    scratch_key = work_item_id or run_id
+    scratch_pasted = repo_root / "data" / "pei-workflow" / "dashboard-scratch" / scratch_key / "pasted-result.md"
+    if scratch_pasted.is_file():
+        result_path = scratch_pasted
+
+    if not result_path or not result_path.is_file():
+        raise PeiWorkflowError("Sonuç dosyası bulunamadı. Lütfen önce 'Kaydet ve Bağla' ile sonucu kaydedin.")
+
+    result_text = result_path.read_text(encoding="utf-8")
+    result_artifact = _artifact("result", repo_root, result_path)
+
+    draft_events: list[dict[str, Any]] = []
+    review_date = (date.today() + timedelta(days=7)).isoformat()
+
+    if target_workflow == "idea":
+        # Candidate screen run output -- agy (Gemini CLI) ile semaya
+        # zorlanmis gercek LLM cikarimi. Regex/tablo ayristirma degil.
+        candidates = extract_candidates_via_agy(repo_root, result_text)
+        for c in candidates:
+            raw_ticker = str(c.get("ticker", "")).strip().upper()
+            if not raw_ticker:
+                continue
+
+            bucket = c.get("bucket") or "B"
+            suggested = c.get("suggested_workflow") or ""
+
+            # Map to catalog workflow -- deterministik, LLM'e birakilmaz.
+            mapped_workflow: str | None = None
+            route_status = "unsupported" if suggested else "not_requested"
+            for key, val in WORKFLOW_MAP.items():
+                if key in suggested.lower():
+                    if val in catalog:
+                        mapped_workflow = val
+                        route_status = "supported"
+                        break
+
+            payload: dict[str, Any] = {
+                "bucket": bucket,
+                "setup": c.get("setup") or "",
+                "variant_wedge": c.get("variant_wedge") or "",
+                "first_rejection": c.get("first_rejection") or "",
+                "suggested_workflow": suggested or None,
+                "mapped_workflow": mapped_workflow,
+                "route_status": route_status,
+            }
+
+            if bucket == "B":
+                payload["manual_review_date"] = c.get("manual_review_date") or review_date
+
+            draft_events.append(make_event(
+                event_id=_event_id(f"SCREEN-{raw_ticker}"),
+                event_type="candidate_screened",
+                run_id=run_id,
+                ticker=raw_ticker,
+                source_artifacts=[result_artifact],
+                payload=payload,
+                recorded_at=utc_now(),
+            ))
+    else:
+        # Single workflow event (e.g. tearsheet, preview, pitch)
+        source_artifacts = [result_artifact]
+        if target_dir and target_dir.is_dir():
+            pack_file = target_dir / "pack.json"
+            if pack_file.is_file():
+                source_artifacts.append(_artifact("pack", repo_root, pack_file))
+            inst_file = target_dir / "instructions.md"
+            if inst_file.is_file():
+                source_artifacts.append(_artifact("instructions", repo_root, inst_file))
+
+        # Look for explicit JSON block generated by LLM
+        payload: dict[str, Any] = {"workflow": target_workflow}
+        if work_item_id:
+            payload["work_item_id"] = work_item_id
+
+        json_match = re.search(r"```json\s*(\{.*?\})\s*```", result_text, re.DOTALL)
+        if json_match:
+            try:
+                parsed_json = json.loads(json_match.group(1))
+                if isinstance(parsed_json, dict):
+                    payload.update(parsed_json)
+            except json.JSONDecodeError:
+                pass
+
+        draft_events.append(make_event(
+            event_id=_event_id(f"COMPLETE-{target_ticker or 'WORKFLOW'}"),
+            event_type="workflow_completed",
+            run_id=run_id,
+            ticker=target_ticker,
+            source_artifacts=source_artifacts,
+            payload=payload,
+            recorded_at=utc_now(),
+        ))
+
+    return {"events": draft_events}
 
 
 def prepare_work_item(

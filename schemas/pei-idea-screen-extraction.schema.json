@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trade-us.local/schemas/pei-idea-screen-extraction.schema.json",
+  "title": "PEI idea-generation screen extraction (agy structured output)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["candidates"],
+  "properties": {
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ticker", "bucket", "setup", "variant_wedge", "first_rejection",
+          "suggested_workflow", "manual_review_date"
+        ],
+        "properties": {
+          "ticker": {"type": "string"},
+          "bucket": {"type": "string", "enum": ["A", "B", "C", "Reject"]},
+          "setup": {"type": "string"},
+          "variant_wedge": {"type": "string"},
+          "first_rejection": {"type": "string"},
+          "suggested_workflow": {"type": ["string", "null"]},
+          "manual_review_date": {"type": ["string", "null"]}
+        }
+      }
+    }
+  }
+}
