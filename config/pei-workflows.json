@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "workflows": {
+    "tearsheet": {
+      "pack_step": "tearsheet",
+      "required_workflows": [],
+      "allowed_next": ["earnings_preview", "earnings_deep_dive", "comps", "pitch"],
+      "result_contract": "profile_and_data_gaps_only"
+    },
+    "earnings_preview": {
+      "pack_step": "preview",
+      "required_workflows": [],
+      "allowed_next": ["earnings_deep_dive", "pitch"],
+      "result_contract": "expectation_bar_and_triggers"
+    },
+    "earnings_deep_dive": {
+      "pack_step": "deepdive",
+      "required_workflows": [],
+      "allowed_next": ["tearsheet", "comps", "pitch", "thesis_tracker"],
+      "result_contract": "post_print_thesis_and_action_implications"
+    },
+    "comps": {
+      "pack_step": "comps",
+      "required_workflows": ["tearsheet"],
+      "allowed_next": ["pitch"],
+      "result_contract": "valuation_assumptions_and_gates"
+    },
+    "pitch": {
+      "pack_step": "pitch",
+      "required_workflows": ["tearsheet"],
+      "allowed_next": ["thesis_tracker"],
+      "result_contract": "pitch_verdict_thesis_and_rules"
+    },
+    "thesis_tracker": {
+      "pack_step": null,
+      "required_workflows": ["pitch"],
+      "allowed_next": [],
+      "result_contract": "append_only_thesis_record"
+    }
+  }
+}

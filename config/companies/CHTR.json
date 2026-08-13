@@ -1,0 +1,8 @@
+{
+  "schema_version": 1, "ticker": "CHTR", "exchange": "NASDAQ",
+  "company_name": "Charter Communications, Inc.", "reporting_locale": "tr-TR",
+  "classification": {"source": "SEC", "official_sector": "Communication Services", "official_industry": "Telecom Services", "official_subindustry": null, "actual_activity": "Broadband, Cable and Mobile Communications", "classification_date": "2026-08-12"},
+  "pipeline": {"company_type": "standard_corporate", "sector_module": "generic"},
+  "sources": {"identity_source": "SEC submissions", "classification_source": "SEC"},
+  "version": 1, "is_active": true
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:MSFT:1",
+  "subject_ticker": "MSFT",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "blended_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "cloud_ai_infrastructure",
+      "label": "Cloud and AI infrastructure",
+      "purpose": "Azure, hyperscale cloud, enterprise workloads, AI infrastructure and capital-intensity economics",
+      "members": ["AMZN", "GOOGL", "ORCL"]
+    },
+    {
+      "group_id": "enterprise_software_saas",
+      "label": "Enterprise software and SaaS",
+      "purpose": "Recurring enterprise applications, productivity software, subscriptions and AI monetization",
+      "members": ["CRM", "ADBE", "ORCL"]
+    },
+    {
+      "group_id": "mega_cap_ai_quality",
+      "label": "Mega-cap AI and quality references",
+      "purpose": "AI demand, ecosystem quality, capital efficiency and mega-cap valuation-premium context",
+      "members": ["GOOGL", "NVDA", "AAPL"]
+    }
+  ],
+  "operational_references": [],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "Microsoft requires separate cloud/AI infrastructure and enterprise-software lenses. AMZN, GOOGL, ORCL and CRM form the core cross-business peer set; ADBE, NVDA and AAPL are contextual references within their stated lenses."
+  }
+}

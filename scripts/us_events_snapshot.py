@@ -63,7 +63,7 @@ def collect(symbol: str) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--universe",
-                    default=str(REPO / "config" / "universes" / "us60.json"))
+                    default=str(REPO / "config" / "universes" / "us-live.json"))
     ap.add_argument("--out", default=str(OUT))
     ap.add_argument("--sleep", type=float, default=0.6)
     args = ap.parse_args()

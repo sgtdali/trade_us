@@ -133,6 +133,37 @@ def freeze_price_ledger(*, run_root: Path) -> Path:
     ledger_dir = run_root / "ledger" / "prices"
     manifest_path = run_root / "ledger" / "price-ledger.json"
     if manifest_path.exists():
+        manifest = read_json(manifest_path)
+        hashes = manifest.get("ticker_sha256", {})
+        missing = sorted(set(config["universe"]) - set(hashes))
+        if missing:
+            start = date.fromisoformat(config["start_date"]) - timedelta(days=450)
+            end = date.fromisoformat(config["end_date"]) + timedelta(days=45)
+            ledger_dir.mkdir(parents=True, exist_ok=True)
+            provider = YFinanceProvider()
+            for ticker in missing:
+                request = EndOfDayFetchRequest(
+                    internal_ticker=ticker, provider_symbol=ticker,
+                    start_date_inclusive=start.isoformat(),
+                    end_date_exclusive=end.isoformat(), repair=True,
+                )
+                series = provider.fetch((request,))[0]
+                if series.status != "ok" or not series.rows:
+                    raise UsPipelineError(
+                        f"price ledger fetch failed for {ticker}: {series.error_reason}")
+                payload = {
+                    "schema_version": "1.0.0", "ticker": ticker,
+                    "provider": "yfinance", "frozen_at": _utc_now(),
+                    "rows": [row.to_dict() for row in series.rows],
+                    "warnings": list(series.warnings),
+                }
+                path = ledger_dir / f"{ticker}.json"
+                write_json_atomic(path, payload)
+                hashes[ticker] = _file_hash(path)
+            manifest["ticker_sha256"] = hashes
+            manifest["extended_at"] = _utc_now()
+            manifest["extension_members"] = missing
+            write_json_atomic(manifest_path, manifest)
         verify_price_ledger(run_root)
         return manifest_path
     start = date.fromisoformat(config["start_date"]) - timedelta(days=450)
@@ -173,7 +204,8 @@ def freeze_price_ledger(*, run_root: Path) -> Path:
 def verify_price_ledger(run_root: Path) -> None:
     manifest = read_json(run_root / "ledger" / "price-ledger.json")
     expected = manifest.get("ticker_sha256", {})
-    if set(expected) != set(read_json(run_root / "run-config.json")["universe"]):
+    universe = set(read_json(run_root / "run-config.json")["universe"])
+    if not universe.issubset(expected):
         raise UsPipelineError("price ledger universe does not match the frozen run universe")
     for ticker, digest in expected.items():
         path = run_root / "ledger" / "prices" / f"{ticker}.json"
@@ -186,6 +218,42 @@ def freeze_sec_discovery_ledger(*, run_root: Path, client: SecClient) -> Path:
     payload_root = run_root / "ledger" / "sec-discovery-payloads"
     if target.exists():
         verify_sec_discovery_ledger(run_root)
+        config = read_json(run_root / "run-config.json")
+        manifest = read_json(target)
+        records = manifest.get("submissions", {})
+        missing = sorted(ticker for ticker in config["universe"] if ticker not in records)
+        if missing:
+            ticker_path = run_root / manifest["company_tickers"]["relative_path"]
+            ticker_payload = read_json(ticker_path)
+            payload_root.mkdir(parents=True, exist_ok=True)
+            for ticker in missing:
+                cik = resolve_cik(_StaticJsonClient({SEC_TICKER_URL: ticker_payload}), ticker)
+                url = f"https://data.sec.gov/submissions/CIK{cik}.json"
+                submissions = client.get_json(url)
+                path = payload_root / f"CIK{cik}.json"
+                write_json_atomic(path, submissions)
+                records[ticker] = {
+                    "cik": cik, "url": url,
+                    "relative_path": path.relative_to(run_root).as_posix(),
+                    "sha256": _file_hash(path),
+                }
+                for entry in submissions.get("filings", {}).get("files", []) or []:
+                    name = entry.get("name") if isinstance(entry, dict) else None
+                    if not name:
+                        continue
+                    page_url = f"https://data.sec.gov/submissions/{name}"
+                    page_path = payload_root / name
+                    write_json_atomic(page_path, client.get_json(page_url))
+                    records[f"{ticker}:{name}"] = {
+                        "cik": cik, "url": page_url,
+                        "relative_path": page_path.relative_to(run_root).as_posix(),
+                        "sha256": _file_hash(page_path),
+                    }
+            manifest["submissions"] = records
+            manifest["extended_at"] = _utc_now()
+            manifest["extension_members"] = missing
+            write_json_atomic(target, manifest)
+            verify_sec_discovery_ledger(run_root)
         return target
     config = read_json(run_root / "run-config.json")
     ticker_payload = client.get_json(SEC_TICKER_URL)

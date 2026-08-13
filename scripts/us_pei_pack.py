@@ -52,10 +52,43 @@ SOURCE_RUN = REPO / live_refresh.LIVE_PARENT / live_refresh.RUN_ID
 GUIDANCE = REPO / "guidance"
 CONSENSUS_DIR = REPO / "data" / "consensus"
 PEERS = REPO / "config" / "valuation" / "comparison" / "peer-universes"
+COMPANY_PEERS = REPO / "config" / "valuation" / "comparison" / "company-peer-frameworks"
+LIVE_UNIVERSE = REPO / "config" / "universes" / "us-live.json"
 OUT_ROOT = REPO / "pei"
 
 CARRY = ("earnings_estimate", "revenue_estimate", "eps_trend",
          "eps_revisions", "price_targets")
+
+TEARSHEET_FINANCIAL_METRICS = (
+    "revenue_total",
+    "gross_profit",
+    "operating_profit",
+    "net_profit_attributable_parent",
+    "eps_diluted_usc",
+    "cash_and_equivalents",
+    "financial_investments_current",
+    "total_assets",
+    "borrowings_long_term_current_portion",
+    "borrowings_long_term",
+    "total_liabilities",
+    "total_equity",
+    "cf_net_operating_activities",
+    "cf_capex_ppe_intangible",
+    "cf_dividends_paid",
+    "cf_share_repurchases",
+)
+
+TEARSHEET_EXTERNAL_GAPS = (
+    ("business_mix", "product, segment and geographic mix is not normalized in workspace artifacts"),
+    ("free_float", "no point-in-time free-float source in the workspace"),
+    ("index_membership_and_weight", "no point-in-time index constituent weight source in the workspace"),
+    ("top_holders_and_ownership_concentration", "no point-in-time ownership source in the workspace"),
+    ("passive_and_etf_ownership", "no point-in-time passive ownership source in the workspace"),
+    ("short_interest_and_borrow", "no point-in-time short-interest or borrow source in the workspace"),
+    ("factor_exposure", "no point-in-time factor model in the workspace"),
+    ("governance_detail", "no normalized board and governance dataset in the workspace"),
+    ("earnings_call_commentary", "earnings-call transcripts are not stored in the workspace"),
+)
 
 # Hangi adim hangi blogu gorur. Kaynak: skill dosyalarindaki "Relevant
 # Dependency Categories" ve "Resolve only the catalogued source categories
@@ -93,31 +126,69 @@ STEP_BLOCKS = {
 
 
 def latest_complete_month(run_root: Path) -> str:
-    """Butun evrenin degerlemesi cikmis en yeni ay.
+    """En az bir sirketi basariyla uretilmis en yeni canli kesit.
 
-    Olcu RAPOR DEGIL degerleme sonucudur: canli akis artik rapor uretmiyor
-    (paket dogrudan artifact'lerden kuruluyor) ve rapor sayan eski kural bu
-    kokte hicbir ayi tam gormezdi. Donmus backtest kokleri raporlarini
-    uretmeye devam ediyor ama onlarin da degerleme sonuclari yerinde.
+    Tek bir sirketin SEC/XBRL boslugu diger sirketlerin paketini bloke etmez.
+    Kapsam eksigi ``coverage.json`` ve pack'in ``universe_coverage`` alaninda
+    acikca tasinir; henuz hic sirket uretilmemis bir kesit kullanilmaz.
     """
-    universe = json.loads((run_root / "run-config.json").read_text())["universe"]
     months = []
     for folder in (run_root / "months").iterdir():
         marker = folder / "cutoff.json"
-        if not marker.is_file():
+        coverage_path = folder / "coverage.json"
+        if not marker.is_file() or not coverage_path.is_file():
             continue
-        cutoff = json.loads(marker.read_text(encoding="utf-8"))["cutoff_date"]
-        if live_refresh.month_is_complete(run_root=run_root, cutoff=cutoff,
-                                          universe=universe):
-            months.append((cutoff, folder.name))
+        cutoff_payload = json.loads(marker.read_text(encoding="utf-8"))
+        cutoff = cutoff_payload["cutoff_date"]
+        precedence = cutoff_payload.get("cutoff_instant") or cutoff
+        coverage = json.loads(coverage_path.read_text(encoding="utf-8"))
+        if int(coverage.get("covered") or 0) > 0:
+            months.append((precedence, folder.name))
     if not months:
-        raise SystemExit(f"{run_root}: tam ay yok")
-    # Siralama KLASOR ADIYLA degil KESIM TARIHIYLE yapilir. Kokte iki
+        raise SystemExit(f"{run_root}: kullanilabilir canli kesit yok")
+    # Siralama KLASOR ADIYLA degil KESIN CUTOFF ANIYLA yapilir. Kokte iki
     # adlandirma yan yana yasiyor: eskiden ay adiyla ("2026-08", kesimi
     # 31 Temmuz), simdi kesim adiyla ("2026-08-07"). Lexik sirada
     # "2026-08-07" > "2026-08" oldugu icin bugun dogru olan seciliyor ama
     # bu tesaduf: eski semadan kalma bir "2026-09" hepsini yenerdi.
     return max(months)[1]
+
+
+def resolve_live_month(run_root: Path, requested: str | None) -> str:
+    """Live pack her zaman eldeki en yeni kullanilabilir kesitten kurulur."""
+    latest = latest_complete_month(run_root)
+    if requested is not None and requested != latest:
+        raise SystemExit(
+            f"live pack eski kesitten uretilmez: istenen {requested}, "
+            f"en son canli kesit {latest}. Backtest/replay aracini kullanin."
+        )
+    return latest
+
+
+def set_live_decision_date(pack: dict, built_on: str) -> None:
+    """Canli pack karar tarihini kosu gunune bagla.
+
+    Kaynak finansal artifact'in tarihi ``cutoff_instant`` ve ``execution_date``
+    alanlarinda korunur. ``decision_date`` ise tarihsel artifact'ten miras
+    alinmaz; bu pack'in hangi gun karar icin uretildigini anlatir.
+    """
+    pack["decision_date"] = built_on
+
+
+def align_subset_coverage(pack: dict, keep_set: set[str]) -> None:
+    """Alt kumeye daraltilmis pack'in coverage metadatasini hizala."""
+    coverage = pack.get("universe_coverage")
+    if not isinstance(coverage, dict):
+        return
+    source_included = coverage.get("included_count")
+    if isinstance(source_included, int):
+        coverage["source_included_count"] = source_included
+    coverage["included_count"] = len(pack.get("companies") or [])
+    missing = coverage.get("missing_financial_artifacts")
+    if isinstance(missing, list):
+        coverage["missing_financial_artifacts"] = [
+            ticker for ticker in missing if ticker in keep_set
+        ]
 
 
 def latest_consensus() -> tuple[dict, str, Path]:
@@ -156,6 +227,291 @@ def attach_consensus(pack: dict, companies: dict, as_of: str) -> tuple[int, list
         }
         hit += 1
     return hit, missing
+
+
+def _load_json(path: Path) -> dict:
+    if not path.is_file():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _tearsheet_identity(run_root: Path, ticker: str) -> dict:
+    config = _load_json(REPO / "config" / "companies" / f"{ticker}.json")
+    discovery = _load_json(
+        run_root / "ledger" / "sec-discovery-payloads" /
+        f"CIK{str((config.get('sources') or {}).get('cik') or '').zfill(10)}.json"
+    )
+    if not discovery:
+        index = _load_json(run_root / "ledger" / "sec-discovery.json")
+        record = ((index.get("submissions") or {}).get(ticker) or {})
+        relative = record.get("relative_path")
+        if relative:
+            discovery = _load_json(run_root / relative)
+
+    classification = config.get("classification") or {}
+    address = (discovery.get("addresses") or {}).get("business") or {}
+    headquarters = {
+        key: address.get(key)
+        for key in ("city", "stateOrCountry", "country", "zipCode")
+        if address.get(key) is not None
+    }
+    return {
+        "legal_name": discovery.get("name") or config.get("company_name"),
+        "ticker": ticker,
+        "exchange": config.get("exchange") or next(iter(discovery.get("exchanges") or []), None),
+        "cik": str(discovery.get("cik") or "").zfill(10) or None,
+        "sic": discovery.get("sic"),
+        "sic_description": discovery.get("sicDescription"),
+        "fiscal_year_end": discovery.get("fiscalYearEnd"),
+        "headquarters": headquarters or None,
+        "sector": classification.get("official_sector"),
+        "industry": classification.get("official_industry"),
+        "subindustry": classification.get("official_subindustry"),
+        "actual_activity": classification.get("actual_activity"),
+        "classification_as_of": classification.get("classification_date"),
+        "sources": {
+            "identity": (config.get("sources") or {}).get("identity_source"),
+            "classification": (config.get("sources") or {}).get("classification_source"),
+            "sec_submissions": (
+                f"sec-submissions-{str(discovery.get('cik')).zfill(10)}"
+                if discovery.get("cik") is not None else None
+            ),
+        },
+    }
+
+
+def _metric_evidence(item: dict) -> dict:
+    provenance = item.get("provenance") or {}
+    direct = item.get("data_type") == "direct"
+    return {
+        "metric_id": item.get("metric_id"),
+        "name": item.get("name"),
+        "value": item.get("value"),
+        "unit": item.get("unit"),
+        "period": item.get("period"),
+        "comparison_value": item.get("comparison_value"),
+        "comparison_period": item.get("comparison_period"),
+        "status": item.get("status"),
+        "source": provenance.get("source_id"),
+        "source_location": {
+            key: provenance.get(key)
+            for key in ("source_file", "sheet", "cell_or_range", "page")
+            if provenance.get(key) is not None
+        } or None,
+        "evidence": "fact_source_reported" if direct else "derived_calculation",
+        "confidence": "high" if direct and provenance.get("source_id") else "medium",
+        "calculation": provenance.get("formula"),
+        "notes": provenance.get("notes"),
+    }
+
+
+def _tearsheet_reported_financials(run_root: Path, ticker: str, period: str) -> dict:
+    payload = _load_json(run_root / "data" / "financial" / ticker / f"{period}.json")
+    metrics_by_id = {
+        item.get("metric_id"): item
+        for section in ("income_statement", "balance_sheet", "cash_flow_statement")
+        for item in (payload.get(section) or [])
+        if isinstance(item, dict) and item.get("metric_id")
+    }
+    metrics = [
+        _metric_evidence(metrics_by_id[metric_id])
+        for metric_id in TEARSHEET_FINANCIAL_METRICS
+        if metric_id in metrics_by_id
+    ]
+    return {
+        "period": payload.get("period") or period,
+        "period_start": payload.get("period_start"),
+        "period_end": payload.get("period_end"),
+        "period_type": payload.get("period_type"),
+        "currency": payload.get("currency"),
+        "scale": payload.get("scale"),
+        "accounting_basis": payload.get("accounting_basis"),
+        "audit_status": payload.get("audit_status"),
+        "publication_date": payload.get("publication_date"),
+        "source_revision": payload.get("source_revision"),
+        "metrics": metrics,
+    }
+
+
+def _tearsheet_risks(run_root: Path, ticker: str, period: str) -> dict:
+    payload = _load_json(run_root / "data" / "risks" / ticker / f"{period}.json")
+    risks = []
+    for item in payload.get("risks") or []:
+        if not isinstance(item, dict):
+            continue
+        risks.append({
+            key: item.get(key)
+            for key in ("risk_id", "category", "title", "description", "direction",
+                        "severity", "severity_rationale", "time_horizon", "evidence",
+                        "mitigants", "quantified_effect", "notes")
+        })
+    return {
+        "status": payload.get("analysis_status") or "unavailable",
+        "as_of": payload.get("as_of"),
+        "scope_note": payload.get("scope_note"),
+        "risks": risks,
+    }
+
+
+def _tearsheet_sources(run_root: Path, entry: dict, identity: dict,
+                       financials: dict, risks: dict) -> list[dict]:
+    ticker = entry["ticker"]
+    manifest = _load_json(run_root / "data" / "source-manifests" / f"{ticker}.json")
+    used_ids = {
+        metric.get("source")
+        for metric in financials.get("metrics") or []
+        if metric.get("source")
+    }
+    for risk in risks.get("risks") or []:
+        for evidence in risk.get("evidence") or []:
+            if evidence.get("source_id"):
+                used_ids.add(evidence["source_id"])
+    release = entry.get("latest_earnings_release") or {}
+    if release.get("source_id"):
+        used_ids.add(release["source_id"])
+
+    sources = []
+    for item in manifest.get("sources") or []:
+        if item.get("source_id") not in used_ids:
+            continue
+        sources.append({
+            "source_id": item.get("source_id"),
+            "source_name": item.get("path"),
+            "source_type": item.get("source_type"),
+            "provider_or_owner": "SEC",
+            "as_of_date": item.get("publication_date"),
+            "period_covered": item.get("periods_covered"),
+            "source_location": item.get("path"),
+            "freshness_status": "current",
+            "sha256": item.get("sha256"),
+            "notes": item.get("notes"),
+        })
+
+    synthetic = [
+        {
+            "source_id": f"company-config-{ticker}",
+            "source_name": f"config/companies/{ticker}.json",
+            "source_type": "workspace_config",
+            "provider_or_owner": "trade_us",
+            "as_of_date": identity.get("classification_as_of"),
+            "source_location": f"config/companies/{ticker}.json",
+            "freshness_status": "current",
+        },
+        {
+            "source_id": identity.get("sources", {}).get("sec_submissions"),
+            "source_name": "SEC company submissions payload",
+            "source_type": "sec_submissions",
+            "provider_or_owner": "SEC",
+            "as_of_date": identity.get("classification_as_of"),
+            "source_location": (
+                "live/current/ledger/sec-discovery-payloads/"
+                f"CIK{identity.get('cik')}.json"
+            ),
+            "freshness_status": "current",
+        },
+        {
+            "source_id": f"market-pack-{ticker}",
+            "source_name": "point-in-time market and valuation artifacts",
+            "source_type": "workspace_market_artifacts",
+            "provider_or_owner": "trade_us pipeline",
+            "as_of_date": (
+                entry.get("market_data_as_of")
+                or entry.get("price_reconciliation", {}).get("multiples_price_as_of")
+            ),
+            "source_location": f"live/current/data/market/{ticker}",
+            "freshness_status": "current",
+        },
+    ]
+    if release.get("status") == "available":
+        synthetic.append({
+            "source_id": release.get("source_id"),
+            "source_name": f"SEC earnings release {release.get('accession')}",
+            "source_type": "sec_earnings_release",
+            "provider_or_owner": "SEC / issuer",
+            "as_of_date": release.get("filing_date"),
+            "source_location": f"guidance/{ticker}/{release.get('accession')}",
+            "freshness_status": "current",
+            "sha256": release.get("text_sha256"),
+        })
+    consensus = entry.get("consensus_estimates") or {}
+    if consensus.get("status") == "available":
+        synthetic.append({
+            "source_id": f"consensus-{ticker}",
+            "source_name": consensus.get("source"),
+            "source_type": "provider_snapshot",
+            "provider_or_owner": consensus.get("source"),
+            "as_of_date": consensus.get("as_of"),
+            "source_location": f"data/consensus/snapshot-{consensus.get('as_of')}.json",
+            "freshness_status": "current",
+        })
+    return [item for item in sources + synthetic if item.get("source_id")]
+
+
+def _tearsheet_evidence_gaps(entry: dict, identity: dict,
+                             financials: dict, risks: dict) -> list[dict]:
+    gaps = [
+        {"field": field, "status": "missing_required_source", "reason": reason}
+        for field, reason in TEARSHEET_EXTERNAL_GAPS
+    ]
+    checks = (
+        ("legal_name", identity.get("legal_name"), "company identity is unavailable"),
+        ("exchange", identity.get("exchange"), "listing venue is unavailable"),
+        ("reported_financials", financials.get("metrics"), "latest reported financial metrics are unavailable"),
+        ("risk_factors", risks.get("risks"), "normalized SEC risk factors are unavailable"),
+        ("consensus", (entry.get("consensus_estimates") or {}).get("status") == "available",
+         "current consensus snapshot is unavailable"),
+    )
+    for field, present, reason in checks:
+        if not present:
+            gaps.append({"field": field, "status": "missing_required_source", "reason": reason})
+    return gaps
+
+
+def attach_tearsheet_context(pack: dict, run_root: Path) -> None:
+    """Pack'teki mevcut repo artefaktlarini tearsheet icin kanitli hale getir."""
+    for entry in pack.get("companies") or []:
+        ticker = entry["ticker"]
+        period = entry.get("period_label")
+        identity = _tearsheet_identity(run_root, ticker)
+        financials = _tearsheet_reported_financials(run_root, ticker, period)
+        risks = _tearsheet_risks(run_root, ticker, period)
+        release = entry.get("latest_earnings_release") or {}
+        entry["identity"] = identity
+        entry["business_profile"] = {
+            "status": "partial",
+            "company_name": identity.get("legal_name"),
+            "sector": identity.get("sector"),
+            "industry": identity.get("industry"),
+            "actual_activity": identity.get("actual_activity"),
+            "latest_issuer_reported_context": {
+                "as_of": release.get("filing_date"),
+                "source": release.get("source_id"),
+                "evidence": "issuer_management_claim",
+                "confidence": "high" if release.get("status") == "available" else "low",
+                "excerpts": release.get("excerpts") or [],
+            },
+            "limitation": (
+                "Normalized product, segment and geographic mix is not available; "
+                "the external research layer may complete it."
+            ),
+        }
+        entry["reported_financials"] = financials
+        metric_map = {
+            item["metric_id"]: item
+            for item in financials.get("metrics") or []
+        }
+        entry["capital_allocation"] = {
+            "period": financials.get("period"),
+            "dividends_paid": metric_map.get("cf_dividends_paid"),
+            "share_repurchases": metric_map.get("cf_share_repurchases"),
+        }
+        entry["risk_factors"] = risks
+        entry["sources"] = _tearsheet_sources(run_root, entry, identity, financials, risks)
+        entry["evidence_gaps"] = _tearsheet_evidence_gaps(entry, identity, financials, risks)
 
 
 def attach_events(pack: dict) -> tuple[int, str | None]:
@@ -263,7 +619,7 @@ def attach_valuation_history(pack: dict, horizon: str) -> tuple[int, str | None]
 
 
 def refresh_prices(pack: dict) -> tuple[int, str | None]:
-    """Fiyati BUGUNE cek ve fiyat-tabanli carpanlari yeniden olcekle.
+    """Fiyat ve piyasa istatistiklerini son tamamlanmis seansa cek.
 
     Fiyat, donmus aylik kosunun defterinden geliyordu ve gunlerce bayat
     kalabiliyor (2026-08-09'da 5 gun; o arada piyasa ortalama %3, ORCL %13
@@ -282,14 +638,58 @@ def refresh_prices(pack: dict) -> tuple[int, str | None]:
 
     symbols = [c["ticker"] for c in pack["companies"]]
     quotes: dict[str, float] = {}
+    current_market: dict[str, dict] = {}
     try:
-        data = yf.download(symbols, period="5d", progress=False,
+        data = yf.download(symbols, period="18mo", progress=False,
                            auto_adjust=False, threads=True)["Close"]
+        volume_data = yf.download(symbols, period="18mo", progress=False,
+                                  auto_adjust=False, threads=True)["Volume"]
         for symbol in symbols:
-            column = data[symbol] if len(symbols) > 1 else data
-            series = column.dropna()
-            if len(series):
-                quotes[symbol] = float(series.iloc[-1])
+            close_column = data[symbol] if len(symbols) > 1 else data
+            volume_column = volume_data[symbol] if len(symbols) > 1 else volume_data
+            frame = close_column.to_frame("close").join(
+                volume_column.to_frame("volume"), how="left"
+            ).dropna(subset=["close"])
+            if not len(frame):
+                continue
+            quotes[symbol] = float(frame["close"].iloc[-1])
+            closes = [float(value) for value in frame["close"]]
+
+            def trailing_return(sessions: int) -> float | None:
+                if len(closes) <= sessions or closes[-sessions - 1] == 0:
+                    return None
+                return round((closes[-1] / closes[-sessions - 1] - 1) * 100, 2)
+
+            daily_returns = [
+                closes[index] / closes[index - 1] - 1
+                for index in range(1, len(closes))
+                if closes[index - 1] != 0
+            ]
+            recent_returns = daily_returns[-252:]
+            volatility = (
+                round(statistics.stdev(recent_returns) * (252 ** 0.5) * 100, 2)
+                if len(recent_returns) >= 2 else None
+            )
+            window = closes[-253:]
+            peak = window[0]
+            max_drawdown = 0.0
+            for value in window:
+                peak = max(peak, value)
+                max_drawdown = min(max_drawdown, value / peak - 1)
+            recent = frame.tail(20).dropna(subset=["volume"])
+            adv = (
+                round(float((recent["close"] * recent["volume"]).mean()) / 1_000_000, 2)
+                if len(recent) else None
+            )
+            current_market[symbol] = {
+                "return_1m_pct": trailing_return(21),
+                "return_3m_pct": trailing_return(63),
+                "return_6m_pct": trailing_return(126),
+                "return_12m_pct": trailing_return(252),
+                "annualized_volatility_pct": volatility,
+                "max_drawdown_12m_pct": round(max_drawdown * 100, 2),
+                "avg_dollar_volume_20d_usd_m": adv,
+            }
         as_of = str(data.dropna(how="all").index[-1].date())
     except Exception as exc:
         for entry in pack["companies"]:
@@ -304,6 +704,17 @@ def refresh_prices(pack: dict) -> tuple[int, str | None]:
             entry["price_refresh"] = {"status": "unavailable"}
             continue
         ratio = now / anchor
+        cutoff_market = dict(entry.get("market") or {})
+        refreshed_market = current_market.get(entry["ticker"])
+        if refreshed_market:
+            entry["market_statistics_at_cutoff"] = cutoff_market
+            entry["market_statistics_at_cutoff_as_of"] = pack["execution_date"]
+            entry["market"] = refreshed_market
+            entry["market_statistics_as_of"] = as_of
+            entry["market_statistics_refresh_status"] = "available"
+        else:
+            entry["market_statistics_as_of"] = pack["execution_date"]
+            entry["market_statistics_refresh_status"] = "unavailable"
         rescaled, left = {}, []
         for label, value in (entry.get("valuation") or {}).items():
             if not isinstance(value, (int, float)):
@@ -354,7 +765,7 @@ CONTEXT_SIGNAL = {
     "2.05": "costs associated with exit or disposal",
 }
 
-# BEKLEYEN islem: duyurulmus ama tamamlanmamis birlesme/devralma.
+# ISLEM FILING GECMISI: birlesme/devralma ile iliskili form gorulmus.
 #
 # 2.01 yalniz TAMAMLANMIS islemi yakaliyor. NSC'nin 85 milyar dolarlik
 # bekleyen birlesmesi bu yuzden pakette hic gorunmedi ve tarama onu ceyreklik
@@ -370,7 +781,7 @@ CONTEXT_SIGNAL = {
 # (birlesme vekaleti) dosyalamak ZORUNDA; bunlarin baska kullanimi yok.
 # Olculdu, ayni 24 aylik pencere: 8/60 sirket. DEFA14A bilerek DISARIDA --
 # olagan genel kurul materyali, 57/60'ta goruluyor ve sinyali yok ediyor.
-PENDING_DEAL_FORMS = ("425", "S-4", "DEFM14A", "PREM14A", "SC 13E3")
+TRANSACTION_FILING_FORMS = ("425", "S-4", "DEFM14A", "PREM14A", "SC 13E3")
 
 
 def _mark_broken_comparisons(entry: dict, high: list[dict], cutoff: date) -> None:
@@ -438,7 +849,7 @@ def flag_special_situations(pack: dict, source_run: Path,
                 continue
             if form.startswith(("10-Q/A", "10-K/A")):
                 amended.append({"date": day, "form": form})
-            if form.startswith(PENDING_DEAL_FORMS):
+            if form.startswith(TRANSACTION_FILING_FORMS):
                 deal.append({"date": day, "form": form})
             for part in (code or "").split(","):
                 part = part.strip()
@@ -458,23 +869,26 @@ def flag_special_situations(pack: dict, source_run: Path,
             proxy = any(f.startswith(("DEFM14A", "PREM14A")) for f in forms)
             registered = any(f.startswith("S-4") for f in forms)
             if proxy and not registered:
-                role, basis = "solicited its own shareholders", "filed a merger proxy (DEFM14A/PREM14A) and no S-4"
+                role, basis = "filed to solicit its own shareholders", "filed a merger proxy (DEFM14A/PREM14A) and no S-4"
             elif registered and not proxy:
-                role, basis = "registered shares to be issued", "filed an S-4 and no merger proxy"
+                role, basis = "filed to register securities for a transaction", "filed an S-4 and no merger proxy"
             else:
                 role, basis = "not determinable from form mix", "filed neither form, or both"
-            entry["pending_transaction"] = {
-                "status": "announced; no completion filing in this window",
+            entry["transaction_filing_history"] = {
+                "status": "transaction-related filing history; current status not determined",
+                "current_transaction_status": "not determined from filing-form history",
+                "verification_required": True,
                 "filing_count": len(deal),
                 "first_filing": min(d["date"] for d in deal),
                 "latest_filing": max(d["date"] for d in deal),
                 "forms": forms,
-                "role_in_transaction": role,
-                "role_basis": basis,
-                "not_in_this_pack": (
-                    "Deal terms, consideration, the counterparty, the closing "
-                    "timetable and the regulatory status. The pack carries only "
-                    "which forms were filed, how many and when."),
+                "filing_role_indicator": role,
+                "filing_role_basis": basis,
+                "not_established_by_pack": (
+                    "Whether a transaction remains pending, completed, terminated "
+                    "or superseded; deal terms, consideration, counterparty, closing "
+                    "timetable and regulatory status. Filing-form history alone does "
+                    "not establish current transaction status."),
             }
         if not (high or amended):
             if context:
@@ -777,6 +1191,118 @@ def attach_net_debt(pack: dict, source_run: Path, horizon: str) -> tuple[int, li
     return ok, missing
 
 
+def finalize_current_valuation(pack: dict) -> tuple[int, list[str]]:
+    """Guncel fiyati pack'in kanonik piyasa ve degerleme gorunumu yap.
+
+    Ozsermaye carpanlari ``refresh_prices`` tarafindan fiyat oranıyla tam
+    olarak guncellenir. Girisim-degeri carpanlari ise ancak net borc
+    eklendikten sonra tam hesaplanabilir: yeni EV / eski EV orani kullanilir.
+    Eski kesit ``*_at_cutoff`` alanlarinda korunur.
+    """
+    updated, incomplete = 0, []
+    for entry in pack.get("companies") or []:
+        refresh = entry.get("price_refresh") or {}
+        if refresh.get("status") != "available":
+            incomplete.append(entry.get("ticker"))
+            continue
+
+        valuation_at_cutoff = dict(entry.get("valuation") or {})
+        current = dict(refresh.get("valuation_at_price_now") or {})
+        debt = entry.get("net_debt") or {}
+        net_debt = debt.get("net_debt")
+        cap_at_cutoff = entry.get("market_cap_usd_m")
+        cap_now = refresh.get("market_cap_now_usd_m")
+        can_refresh_ev = (
+            isinstance(net_debt, (int, float))
+            and isinstance(cap_at_cutoff, (int, float))
+            and isinstance(cap_now, (int, float))
+            and not debt.get("may_be_only_part_of_the_debt")
+        )
+        still_stale = []
+        for label, value in valuation_at_cutoff.items():
+            if label in current:
+                continue
+            if not isinstance(value, (int, float)):
+                current[label] = None
+                continue
+            if "Enterprise Value" not in label:
+                continue
+            if not can_refresh_ev:
+                still_stale.append(label)
+                current[label] = None
+                continue
+            ev_at_cutoff = cap_at_cutoff + net_debt
+            ev_now = cap_now + net_debt
+            if ev_at_cutoff <= 0:
+                still_stale.append(label)
+                current[label] = None
+                continue
+            current[label] = round(value * ev_now / ev_at_cutoff, 4)
+
+        entry["market_at_cutoff"] = {
+            "price_usd": entry.get("closing_price_usd"),
+            "market_cap_usd_m": cap_at_cutoff,
+            "as_of": refresh.get("cutoff_price_as_of"),
+        }
+        entry["valuation_at_cutoff"] = valuation_at_cutoff
+        entry["valuation_at_cutoff_as_of"] = refresh.get("cutoff_price_as_of")
+        entry["closing_price_usd"] = refresh.get("price_now")
+        entry["market_cap_usd_m"] = cap_now
+        entry["market_data_as_of"] = refresh.get("price_as_of")
+        entry["valuation"] = current
+        entry["valuation_as_of"] = refresh.get("price_as_of")
+        refresh["valuation_at_price_now"] = current
+        refresh["not_rescaled"] = still_stale
+        refresh["not_rescaled_reason"] = (
+            "Only methods lacking a complete net-debt bridge remain at the cutoff."
+            if still_stale else None
+        )
+        refresh["method"] = (
+            "Price-based multiples use the exact price ratio; enterprise-value "
+            "multiples use exact current EV = refreshed market cap + filing-based net debt."
+        )
+        history = entry.get("own_valuation_history") or {}
+        history["history_through"] = (
+            max(history.get("span") or [None]) if history.get("span") else None
+        )
+        history["current_valuation_as_of"] = entry["valuation_as_of"]
+        for label, stats in (history.get("methods") or {}).items():
+            current_display = current.get(label)
+            if not isinstance(current_display, (int, float)):
+                stats["current_value"] = None
+                stats["current_sits"] = None
+                continue
+            current_comparable = (
+                current_display / 100 if "Yield" in label else current_display
+            )
+            if current_comparable <= stats["p25"]:
+                where = "at or below its own 25th percentile"
+            elif current_comparable <= stats["median"]:
+                where = "between its 25th percentile and median"
+            elif current_comparable <= stats["p75"]:
+                where = "between its median and 75th percentile"
+            else:
+                where = "at or above its own 75th percentile"
+            stats["historical_last_value"] = stats.pop("last_value", None)
+            stats["historical_last_sits"] = stats.pop("latest_sits", None)
+            stats["current_value"] = round(current_comparable, 6)
+            stats["current_display_value"] = current_display
+            stats["current_as_of"] = entry["valuation_as_of"]
+            stats["current_sits"] = where
+        if history:
+            history["note"] = (
+                "Historical distribution ends at history_through. current_value is "
+                "the live valuation placed against that unchanged historical distribution."
+            )
+            history["unit_warning"] = (
+                "Historical yields use fractions; current_display_value keeps the "
+                "reader-facing percentage while current_value is converted to the "
+                "historical fraction scale before current_sits is calculated."
+            )
+        updated += 1
+    return updated, [ticker for ticker in incomplete if ticker]
+
+
 DISCRETE_METRICS = {
     "revenue_total": "revenue",
     "operating_profit": "operating_income",
@@ -1025,43 +1551,165 @@ def flag_price_drift(pack: dict, consensus_as_of: str) -> tuple[int, float]:
     return drifted, worst
 
 
-def peer_block(pack: dict, ticker: str, sectors: dict[str, str]) -> dict:
-    """Hedefin kendi sektor emsalleri: ayni tanimla hesaplanmis carpanlar.
+PEER_FUNDAMENTAL_METRICS = (
+    "revenue_growth",
+    "gross_margin",
+    "operating_margin",
+    "net_margin",
+    "operating_cash_flow_margin",
+    "free_cash_flow_margin",
+    "ocf_to_net_profit",
+)
 
-    Medyan da verilir ama uyarisiyla: emsal medyanina yakinsamanin bu evrende
-    olculebilir bir ileri getiri bilgisi tasimadigi olculdu
-    (docs/us-peer-relative-multiple-result.md).
-    """
+
+def _growth_pct(record: dict, period: str) -> float | None:
+    value = (record.get(period) or {}).get("growth")
+    return round(value * 100, 2) if isinstance(value, (int, float)) else None
+
+
+def _peer_consensus_summary(entry: dict) -> dict:
+    consensus = entry.get("consensus_estimates") or {}
+    if consensus.get("status") != "available":
+        return {"status": "unavailable"}
+    revenue = consensus.get("revenue_estimate") or {}
+    earnings = consensus.get("earnings_estimate") or {}
+    revisions = consensus.get("eps_revisions") or {}
+    current_year_revisions = revisions.get("0y") or {}
+    up = current_year_revisions.get("upLast30days")
+    down = current_year_revisions.get("downLast30days")
+    return {
+        "status": "available",
+        "as_of": consensus.get("as_of"),
+        "revenue_growth_current_year_pct": _growth_pct(revenue, "0y"),
+        "revenue_growth_next_year_pct": _growth_pct(revenue, "+1y"),
+        "eps_growth_current_year_pct": _growth_pct(earnings, "0y"),
+        "eps_growth_next_year_pct": _growth_pct(earnings, "+1y"),
+        "current_year_eps_analyst_count": (earnings.get("0y") or {}).get("numberOfAnalysts"),
+        "current_year_eps_revision_net_30d": (
+            up - down if isinstance(up, (int, float)) and isinstance(down, (int, float))
+            else None
+        ),
+    }
+
+
+def _peer_snapshot(entry: dict) -> dict:
+    fundamentals = entry.get("fundamentals") or {}
+    return {
+        "ticker": entry["ticker"],
+        "as_of": {
+            "financial_period_end": entry.get("latest_period_end"),
+            "financial_publication_date": entry.get("financial_publication_date"),
+            "market": entry.get("market_data_as_of"),
+            "valuation": entry.get("valuation_as_of"),
+            "consensus": (entry.get("consensus_estimates") or {}).get("as_of"),
+        },
+        "closing_price_usd": entry.get("closing_price_usd"),
+        "market_cap_usd_m": entry.get("market_cap_usd_m"),
+        "valuation": entry.get("valuation") or {},
+        "fundamentals": {
+            metric: fundamentals.get(metric)
+            for metric in PEER_FUNDAMENTAL_METRICS
+            if isinstance(fundamentals.get(metric), (int, float))
+        },
+        "fundamentals_comparability": entry.get("fundamentals_comparability"),
+        "roic": entry.get("roic") or {"status": "unavailable"},
+        "consensus": _peer_consensus_summary(entry),
+    }
+
+
+def _peer_medians(members: list[dict]) -> dict:
+    sections: dict[str, dict[str, list[float]]] = {
+        "valuation": {}, "fundamentals": {}, "consensus": {}, "quality": {}
+    }
+    for member in members:
+        for section in ("valuation", "fundamentals", "consensus"):
+            for key, value in (member.get(section) or {}).items():
+                if isinstance(value, (int, float)) and not isinstance(value, bool):
+                    sections[section].setdefault(key, []).append(value)
+        roic = (member.get("roic") or {}).get("value_pct")
+        if isinstance(roic, (int, float)):
+            sections["quality"].setdefault("roic_pct", []).append(roic)
+    return {
+        section: {
+            key: round(statistics.median(values), 2)
+            for key, values in rows.items() if values
+        }
+        for section, rows in sections.items()
+    }
+
+
+def _company_peer_framework(pack: dict, ticker: str, path: Path) -> dict:
+    framework = json.loads(path.read_text(encoding="utf-8"))
+    if framework.get("subject_ticker") != ticker:
+        return {"status": "unavailable", "reason": "peer framework subject mismatch"}
+    index = {entry["ticker"]: entry for entry in pack["companies"]}
+    groups, all_member_tickers, missing = [], set(), []
+    for authored in framework.get("groups") or []:
+        members = []
+        absent = []
+        for member_ticker in authored.get("members") or []:
+            entry = index.get(member_ticker)
+            if entry is None:
+                absent.append(member_ticker)
+                missing.append(member_ticker)
+                continue
+            snapshot = _peer_snapshot(entry)
+            members.append(snapshot)
+            all_member_tickers.add(member_ticker)
+        groups.append({
+            "group_id": authored.get("group_id"),
+            "label": authored.get("label"),
+            "purpose": authored.get("purpose"),
+            "member_count": len(members),
+            "missing_members": absent,
+            "medians": _peer_medians(members),
+            "members": members,
+        })
+    return {
+        "status": "partial" if missing else "available",
+        "framework_type": "company_specific_multi_lens",
+        "framework_id": framework.get("artifact_id"),
+        "framework_version": framework.get("framework_version"),
+        "framework_source": str(path.relative_to(REPO)).replace("\\", "/"),
+        "effective_from": framework.get("effective_from"),
+        "methodology": framework.get("methodology"),
+        "single_combined_peer_median": False,
+        "peer_count": len(all_member_tickers),
+        "missing_numeric_peers": sorted(set(missing)),
+        "groups": groups,
+        "operational_references": framework.get("operational_references") or [],
+        "median_caveat": (
+            "Each median belongs only to its stated economic lens. Do not combine "
+            "the groups into one median and do not treat convergence as evidence "
+            "without an independent operating or fundamental justification."
+        ),
+    }
+
+
+def peer_block(pack: dict, ticker: str, sectors: dict[str, str]) -> dict:
+    """Genel altyapi; varsa hedefe ozel, yoksa sektor tabanli peer blogu."""
+    framework_path = COMPANY_PEERS / f"{ticker}.json"
+    if framework_path.is_file():
+        return _company_peer_framework(pack, ticker, framework_path)
+
     group = sectors.get(ticker)
     if not group:
         return {"status": "unavailable", "reason": "no peer group mapped"}
-    members, rows = [], {}
-    for entry in pack["companies"]:
-        if entry["ticker"] == ticker or sectors.get(entry["ticker"]) != group:
-            continue
-        members.append({
-            "ticker": entry["ticker"],
-            "closing_price_usd": entry.get("closing_price_usd"),
-            "market_cap_usd_m": entry.get("market_cap_usd_m"),
-            "valuation": entry.get("valuation"),
-        })
-        for key, value in (entry.get("valuation") or {}).items():
-            if isinstance(value, (int, float)):
-                rows.setdefault(key, []).append(value)
-    medians = {k: round(statistics.median(v), 2) for k, v in rows.items() if v}
+    members = [
+        _peer_snapshot(entry)
+        for entry in pack["companies"]
+        if entry["ticker"] != ticker and sectors.get(entry["ticker"]) == group
+    ]
     return {
         "status": "available",
+        "framework_type": "sector_fallback",
         "peer_group": group,
         "peer_group_source": "config/valuation/comparison/peer-universes",
         "peer_count": len(members),
-        "medians": medians,
+        "medians": _peer_medians(members),
         "median_caveat": (
-            "Convergence to a peer median is not evidence on its own. Ranking a "
-            "multiple inside its sector peer group carried no measurable "
-            "forward-return information across 31 cross-sections of this same "
-            "universe (mean IC -0.013, 95% upper bound +0.037). If an upside "
-            "case rests on peer convergence, say so explicitly and state what "
-            "independent evidence supports the target multiple."
+            "This is a broad sector fallback, not a claim that every member is "
+            "an operating peer. Convergence to its median is not evidence on its own."
         ),
         "members": members,
     }
@@ -1138,19 +1786,22 @@ produce.
 | layer | as of |
 |---|---|
 | this pack was built on | {built_on} |
-| financial statements | {cutoff} |
-| prices / market cap, and every multiple | {execution} |
+| financial statement period end | {financial_period_end} |
+| financial filing publication | {financial_publication_date} |
+| data eligibility cutoff | {cutoff} |
+| latest market price and canonical valuation | {price_as_of} |
+| trailing returns / volatility / ADV | {market_statistics_as_of} |
 | analyst consensus | {consensus_as_of} |
 
 Quote the correct as-of when you cite a number. Anything after these dates
 belongs to the web layer, not to the pack.
 
-`valuation` is priced as of {execution}; the consensus block is later
-({consensus_as_of}). {drift_line} For the later price, use
-`price_refresh.valuation_at_price_now` -- already rescaled, don't recompute.
-Enterprise-value multiples stay at {execution} (`price_refresh.not_rescaled`):
-EV = market cap + net debt, and debt didn't move, so a price-ratio rescale
-would be wrong, not approximate.
+`valuation` is the canonical current valuation priced as of {price_as_of}.
+`valuation_at_cutoff` preserves the original {execution} valuation snapshot.
+{drift_line} Price-based multiples are updated by the exact price ratio.
+Enterprise-value multiples are recomputed from refreshed market cap plus
+filing-based net debt; any method that cannot be refreshed remains explicitly
+listed in `price_refresh.not_rescaled` rather than silently mixed with current data.
 
 ## Names that reported after the cutoff -- read this before ranking
 
@@ -1175,12 +1826,12 @@ twelve months a company's growth rates span. Names the affected `*_growth`
 fields: they compare periods covering different businesses, neither restated.
 Single-period ratios are unaffected.
 
-`pending_transaction` -- a 425, S-4 or merger proxy filed with no completion
-filing yet. Carries form mix, count, dates, and which side of the deal the
-company is on (merger proxy = soliciting its own shareholders; S-4 =
-registering shares it would issue; 425 alone = role unknown). **Deal terms,
-consideration, counterparty, timetable, regulatory status and outcome are not
-in the pack** -- the filing count is a count.
+`transaction_filing_history` -- a 425, S-4 or merger proxy was found in the
+filing window. Carries form mix, count, dates and a form-based role indicator
+(merger proxy = soliciting its own shareholders; S-4 = registering securities;
+425 alone = role unknown). **This does not establish that a transaction is
+currently pending, completed or terminated. Deal terms, consideration,
+counterparty, timetable, regulatory status and outcome are not in the pack.**
 
 ## What is deliberately NOT in the pack
 
@@ -1230,17 +1881,21 @@ empty table.""",
 
     "comps": """Use comps-valuation for {ticker}.
 
-`sector_peers` in the pack holds the peer group and their multiples, all
-computed with one definition, plus the peer medians. Read `median_caveat`
-before you use those medians.
+`sector_peers` uses a company-specific multi-lens framework where one is
+authored; otherwise it clearly identifies a broad sector fallback. Each peer
+contains valuation, selected fundamentals, ROIC, consensus growth/revisions
+and layer-specific as-of dates.
 
-Peer selection is yours -- my grouping is a starting universe, not a
-conclusion. Say which peers you exclude and why.""",
+For a multi-lens framework use only each group's own median. Never combine the
+groups into one median. Read `purpose`, `operational_references` and
+`median_caveat` before drawing a conclusion.""",
 
     "pitch": """Use long-short-pitch for {ticker}.
 
-Build on the earlier work in this conversation; the pack is here for the
-current numbers, no new raw data is needed.
+Build on the earlier result artifacts supplied with this pack. Do not assume
+that this chat contains any prior work. If a required prior artifact was not
+supplied, name the missing artifact instead of reconstructing it from memory.
+The pack is here for the current numbers; no new raw data is needed.
 
 Every threshold must carry a number and a date. A threshold without one is not
 a threshold.""",
@@ -1266,7 +1921,11 @@ def main() -> int:
                     help="virgulle ayrilmis liste; onceki elemeden gecenler")
     ap.add_argument("--for", dest="step", default=None,
                     choices=sorted(TASKS), help="hangi adim icin talimat")
-    ap.add_argument("--month", default=None, help="varsayilan: en son tam ay")
+    ap.add_argument(
+        "--month", default=None,
+        help=("yalniz en son canli kesit kabul edilir; eski ay verilirse "
+              "live pack uretimi durur"),
+    )
     ap.add_argument("--out", default=str(OUT_ROOT))
     # Varsayilan: her sey tazelenir. Paket, uretildigi gunun verisini tasir.
     ap.add_argument("--no-refresh", action="store_true",
@@ -1297,7 +1956,7 @@ def main() -> int:
             started = time.time()
             proc = subprocess.run(
                 [sys.executable, str(REPO / "scripts" / helper),
-                 "--universe", str(REPO / "config" / "universes" / "us60.json")],
+                 "--universe", str(LIVE_UNIVERSE)],
                 capture_output=True, text=True)
             tail = (proc.stdout or "").strip().splitlines()
             print(f"{helper:28} ({time.time()-started:.0f} sn) "
@@ -1307,53 +1966,31 @@ def main() -> int:
         if outcome["skipped"]:
             print(f"  ATLANAN: {', '.join(outcome['skipped'])}", flush=True)
         print("=== tazeleme bitti ===\n", flush=True)
-    if month is None:
-        month = latest_complete_month(source_run)
+    month = resolve_live_month(source_run, month)
     print(f"kaynak: {source_run.name}/{month}   adim: {step}"
           + (f"   sirket: {ticker}" if ticker else ""))
 
     # Rapor AYRISTIRILMIYOR: paket dogrudan artifact'lerden kuruluyor.
     pack = build_pack_from_artifacts(run_root=source_run, month=month,
                                      guidance_root=GUIDANCE)
-    # Paketin bilgi ufku. Nokta-zamanli olmayan her katman buna gore
-    # kesilir ya da hic eklenmez.
+    pack["mode"] = "live"
+    pack["known_limitations"] = [
+        item for item in pack.get("known_limitations", [])
+        if item != "all knowledge and claims must be bounded by cutoff_instant"
+    ]
+    pack["known_limitations"].append(
+        "each live layer carries its own as-of date; do not apply the financial "
+        "artifact cutoff to refreshed market, consensus or event data"
+    )
+    # SEC artefaktlari icin son canli kesim. Bu script tarihsel replay yapmaz;
+    # asagidaki butun canli katmanlar kosu anindaki en yeni veriye cekilir.
     horizon = pack["cutoff_instant"][:10]
     # Paketin URETILDIGI gun; kesim (son seans) ondan farklidir.
     built_on = date.today().isoformat()
+    set_live_decision_date(pack, built_on)
     companies, consensus_as_of, consensus_path = latest_consensus()
-    # GECMISE DONUK KULLANIM KORUMASI.
-    # Konsensus, olay takvimi ve tazelenmis fiyat BUGUNUN verisidir ve hicbir
-    # gecmis vintage'i yoktur. Gecmis bir aya bunlari eklemek 19 aylik gelecegi
-    # pakete sizdirir -- ve sessizce. Once 2025-01 paketinde tam bunun oldugu
-    # goruldu: consensus_estimates 60/60 doluydu, hepsi 2026-08-09 tarihliydi.
-    is_historical = consensus_as_of > horizon and (
-        date.fromisoformat(consensus_as_of) - date.fromisoformat(horizon)).days > 14
-    if is_historical:
-        for entry in pack["companies"]:
-            entry["consensus_estimates"] = {
-                "status": "unavailable",
-                "reason": (f"no consensus vintage exists for {horizon}; the only "
-                           f"snapshot we hold is {consensus_as_of} and attaching "
-                           f"it would leak the future into a historical pack"),
-            }
-            entry["next_events"] = {
-                "status": "unavailable",
-                "reason": "forward event dates cannot be reconstructed historically",
-            }
-        pack["historical_mode"] = {
-            "cutoff": horizon,
-            "layers_withheld": ["consensus_estimates", "next_events",
-                                "price_refresh"],
-            "why": ("These layers have no point-in-time vintage. They are "
-                    "captured live and only forward. A pack built for a past "
-                    "date carries them as unavailable rather than carrying "
-                    "today's values under a past date."),
-        }
-        hit, missing = 0, list(pack["companies"] and
-                               [c["ticker"] for c in pack["companies"]])
-    else:
-        hit, missing = attach_consensus(pack, companies, consensus_as_of)
-    events_n, events_as_of = (0, None) if is_historical else attach_events(pack)
+    hit, missing = attach_consensus(pack, companies, consensus_as_of)
+    events_n, events_as_of = attach_events(pack)
     history_n, history_last = attach_valuation_history(pack, horizon)
     pack["_financial_root"] = str(source_run / "data" / "financial")
     special_n, special_names = flag_special_situations(pack, source_run)
@@ -1362,10 +1999,10 @@ def main() -> int:
     series_n, series_skipped = attach_quarterly_series(pack, source_run, horizon)
     prior_n, prior_as_of = attach_prior_consensus(pack, horizon)
     stale_n, stale_names = flag_superseded(pack, source_run)
-    # Gecmis paket bugunun fiyatini tasiyamaz.
-    priced_n, price_as_of = (0, None) if is_historical else refresh_prices(pack)
+    priced_n, price_as_of = refresh_prices(pack)
     debt_n, debt_missing = attach_net_debt(pack, source_run, horizon)
     drifted, worst = flag_price_drift(pack, consensus_as_of)
+    current_valuation_n, current_valuation_missing = finalize_current_valuation(pack)
     universe_count = pack["universe_count"]
 
     # Alt kume DARALTMASI butun bloklar eklendikten SONRA yapilir: emsal
@@ -1399,6 +2036,7 @@ def main() -> int:
         pack["companies"] = [c for c in pack["companies"] if c["ticker"] in keep_set]
         pack["universe_count"] = len(pack["companies"])
         universe_count = pack["universe_count"]
+        align_subset_coverage(pack, keep_set)
 
         # Ozet sayilar daraltmadan ONCE hesaplanmisti; oldugu gibi birakmak
         # "net borc 58/12" gibi bir satir ve teknoloji paketinde FIZZ/MNST
@@ -1419,6 +2057,16 @@ def main() -> int:
         special_n = len(special_names)
         events_n = _have("next_events")
         history_n = _have("own_valuation_history")
+        current_valuation_n = sum(
+            1 for c in here if c.get("valuation_as_of") is not None
+        )
+        current_valuation_missing = [
+            c["ticker"] for c in here if c.get("valuation_as_of") is None
+        ]
+        priced_n = sum(
+            1 for c in here
+            if (c.get("price_refresh") or {}).get("status") == "available"
+        )
         stale_names = [c["ticker"] for c in here if c.get("announced_but_not_filed")]
         stale_n = len(stale_names)
         pack["subset"] = {
@@ -1451,6 +2099,8 @@ def main() -> int:
         pack["universe_count"] = 1
         if peers is not None:
             pack["sector_peers"] = peers
+        if step == "tearsheet":
+            attach_tearsheet_context(pack, source_run)
         gap = (entry.get("price_reconciliation") or {}).get("gap_pct")
         drift_line = (f"For {ticker} the two prices differ by {gap:+.1f}%."
                       if gap is not None else
@@ -1502,6 +2152,20 @@ def main() -> int:
         missing = [c["ticker"] for c in pack["companies"]
                    if c["consensus_estimates"].get("status") != "available"]
 
+    if ticker:
+        financial_period_end = entry.get("latest_period_end") or "unavailable"
+        financial_publication_date = (
+            entry.get("financial_publication_date") or "unavailable"
+        )
+        market_statistics_as_of = (
+            entry.get("market_statistics_as_of") or "unavailable"
+        )
+    else:
+        financial_period_end = "varies by company; see latest_period_end"
+        financial_publication_date = "varies by company; see financial_publication_date"
+        market_statistics_as_of = "varies by company; see market_statistics_as_of"
+    current_market_as_of = price_as_of or pack["execution_date"]
+
     pack["pack_purpose"] = (
         "Deterministic numeric input for the ChatGPT Public Equity Investing "
         "plugin. Numbers here replace the plugin's paid data connectors; the "
@@ -1511,14 +2175,16 @@ def main() -> int:
     pack["consensus_as_of"] = consensus_as_of
     pack["intended_step"] = step
     pack["built_on"] = built_on
-    pack["last_market_session"] = pack["execution_date"]
+    pack["last_market_session"] = current_market_as_of
+    pack["market_data_as_of"] = current_market_as_of
+    pack["financial_data_cutoff"] = pack["cutoff_instant"]
 
     # Adima ait olmayan bloklari SIL. Fazladan veri masum degil: okunmayi
     # bekleyen her blok dikkati boler, ve skill zaten yalniz kendi kaynak
     # kategorilerini cozmesini soyluyor.
     # Bir blok birden fazla alan yaziyorsa hepsi birlikte gider; yoksa blok
     # kapatildiginda yetim bir uyari alani geride kalir.
-    COMPANIONS = {"special_situations": ("pending_transaction",
+    COMPANIONS = {"special_situations": ("transaction_filing_history",
                                          "fundamentals_comparability")}
     for name, keep in blocks.items():
         if keep or name == "sector_peers":
@@ -1553,6 +2219,10 @@ def main() -> int:
     (out / "instructions.md").write_text(
         HEADER.format(scope=scope, cutoff=pack["cutoff_instant"],
                       execution=pack["execution_date"],
+                      financial_period_end=financial_period_end,
+                      financial_publication_date=financial_publication_date,
+                      price_as_of=current_market_as_of,
+                      market_statistics_as_of=market_statistics_as_of,
                       consensus_as_of=consensus_as_of,
                       drift_line=drift_line, task=task, step=step,
                       mandate=mandate_block(), stale_line=stale_line,
@@ -1562,13 +2232,22 @@ def main() -> int:
     (out / "manifest.json").write_text(json.dumps({
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "built_on": built_on,
-        "last_market_session": pack["execution_date"],
+        "last_market_session": current_market_as_of,
         "intended_step": step,
         "ticker": ticker,
         "source_month": month,
         "source_run_root": SOURCE_RUN.relative_to(REPO).as_posix(),
-        "financials_as_of": pack["cutoff_instant"],
-        "prices_as_of": pack["execution_date"],
+        "financial_period_end": (entry.get("latest_period_end") if ticker else None),
+        "financial_publication_date": (
+            entry.get("financial_publication_date") if ticker else None
+        ),
+        "financial_data_cutoff": pack["cutoff_instant"],
+        "financials_as_of": (entry.get("latest_period_end") if ticker else None),
+        "prices_as_of": current_market_as_of,
+        "valuation_as_of": current_market_as_of,
+        "market_statistics_as_of": (
+            entry.get("market_statistics_as_of") if ticker else None
+        ),
         "consensus_as_of": consensus_as_of,
         "consensus_file": consensus_path.relative_to(REPO).as_posix(),
         "companies_in_pack": count,
@@ -1603,10 +2282,12 @@ def main() -> int:
               + (f"   cikarilamayan: {', '.join(debt_missing)}" if debt_missing else ""))
     print(f"  ozel durum {special_n}/{universe_count}"
           + (f"   {', '.join(special_names)}" if special_names else ""))
-    deal_names = [c["ticker"] for c in pack["companies"] if c.get("pending_transaction")]
+    deal_names = [c["ticker"] for c in pack["companies"]
+                  if c.get("transaction_filing_history")]
     broken = [c["ticker"] for c in pack["companies"] if c.get("fundamentals_comparability")]
     if deal_names:
-        print(f"  bekleyen islem {len(deal_names)}/{universe_count}   {', '.join(deal_names)}")
+        print(f"  islem filing gecmisi {len(deal_names)}/{universe_count}   "
+              f"{', '.join(deal_names)}   (guncel durum dogrulanmadi)")
     if broken:
         print(f"  kirik buyume   {len(broken)}/{universe_count}   {', '.join(broken)}"
               "   (yillik karsilastirma yapisal olayi asiyor)")
@@ -1614,9 +2295,14 @@ def main() -> int:
         print(f"  olay       {events_n}/{universe_count}   (as-of {events_as_of})")
     if blocks["own_valuation_history"]:
         print(f"  carpan gecmisi {history_n}/{universe_count}   (son {history_last})")
+    print(f"  guncel degerleme {current_valuation_n}/{universe_count}"
+          + (f"   eksik: {', '.join(current_valuation_missing)}"
+             if current_valuation_missing else ""))
     if ticker and "sector_peers" in pack:
+        framework = pack["sector_peers"].get("framework_type")
+        group = pack["sector_peers"].get("peer_group")
         print(f"  emsal      {pack['sector_peers'].get('peer_count', 0)} sirket "
-              f"({pack['sector_peers'].get('peer_group')})")
+              f"({framework or group})")
     if dropped:
         print(f"  cikarilan  {', '.join(dropped)}   (bu adima ait degil)")
     if ticker:
@@ -1627,16 +2313,22 @@ def main() -> int:
     else:
         print(f"\nACIKLADI AMA DOSYALAMADI: {stale_n}/{universe_count}"
               + (f"\n  {', '.join(stale_names)}" if stale_names else ""))
-    print(f"\nuretim gunu {built_on}   son seans {pack['execution_date']}")
+    print(f"\nuretim gunu {built_on}   son piyasa seansi {current_market_as_of}")
     print("as-of:")
     if ticker:
         own_stale = "announced_but_not_filed" in pack["companies"][0]
         note = "   ACIKLADI AMA DOSYALAMADI" if own_stale else "   guncel"
     else:
         note = f"   ({stale_n} sirket acikladi ama dosyalamadi)" if stale_n else "   guncel"
-    print(f"  finansal   {pack['cutoff_instant'][:10]}{note}")
-    print(f"  fiyat      {price_as_of or pack['execution_date']}"
+    if ticker:
+        print(f"  finansal donem sonu  {financial_period_end}{note}")
+        print(f"  finansal yayin       {financial_publication_date}")
+    else:
+        print(f"  finansal veri kesimi {pack['cutoff_instant'][:10]}{note}")
+    print(f"  fiyat/degerleme      {current_market_as_of}"
           + (f"   ({priced_n}/{universe_count} tazelendi)" if priced_n else " TAZELENEMEDI"))
+    if ticker:
+        print(f"  piyasa istatistikleri {market_statistics_as_of}")
     print(f"  konsensus  {consensus_as_of}")
     print(f"  olay       {events_as_of}")
     return 0

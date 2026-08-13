@@ -13,7 +13,6 @@ from engine.valuation.results.service import CompanyContext, generate_current_re
 from engine.technical.service import generate_technical_snapshot
 
 from .errors import UsPipelineError
-from .diagnostics import generate_us_diagnostics
 from .market import generate_us_market_snapshot, valuation_context_projection
 from .models import SecFact
 from .reporting import generate_us_valuation_report
@@ -24,7 +23,6 @@ def run_us_valuation(
     accession: str, facts: tuple[SecFact, ...], latest_period: str, fy_period: str,
     latest_period_end: date, fy_period_end: date, company_type: str, sector_module: str,
     prior_interim_period: dict[str, Any] | None = None,
-    annual_share_counts: tuple[int | None, int | None] = (None, None),
     historical_market_observation: dict[str, str] | None = None,
     filing_available_at: str | None = None,
     historical_technical_input: dict[str, Any] | None = None,
@@ -62,6 +60,7 @@ def run_us_valuation(
         data_root=workspace, ticker=ticker, as_of_date=as_of_date, cutoff_instant=cutoff_instant,
         financial_period_refs=tuple(period_refs), market_snapshot_path=market_path,
         context_projection=context_projection, catalog_registry=registry, output_dir=workspace,
+        config_root=config_root,
     )
     if not inputs_result.ok or inputs_result.valuation_inputs is None:
         raise UsPipelineError(_finding_message("valuation inputs", inputs_result.findings))
@@ -74,16 +73,6 @@ def run_us_valuation(
     )
     if not results_result.ok or results_result.artifact is None:
         raise UsPipelineError(_finding_message("valuation results", results_result.findings))
-    generate_us_diagnostics(
-        workspace=workspace,
-        ticker=ticker,
-        as_of_date=as_of_date,
-        generated_at=cutoff_instant,
-        latest_fy=fy_period,
-        valuation_inputs_path=inputs_path,
-        company_type=company_type,
-        annual_share_counts=annual_share_counts,
-    )
     _, technical_findings = generate_technical_snapshot(
         ticker=ticker,
         as_of_date=as_of_date,

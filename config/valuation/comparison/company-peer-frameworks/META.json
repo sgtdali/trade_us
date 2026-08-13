@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:META:1",
+  "subject_ticker": "META",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "blended_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "scaled_advertising_core",
+      "label": "Scaled advertising core",
+      "purpose": "Global digital advertising, AI-driven targeting, network effects and cash generation at mega-cap scale",
+      "members": ["GOOGL"]
+    },
+    {
+      "group_id": "social_ad_platforms",
+      "label": "Social and advertising platforms",
+      "purpose": "Consumer attention, social discovery, engagement and advertising monetization",
+      "members": ["PINS", "SNAP", "RDDT"]
+    },
+    {
+      "group_id": "advertising_market_context",
+      "label": "Advertising market context",
+      "purpose": "Cross-business advertising and independent ad-tech valuation context",
+      "members": ["AMZN", "TTD"]
+    },
+    {
+      "group_id": "attention_reference",
+      "label": "Consumer attention reference",
+      "purpose": "Consumer attention and engagement monetization reference; subscription-led rather than a direct advertising peer",
+      "members": ["NFLX"]
+    }
+  ],
+  "operational_references": [
+    {
+      "ticker": "BYTEDANCE",
+      "reason": "TikTok is a major operating competitor to Instagram and Reels but is private and cannot enter public-company valuation medians.",
+      "included_in_numeric_comparison": false
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "GOOGL is the primary scaled valuation peer; PINS, SNAP and RDDT provide closer social-ad business-model comparisons at materially smaller scale. Reality Labs requires separate interpretation from the core advertising franchise."
+  }
+}

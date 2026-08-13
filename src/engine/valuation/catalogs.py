@@ -5,11 +5,7 @@ the established import surface for callers.
 """
 
 from .catalog_capital import _CAPITAL_BASIS_ENTRIES
-from .catalog_comparison import (
-    _MAGIC_FORMULA_DIAGNOSTIC_ENTRY,
-    _PIOTROSKI_DIAGNOSTIC_ENTRY,
-    _RANKING_POLICY_ENTRIES,
-)
+from .catalog_comparison import _RANKING_POLICY_ENTRIES
 from .catalog_methods import _METHOD_FORMULA_ENTRIES
 from .catalog_policies import (
     _APPLICABILITY_POLICY_ENTRIES,

@@ -14,11 +14,6 @@ Bu modul ayni paketi dogrudan artifact'lerden kurar:
   valuation-inputs/<t>/<as_of>/ctx-*.json           -> fiyat, piyasa degeri
   financial/<t>/<donem>{,-derived-ratios}.json      -> donem, fundamentals
   signals/<t>/<donem>.json                          -> deterministik sinyaller
-
-Piotroski KALDIRILDI: hicbir artifact'te yok, yalniz rapor uretilirken
-hesaplaniyordu ve eklentinin 570 dosyasinin hicbirinde gecmiyor -- ne
-piotroski, ne altman, ne beneish. Kalite boyutunun istedigi her sey (marjlar,
-nakit donusumu, bilanco, ROIC) zaten ayri ayri pakette.
 """
 from __future__ import annotations
 
@@ -133,8 +128,14 @@ def _fundamentals(derived: dict | None) -> dict[str, float]:
 
 
 def _valuation(workspace: Path, ticker: str, as_of: str) -> dict[str, float | None]:
-    pattern = str(workspace / "data" / "valuation-results" / ticker / as_of
-                  / "*" / "current.json")
+    root = workspace / "data" / "valuation-results" / ticker
+    eligible = sorted(
+        path.name for path in root.iterdir()
+        if path.is_dir() and path.name <= as_of
+    ) if root.is_dir() else []
+    if not eligible:
+        return {}
+    pattern = str(root / eligible[-1] / "*" / "current.json")
     out: dict[str, float | None] = {}
     for path in glob.glob(pattern):
         try:
@@ -155,7 +156,14 @@ def _valuation(workspace: Path, ticker: str, as_of: str) -> dict[str, float | No
 
 def _price_and_cap(workspace: Path, ticker: str,
                    as_of: str) -> tuple[float | None, float | None]:
-    pattern = str(workspace / "data" / "valuation-inputs" / ticker / as_of / "*.json")
+    root = workspace / "data" / "valuation-inputs" / ticker
+    eligible = sorted(
+        path.name for path in root.iterdir()
+        if path.is_dir() and path.name <= as_of
+    ) if root.is_dir() else []
+    if not eligible:
+        return None, None
+    pattern = str(root / eligible[-1] / "*.json")
     for path in glob.glob(pattern):
         try:
             payload = json.loads(Path(path).read_text(encoding="utf-8"))
@@ -202,7 +210,10 @@ def build_pack_from_artifacts(*, run_root: Path, month: str,
                      cutoff_date=cutoff["cutoff_date"],
                      cutoff_instant=cutoff["cutoff_instant"],
                      execution_date=cutoff["execution_date"])
-    horizon = cutoff["cutoff_date"]
+    # Finansal bilgi, fiyat seansindan sonra da yayinlanabilir. Canli pack'te
+    # finansal uygunluk ufku kesin cutoff instant'in takvim gunudur; piyasa
+    # fiyatinin tarihi ayrica execution_date/cutoff_date alanlarinda kalir.
+    horizon = cutoff["cutoff_instant"][:10]
 
     companies, missing = [], []
     for ticker in config["universe"]:
@@ -233,6 +244,7 @@ def build_pack_from_artifacts(*, run_root: Path, month: str,
             "latest_reported_period": _describe_period(payload),
             "period_label": payload.get("period"),
             "latest_period_end": period_end,
+            "financial_publication_date": payload.get("publication_date"),
             "financial_age_days": age,
             "closing_price_usd": round(price, 4) if price is not None else None,
             "market_cap_usd_m": cap,
@@ -244,8 +256,22 @@ def build_pack_from_artifacts(*, run_root: Path, month: str,
             "source_ids": source_ids,
         })
 
+    coverage_path = run_root / "months" / month / "coverage.json"
+    coverage = _read_json(coverage_path) if coverage_path.is_file() else {}
+    limitations = [
+        "fixed current universe creates survivorship and universe-selection bias",
+        "historical consensus, transcripts, positioning and short-interest "
+        "vintages are unavailable",
+        "guidance is available only where a range was extracted and both "
+        "endpoints appear in the selected release",
+        "peer medians are supplied only for the comps step; do not invent them",
+        "all knowledge and claims must be bounded by cutoff_instant",
+    ]
     if missing:
-        raise RuntimeError(f"{month}: finansali okunamayan sirket: {', '.join(missing)}")
+        limitations.append(
+            "live universe coverage is partial; companies without readable "
+            "financial artifacts are excluded and named in universe_coverage"
+        )
 
     return {
         "schema_version": 2,
@@ -256,14 +282,12 @@ def build_pack_from_artifacts(*, run_root: Path, month: str,
         "cutoff_instant": plan.cutoff_instant,
         "execution_date": plan.execution_date,
         "universe_count": len(companies),
-        "known_limitations": [
-            "fixed current universe creates survivorship and universe-selection bias",
-            "historical consensus, transcripts, positioning and short-interest "
-            "vintages are unavailable",
-            "guidance is available only where a range was extracted and both "
-            "endpoints appear in the selected release",
-            "peer medians are supplied only for the comps step; do not invent them",
-            "all knowledge and claims must be bounded by cutoff_instant",
-        ],
+        "universe_coverage": {
+            "configured_count": len(config["universe"]),
+            "included_count": len(companies),
+            "missing_financial_artifacts": missing,
+            "pipeline_skipped": coverage.get("skipped") or {},
+        },
+        "known_limitations": limitations,
         "companies": companies,
     }

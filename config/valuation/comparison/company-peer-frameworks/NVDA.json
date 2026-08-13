@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:NVDA:1",
+  "subject_ticker": "NVDA",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "blended_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "ai_accelerated_compute",
+      "label": "AI accelerated compute",
+      "purpose": "Data-center accelerators, server compute, full-stack software ecosystems and AI-compute competition",
+      "members": ["AMD"]
+    },
+    {
+      "group_id": "custom_ai_silicon",
+      "label": "Custom AI silicon",
+      "purpose": "Hyperscaler custom accelerators, XPU economics and the risk of customers internalizing AI silicon",
+      "members": ["AVGO", "MRVL"]
+    },
+    {
+      "group_id": "ai_networking",
+      "label": "AI networking",
+      "purpose": "AI-cluster Ethernet, switching, optical interconnect and data-center connectivity economics",
+      "members": ["ANET", "AVGO", "MRVL"]
+    }
+  ],
+  "operational_references": [
+    {
+      "ticker": "ARM",
+      "lens_id": "compute_ip_platform",
+      "reason": "Compute architecture, IP and AI-ecosystem reference; royalty and licensing economics differ from NVIDIA and the current pipeline does not support Arm's foreign-issuer filing regime.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "TSM",
+      "lens_id": "semiconductor_supply_chain",
+      "reason": "Critical advanced-node capacity and foundry-economics reference; not an NVIDIA valuation peer and outside the current foreign-issuer filing support.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "ASML",
+      "lens_id": "semiconductor_supply_chain",
+      "reason": "Upstream AI-semiconductor capital-cycle reference; not an NVIDIA valuation peer and outside the current foreign-issuer filing support.",
+      "included_in_numeric_comparison": false
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "NVIDIA is evaluated through accelerated compute, custom silicon and AI-networking lenses rather than a broad semiconductor basket. AMD is the closest direct compute peer and Broadcom the principal custom-silicon and networking reference."
+  }
+}

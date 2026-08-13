@@ -217,7 +217,9 @@ class FinancialBasisBuilder(Protocol):
 
 
 def _load_period_contexts(
-    *, data_root: Path | None, ticker: str, financial_period_refs: tuple[FinancialPeriodRef, ...]
+    *, data_root: Path | None, ticker: str,
+    financial_period_refs: tuple[FinancialPeriodRef, ...],
+    config_root: Path | None = None,
 ) -> list[AnalysisContext]:
     if not financial_period_refs:
         raise FinancialBasisError("at least one financial_period_refs entry is required")
@@ -226,7 +228,9 @@ def _load_period_contexts(
     for ref in financial_period_refs:
         period_id = ref.source_id
         try:
-            ctx = build_context(ticker, period_id, data_root=data_root)
+            ctx = build_context(
+                ticker, period_id, data_root=data_root, config_root=config_root,
+            )
         except (ConfigError, PeriodError, UnsafePathError) as exc:
             raise FinancialBasisError(
                 f"cannot build authored context for period ref {ref.source_id!r}: {exc}"
@@ -374,6 +378,7 @@ def build_financial_basis(
     ticker: str,
     as_of_date: date,
     financial_period_refs: tuple[FinancialPeriodRef, ...],
+    config_root: Path | None = None,
 ) -> FinancialBasis:
     """Build an immutable :class:`FinancialBasis` from exact authored
     fundamental periods.
@@ -393,7 +398,10 @@ def build_financial_basis(
     reads a generated ratio/signal/summary/report file.
     """
     ticker = safe_ticker(ticker)
-    contexts = _load_period_contexts(data_root=data_root, ticker=ticker, financial_period_refs=financial_period_refs)
+    contexts = _load_period_contexts(
+        data_root=data_root, ticker=ticker,
+        financial_period_refs=financial_period_refs, config_root=config_root,
+    )
     _require_point_in_time_safe(contexts, ticker=ticker, as_of_date=as_of_date)
 
     # Balance-sheet (point-in-time) capital fields are projected from the
@@ -510,6 +518,7 @@ def build_company_specific_basis(
     ticker: str,
     as_of_date: date,
     financial_period_refs: tuple[FinancialPeriodRef, ...],
+    config_root: Path | None = None,
 ) -> CompanySpecificBasis:
     """Project the sector-module-routed company-specific operational
     fields a ``company_specific_inputs`` block may cite. Uses the same
@@ -517,7 +526,10 @@ def build_company_specific_basis(
     an implicit latest period and never fabricates a field a company's
     actual sector module does not define."""
     ticker = safe_ticker(ticker)
-    contexts = _load_period_contexts(data_root=data_root, ticker=ticker, financial_period_refs=financial_period_refs)
+    contexts = _load_period_contexts(
+        data_root=data_root, ticker=ticker,
+        financial_period_refs=financial_period_refs, config_root=config_root,
+    )
     primary_ctx = max(contexts, key=lambda c: c.direct_financials["period_end"])
     primary_ref = max(financial_period_refs, key=lambda r: r.period_end)
 

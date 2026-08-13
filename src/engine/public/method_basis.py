@@ -306,6 +306,7 @@ def build_method_basis(
     ticker: str,
     as_of_date: date,
     financial_period_refs: tuple[FinancialPeriodRef, ...],
+    config_root: Path | None = None,
 ) -> MethodBasis:
     """Build an immutable :class:`MethodBasis` from exact authored
     fundamental periods -- the same ``financial_period_refs`` a caller
@@ -313,7 +314,10 @@ def build_method_basis(
     Never reads a generated ratio/signal/summary/report file, and never
     scans for an implicit "latest" period."""
     ticker = safe_ticker(ticker)
-    contexts = _load_period_contexts(data_root=data_root, ticker=ticker, financial_period_refs=financial_period_refs)
+    contexts = _load_period_contexts(
+        data_root=data_root, ticker=ticker,
+        financial_period_refs=financial_period_refs, config_root=config_root,
+    )
     _require_point_in_time_safe(contexts, ticker=ticker, as_of_date=as_of_date)
 
     primary_ctx = max(contexts, key=lambda c: c.direct_financials["period_end"])

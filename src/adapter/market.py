@@ -182,6 +182,7 @@ def select_direct_outstanding_shares(facts: tuple[SecFact, ...], *, as_of: date)
 
 #: Kapak sayfasi hisse adedinin sinif bazinda bildirildigi eksenler.
 _CLASS_OF_STOCK_AXES = ("StatementClassOfStockAxis", "ClassOfStockAxis")
+_PLAIN_COMMON_STOCK_MEMBERS = frozenset({"CommonStockMember"})
 
 
 def _class_member(dimensions: tuple[tuple[str, str], ...]) -> str | None:
@@ -192,6 +193,21 @@ def _class_member(dimensions: tuple[tuple[str, str], ...]) -> str | None:
     if axis.rsplit("}", 1)[-1] not in _CLASS_OF_STOCK_AXES:
         return None
     return member.rsplit("}", 1)[-1]
+
+
+def _is_plain_common_stock_member(member: str) -> bool:
+    """Whether a class member represents ordinary issuer common equity.
+
+    Alphabetic common/capital classes are the long-standing multi-class SEC
+    presentation. ``us-gaap:CommonStockMember`` is the taxonomy's generic
+    common-stock member and is equally eligible. Keeping the accepted set
+    explicit prevents tracking, preferred, and redeemable classes from being
+    swept into market capitalization merely because their names contain the
+    word ``Common``.
+    """
+    return member in _PLAIN_COMMON_STOCK_MEMBERS or member.startswith(
+        ("CommonClass", "CapitalClass")
+    )
 
 
 def _combine_common_stock_classes(facts: tuple[SecFact, ...], *, as_of: date) -> SecFact:
@@ -230,16 +246,22 @@ def _combine_common_stock_classes(facts: tuple[SecFact, ...], *, as_of: date) ->
                 "cover-page share counts carry a dimension other than class of stock; "
                 f"refusing to combine: {fact.dimensions}"
             )
-        if not member.startswith("CommonClass"):
+        if not _is_plain_common_stock_member(member):
             raise FactSelectionError(
                 f"cover-page share class {member!r} is not a plain common class; classes "
                 "with a different economic claim must not be summed"
             )
-        if member in by_class and by_class[member].value != fact.value:
-            raise FactSelectionError(
-                f"conflicting cover-page share counts for {member} at {latest_date}: "
-                f"{sorted({by_class[member].value, fact.value})}"
-            )
+        if member in by_class:
+            try:
+                existing_value = Decimal(by_class[member].value)
+                candidate_value = Decimal(fact.value)
+            except InvalidOperation as exc:
+                raise FactSelectionError("SEC direct outstanding-share fact must be numeric") from exc
+            if existing_value != candidate_value:
+                raise FactSelectionError(
+                    f"conflicting cover-page share counts for {member} at {latest_date}: "
+                    f"{sorted({by_class[member].value, fact.value})}"
+                )
         by_class[member] = fact
 
     total = Decimal(0)
@@ -248,9 +270,12 @@ def _combine_common_stock_classes(facts: tuple[SecFact, ...], *, as_of: date) ->
             value = Decimal(fact.value)
         except InvalidOperation as exc:
             raise FactSelectionError("SEC direct outstanding-share fact must be numeric") from exc
-        if value <= 0 or value != value.to_integral_value():
-            raise FactSelectionError("SEC direct outstanding-share fact must be positive")
+        if value < 0 or value != value.to_integral_value():
+            raise FactSelectionError("SEC direct outstanding-share fact must be a nonnegative whole number")
         total += value
+
+    if total <= 0:
+        raise FactSelectionError("combined SEC direct outstanding-share count must be positive")
 
     reference = by_class[min(by_class)]
     # Kaynak izi tek bir context'e degil, toplama giren butun context'lere isaret

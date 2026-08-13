@@ -50,6 +50,7 @@ def generate_valuation_inputs(
     catalog_registry: CatalogRegistry,
     output_dir: Path,
     check_only: bool = False,
+    config_root: Path | None = None,
 ) -> ValuationInputsGenerationResult:
     findings: list[Finding] = []
 
@@ -80,13 +81,16 @@ def generate_valuation_inputs(
     try:
         parsed_as_of = date_type.fromisoformat(as_of_date)
         financial_basis = build_financial_basis(
-            data_root=data_root, ticker=ticker, as_of_date=parsed_as_of, financial_period_refs=financial_period_refs,
+            data_root=data_root, ticker=ticker, as_of_date=parsed_as_of,
+            financial_period_refs=financial_period_refs, config_root=config_root,
         )
         company_specific = build_company_specific_basis(
-            data_root=data_root, ticker=ticker, as_of_date=parsed_as_of, financial_period_refs=financial_period_refs,
+            data_root=data_root, ticker=ticker, as_of_date=parsed_as_of,
+            financial_period_refs=financial_period_refs, config_root=config_root,
         )
         method_basis = build_method_basis(
-            data_root=data_root, ticker=ticker, as_of_date=parsed_as_of, financial_period_refs=financial_period_refs,
+            data_root=data_root, ticker=ticker, as_of_date=parsed_as_of,
+            financial_period_refs=financial_period_refs, config_root=config_root,
         )
     except FinancialBasisError as exc:
         findings.append(Finding(rule_id="VAL-ID-101", severity="blocker", scope="bundle", reason_code="status.required_observation_missing", message=str(exc)))

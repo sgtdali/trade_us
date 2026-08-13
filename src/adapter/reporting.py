@@ -86,18 +86,6 @@ _PERCENT_POINT_PEER_METRICS = {
     "free_cash_flow_margin",
 }
 
-_PIOTROSKI_LABELS = {
-    "piot.roa_positive": "Positive return on assets",
-    "piot.cfo_positive": "Positive operating cash flow",
-    "piot.delta_roa_positive": "Improving return on assets",
-    "piot.accrual_quality": "Operating cash flow exceeds net income",
-    "piot.leverage_decreased": "Lower long-term leverage",
-    "piot.current_ratio_increased": "Improving current ratio",
-    "piot.no_external_equity_issuance": "No increase in shares outstanding",
-    "piot.gross_margin_increased": "Improving gross margin",
-    "piot.asset_turnover_increased": "Improving asset turnover",
-}
-
 _REASON_TEXT = {
     "method.canonical_ebitda_unavailable": (
         "Issuer-reported EBITDA was not available from an accession-specific filing "
@@ -156,10 +144,6 @@ def generate_us_valuation_report(
         peer_group,
         ticker,
     )
-    magic_facts_path = (
-        workspace / "data" / "diagnostic-facts" / ticker / as_of_date /
-        "magic-formula-facts.json"
-    )
     review_signal_ids = _review_required_signal_ids(deps.latest_signals)
     positive_signal_ids = _deduplicate_signal_ids(
         signal_summary.get("positive_signals", []), signal_details
@@ -206,9 +190,6 @@ def generate_us_valuation_report(
         "fiscal_year_naming_note": _fiscal_year_naming_note(
             deps.latest_financials, deps.fy_financials,
         ),
-        "magic_formula_capital": _magic_formula_capital(
-            read_json(magic_facts_path) if magic_facts_path.exists() else None
-        ),
         "metric_lineage_rows": _metric_lineage_rows(
             context["latest_lookup"], context["fy_lookup"]
         ),
@@ -220,7 +201,6 @@ def generate_us_valuation_report(
         "risk_text_en": lambda risk_id: _RISK_TEXT.get(risk_id, (risk_id.replace("_", " ").title(), "Risk disclosed in the source filing.")),
         "risk_evidence_en": _risk_evidence,
         "reason_text_en": lambda code: _REASON_TEXT.get(code, _humanize_id(code)),
-        "piotroski_label_en": lambda component_id: _PIOTROSKI_LABELS.get(component_id, _humanize_id(component_id)),
         "technical_label_en": lambda metric_id: _TECHNICAL_LABELS.get(metric_id, _humanize_id(metric_id)),
         "extraction_method_en": _extraction_method_label,
         "metric_provenance_en": _metric_provenance,
@@ -347,7 +327,6 @@ def _comparison_scope(comparison: dict[str, Any]) -> str:
 
 
 def _ordered_comparisons(comparisons: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    diagnostic_order = {"piotroski_diagnostic": 100, "magic_formula_diagnostic": 110}
     return sorted(
         [
             item for item in comparisons
@@ -358,7 +337,7 @@ def _ordered_comparisons(comparisons: list[dict[str, Any]]) -> list[dict[str, An
         key=lambda item: (
             _COMPARISON_ORDER.get(
                 _comparison_scope(item),
-                diagnostic_order.get(item.get("comparison_type", ""), 90),
+                90,
             ),
             _comparison_scope(item),
         ),
@@ -632,24 +611,6 @@ def _latest_available_annual_leases(
         "period": fy_financials.get("period"),
         "period_end": fy_financials.get("period_end"),
         "source_id": ((annual_current.get("provenance") or {}).get("source_id")),
-    }
-
-
-def _magic_formula_capital(facts: dict[str, Any] | None) -> dict[str, Any] | None:
-    if not facts:
-        return None
-    nwc = _decimal((facts.get("net_working_capital") or {}).get("value"))
-    fixed_assets = _decimal(
-        (facts.get("net_operating_fixed_assets") or {}).get("value")
-    )
-    if nwc is None or fixed_assets is None:
-        return None
-    tangible_operating_capital = (nwc + fixed_assets) / Decimal("1000000")
-    return {
-        "net_working_capital": nwc / Decimal("1000000"),
-        "net_operating_fixed_assets": fixed_assets / Decimal("1000000"),
-        "tangible_operating_capital": tangible_operating_capital,
-        "small_denominator": tangible_operating_capital < Decimal("10000"),
     }
 
 

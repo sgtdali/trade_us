@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trade-us.local/schemas/pei-workflow-event.schema.json",
+  "title": "PEI workflow event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "event_id", "event_type", "recorded_at", "run_id",
+    "ticker", "source_artifacts", "payload"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+    "event_type": {
+      "enum": [
+        "idea_run_started", "result_attached", "screen_run_recorded",
+        "candidate_screened", "workflow_requested", "workflow_prepared",
+        "workflow_completed", "waiting_for_trigger", "trigger_satisfied",
+        "manual_review_required", "candidate_deprioritized",
+        "source_interpretation_corrected", "thesis_opened", "legacy_imported"
+      ]
+    },
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+    "ticker": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[A-Z0-9.-]+$"},
+        {"type": "null"}
+      ]
+    },
+    "source_artifacts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/sourceArtifact"}
+    },
+    "payload": {"type": "object"},
+    "approval": {"$ref": "#/$defs/approval"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "candidate_screened"}}},
+      "then": {
+        "properties": {
+          "ticker": {"type": "string"},
+          "payload": {"$ref": "#/$defs/candidatePayload"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {"enum": ["workflow_requested", "workflow_prepared", "workflow_completed"]}
+        }
+      },
+      "then": {
+        "properties": {
+          "ticker": {"type": "string"},
+          "payload": {
+            "type": "object",
+            "required": ["workflow"],
+            "properties": {"workflow": {"type": "string", "minLength": 1}}
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "waiting_for_trigger"}}},
+      "then": {
+        "properties": {
+          "ticker": {"type": "string"},
+          "payload": {
+            "type": "object",
+            "required": ["triggers"],
+            "properties": {
+              "triggers": {
+                "type": "array", "minItems": 1,
+                "items": {"$ref": "#/$defs/trigger"}
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sourceArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "path", "sha256"],
+      "properties": {
+        "role": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "approved_at", "approval_mode"],
+      "properties": {
+        "status": {"const": "approved"},
+        "approved_at": {"type": "string", "format": "date-time"},
+        "approval_mode": {
+          "enum": ["system_action", "explicit_user_confirmation", "legacy_import"]
+        },
+        "note": {"type": ["string", "null"]}
+      }
+    },
+    "candidatePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bucket", "setup", "variant_wedge", "first_rejection",
+        "suggested_workflow", "mapped_workflow", "route_status"
+      ],
+      "properties": {
+        "bucket": {"enum": ["A", "B", "C", "Reject"]},
+        "setup": {"type": "string", "minLength": 1},
+        "variant_wedge": {"type": "string", "minLength": 1},
+        "first_rejection": {"type": "string", "minLength": 1},
+        "suggested_workflow": {"type": ["string", "null"]},
+        "mapped_workflow": {"type": ["string", "null"]},
+        "route_status": {"enum": ["supported", "unsupported", "not_requested"]},
+        "triggers": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/trigger"}
+        },
+        "manual_review_date": {"type": ["string", "null"], "format": "date"}
+      }
+    },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trigger_id", "type", "check_cadence", "next_check_date",
+        "on_match", "workflow"
+      ],
+      "properties": {
+        "trigger_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+        "type": {"enum": ["date_due", "event_window", "new_filing", "metric_condition"]},
+        "check_cadence": {"enum": ["daily", "weekly", "monthly", "event_driven"]},
+        "next_check_date": {"type": "string", "format": "date"},
+        "on_match": {"enum": ["request_workflow", "manual_review"]},
+        "workflow": {"type": ["string", "null"]},
+        "date": {"type": "string", "format": "date"},
+        "lead_days": {"type": "integer", "minimum": 0},
+        "metric_path": {"type": "string", "pattern": "^/"},
+        "operator": {"enum": ["<", "<=", "==", "!=", ">=", ">"]},
+        "value": {"type": ["number", "string", "boolean", "null"]},
+        "baseline": {"type": ["number", "string", "boolean", "null"]},
+        "source_path": {"type": ["string", "null"]},
+        "date_status": {"enum": ["confirmed", "estimated", "analyst_deadline"]}
+      }
+    }
+  }
+}

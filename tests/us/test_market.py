@@ -16,11 +16,14 @@ from adapter.models import SecFact
 from adapter.xbrl import _canonical_unit
 
 
-def _share_fact(value="4302549243", end_date=date(2026, 7, 27), context_id="c-21"):
+def _share_fact(
+    value="4302549243", end_date=date(2026, 7, 27), context_id="c-21",
+    dimensions=(),
+):
     return SecFact(
         namespace="http://xbrl.sec.gov/dei/2026", concept="EntityCommonStockSharesOutstanding",
         value=value, unit="shares", context_id=context_id, start_date=None, end_date=end_date,
-        dimensions=(), decimals="0", is_nil=False,
+        dimensions=dimensions, decimals="0", is_nil=False,
     )
 
 
@@ -51,6 +54,43 @@ def test_select_direct_outstanding_shares_rejects_same_date_conflict():
 
 def test_direct_share_count_accepts_integral_decimal_lexical_form():
     assert direct_share_count_as_int(_share_fact("416000000.0")) == 416000000
+
+
+def test_select_direct_outstanding_shares_combines_alphabet_capital_classes():
+    axis = "{http://xbrl.sec.gov/dei/2026}StatementClassOfStockAxis"
+    facts = (
+        _share_fact("5800000000", context_id="a", dimensions=((axis, "{x}CommonClassAMember"),)),
+        _share_fact("870000000", context_id="b", dimensions=((axis, "{x}CommonClassBMember"),)),
+        _share_fact("5700000000", context_id="c", dimensions=((axis, "{x}CapitalClassCMember"),)),
+    )
+
+    selected = select_direct_outstanding_shares(facts, as_of=date(2026, 8, 3))
+
+    assert direct_share_count_as_int(selected) == 12_370_000_000
+
+
+def test_select_direct_outstanding_shares_combines_generic_common_stock_member():
+    axis = "{http://fasb.org/us-gaap/2026}StatementClassOfStockAxis"
+    facts = (
+        _share_fact("1817146", context_id="class-a", dimensions=((axis, "{x}CommonClassAMember"),)),
+        _share_fact("101137842", context_id="common", dimensions=((axis, "{x}CommonStockMember"),)),
+        _share_fact("0", context_id="class-c", dimensions=((axis, "{x}CommonClassCMember"),)),
+    )
+
+    selected = select_direct_outstanding_shares(facts, as_of=date(2026, 8, 3))
+
+    assert direct_share_count_as_int(selected) == 102_954_988
+
+
+def test_select_direct_outstanding_shares_still_rejects_tracking_stock():
+    axis = "{http://xbrl.sec.gov/dei/2026}StatementClassOfStockAxis"
+    with pytest.raises(FactSelectionError, match="not a plain common class"):
+        select_direct_outstanding_shares(
+            (_share_fact(
+                dimensions=((axis, "{x}TrackingStockMember"),),
+            ),),
+            as_of=date(2026, 8, 3),
+        )
 
 
 def test_generate_us_market_snapshot_supports_sec_direct_share_basis(tmp_path, monkeypatch):

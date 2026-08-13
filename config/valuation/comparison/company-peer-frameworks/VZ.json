@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:VZ:1",
+  "subject_ticker": "VZ",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "blended_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "integrated_telecom",
+      "label": "Integrated telecom valuation",
+      "purpose": "Wireless and fiber convergence, network capital intensity, spectrum, leverage, dividends and free-cash-flow economics",
+      "members": ["T"]
+    },
+    {
+      "group_id": "wireless_quality_growth",
+      "label": "Wireless quality and growth",
+      "purpose": "Subscriber growth, ARPU, churn, spectrum efficiency and national wireless-network economics",
+      "members": ["TMUS"]
+    },
+    {
+      "group_id": "broadband_mobile_convergence",
+      "label": "Broadband and mobile convergence",
+      "purpose": "Fixed broadband, cable distribution and mobile-bundle competition",
+      "members": ["CHTR", "CMCSA"]
+    }
+  ],
+  "operational_references": [
+    {
+      "ticker": "BCE",
+      "lens_id": "international_integrated_telecom",
+      "reason": "Wireless, fixed broadband, dividends and capital-intensity reference; Canadian regulation and market structure make BCE unsuitable for US core medians.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "TU",
+      "lens_id": "international_integrated_telecom",
+      "reason": "TELUS provides wireless, broadband and capital-intensity context, but Canadian regulation and market structure make it unsuitable for US core medians.",
+      "included_in_numeric_comparison": false
+    }
+  ],
+  "preferred_metrics": ["EV / EBITDA", "Free Cash Flow Yield", "Net Debt / EBITDA"],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "AT&T and T-Mobile US are Verizon's true national core peers but serve different analytical roles. Charter and Comcast provide broadband-mobile convergence context; no combined peer median is appropriate."
+  }
+}

@@ -153,16 +153,16 @@ def load_report_dependencies(
     fy_risks = _load_fundamental_json(root, "data", "risks", ticker, f"{fy_period}.json")
 
     # Optional Downstream Assets:
-    # Comparison (try standard comparison types). Comparison/diagnostic
+    # Comparison (try standard comparison types). Comparison
     # artifacts key their filename on comparison_type + their own
     # independently-derived context_id (T74-B: dimensions are ticker(s) +
-    # as_of_date + purpose + diagnostic/comparison-specific facts, never the
+    # as_of_date + purpose + comparison-specific facts, never the
     # valuation-inputs context_id) -- so lookup cannot reuse `context_id`
     # the way market_snapshot/valuation_inputs do. Instead scan each
     # comparison_type directory and match on subject ticker + as_of_date.
     comparisons: list[dict[str, Any]] = []
     comparison_root = root / "data" / "valuation-comparison"
-    for comp_type in ("historical_self", "sector_peer", "piotroski_diagnostic", "magic_formula_diagnostic", "peer_groups"):
+    for comp_type in ("historical_self", "sector_peer", "peer_groups"):
         comp_type_dir = comparison_root / comp_type
         if not comp_type_dir.is_dir():
             continue

@@ -994,6 +994,7 @@ def _include_temporary_equity(
             "redeemable_noncontrolling_interests_adjustment",
             [
                 "RedeemableNoncontrollingInterestEquityCarryingAmount",
+                "RedeemableNoncontrollingInterestEquityCommonCarryingAmount",
                 "TemporaryEquityCarryingAmountAttributableToNoncontrollingInterest",
                 # A redeemable interest measured at fair value rather than
                 # carrying amount is tagged with a different element, and the
@@ -1177,8 +1178,8 @@ def _select_comparison_only(
             match = [f for f in facts
                      if f.concept == concept and not f.dimensions and not f.is_nil
                      and f.is_instant and f.end_date == candidate_date and f.unit == "USD"]
-            if len(match) == 1:
-                return None, match[0]
+            if match:
+                return None, _unique_fact(match, metric_id="temporary_equity", concept=concept)
     return None
 
 
@@ -1205,8 +1206,6 @@ def _select_temporary_equity(
             fallback = selected
         if not (_is_zero(selected[0]) and _is_zero(selected[1])):
             return selected
-    if fallback is not None:
-        return fallback
     # Kalem YALNIZ karsilastirma sutununda olabilir. Bir mezzanine satiri yil
     # icinde tamamen ortadan kalkarsa filing onu cari donem icin hic
     # etiketlemez, yalniz onceki yil icin tasir: DE'nin FY2020 10-K'si
@@ -1222,6 +1221,8 @@ def _select_temporary_equity(
     comparison_only = _select_comparison_only(facts, period_end, concepts)
     if comparison_only is not None:
         return comparison_only
+    if fallback is not None:
+        return fallback
     current = _aggregate_stock_class_facts(facts, period_end, concepts, metric_id)
     if current is None:
         return None

@@ -1,0 +1,434 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trade-us.local/schemas/pei-thesis-record.schema.json",
+  "title": "PEI thesis record draft (v1/v2)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "record_id", "thesis_id", "ticker", "recorded_at",
+    "event_type", "thesis_operation", "source_artifacts", "decision",
+    "narrative", "rules", "catalysts", "data_gaps", "unstructured_findings",
+    "pack_checks"
+  ],
+  "properties": {
+    "schema_version": {"enum": [1, 2]},
+    "record_id": {"type": "string", "pattern": "^[A-Z0-9.-]+-[A-Za-z0-9._-]+$"},
+    "thesis_id": {"type": "string", "pattern": "^[A-Z0-9.-]+-[0-9]{8}-[a-z0-9-]+$"},
+    "ticker": {"type": "string", "pattern": "^[A-Z0-9.-]+$"},
+    "recorded_at": {"type": "string", "format": "date"},
+    "event_type": {
+      "enum": ["thesis_opened", "evidence_update", "decision_update", "thesis_closed", "thesis_superseded"]
+    },
+    "thesis_operation": {
+      "enum": ["open_new", "append_existing", "supersede_existing"]
+    },
+    "supersedes_thesis_id": {"type": ["string", "null"]},
+    "source_artifacts": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/sourceArtifact"}
+    },
+    "decision": {"$ref": "#/$defs/decision"},
+    "narrative": {"$ref": "#/$defs/narrative"},
+    "rules": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/rule"}
+    },
+    "catalysts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/catalyst"}
+    },
+    "thesis_pillars": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/thesisPillar"}
+    },
+    "evidence_ledger": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidenceLedgerItem"}
+    },
+    "kpi_observations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/kpiObservation"}
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/openQuestion"}
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/scenario"}
+    },
+    "data_gaps": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "unstructured_findings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/unstructuredFinding"}
+    },
+    "pack_checks": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/packCheck"}
+    },
+    "review_items": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "record_approval": {"$ref": "#/$defs/recordApproval"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"schema_version": {"const": 2}},
+        "required": ["schema_version"]
+      },
+      "then": {
+        "required": ["thesis_pillars", "evidence_ledger", "kpi_observations", "open_questions"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "schema_version": {"const": 2},
+          "event_type": {"const": "thesis_opened"}
+        },
+        "required": ["schema_version", "event_type"]
+      },
+      "then": {
+        "properties": {
+          "thesis_pillars": {"minItems": 1},
+          "evidence_ledger": {"minItems": 1}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "schema_version": {"const": 2},
+          "event_type": {"const": "evidence_update"}
+        },
+        "required": ["schema_version", "event_type"]
+      },
+      "then": {
+        "properties": {"evidence_ledger": {"minItems": 1}}
+      }
+    }
+  ],
+  "$defs": {
+    "sourceArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "path", "sha256"],
+      "properties": {
+        "role": {"enum": ["result", "pack", "tearsheet_result", "comps_result", "other"]},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pitch_verdict", "company_thesis_status", "security_thesis_readiness",
+        "position_action", "position_status", "evidence"
+      ],
+      "properties": {
+        "pitch_verdict": {
+          "enum": ["actionable_candidate", "watchlist", "pass_for_now", "red_team_only"]
+        },
+        "company_thesis_status": {
+          "enum": ["strengthening", "intact", "watch", "impaired", "broken", "changed", "untested", "retired"]
+        },
+        "security_thesis_readiness": {
+          "enum": ["ready", "conditional", "re_underwrite", "not_decision_grade"]
+        },
+        "position_action": {
+          "enum": ["add", "press", "hold", "trim", "exit", "hedge", "wait_for_proof", "re_underwrite"]
+        },
+        "position_status": {
+          "enum": ["no_position", "starter", "active", "reduced", "closed", "unknown"]
+        },
+        "status_override_rationale": {
+          "oneOf": [
+            {"$ref": "#/$defs/sourcedText"},
+            {"type": "null"}
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/evidence"}
+        }
+      }
+    },
+    "narrative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["thesis", "variant_perception", "priced_in", "decision_rationale"],
+      "properties": {
+        "thesis": {"$ref": "#/$defs/sourcedText"},
+        "variant_perception": {"$ref": "#/$defs/sourcedText"},
+        "priced_in": {"$ref": "#/$defs/sourcedText"},
+        "decision_rationale": {"$ref": "#/$defs/sourcedText"}
+      }
+    },
+    "sourcedText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "evidence"],
+      "properties": {
+        "text": {"type": "string", "minLength": 1},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/evidence"}
+        }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric", "operator", "value", "unit"],
+      "properties": {
+        "metric": {"type": "string", "minLength": 1},
+        "operator": {"enum": ["<", "<=", "==", "!=", ">=", ">", "in", "not_in"]},
+        "value": {"type": ["number", "string", "boolean"]},
+        "unit": {"type": ["string", "null"]}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_path", "quote"],
+      "properties": {
+        "source_path": {"type": "string", "minLength": 1},
+        "heading": {"type": ["string", "null"]},
+        "quote": {"type": "string", "minLength": 12}
+      }
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id", "rule_type", "logic", "conditions", "test_date", "action",
+        "threshold_origin", "threshold_approval_status", "evidence"
+      ],
+      "properties": {
+        "rule_id": {"type": "string", "minLength": 1},
+        "rule_type": {"enum": ["entry", "add", "trim", "exit", "kill", "monitor", "no_chase", "re_underwrite"]},
+        "logic": {"enum": ["all_of", "any_of"]},
+        "conditions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/condition"}
+        },
+        "test_date": {"type": "string", "format": "date"},
+        "date_status": {"enum": ["confirmed", "estimated", "analyst_deadline"]},
+        "action": {"type": "string", "minLength": 1},
+        "threshold_origin": {
+          "enum": ["inherited_threshold", "draft_for_pm_confirmation", "approved_monitoring_rule"]
+        },
+        "threshold_approval_status": {"enum": ["pending", "approved"]},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/evidence"}
+        }
+      }
+    },
+    "catalyst": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event", "date", "date_status", "evidence"],
+      "properties": {
+        "event": {"type": "string", "minLength": 1},
+        "date": {"type": "string", "format": "date"},
+        "date_status": {"enum": ["confirmed", "estimated", "analyst_deadline"]},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      }
+    },
+    "nextProofPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "date", "date_status"],
+      "properties": {
+        "description": {"type": "string", "minLength": 1},
+        "date": {"type": "string", "format": "date"},
+        "date_status": {"enum": ["confirmed", "estimated", "analyst_deadline"]},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      }
+    },
+    "thesisPillar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pillar_id", "name", "claim", "priority", "status",
+        "linked_rule_ids", "latest_evidence_ids", "next_proof_point"
+      ],
+      "properties": {
+        "pillar_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+        "name": {"type": "string", "minLength": 1},
+        "claim": {"$ref": "#/$defs/sourcedText"},
+        "priority": {"enum": ["core", "secondary"]},
+        "status": {
+          "enum": ["strengthening", "intact", "watch", "impaired", "broken", "changed", "untested", "retired"]
+        },
+        "kpi_metrics": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "linked_rule_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "latest_evidence_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "model_linkages": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "next_proof_point": {"$ref": "#/$defs/nextProofPoint"}
+      }
+    },
+    "evidenceLedgerItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id", "observed_at", "pillar_ids", "signal", "fact",
+        "evidence", "source_type", "quality", "interpretation"
+      ],
+      "properties": {
+        "evidence_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+        "observed_at": {"type": "string", "format": "date"},
+        "period": {"type": ["string", "null"]},
+        "pillar_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "signal": {
+          "enum": [
+            "strongly_confirming", "mildly_confirming", "neutral", "mixed",
+            "mildly_weakening", "strongly_weakening", "invalidating", "untested"
+          ]
+        },
+        "fact": {"type": "string", "minLength": 1},
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "source_type": {"type": "string", "minLength": 1},
+        "quality": {"enum": ["low", "medium", "medium_high", "high"]},
+        "interpretation": {"type": "string", "minLength": 1},
+        "model_impact": {"type": ["string", "null"]},
+        "valuation_impact": {"type": ["string", "null"]},
+        "confidence_impact": {"enum": ["up", "down", "neutral", "unknown"]},
+        "action_implication": {"type": ["string", "null"]},
+        "next_step": {"type": ["string", "null"]}
+      }
+    },
+    "kpiObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_id", "kpi", "pillar_id", "period", "observed_at",
+        "current_value", "unit", "status", "trend", "evidence",
+        "linked_rule_ids", "next_proof_point"
+      ],
+      "properties": {
+        "observation_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+        "kpi": {"type": "string", "minLength": 1},
+        "pillar_id": {"type": "string", "minLength": 1},
+        "period": {"type": "string", "minLength": 1},
+        "observed_at": {"type": "string", "format": "date"},
+        "prior_value": {"type": ["number", "string", "boolean", "null"]},
+        "current_value": {"type": ["number", "string", "boolean"]},
+        "unit": {"type": ["string", "null"]},
+        "status": {"enum": ["confirming", "on_track", "watch", "warning", "break", "untested"]},
+        "trend": {"enum": ["up", "down", "flat", "mixed", "unknown"]},
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "linked_rule_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "next_proof_point": {"$ref": "#/$defs/nextProofPoint"}
+      }
+    },
+    "openQuestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question_id", "question", "pillar_ids", "decision_impact",
+        "required_source", "status"
+      ],
+      "properties": {
+        "question_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+        "question": {"type": "string", "minLength": 1},
+        "pillar_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "decision_impact": {"enum": ["blocking", "high", "medium", "low"]},
+        "required_source": {"type": "string", "minLength": 1},
+        "due_date": {"type": ["string", "null"], "format": "date"},
+        "date_status": {
+          "oneOf": [
+            {"enum": ["confirmed", "estimated", "analyst_deadline"]},
+            {"type": "null"}
+          ]
+        },
+        "status": {"enum": ["open", "answered", "deferred", "closed"]},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "probability_pct", "target_date", "target_price", "return_pct", "status"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "probability_pct": {"type": "number", "minimum": 0, "maximum": 100},
+        "target_date": {"type": "string", "format": "date"},
+        "target_price": {"type": "number"},
+        "return_pct": {"type": "number"},
+        "status": {"enum": ["analyst_assumption", "approved_house_scenario"]}
+      }
+    },
+    "unstructuredFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "evidence", "needs_review"],
+      "properties": {
+        "text": {"type": "string", "minLength": 1},
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "needs_review": {"type": "boolean"}
+      }
+    },
+    "packCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["json_pointer", "expected_value"],
+      "properties": {
+        "json_pointer": {"type": "string", "pattern": "^/"},
+        "expected_value": {"type": ["number", "string", "boolean", "null"]}
+      }
+    },
+    "recordApproval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "approved_at", "approval_mode"],
+      "properties": {
+        "status": {"const": "approved"},
+        "approved_at": {"type": "string", "format": "date-time"},
+        "approval_mode": {"const": "explicit_user_confirmation"},
+        "note": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

@@ -10,11 +10,7 @@ from typing import Any
 from ..paths import repo_path
 from .canonical import canonical_text
 from .catalog_capital import _CAPITAL_BASIS_ENTRIES
-from .catalog_comparison import (
-    _MAGIC_FORMULA_DIAGNOSTIC_ENTRY,
-    _PIOTROSKI_DIAGNOSTIC_ENTRY,
-    _RANKING_POLICY_ENTRIES,
-)
+from .catalog_comparison import _RANKING_POLICY_ENTRIES
 from .catalog_methods import _METHOD_FORMULA_ENTRIES
 from .catalog_policies import (
     _APPLICABILITY_POLICY_ENTRIES,
@@ -33,7 +29,6 @@ EFFECTIVE_FROM = "2026-07-15"
 
 _COMPARISON_CATALOG_SOURCE_ORDER: list[tuple[str, str, list[dict[str, Any]]]] = [
     ("valuation.policies.comparison_ranking", "comparison/comparison-ranking-policies.json", _RANKING_POLICY_ENTRIES),
-    ("valuation.policies.strategy_diagnostic", "comparison/strategy-diagnostic-policies.json", [_MAGIC_FORMULA_DIAGNOSTIC_ENTRY, _PIOTROSKI_DIAGNOSTIC_ENTRY]),
 ]
 
 
@@ -50,13 +45,12 @@ def build_comparison_everything() -> dict[str, dict[str, Any]]:
 
 def render_comparison_canonical_files() -> dict[str, str]:
     """Return ``{relative_filename_under_config_valuation_comparison:
-    canonical_text}`` for the T74-A comparison/diagnostic policy
-    catalogs."""
+    canonical_text}`` for the T74-A comparison policy catalog."""
     return {name: canonical_text(doc) for name, doc in build_comparison_everything().items()}
 
 
 def load_comparison_catalog_registry(*, repo_root: Path | None = None) -> "CatalogRegistry":
-    """Load and return the T74-A comparison/diagnostic policy catalogs
+    """Load and return the T74-A comparison policy catalog
     directly from ``repo_root/config/valuation/comparison`` -- entirely
     independent of :func:`load_catalog_registry`'s T70/T71 registry."""
     root = repo_root if repo_root is not None else repo_path()

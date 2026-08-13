@@ -86,6 +86,70 @@ def test_dimensionless_preferred_stock_closes_mezzanine_equity_balance_gap():
     assert by_id["equity_attributable_to_parent"]["value"] == pytest.approx(864.579)
 
 
+def test_comparison_only_temporary_equity_wins_over_zero_preferred_stock_fallback():
+    provenance = {"formula": None, "cell_or_range": "reported", "notes": "SEC fact."}
+    statements = {"balance_sheet": [
+        {"metric_id": "total_assets", "value": 3119.0, "comparison_value": 1596.467, "data_type": "direct", "provenance": dict(provenance)},
+        {"metric_id": "total_liabilities", "value": 321.0, "comparison_value": 155.897, "data_type": "direct", "provenance": dict(provenance)},
+        {"metric_id": "equity_attributable_to_parent", "value": 2798.0, "comparison_value": -412.922, "data_type": "direct", "provenance": dict(provenance)},
+        {"metric_id": "total_equity", "value": 2798.0, "comparison_value": -412.922, "data_type": "direct", "provenance": dict(provenance)},
+    ]}
+    comparison_temporary_equity = SecFact(
+            namespace="http://fasb.org/us-gaap/2024",
+            concept="TemporaryEquityCarryingAmountAttributableToParent",
+            value="1853492000", unit="USD", context_id="prior-temporary-equity",
+            start_date=None, end_date=date(2023, 12, 31), dimensions=(), is_nil=False,
+        )
+    facts = (
+        comparison_temporary_equity,
+        comparison_temporary_equity,
+        SecFact(
+            namespace="http://fasb.org/us-gaap/2024", concept="PreferredStockValue",
+            value="0", unit="USD", context_id="current-preferred",
+            start_date=None, end_date=date(2024, 12, 31), dimensions=(), is_nil=False,
+        ),
+        SecFact(
+            namespace="http://fasb.org/us-gaap/2024", concept="PreferredStockValue",
+            value="0", unit="USD", context_id="prior-preferred",
+            start_date=None, end_date=date(2023, 12, 31), dimensions=(), is_nil=False,
+        ),
+    )
+
+    _include_temporary_equity(
+        statements=statements, selected_evidence=[], facts=facts,
+        period_end=date(2024, 12, 31), fiscal_period="FY",
+    )
+
+    by_id = {row["metric_id"]: row for row in statements["balance_sheet"]}
+    assert by_id["total_equity"]["value"] == 2798.0
+    assert by_id["total_equity"]["comparison_value"] == pytest.approx(1440.57)
+
+
+def test_redeemable_common_noncontrolling_interest_closes_balance_gap():
+    provenance = {"formula": None, "cell_or_range": "reported", "notes": "SEC fact."}
+    statements = {"balance_sheet": [
+        {"metric_id": "total_assets", "value": 122757, "comparison_value": None, "data_type": "direct", "provenance": dict(provenance)},
+        {"metric_id": "total_liabilities", "value": 76285, "comparison_value": None, "data_type": "direct", "provenance": dict(provenance)},
+        {"metric_id": "noncontrolling_interests", "value": 1081, "comparison_value": None, "data_type": "direct", "provenance": dict(provenance)},
+        {"metric_id": "total_equity", "value": 46307, "comparison_value": None, "data_type": "direct", "provenance": dict(provenance)},
+    ]}
+    redeemable_nci = SecFact(
+        namespace="http://fasb.org/us-gaap/2024",
+        concept="RedeemableNoncontrollingInterestEquityCommonCarryingAmount",
+        value="165000000", unit="USD", context_id="redeemable-nci",
+        start_date=None, end_date=date(2023, 12, 31), dimensions=(), is_nil=False,
+    )
+
+    _include_temporary_equity(
+        statements=statements, selected_evidence=[], facts=(redeemable_nci,),
+        period_end=date(2023, 12, 31), fiscal_period="FY",
+    )
+
+    by_id = {row["metric_id"]: row for row in statements["balance_sheet"]}
+    assert by_id["total_equity"]["value"] == 46472
+    assert by_id["noncontrolling_interests"]["value"] == 1246
+
+
 def test_preferred_stock_is_not_double_counted_when_balance_sheet_already_balances():
     provenance = {"formula": None, "cell_or_range": "reported", "notes": "SEC fact."}
     statements = {"balance_sheet": [

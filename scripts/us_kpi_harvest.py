@@ -148,7 +148,7 @@ def harvest(text: str, source_id: str, limit: int) -> list[dict]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--universe",
-                    default=str(REPO / "config" / "universes" / "us60.json"))
+                    default=str(REPO / "config" / "universes" / "us-live.json"))
     ap.add_argument("--only", default=None, help="tek ticker")
     ap.add_argument("--limit", type=int, default=400, help="dosya basina aday tavani")
     ap.add_argument("--head", type=int, default=14000,

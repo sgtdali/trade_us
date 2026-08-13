@@ -13,16 +13,11 @@ from ..identity import derive_artifact_id, derive_context_id
 
 COMPARISON_SCHEMA_VERSION = "1.0.0"
 
-_DIAGNOSTIC_TYPES = frozenset({"piotroski_diagnostic", "magic_formula_diagnostic"})
-
-
 def derive_comparison_status(comparison_type: str, eligibility_state: str | None) -> tuple[str, bool, bool]:
     """Map an engine's eligibility outcome to the schema's closed
     ``status.state`` vocabulary plus ``canonical_statistic_available``/
     ``ranking_available`` -- never a stored claim the engine itself
     *correctly computed* ``insufficient_data`` status, not a failure)."""
-    if comparison_type in _DIAGNOSTIC_TYPES:
-        return "diagnostic_only", True, False
     mapping = {"eligible": "available", "provisional": "provisional", "excluded_insufficient_data": "insufficient_data"}
     state = mapping[eligibility_state]  # type: ignore[index]
     canonical_statistic_available = eligibility_state == "eligible"
@@ -80,7 +75,7 @@ def assemble_valuation_comparison(
 
     state, canonical_statistic_available, ranking_available = derive_comparison_status(comparison_type, eligibility_state)
     publication_eligible = state in ("available",)
-    current_use_eligible = state in ("available", "provisional", "diagnostic_only")
+    current_use_eligible = state in ("available", "provisional")
 
     status = {
         "state": state, "reason_records": [dict(r) for r in status_reason_records],

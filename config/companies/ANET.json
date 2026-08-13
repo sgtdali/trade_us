@@ -1,0 +1,8 @@
+{
+  "schema_version": 1, "ticker": "ANET", "exchange": "NYSE",
+  "company_name": "Arista Networks, Inc.", "reporting_locale": "tr-TR",
+  "classification": {"source": "SEC", "official_sector": "Technology", "official_industry": "Communication Equipment", "official_subindustry": null, "actual_activity": "Cloud and AI Data-Center Networking", "classification_date": "2026-08-12"},
+  "pipeline": {"company_type": "standard_corporate", "sector_module": "generic"},
+  "sources": {"identity_source": "SEC submissions", "classification_source": "SEC"},
+  "version": 1, "is_active": true
+}

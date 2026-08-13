@@ -35,6 +35,7 @@ class AnalysisContext:
     operational_data: dict | None
     authored_risks: dict | None
     data_root: Path | None = None
+    config_root: Path | None = None
 
     @property
     def company_type(self) -> str:
@@ -102,6 +103,7 @@ def build_context(
         operational_data=_maybe_read("data", "operational", ticker, f"{period_id}.json", root=data_root),
         authored_risks=_maybe_read("data", "risks", ticker, f"{period_id}.json", root=data_root),
         data_root=data_root,
+        config_root=config_root,
     )
 
 

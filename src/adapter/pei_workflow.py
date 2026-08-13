@@ -1,0 +1,905 @@
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from datetime import date, datetime, timedelta, timezone
+from pathlib import Path
+from typing import Any, Callable, Iterable
+
+import jsonschema
+
+
+class PeiWorkflowError(RuntimeError):
+    pass
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def sha256_path(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def write_text_atomic(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(text)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+
+def safe_repo_path(repo_root: Path, relative: str) -> Path:
+    supplied = Path(relative)
+    if supplied.is_absolute() or ".." in supplied.parts:
+        raise PeiWorkflowError(f"repo-relative path required: {relative!r}")
+    resolved = (repo_root / supplied).resolve()
+    try:
+        resolved.relative_to(repo_root.resolve())
+    except ValueError as exc:
+        raise PeiWorkflowError(f"path escapes repository: {relative!r}") from exc
+    return resolved
+
+
+def repo_relative(repo_root: Path, path: Path) -> str:
+    try:
+        return path.resolve().relative_to(repo_root.resolve()).as_posix()
+    except ValueError as exc:
+        raise PeiWorkflowError(f"path is outside repository: {path}") from exc
+
+
+def load_catalog(repo_root: Path) -> dict[str, Any]:
+    path = repo_root / "config" / "pei-workflows.json"
+    try:
+        catalog = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise PeiWorkflowError(f"workflow catalog cannot be read: {exc}") from exc
+    workflows = catalog.get("workflows")
+    if catalog.get("schema_version") != 1 or not isinstance(workflows, dict):
+        raise PeiWorkflowError("workflow catalog has an unsupported shape")
+    for name, definition in workflows.items():
+        if not isinstance(definition, dict):
+            raise PeiWorkflowError(f"workflow definition must be an object: {name}")
+        for dependency in definition.get("required_workflows", []):
+            if dependency not in workflows:
+                raise PeiWorkflowError(f"unknown prerequisite {dependency!r} for {name!r}")
+    return catalog
+
+
+def load_event_schema(repo_root: Path) -> dict[str, Any]:
+    path = repo_root / "schemas" / "pei-workflow-event.schema.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def schema_errors(event: dict[str, Any], repo_root: Path) -> list[str]:
+    validator = jsonschema.Draft202012Validator(
+        load_event_schema(repo_root), format_checker=jsonschema.FormatChecker(),
+    )
+    errors = []
+    for error in sorted(validator.iter_errors(event), key=lambda item: list(item.absolute_path)):
+        location = "/" + "/".join(str(part) for part in error.absolute_path)
+        errors.append(f"schema {location}: {error.message}")
+    return errors
+
+
+def events_path(repo_root: Path) -> Path:
+    return repo_root / "data" / "pei-workflow" / "events.jsonl"
+
+
+def read_events(repo_root: Path, ledger_path: Path | None = None) -> list[dict[str, Any]]:
+    path = ledger_path or events_path(repo_root)
+    if not path.exists():
+        return []
+    events: list[dict[str, Any]] = []
+    ids: set[str] = set()
+    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise PeiWorkflowError(f"invalid workflow JSON at {path}:{line_number}") from exc
+        if not isinstance(event, dict):
+            raise PeiWorkflowError(f"workflow event is not an object at {path}:{line_number}")
+        errors = schema_errors(event, repo_root)
+        if errors:
+            raise PeiWorkflowError(f"invalid workflow event at {path}:{line_number}: {errors[0]}")
+        event_id = event["event_id"]
+        if event_id in ids:
+            raise PeiWorkflowError(f"duplicate event_id in workflow ledger: {event_id}")
+        ids.add(event_id)
+        events.append(event)
+    return events
+
+
+def make_event(
+    *,
+    event_id: str,
+    event_type: str,
+    run_id: str,
+    ticker: str | None,
+    payload: dict[str, Any],
+    source_artifacts: list[dict[str, Any]] | None = None,
+    recorded_at: str | None = None,
+) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "event_id": event_id,
+        "event_type": event_type,
+        "recorded_at": recorded_at or utc_now(),
+        "run_id": run_id,
+        "ticker": ticker,
+        "source_artifacts": source_artifacts or [],
+        "payload": payload,
+    }
+
+
+def approve_system_event(event: dict[str, Any], *, mode: str = "system_action", note: str | None = None) -> dict[str, Any]:
+    approved = dict(event)
+    approved["approval"] = {
+        "status": "approved",
+        "approved_at": utc_now(),
+        "approval_mode": mode,
+        "note": note,
+    }
+    return approved
+
+
+def _load_draft_events(draft_path: Path) -> tuple[bytes, list[dict[str, Any]]]:
+    payload = draft_path.read_bytes()
+    decoded = json.loads(payload.decode("utf-8"))
+    if isinstance(decoded, dict) and isinstance(decoded.get("events"), list):
+        values = decoded["events"]
+    elif isinstance(decoded, list):
+        values = decoded
+    elif isinstance(decoded, dict):
+        values = [decoded]
+    else:
+        raise PeiWorkflowError("draft must be an event, an event array, or an object with events")
+    if not all(isinstance(item, dict) for item in values):
+        raise PeiWorkflowError("every draft event must be an object")
+    return payload, values
+
+
+def validate_draft(
+    draft_path: Path,
+    *,
+    repo_root: Path,
+    ledger_path: Path | None = None,
+) -> dict[str, Any]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    try:
+        draft_bytes, draft_events = _load_draft_events(draft_path)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, PeiWorkflowError) as exc:
+        return {
+            "status": "rejected", "draft": str(draft_path), "draft_sha256": None,
+            "errors": [f"draft cannot be read: {exc}"], "warnings": [],
+            "checked_at": utc_now(),
+        }
+
+    try:
+        existing = read_events(repo_root, ledger_path)
+        catalog = load_catalog(repo_root)["workflows"]
+    except PeiWorkflowError as exc:
+        errors.append(str(exc))
+        existing, catalog = [], {}
+
+    known_ids = {item["event_id"] for item in existing}
+    draft_ids: set[str] = set()
+    existing_result_hashes = {
+        artifact["sha256"]
+        for event in existing if event.get("event_type") == "result_attached"
+        for artifact in event.get("source_artifacts", []) if artifact.get("role") == "result"
+    }
+    draft_result_hashes: set[str] = set()
+    manual_review_tickers = {
+        (event.get("run_id"), event.get("ticker"))
+        for event in draft_events if event.get("event_type") == "manual_review_required"
+    }
+
+    def validate_trigger(trigger: dict[str, Any], trigger_prefix: str) -> None:
+        trigger_workflow = trigger.get("workflow")
+        if trigger_workflow is not None and trigger_workflow not in catalog:
+            errors.append(f"{trigger_prefix}: unsupported workflow: {trigger_workflow!r}")
+        trigger_type = trigger.get("type")
+        if trigger_type in {"new_filing", "metric_condition"} and not trigger.get("metric_path"):
+            errors.append(f"{trigger_prefix}: {trigger_type} requires metric_path")
+        if trigger_type == "new_filing" and "baseline" not in trigger:
+            errors.append(f"{trigger_prefix}: new_filing requires baseline")
+        if trigger_type == "metric_condition" and (
+            not trigger.get("operator") or "value" not in trigger
+        ):
+            errors.append(f"{trigger_prefix}: metric_condition requires operator and value")
+        if trigger_type == "event_window" and not trigger.get("date"):
+            errors.append(f"{trigger_prefix}: event_window requires date")
+
+    for index, event in enumerate(draft_events):
+        prefix = f"events/{index}"
+        if "approval" in event:
+            errors.append(f"{prefix}: draft event must not contain approval metadata")
+        for error in schema_errors(event, repo_root):
+            errors.append(f"{prefix}: {error}")
+        event_id = event.get("event_id")
+        if isinstance(event_id, str):
+            if event_id in known_ids or event_id in draft_ids:
+                errors.append(f"{prefix}: duplicate event_id: {event_id}")
+            draft_ids.add(event_id)
+
+        for artifact in event.get("source_artifacts", []):
+            if not isinstance(artifact, dict) or not isinstance(artifact.get("path"), str):
+                continue
+            try:
+                path = safe_repo_path(repo_root, artifact["path"])
+            except PeiWorkflowError as exc:
+                errors.append(f"{prefix}: {exc}")
+                continue
+            if not path.is_file():
+                errors.append(f"{prefix}: source artifact does not exist: {artifact['path']}")
+                continue
+            if sha256_path(path) != artifact.get("sha256"):
+                errors.append(f"{prefix}: source hash mismatch: {artifact['path']}")
+            if event.get("event_type") == "result_attached" and artifact.get("role") == "result":
+                digest = artifact.get("sha256")
+                if digest in existing_result_hashes or digest in draft_result_hashes:
+                    errors.append(f"{prefix}: result artifact has already been attached")
+                draft_result_hashes.add(digest)
+
+        payload = event.get("payload") or {}
+        workflow = payload.get("workflow")
+        if event.get("event_type") in {
+            "workflow_requested", "workflow_prepared", "workflow_completed", "trigger_satisfied",
+        } and workflow not in catalog:
+            errors.append(f"{prefix}: unsupported workflow: {workflow!r}")
+        if event.get("event_type") == "candidate_screened":
+            mapped = payload.get("mapped_workflow")
+            route_status = payload.get("route_status")
+            if mapped is not None and mapped not in catalog:
+                errors.append(f"{prefix}: mapped_workflow is not in the catalog: {mapped!r}")
+            if route_status == "supported" and mapped is None:
+                errors.append(f"{prefix}: supported route requires mapped_workflow")
+            if route_status != "supported" and mapped is not None:
+                errors.append(f"{prefix}: non-supported route cannot carry mapped_workflow")
+            if payload.get("bucket") == "B":
+                has_trigger = bool(payload.get("triggers"))
+                has_review = bool(payload.get("manual_review_date")) or (
+                    event.get("run_id"), event.get("ticker")
+                ) in manual_review_tickers
+                if not has_trigger and not has_review:
+                    errors.append(f"{prefix}: B candidate needs a trigger or dated manual review")
+            for trigger_index, trigger in enumerate(payload.get("triggers") or []):
+                validate_trigger(trigger, f"{prefix}/payload/triggers/{trigger_index}")
+        elif event.get("event_type") == "waiting_for_trigger":
+            for trigger_index, trigger in enumerate(payload.get("triggers") or []):
+                validate_trigger(trigger, f"{prefix}/payload/triggers/{trigger_index}")
+
+        transition_state = project([*existing, *draft_events[:index]])
+        if isinstance(event.get("ticker"), str):
+            transition_key = f"{event.get('run_id')}:{event.get('ticker')}"
+            before = transition_state["candidates"].get(transition_key)
+            if event.get("event_type") == "workflow_completed":
+                if before is None or before.get("state") != "in_progress":
+                    errors.append(f"{prefix}: workflow_completed requires an in_progress candidate")
+                elif before.get("next_workflow") != payload.get("workflow"):
+                    errors.append(f"{prefix}: completed workflow does not match prepared workflow")
+            if event.get("event_type") == "trigger_satisfied" and (
+                before is None or before.get("state") != "waiting"
+            ):
+                errors.append(f"{prefix}: trigger_satisfied requires a waiting candidate")
+
+    status = "rejected" if errors else ("valid_with_review" if warnings else "valid")
+    return {
+        "status": status,
+        "draft": str(draft_path),
+        "draft_sha256": hashlib.sha256(draft_bytes).hexdigest(),
+        "event_count": len(draft_events),
+        "errors": errors,
+        "warnings": warnings,
+        "checked_at": utc_now(),
+    }
+
+
+def append_events(
+    events: Iterable[dict[str, Any]],
+    *,
+    repo_root: Path,
+    ledger_path: Path | None = None,
+) -> Path:
+    path = ledger_path or events_path(repo_root)
+    existing = read_events(repo_root, path)
+    existing_ids = {item["event_id"] for item in existing}
+    additions = list(events)
+    addition_ids: set[str] = set()
+    for event in additions:
+        errors = schema_errors(event, repo_root)
+        if errors:
+            raise PeiWorkflowError("event fails schema: " + "; ".join(errors))
+        if event.get("approval", {}).get("status") != "approved":
+            raise PeiWorkflowError("only approved workflow events may be appended")
+        event_id = event["event_id"]
+        if event_id in existing_ids or event_id in addition_ids:
+            raise PeiWorkflowError(f"duplicate event_id: {event_id}")
+        addition_ids.add(event_id)
+    lines = [json.dumps(item, ensure_ascii=False, separators=(",", ":")) for item in existing + additions]
+    write_text_atomic(path, "\n".join(lines) + ("\n" if lines else ""))
+    return path
+
+
+def approve_draft(
+    draft_path: Path,
+    *,
+    repo_root: Path,
+    ledger_path: Path | None = None,
+    allow_review: bool = False,
+    note: str | None = None,
+    approval_mode: str = "explicit_user_confirmation",
+) -> Path:
+    report = validate_draft(draft_path, repo_root=repo_root, ledger_path=ledger_path)
+    if report["status"] == "rejected":
+        raise PeiWorkflowError("draft is rejected: " + "; ".join(report["errors"]))
+    if report["status"] == "valid_with_review" and not allow_review:
+        raise PeiWorkflowError("draft requires explicit review acceptance")
+    _, draft_events = _load_draft_events(draft_path)
+    approved = []
+    approved_at = utc_now()
+    for event in draft_events:
+        item = dict(event)
+        item["approval"] = {
+            "status": "approved",
+            "approved_at": approved_at,
+            "approval_mode": approval_mode,
+            "note": note,
+        }
+        approved.append(item)
+    return append_events(approved, repo_root=repo_root, ledger_path=ledger_path)
+
+
+def _candidate_default(run_id: str, ticker: str) -> dict[str, Any]:
+    return {
+        "run_id": run_id,
+        "ticker": ticker,
+        "state": "screened",
+        "bucket": None,
+        "setup": None,
+        "variant_wedge": None,
+        "first_rejection": None,
+        "suggested_workflow": None,
+        "next_workflow": None,
+        "target_workflow": None,
+        "triggers": [],
+        "manual_review_date": None,
+        "status_reason": None,
+        "completed_workflows": [],
+        "corrections": [],
+        "last_event_at": None,
+    }
+
+
+def project(events: Iterable[dict[str, Any]]) -> dict[str, Any]:
+    state: dict[str, Any] = {"runs": {}, "candidates": {}, "work_items": {}, "last_event_at": None}
+    for event in events:
+        run_id = event["run_id"]
+        ticker = event.get("ticker")
+        event_type = event["event_type"]
+        payload = event.get("payload") or {}
+        state["last_event_at"] = event["recorded_at"]
+        run = state["runs"].setdefault(run_id, {
+            "run_id": run_id, "state": "unknown", "artifact_dir": None,
+            "tickers": [], "result_path": None, "last_event_at": None,
+        })
+        run["last_event_at"] = event["recorded_at"]
+        if event_type in {"idea_run_started", "legacy_imported"}:
+            run.update({
+                "state": payload.get("state", "waiting_for_result"),
+                "artifact_dir": payload.get("artifact_dir"),
+                "tickers": payload.get("tickers", run["tickers"]),
+            })
+        elif event_type == "result_attached" and ticker is None:
+            run["state"] = "result_attached"
+            run["result_path"] = payload.get("result_path")
+        elif event_type == "screen_run_recorded":
+            run["state"] = "screen_recorded"
+
+        if ticker is None:
+            continue
+        key = f"{run_id}:{ticker}"
+        candidate = state["candidates"].setdefault(key, _candidate_default(run_id, ticker))
+        candidate["last_event_at"] = event["recorded_at"]
+        if event_type == "candidate_screened":
+            candidate.update({
+                "bucket": payload.get("bucket"),
+                "setup": payload.get("setup"),
+                "variant_wedge": payload.get("variant_wedge"),
+                "first_rejection": payload.get("first_rejection"),
+                "suggested_workflow": payload.get("suggested_workflow"),
+                "target_workflow": payload.get("mapped_workflow"),
+                "triggers": payload.get("triggers", []),
+                "manual_review_date": payload.get("manual_review_date"),
+            })
+            bucket = payload.get("bucket")
+            if bucket == "A":
+                candidate["next_workflow"] = payload.get("mapped_workflow")
+                candidate["state"] = "ready" if payload.get("mapped_workflow") else "blocked"
+                candidate["status_reason"] = (
+                    None if payload.get("mapped_workflow") else
+                    f"unsupported route: {payload.get('suggested_workflow')}"
+                )
+            elif bucket == "B":
+                candidate["next_workflow"] = None
+                candidate["state"] = "waiting" if (
+                    payload.get("triggers") or payload.get("manual_review_date")
+                ) else "blocked"
+                candidate["status_reason"] = (
+                    f"manual review due {payload.get('manual_review_date')}"
+                    if payload.get("manual_review_date") else "waiting for trigger"
+                )
+            else:
+                candidate["next_workflow"] = None
+                candidate["state"] = "deprioritized"
+                candidate["status_reason"] = "deprioritized until a later screen"
+        elif event_type == "workflow_requested":
+            candidate["state"] = "ready"
+            candidate["next_workflow"] = payload.get("workflow")
+            candidate["target_workflow"] = payload.get("workflow")
+        elif event_type == "workflow_prepared":
+            candidate["state"] = "in_progress"
+            candidate["next_workflow"] = payload.get("workflow")
+            candidate["target_workflow"] = payload.get("requested_workflow", payload.get("workflow"))
+            work_item_id = payload.get("work_item_id")
+            if work_item_id:
+                state["work_items"][work_item_id] = {
+                    **payload, "run_id": run_id, "ticker": ticker, "state": "prepared",
+                }
+        elif event_type == "workflow_completed":
+            workflow = payload.get("workflow")
+            if workflow and workflow not in candidate["completed_workflows"]:
+                candidate["completed_workflows"].append(workflow)
+            resume = payload.get("resume_workflow")
+            if resume and resume != workflow:
+                candidate["state"] = "ready"
+                candidate["next_workflow"] = resume
+                candidate["target_workflow"] = resume
+            elif payload.get("next_workflow"):
+                candidate["state"] = "ready"
+                candidate["next_workflow"] = payload["next_workflow"]
+                candidate["target_workflow"] = payload["next_workflow"]
+            else:
+                candidate["state"] = "completed"
+                candidate["next_workflow"] = None
+        elif event_type == "waiting_for_trigger":
+            candidate["state"] = "waiting"
+            candidate["triggers"] = payload.get("triggers", [])
+            triggers = candidate["triggers"]
+            if triggers:
+                first = triggers[0]
+                target = first.get("workflow") or "manual_review"
+                due = first.get("date") or first.get("next_check_date") or "unscheduled"
+                candidate["status_reason"] = (
+                    f"waiting for {first.get('type')} on {due} -> {target}"
+                )
+            else:
+                candidate["status_reason"] = "waiting for an unspecified trigger"
+        elif event_type == "trigger_satisfied":
+            candidate["state"] = "ready"
+            candidate["next_workflow"] = payload.get("workflow")
+            candidate["target_workflow"] = payload.get("workflow")
+        elif event_type == "manual_review_required":
+            candidate["state"] = "blocked"
+            candidate["manual_review_date"] = payload.get("review_date")
+            candidate["status_reason"] = payload.get("reason")
+        elif event_type == "candidate_deprioritized":
+            candidate["state"] = "deprioritized"
+            candidate["next_workflow"] = None
+        elif event_type == "source_interpretation_corrected":
+            candidate["corrections"].append(payload)
+        elif event_type == "thesis_opened":
+            candidate["state"] = "thesis_opened"
+            candidate["next_workflow"] = None
+            candidate["status_reason"] = f"thesis opened: {payload.get('thesis_id')}"
+    return state
+
+
+def _first_missing_prerequisite(
+    workflow: str,
+    completed: set[str],
+    catalog: dict[str, Any],
+    seen: set[str] | None = None,
+) -> str | None:
+    seen = seen or set()
+    if workflow in seen:
+        raise PeiWorkflowError(f"workflow prerequisite cycle at {workflow}")
+    seen.add(workflow)
+    for dependency in catalog[workflow].get("required_workflows", []):
+        if dependency in completed:
+            continue
+        nested = _first_missing_prerequisite(dependency, completed, catalog, seen)
+        return nested or dependency
+    return None
+
+
+def next_items(repo_root: Path, *, ledger_path: Path | None = None) -> list[dict[str, Any]]:
+    events = read_events(repo_root, ledger_path)
+    projection = project(events)
+    catalog = load_catalog(repo_root)["workflows"]
+    items: list[dict[str, Any]] = []
+    priority = {"A": 0, "B": 1, "C": 2, "Reject": 3, None: 4}
+    for candidate in latest_candidates(projection).values():
+        if candidate["state"] == "in_progress":
+            work_item = next(
+                (
+                    item for item in projection["work_items"].values()
+                    if item["run_id"] == candidate["run_id"]
+                    and item["ticker"] == candidate["ticker"]
+                    and item["state"] == "prepared"
+                ),
+                None,
+            )
+            if work_item:
+                items.append({
+                    "work_item_id": work_item["work_item_id"],
+                    "run_id": candidate["run_id"],
+                    "ticker": candidate["ticker"],
+                    "bucket": candidate["bucket"],
+                    "workflow": work_item["workflow"],
+                    "requested_workflow": work_item.get(
+                        "requested_workflow", work_item["workflow"],
+                    ),
+                    "reason": "pack hazir; ChatGPT sonucu bekleniyor",
+                    "action": "attach_result",
+                    "artifact_dir": work_item["artifact_dir"],
+                    "required_context_artifacts": work_item.get(
+                        "required_context_artifacts", [],
+                    ),
+                })
+            continue
+        if candidate["state"] != "ready" or not candidate.get("next_workflow"):
+            continue
+        target = candidate["next_workflow"]
+        if target not in catalog:
+            continue
+        missing = _first_missing_prerequisite(
+            target, set(candidate["completed_workflows"]), catalog,
+        )
+        effective = missing or target
+        work_item_id = f"WI-{candidate['run_id']}-{candidate['ticker']}-{effective}"
+        items.append({
+            "work_item_id": work_item_id,
+            "run_id": candidate["run_id"],
+            "ticker": candidate["ticker"],
+            "bucket": candidate["bucket"],
+            "workflow": effective,
+            "requested_workflow": target,
+            "reason": (
+                f"{target} icin once {effective} gerekli"
+                if missing else f"{candidate['bucket']} bucket ve desteklenen rota"
+            ),
+            "action": "prepare",
+        })
+    action_priority = {"attach_result": 0, "prepare": 1}
+    return sorted(items, key=lambda item: (
+        action_priority[item["action"]], priority[item["bucket"]],
+        item["ticker"], item["workflow"],
+    ))
+
+
+def latest_candidates(projection: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    latest: dict[str, dict[str, Any]] = {}
+    for candidate in projection["candidates"].values():
+        prior = latest.get(candidate["ticker"])
+        if prior is None or (candidate.get("last_event_at") or "") > (prior.get("last_event_at") or ""):
+            latest[candidate["ticker"]] = candidate
+    return latest
+
+
+def _artifact(role: str, repo_root: Path, path: Path) -> dict[str, Any]:
+    return {"role": role, "path": repo_relative(repo_root, path), "sha256": sha256_path(path)}
+
+
+def _event_id(prefix: str) -> str:
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    return f"{prefix}-{stamp}"
+
+
+def _locate_single(root: Path, name: str) -> Path:
+    matches = sorted(root.rglob(name))
+    if len(matches) != 1:
+        raise PeiWorkflowError(f"expected one {name} below {root}, found {len(matches)}")
+    return matches[0]
+
+
+def start_idea(
+    tickers: list[str],
+    *,
+    repo_root: Path,
+    no_refresh: bool = False,
+    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> tuple[str, Path]:
+    normalized = [ticker.strip().upper() for ticker in tickers if ticker.strip()]
+    if not normalized or len(set(normalized)) != len(normalized):
+        raise PeiWorkflowError("tickers must be a non-empty unique list")
+    run_id = f"IDEA-{date.today():%Y%m%d}-{datetime.now(timezone.utc):%H%M%S%f}"
+    run_root = repo_root / "data" / "pei-workflow" / "runs" / run_id
+    command = [
+        sys.executable, str(repo_root / "scripts" / "us_pei_pack.py"),
+        "--for", "idea", "--tickers", ",".join(normalized), "--out", str(run_root),
+    ]
+    if no_refresh:
+        command.append("--no-refresh")
+    completed = runner(command, cwd=repo_root, text=True, capture_output=True)
+    if completed.returncode:
+        raise PeiWorkflowError(f"idea pack failed: {(completed.stderr or completed.stdout).strip()}")
+    pack = _locate_single(run_root, "pack.json")
+    artifact_dir = pack.parent
+    event = make_event(
+        event_id=_event_id("IDEA-START"), event_type="idea_run_started",
+        run_id=run_id, ticker=None,
+        source_artifacts=[
+            _artifact("pack", repo_root, pack),
+            _artifact("instructions", repo_root, artifact_dir / "instructions.md"),
+        ],
+        payload={
+            "state": "waiting_for_result", "tickers": normalized,
+            "artifact_dir": repo_relative(repo_root, artifact_dir), "command": command,
+        },
+    )
+    append_events([approve_system_event(event)], repo_root=repo_root)
+    return run_id, artifact_dir
+
+
+def attach_result(
+    run_id: str,
+    source: Path,
+    *,
+    repo_root: Path,
+    work_item_id: str | None = None,
+) -> Path:
+    if not source.is_file():
+        raise PeiWorkflowError(f"result file does not exist: {source}")
+    events = read_events(repo_root)
+    projection = project(events)
+    if work_item_id:
+        work_item = projection["work_items"].get(work_item_id)
+        if not work_item or work_item["run_id"] != run_id:
+            raise PeiWorkflowError(f"unknown work item for run: {work_item_id}")
+        target_dir = safe_repo_path(repo_root, work_item["artifact_dir"])
+        ticker = work_item["ticker"]
+        workflow = work_item["workflow"]
+    else:
+        run = projection["runs"].get(run_id)
+        if not run or not run.get("artifact_dir"):
+            raise PeiWorkflowError(f"unknown run: {run_id}")
+        target_dir = safe_repo_path(repo_root, run["artifact_dir"])
+        ticker = None
+        workflow = "idea"
+    target = target_dir / "result.md"
+    incoming = source.read_bytes()
+    incoming_hash = hashlib.sha256(incoming).hexdigest()
+    for event in events:
+        if event["event_type"] != "result_attached":
+            continue
+        if any(
+            artifact.get("role") == "result" and artifact.get("sha256") == incoming_hash
+            for artifact in event.get("source_artifacts", [])
+        ):
+            raise PeiWorkflowError("the same result artifact has already been attached")
+    if target.exists() and target.read_bytes() != incoming:
+        raise PeiWorkflowError(f"result already exists with different content: {target}")
+    if not target.exists():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+    manifest = target_dir / "manifest.json"
+    if manifest.is_file():
+        payload = json.loads(manifest.read_text(encoding="utf-8"))
+        payload["result_sha256"] = sha256_path(target)
+        write_text_atomic(manifest, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+    event = make_event(
+        event_id=_event_id("RESULT"), event_type="result_attached", run_id=run_id,
+        ticker=ticker, source_artifacts=[_artifact("result", repo_root, target)],
+        payload={
+            "result_path": repo_relative(repo_root, target), "workflow": workflow,
+            "work_item_id": work_item_id,
+        },
+    )
+    append_events([approve_system_event(event)], repo_root=repo_root)
+    return target
+
+
+def prepare_work_item(
+    work_item_id: str,
+    *,
+    repo_root: Path,
+    no_refresh: bool = False,
+    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> Path:
+    item = next((
+        value for value in next_items(repo_root)
+        if value["work_item_id"] == work_item_id and value["action"] == "prepare"
+    ), None)
+    if item is None:
+        raise PeiWorkflowError(f"work item is not currently ready: {work_item_id}")
+    catalog = load_catalog(repo_root)["workflows"]
+    step = catalog[item["workflow"]].get("pack_step")
+    if not step:
+        raise PeiWorkflowError(f"workflow has no pack preparation step: {item['workflow']}")
+    work_root = repo_root / "data" / "pei-workflow" / "runs" / item["run_id"] / "work" / work_item_id
+    command = [
+        sys.executable, str(repo_root / "scripts" / "us_pei_pack.py"),
+        "--only", item["ticker"], "--for", step, "--out", str(work_root),
+    ]
+    if no_refresh:
+        command.append("--no-refresh")
+    completed = runner(command, cwd=repo_root, text=True, capture_output=True)
+    if completed.returncode:
+        raise PeiWorkflowError(f"pack preparation failed: {(completed.stderr or completed.stdout).strip()}")
+    pack = _locate_single(work_root, "pack.json")
+    artifact_dir = pack.parent
+    prior_results = []
+    for event in read_events(repo_root):
+        if event["run_id"] != item["run_id"] or event.get("ticker") != item["ticker"]:
+            continue
+        if event["event_type"] != "workflow_completed":
+            continue
+        prior_results.extend(
+            artifact for artifact in event.get("source_artifacts", [])
+            if artifact.get("role") == "result"
+        )
+    event = make_event(
+        event_id=_event_id("PREPARED"), event_type="workflow_prepared",
+        run_id=item["run_id"], ticker=item["ticker"],
+        source_artifacts=[
+            _artifact("pack", repo_root, pack),
+            _artifact("instructions", repo_root, artifact_dir / "instructions.md"),
+            *prior_results,
+        ],
+        payload={
+            "workflow": item["workflow"],
+            "requested_workflow": item["requested_workflow"],
+            "work_item_id": work_item_id,
+            "artifact_dir": repo_relative(repo_root, artifact_dir),
+            "required_context_artifacts": [artifact["path"] for artifact in prior_results],
+            "command": command,
+        },
+    )
+    append_events([approve_system_event(event)], repo_root=repo_root)
+    return artifact_dir
+
+
+def json_pointer(document: Any, pointer: str) -> Any:
+    if not pointer.startswith("/"):
+        raise KeyError(pointer)
+    current = document
+    tokens = pointer[1:].split("/") if pointer != "/" else []
+    index = 0
+    while index < len(tokens):
+        token = tokens[index].replace("~1", "/").replace("~0", "~")
+        if isinstance(current, dict):
+            current = current[token]
+        elif isinstance(current, list):
+            if token.isdigit():
+                current = current[int(token)]
+            else:
+                current = next(item for item in current if item.get("ticker") == token)
+        else:
+            raise KeyError(pointer)
+        index += 1
+    return current
+
+
+def _compare(actual: Any, operator: str, expected: Any) -> bool:
+    if operator == "<":
+        return actual < expected
+    if operator == "<=":
+        return actual <= expected
+    if operator == "==":
+        return actual == expected
+    if operator == "!=":
+        return actual != expected
+    if operator == ">=":
+        return actual >= expected
+    if operator == ">":
+        return actual > expected
+    raise PeiWorkflowError(f"unsupported trigger operator: {operator}")
+
+
+def evaluate_trigger(trigger: dict[str, Any], *, today: date, document: Any | None) -> tuple[bool, str]:
+    kind = trigger["type"]
+    if kind == "date_due":
+        due = date.fromisoformat(trigger.get("date") or trigger["next_check_date"])
+        return today >= due, f"date {today} >= {due}"
+    if kind == "event_window":
+        event_date = date.fromisoformat(trigger["date"])
+        opens = event_date - timedelta(days=int(trigger.get("lead_days", 0)))
+        return opens <= today <= event_date, f"event window {opens}..{event_date}"
+    if document is None:
+        return False, "no current data document"
+    try:
+        actual = json_pointer(document, trigger["metric_path"])
+    except (KeyError, IndexError, StopIteration, TypeError, ValueError):
+        return False, f"metric path unavailable: {trigger.get('metric_path')}"
+    if kind == "new_filing":
+        matched = actual != trigger.get("baseline")
+        return matched, f"current={actual!r}, baseline={trigger.get('baseline')!r}"
+    if kind == "metric_condition":
+        matched = _compare(actual, trigger["operator"], trigger.get("value"))
+        return matched, f"{actual!r} {trigger['operator']} {trigger.get('value')!r}"
+    raise PeiWorkflowError(f"unsupported trigger type: {kind}")
+
+
+def check_triggers(
+    *,
+    repo_root: Path,
+    today: date | None = None,
+    data_path: Path | None = None,
+) -> list[dict[str, Any]]:
+    today = today or date.today()
+    document = json.loads(data_path.read_text(encoding="utf-8")) if data_path else None
+    current = project(read_events(repo_root))
+    additions = []
+    for candidate in latest_candidates(current).values():
+        if candidate["state"] != "waiting":
+            continue
+        for trigger in candidate.get("triggers", []):
+            matched, detail = evaluate_trigger(trigger, today=today, document=document)
+            if not matched:
+                continue
+            workflow = trigger.get("workflow")
+            if workflow is None:
+                event_type = "manual_review_required"
+                payload = {"review_date": today.isoformat(), "reason": detail, "trigger_id": trigger["trigger_id"]}
+            else:
+                event_type = "trigger_satisfied"
+                payload = {"workflow": workflow, "reason": detail, "trigger_id": trigger["trigger_id"]}
+            additions.append(approve_system_event(make_event(
+                event_id=_event_id("TRIGGER"), event_type=event_type,
+                run_id=candidate["run_id"], ticker=candidate["ticker"], payload=payload,
+            )))
+            break
+        else:
+            review_date = candidate.get("manual_review_date")
+            if review_date and today >= date.fromisoformat(review_date):
+                additions.append(approve_system_event(make_event(
+                    event_id=_event_id("REVIEW"), event_type="manual_review_required",
+                    run_id=candidate["run_id"], ticker=candidate["ticker"],
+                    payload={"review_date": review_date, "reason": "scheduled manual review is due"},
+                )))
+    if additions:
+        append_events(additions, repo_root=repo_root)
+    return additions
+
+
+def refresh_trigger_data(
+    *,
+    repo_root: Path,
+    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> Path | None:
+    projection = project(read_events(repo_root))
+    tickers = sorted({
+        candidate["ticker"]
+        for candidate in latest_candidates(projection).values()
+        if candidate["state"] == "waiting"
+        and any(trigger.get("type") in {"new_filing", "metric_condition"}
+                for trigger in candidate.get("triggers", []))
+    })
+    if not tickers:
+        return None
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    check_root = repo_root / "data" / "pei-workflow" / "checks" / stamp
+    command = [
+        sys.executable, str(repo_root / "scripts" / "us_pei_pack.py"),
+        "--for", "idea", "--tickers", ",".join(tickers), "--out", str(check_root),
+    ]
+    completed = runner(command, cwd=repo_root, text=True, capture_output=True)
+    if completed.returncode:
+        raise PeiWorkflowError(f"trigger refresh failed: {(completed.stderr or completed.stdout).strip()}")
+    return _locate_single(check_root, "pack.json")

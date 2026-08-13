@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:GOOGL:1",
+  "subject_ticker": "GOOGL",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "blended_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "advertising_consumer_platform",
+      "label": "Advertising and consumer platform",
+      "purpose": "Advertising growth, monetization, consumer attention and AI-driven ad efficiency",
+      "members": ["META", "AMZN"]
+    },
+    {
+      "group_id": "cloud_ai",
+      "label": "Cloud and AI",
+      "purpose": "Hyperscale cloud, enterprise AI infrastructure and AI monetization",
+      "members": ["MSFT", "AMZN", "ORCL"]
+    },
+    {
+      "group_id": "consumer_ecosystem_subscriptions",
+      "label": "Consumer ecosystem and subscriptions",
+      "purpose": "Platform distribution, subscriptions and video attention economics",
+      "members": ["AAPL", "NFLX"]
+    },
+    {
+      "group_id": "ai_premium_reference",
+      "label": "AI premium reference",
+      "purpose": "AI investment-cycle and mega-cap growth-premium reference; not a direct operating peer",
+      "members": ["NVDA"]
+    }
+  ],
+  "operational_references": [],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "Alphabet has no single clean comparable; advertising, cloud/AI and consumer-platform economics are evaluated through separate lenses. META, MSFT and AMZN form the core cross-business set."
+  }
+}

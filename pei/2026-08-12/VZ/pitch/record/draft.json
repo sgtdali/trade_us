@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "record_id": "VZ-20260812-operational-stabilization-OPEN",
+  "thesis_id": "VZ-20260812-operational-stabilization",
+  "ticker": "VZ",
+  "recorded_at": "2026-08-12",
+  "event_type": "thesis_opened",
+  "thesis_operation": "open_new",
+  "supersedes_thesis_id": null,
+  "source_artifacts": [
+    {
+      "role": "result",
+      "path": "pei/2026-08-12/VZ/pitch/result.md",
+      "sha256": "66551c3d02fe163accaeac3a052ab15a502f6a242e06047b208b71b49643f128"
+    },
+    {
+      "role": "pack",
+      "path": "pei/2026-08-12/VZ/pitch/pack.json",
+      "sha256": "d3491e3f355ceff100f328f41f8aa944d140567f11cf54a41b3952892b70e88e"
+    },
+    {
+      "role": "tearsheet_result",
+      "path": "pei/2026-08-12/VZ/tearsheet/result.md",
+      "sha256": "4c1906e521d9b1841b6251c884500a7b1728ec16b4dfb4585c22f7d7e7203c8d"
+    },
+    {
+      "role": "comps_result",
+      "path": "pei/2026-08-12/VZ/comps/result.md",
+      "sha256": "2567678aebd153b01bced33cfc4ce6b6cba5ef7bd5a2429c804a52cba7922dd0"
+    }
+  ],
+  "decision": {
+    "pitch_verdict": "watchlist",
+    "company_thesis_status": "untested",
+    "security_thesis_readiness": "conditional",
+    "position_action": "wait_for_proof",
+    "position_status": "no_position",
+    "evidence": [
+      {
+        "source_path": "pei/2026-08-12/VZ/pitch/result.md",
+        "heading": "Trade Recommendation",
+        "quote": "**WATCHLIST / CONDITIONAL LONG — VZ common equity at $47.27 as of August 11, 2026, with a 6–12 month fundamental horizon.**"
+      }
+    ]
+  },
+  "narrative": {
+    "thesis": {
+      "text": "Verizon's lower-churn, lower-subsidy operating model may turn current stabilization into a durable earnings and cash-flow inflection.",
+      "evidence": [
+        {
+          "source_path": "pei/2026-08-12/VZ/pitch/result.md",
+          "heading": "Variant Perception",
+          "quote": "**Verizon's lower-churn, lower-subsidy operating model proves durable enough that today's stabilization becomes an earnings-and-cash-flow inflection, while the market continues to value VZ closer to legacy telecom than premium wireless.**"
+        }
+      ]
+    },
+    "variant_perception": {
+      "text": "The operating improvement may be structural while valuation remains anchored closer to legacy telecom than premium wireless.",
+      "evidence": [
+        {
+          "source_path": "pei/2026-08-12/VZ/pitch/result.md",
+          "heading": "Variant Perception",
+          "quote": "**Verizon's lower-churn, lower-subsidy operating model proves durable enough that today's stabilization becomes an earnings-and-cash-flow inflection, while the market continues to value VZ closer to legacy telecom than premium wireless.**"
+        }
+      ]
+    },
+    "priced_in": {
+      "text": "The price reflects successful stabilization but not TMUS-like growth.",
+      "evidence": [
+        {
+          "source_path": "pei/2026-08-12/VZ/pitch/result.md",
+          "heading": "What is priced in",
+          "quote": "Current valuation appears to price **successful stabilization but not TMUS-like growth**."
+        }
+      ]
+    },
+    "decision_rationale": {
+      "text": "The company is improving, but the current stock price and expected price skew do not yet justify a new position.",
+      "evidence": [
+        {
+          "source_path": "pei/2026-08-12/VZ/pitch/result.md",
+          "heading": "PM bottom line",
+          "quote": "**VZ is an improving company but not yet a compelling stock at $47.27.**"
+        }
+      ]
+    }
+  },
+  "rules": [
+    {
+      "rule_id": "VZ-20260812-KILL-Q3-SERVICE-REVENUE",
+      "rule_type": "kill",
+      "logic": "all_of",
+      "conditions": [
+        {"metric": "mobility_and_broadband_service_revenue_growth_pct", "operator": "<", "value": 2.5, "unit": "pct"}
+      ],
+      "test_date": "2026-10-20",
+      "date_status": "estimated",
+      "action": "kill_turnaround_long_setup",
+      "threshold_origin": "draft_for_pm_confirmation",
+      "threshold_approval_status": "pending",
+      "evidence": [
+        {"source_path": "pei/2026-08-12/VZ/pitch/result.md", "heading": "Disconfirmers and Kill Criteria", "quote": "Q3 mobility + broadband service revenue growth **<2.5%**"}
+      ]
+    },
+    {
+      "rule_id": "VZ-20260812-KILL-FY26-EPS-GUIDANCE",
+      "rule_type": "kill",
+      "logic": "all_of",
+      "conditions": [
+        {"metric": "FY26_adjusted_EPS_guidance_lower_bound", "operator": "<", "value": 4.99, "unit": "USD/share"}
+      ],
+      "test_date": "2026-10-20",
+      "date_status": "estimated",
+      "action": "kill_turnaround_long_setup",
+      "threshold_origin": "draft_for_pm_confirmation",
+      "threshold_approval_status": "pending",
+      "evidence": [
+        {"source_path": "pei/2026-08-12/VZ/pitch/result.md", "heading": "Disconfirmers and Kill Criteria", "quote": "FY26 adjusted EPS guidance lower bound cut to **<$4.99**"}
+      ]
+    },
+    {
+      "rule_id": "VZ-20260812-KILL-FY26-FCF-GUIDANCE",
+      "rule_type": "kill",
+      "logic": "all_of",
+      "conditions": [
+        {"metric": "FY26_FCF_guidance_lower_bound", "operator": "<", "value": 21.94, "unit": "USD_bn"}
+      ],
+      "test_date": "2026-10-20",
+      "date_status": "estimated",
+      "action": "kill_turnaround_long_setup",
+      "threshold_origin": "draft_for_pm_confirmation",
+      "threshold_approval_status": "pending",
+      "evidence": [
+        {"source_path": "pei/2026-08-12/VZ/pitch/result.md", "heading": "Disconfirmers and Kill Criteria", "quote": "FY26 FCF guidance lower bound cut to **<$21.94bn**"}
+      ]
+    },
+    {
+      "rule_id": "VZ-20260812-KILL-Q4-TRAJECTORY",
+      "rule_type": "kill",
+      "logic": "all_of",
+      "conditions": [
+        {"metric": "mobility_and_broadband_service_revenue_growth_pct", "operator": "<", "value": 3.5, "unit": "pct"},
+        {"metric": "FY27_EPS_consensus", "operator": "<", "value": 5.28, "unit": "USD/share"}
+      ],
+      "test_date": "2027-01-31",
+      "date_status": "analyst_deadline",
+      "action": "downgrade_or_exit_thesis",
+      "threshold_origin": "draft_for_pm_confirmation",
+      "threshold_approval_status": "pending",
+      "evidence": [
+        {"source_path": "pei/2026-08-12/VZ/pitch/result.md", "heading": "Disconfirmers and Kill Criteria", "quote": "Latest Q4 service-revenue growth **<3.5%** **and** FY27 consensus EPS **<$5.28**"}
+      ]
+    },
+    {
+      "rule_id": "VZ-20260812-KILL-TIME-FAILURE",
+      "rule_type": "kill",
+      "logic": "all_of",
+      "conditions": [
+        {"metric": "FY27_EPS_consensus", "operator": "<=", "value": 5.28, "unit": "USD/share"},
+        {"metric": "mobility_and_broadband_service_revenue_growth_pct", "operator": "<", "value": 3.0, "unit": "pct"}
+      ],
+      "test_date": "2027-08-12",
+      "date_status": "analyst_deadline",
+      "action": "close_thesis",
+      "threshold_origin": "draft_for_pm_confirmation",
+      "threshold_approval_status": "pending",
+      "evidence": [
+        {"source_path": "pei/2026-08-12/VZ/pitch/result.md", "heading": "Disconfirmers and Kill Criteria", "quote": "FY27 consensus EPS **≤$5.28** and latest reported mobility + broadband service-revenue growth **<3.0%**"}
+      ]
+    },
+    {
+      "rule_id": "VZ-20260812-ENTRY-PRICE",
+      "rule_type": "entry",
+      "logic": "all_of",
+      "conditions": [
+        {"metric": "price_usd", "operator": "<=", "value": 44.0, "unit": "USD"},
+        {"metric": "FY26_EPS_consensus", "operator": ">=", "value": 5.0, "unit": "USD/share"},
+        {"metric": "FY26_adjusted_EPS_guidance_lower_bound", "operator": ">=", "value": 4.99, "unit": "USD/share"},
+        {"metric": "FY26_FCF_guidance_lower_bound", "operator": ">=", "value": 21.94, "unit": "USD_bn"}
+      ],
+      "test_date": "2026-09-30",
+      "date_status": "analyst_deadline",
+      "action": "propose_starter_long",
+      "threshold_origin": "draft_for_pm_confirmation",
+      "threshold_approval_status": "pending",
+      "evidence": [
+        {"source_path": "pei/2026-08-12/VZ/pitch/result.md", "heading": "Conditional Add / Trim / Exit Rules", "quote": "**Price-driven initiation — September 30, 2026:** Upgrade from watchlist to a proposed starter long only if the monthly-rebalance price is **≤$44.00**, FY26 EPS consensus is **≥$5.00**, FY26 adjusted EPS guidance lower bound remains **≥$4.99**, and FCF guidance lower bound remains **≥$21.94bn**."}
+      ]
+    },
+    {
+      "rule_id": "VZ-20260812-ENTRY-EVIDENCE",
+      "rule_type": "entry",
+      "logic": "all_of",
+      "conditions": [
+        {"metric": "mobility_and_broadband_service_revenue_growth_pct", "operator": ">=", "value": 3.0, "unit": "pct"},
+        {"metric": "FY26_adjusted_EPS_guidance_lower_bound", "operator": ">=", "value": 4.99, "unit": "USD/share"},
+        {"metric": "FY26_FCF_guidance_lower_bound", "operator": ">=", "value": 21.94, "unit": "USD_bn"},
+        {"metric": "price_usd", "operator": "<=", "value": 46.0, "unit": "USD"}
+      ],
+      "test_date": "2026-10-31",
+      "date_status": "analyst_deadline",
+      "action": "propose_starter_long",
+      "threshold_origin": "draft_for_pm_confirmation",
+      "threshold_approval_status": "pending",
+      "evidence": [
+        {"source_path": "pei/2026-08-12/VZ/pitch/result.md", "heading": "Conditional Add / Trim / Exit Rules", "quote": "**Evidence-driven initiation — October 31, 2026:** If Q3 mobility + broadband service-revenue growth is **≥3.0% at the estimated October 20, 2026 print**, FY26 adjusted EPS guidance remains **≥$4.99 at the low end**, FCF guidance remains **≥$21.94bn at the low end**, and the October 31 price is **≤$46.00**, upgrade to a proposed starter long."}
+      ]
+    },
+    {
+      "rule_id": "VZ-20260812-ADD-Q4-PROOF",
+      "rule_type": "add",
+      "logic": "all_of",
+      "conditions": [
+        {"metric": "mobility_and_broadband_service_revenue_growth_pct", "operator": ">=", "value": 4.0, "unit": "pct"},
+        {"metric": "FY27_EPS_consensus", "operator": ">=", "value": 5.35, "unit": "USD/share"},
+        {"metric": "price_usd", "operator": "<=", "value": 48.0, "unit": "USD"}
+      ],
+      "test_date": "2027-01-31",
+      "date_status": "analyst_deadline",
+      "action": "consider_increasing_position",
+      "threshold_origin": "draft_for_pm_confirmation",
+      "threshold_approval_status": "pending",
+      "evidence": [
+        {"source_path": "pei/2026-08-12/VZ/pitch/result.md", "heading": "Conditional Add / Trim / Exit Rules", "quote": "**Add — January 31, 2027:** Consider increasing only if Q4 mobility + broadband service-revenue growth is **≥4.0%**, FY27 EPS consensus has risen to **≥$5.35**, and VZ trades at **≤$48.00** on January 31, 2027."}
+      ]
+    },
+    {
+      "rule_id": "VZ-20260812-TRIM-RERATING",
+      "rule_type": "trim",
+      "logic": "all_of",
+      "conditions": [
+        {"metric": "price_usd", "operator": ">=", "value": 56.0, "unit": "USD"},
+        {"metric": "FY27_EPS_consensus", "operator": "<", "value": 5.35, "unit": "USD/share"}
+      ],
+      "test_date": "2027-06-30",
+      "date_status": "analyst_deadline",
+      "action": "reduce_risk",
+      "threshold_origin": "draft_for_pm_confirmation",
+      "threshold_approval_status": "pending",
+      "evidence": [
+        {"source_path": "pei/2026-08-12/VZ/pitch/result.md", "heading": "Conditional Add / Trim / Exit Rules", "quote": "**Trim — June 30, 2027:** If VZ reaches **≥$56.00** by June 30, 2027 while FY27 EPS consensus remains **<$5.35**, treat the rerating as having outrun the earnings evidence and reduce risk."}
+      ]
+    },
+    {
+      "rule_id": "VZ-20260812-REUNDERWRITE-BELOW-DOWNSIDE",
+      "rule_type": "re_underwrite",
+      "logic": "all_of",
+      "conditions": [
+        {"metric": "price_usd", "operator": "<", "value": 41.65, "unit": "USD"}
+      ],
+      "test_date": "2026-12-31",
+      "date_status": "analyst_deadline",
+      "action": "do_not_average_down_without_re_underwriting",
+      "threshold_origin": "draft_for_pm_confirmation",
+      "threshold_approval_status": "pending",
+      "evidence": [
+        {"source_path": "pei/2026-08-12/VZ/pitch/result.md", "heading": "Conditional Add / Trim / Exit Rules", "quote": "do not average down solely because VZ trades below the **$41.65 downside anchor by December 31, 2026** without first re-underwriting the operating thesis."}
+      ]
+    }
+  ],
+  "catalysts": [
+    {
+      "event": "Q3 2026 earnings",
+      "date": "2026-10-20",
+      "date_status": "estimated",
+      "evidence": {
+        "source_path": "pei/2026-08-12/VZ/pitch/result.md",
+        "heading": "Why Now / Catalyst Path",
+        "quote": "The next fundamental proof point is the **estimated October 20, 2026 Q3 earnings date**; the pack correctly marks that date as unconfirmed."
+      }
+    },
+    {
+      "event": "Q4 2026 service-revenue trajectory review",
+      "date": "2027-01-31",
+      "date_status": "analyst_deadline",
+      "evidence": {
+        "source_path": "pei/2026-08-12/VZ/pitch/result.md",
+        "heading": "Why Now / Catalyst Path",
+        "quote": "Management's operating milestones are unusually concrete: mobility and broadband service revenue growth is expected to approach **3.0% in Q3 2026** and approximately **4.0% in Q4 2026**, versus 2.8% in Q2."
+      }
+    }
+  ],
+  "scenarios": [
+    {"name": "downside", "probability_pct": 25, "target_date": "2027-08-12", "target_price": 41.65, "return_pct": -11.9, "status": "analyst_assumption"},
+    {"name": "base", "probability_pct": 50, "target_date": "2027-08-12", "target_price": 51.56, "return_pct": 9.1, "status": "analyst_assumption"},
+    {"name": "upside", "probability_pct": 25, "target_date": "2027-08-12", "target_price": 60.0, "return_pct": 26.9, "status": "analyst_assumption"}
+  ],
+  "data_gaps": [
+    "earnings-call transcript",
+    "ownership concentration and passive/ETF ownership",
+    "short interest and crowding",
+    "factor exposures",
+    "portfolio risk budget and benchmark",
+    "DCF or broader normalized integrated-telecom peer set"
+  ],
+  "unstructured_findings": [
+    {
+      "text": "SpaceX mobile ambitions may create a long-duration structural valuation overhang, but the investment impact is not yet reducible to a dated numeric rule.",
+      "evidence": {
+        "source_path": "pei/2026-08-12/VZ/pitch/result.md",
+        "heading": "What is priced in",
+        "quote": "The other side of the debate is increasingly visible: SpaceX has articulated plans to expand Starlink toward a broader mobile service."
+      },
+      "needs_review": true
+    }
+  ],
+  "pack_checks": [
+    {"json_pointer": "/companies/0/closing_price_usd", "expected_value": 47.27},
+    {"json_pointer": "/companies/0/valuation/Price ~1 Earnings", "expected_value": 12.1443},
+    {"json_pointer": "/companies/0/consensus_estimates/earnings_estimate/0y/avg", "expected_value": 5.01242},
+    {"json_pointer": "/companies/0/consensus_estimates/earnings_estimate/+1y/avg", "expected_value": 5.28049},
+    {"json_pointer": "/companies/0/net_debt/net_debt", "expected_value": 163479}
+  ],
+  "review_items": [
+    "Confirm that SpaceX risk should remain an unstructured watch item rather than a thesis pillar.",
+    "Record approval does not approve any of the model-created monitoring thresholds."
+  ]
+}

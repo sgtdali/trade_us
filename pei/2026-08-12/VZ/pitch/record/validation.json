@@ -1,0 +1,12 @@
+{
+  "status": "valid_with_review",
+  "draft": "pei\\2026-08-12\\VZ\\pitch\\record\\draft.json",
+  "draft_sha256": "16ba4d3ceac8a6fef1adb1609e495809cd9e77271c078261fd7f4c743a88ee53",
+  "errors": [],
+  "warnings": [
+    "unstructured_findings/0 requires review",
+    "review_items/0: Confirm that SpaceX risk should remain an unstructured watch item rather than a thesis pillar.",
+    "review_items/1: Record approval does not approve any of the model-created monitoring thresholds."
+  ],
+  "checked_at": "2026-08-12T12:27:39.278948+00:00"
+}

@@ -1,0 +1,8 @@
+{
+  "schema_version": 1, "ticker": "CMCSA", "exchange": "NASDAQ",
+  "company_name": "Comcast Corporation", "reporting_locale": "tr-TR",
+  "classification": {"source": "SEC", "official_sector": "Communication Services", "official_industry": "Telecom Services", "official_subindustry": null, "actual_activity": "Broadband, Cable, Mobile and Media", "classification_date": "2026-08-12"},
+  "pipeline": {"company_type": "standard_corporate", "sector_module": "generic"},
+  "sources": {"identity_source": "SEC submissions", "classification_source": "SEC"},
+  "version": 1, "is_active": true
+}

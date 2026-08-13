@@ -225,7 +225,7 @@ Net-income, EBIT, and free-cash-flow operands use TTM bases ending {{ fmt_date_e
 
 Section 6 lists every engine output, including unavailable or inapplicable methods. Missing inputs remain missing rather than being replaced with zero or an estimate.
 
-## 8. Peer Comparisons and Strategy Diagnostics
+## 8. Peer Comparisons
 
 **Peer cohort:** {{ peer_group_label }} — {{ peer_tickers | join(', ') }}.
 
@@ -235,38 +235,10 @@ Section 6 lists every engine output, including unavailable or inapplicable metho
 
 **Omitted metrics:** Gross Margin, Consolidated Net Margin, and Free Cash Flow Margin are excluded because period and accounting bases are not sufficiently standardized.
 
-**Decision weight:** Peer and strategy diagnostics are secondary to the reconciled financial and valuation inputs in Sections 3–6.
+**Decision weight:** Peer comparisons are secondary to the reconciled financial and valuation inputs in Sections 3–6.
 
 {% for comparison in comparisons %}
-{% if comparison.comparison_type == 'piotroski_diagnostic' %}
-### Piotroski F-Score: {{ comparison.statistics_or_matrix.total if comparison.statistics_or_matrix.total is not none else 'not available' }}/9
-
-{% if comparison.statistics_or_matrix.total is none %}Only {{ comparison.statistics_or_matrix.available_component_count }}/9 components were available, so no aggregate score was produced.
-{% endif %}
-
-| Component | Result |
-|---|---:|
-{% for component in comparison.statistics_or_matrix.components %}| {{ piotroski_label_en(component.component_id) }} | {{ 'Pass' if component.binary_value == 1 else ('Fail' if component.binary_value == 0 else 'not available') }} |
-{% endfor %}
-{% elif comparison.comparison_type == 'magic_formula_diagnostic' %}
-### Magic Formula Diagnostic
-
-* **EBIT / lease-exclusive enterprise value:** {% if comparison.statistics_or_matrix.earnings_yield.raw_value.status == 'available' %}{{ fmt_ratio_percent_en(comparison.statistics_or_matrix.earnings_yield.raw_value.value, 2) }}{% else %}not available{% endif %}
-* **EBIT / tangible operating capital:** {% if comparison.statistics_or_matrix.return_on_capital.raw_value.status == 'available' %}{% if magic_formula_capital and magic_formula_capital.small_denominator %}raw mechanical output {{ fmt_ratio_percent_en(comparison.statistics_or_matrix.return_on_capital.raw_value.value, 2) }} — **not comparable because the denominator is small**{% else %}{{ fmt_ratio_percent_en(comparison.statistics_or_matrix.return_on_capital.raw_value.value, 2) }}{% endif %}{% else %}not available{% endif %}
-
-This is a formula diagnostic, not a cross-company rank.
-
-Tangible operating capital is defined as operating net working capital plus net property, plant and equipment. The ratio can become unusually high when that denominator is small; no cap or normalization is applied.
-{% if magic_formula_capital %}
-* **Operating net working capital:** {{ fmt_number_en(magic_formula_capital.net_working_capital, 1) }} million USD
-* **Net operating property, plant and equipment:** {{ fmt_number_en(magic_formula_capital.net_operating_fixed_assets, 1) }} million USD
-* **Tangible operating capital denominator:** {{ fmt_number_en(magic_formula_capital.tangible_operating_capital, 1) }} million USD
-{% if magic_formula_capital.small_denominator %}
-
-The small denominator makes this return-on-capital output an extreme mechanical value. It is retained only for formula auditability and must not be interpreted as a strong positive performance signal or used for direct cross-company comparison.
-{% endif %}
-{% endif %}
-{% elif comparison.comparison_type == 'sector_peer' %}
+{% if comparison.comparison_type == 'sector_peer' %}
 {% set peer_scope_id = comparison.method_or_dimension_scope.scope_id %}
 {% set peer_stats = comparison.statistics_or_matrix %}
 * **Sector peer comparison — {{ peer_label_en(peer_scope_id) }}:** subject {{ fmt_peer_value_en(peer_scope_id, peer_stats.subject_value.value if peer_stats.subject_value.status == 'available' else none) }}, peer median {{ fmt_peer_value_en(peer_scope_id, peer_stats.median) }}, coverage {{ peer_stats.eligible_peer_count }}/{{ peer_stats.approved_primary_cohort_count }}.
@@ -308,7 +280,7 @@ No deterministic financial signal was emitted for this period.
 
 * Debt, lease, EBITDA, and non-GAAP net-debt fields are shown only when supported by an accession-specific SEC filing or exhibit.
 * An internally calculated EBITDA or net-debt amount is not labeled as issuer-reported.
-* Technical indicators, threshold signals, peer statistics, Piotroski, and Magic Formula are mechanical descriptors with lower decision weight than reconciled filing and valuation inputs.
+* Technical indicators, threshold signals, and peer statistics are mechanical descriptors with lower decision weight than reconciled filing and valuation inputs.
 
 ## 12. Source Summary
 

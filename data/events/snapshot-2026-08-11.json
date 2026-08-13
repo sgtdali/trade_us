@@ -1,0 +1,488 @@
+{
+  "snapshot_date": "2026-08-11",
+  "captured_at": "2026-08-11T11:19:24.923484+00:00",
+  "source": "yfinance / Yahoo Finance calendar",
+  "note": "Bu dosya YENIDEN URETILEMEZ. Yarin bugunun ilan edilmis bir sonraki bilanco tarihi hicbir yerden alinamaz. Yahoo ilan edilmis ile tahmini tarihi ayirt etmiyor; confirmed daima null.",
+  "companies": {
+    "AAPL": {
+      "next_earnings_date": "2026-10-29",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-13",
+      "ex_dividend_date": "2026-08-10"
+    },
+    "ABBV": {
+      "next_earnings_date": "2026-10-29",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-14",
+      "ex_dividend_date": "2026-07-15"
+    },
+    "ABT": {
+      "next_earnings_date": "2026-10-14",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-17",
+      "ex_dividend_date": "2026-07-15"
+    },
+    "ADBE": {
+      "next_earnings_date": "2026-09-10",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": null,
+      "ex_dividend_date": "2005-03-24"
+    },
+    "ADI": {
+      "next_earnings_date": "2026-08-19",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-06-16",
+      "ex_dividend_date": "2026-06-02"
+    },
+    "AMD": {
+      "next_earnings_date": "2026-11-03",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": null,
+      "ex_dividend_date": "1995-04-27"
+    },
+    "AVGO": {
+      "next_earnings_date": "2026-09-02",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-06-30",
+      "ex_dividend_date": "2026-06-22"
+    },
+    "BDX": {
+      "next_earnings_date": "2026-11-05",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-30",
+      "ex_dividend_date": "2026-09-09"
+    },
+    "BJ": {
+      "next_earnings_date": "2026-08-21",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": null,
+      "ex_dividend_date": null
+    },
+    "BMY": {
+      "next_earnings_date": "2026-10-29",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-03",
+      "ex_dividend_date": "2026-07-02"
+    },
+    "BSX": {
+      "next_earnings_date": "2026-10-28",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": null,
+      "ex_dividend_date": null
+    },
+    "CAG": {
+      "next_earnings_date": "2026-09-30",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-02",
+      "ex_dividend_date": "2026-07-30"
+    },
+    "CAT": {
+      "next_earnings_date": "2026-10-29",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-19",
+      "ex_dividend_date": "2026-07-20"
+    },
+    "CELH": {
+      "next_earnings_date": "2026-08-06",
+      "is_past": true,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": null,
+      "ex_dividend_date": null
+    },
+    "CHD": {
+      "next_earnings_date": "2026-10-30",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-01",
+      "ex_dividend_date": "2026-08-14"
+    },
+    "CL": {
+      "next_earnings_date": "2026-10-30",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-14",
+      "ex_dividend_date": "2026-07-20"
+    },
+    "CLX": {
+      "next_earnings_date": "2026-11-03",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-28",
+      "ex_dividend_date": "2026-08-12"
+    },
+    "CMI": {
+      "next_earnings_date": "2026-11-05",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-03",
+      "ex_dividend_date": "2026-08-21"
+    },
+    "COST": {
+      "next_earnings_date": "2026-09-24",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-07",
+      "ex_dividend_date": "2026-07-24"
+    },
+    "CPB": {
+      "next_earnings_date": "2026-09-09",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-03",
+      "ex_dividend_date": "2026-07-02"
+    },
+    "CSCO": {
+      "next_earnings_date": "2026-08-12",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-07-22",
+      "ex_dividend_date": "2026-07-06"
+    },
+    "CSX": {
+      "next_earnings_date": "2026-10-22",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-15",
+      "ex_dividend_date": "2026-08-31"
+    },
+    "DE": {
+      "next_earnings_date": "2026-08-20",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-10",
+      "ex_dividend_date": "2026-06-30"
+    },
+    "DELL": {
+      "next_earnings_date": "2026-09-03",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-07-31",
+      "ex_dividend_date": "2026-07-21"
+    },
+    "DG": {
+      "next_earnings_date": "2026-08-27",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-07-21",
+      "ex_dividend_date": "2026-07-07"
+    },
+    "EMR": {
+      "next_earnings_date": "2026-11-04",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-10",
+      "ex_dividend_date": "2026-08-14"
+    },
+    "ETN": {
+      "next_earnings_date": "2026-11-03",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-28",
+      "ex_dividend_date": "2026-08-07"
+    },
+    "FIZZ": {
+      "next_earnings_date": "2026-09-10",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-07-30",
+      "ex_dividend_date": "2026-07-13"
+    },
+    "GIS": {
+      "next_earnings_date": "2026-09-23",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-03",
+      "ex_dividend_date": "2026-07-10"
+    },
+    "HON": {
+      "next_earnings_date": "2026-10-22",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-04",
+      "ex_dividend_date": "2026-08-14"
+    },
+    "HPQ": {
+      "next_earnings_date": "2026-08-26",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-10-07",
+      "ex_dividend_date": "2026-09-09"
+    },
+    "ITW": {
+      "next_earnings_date": "2026-10-23",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-10-09",
+      "ex_dividend_date": "2026-09-30"
+    },
+    "JNJ": {
+      "next_earnings_date": "2026-10-13",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-08",
+      "ex_dividend_date": "2026-08-25"
+    },
+    "KDP": {
+      "next_earnings_date": "2026-10-26",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-07-10",
+      "ex_dividend_date": "2026-06-26"
+    },
+    "KHC": {
+      "next_earnings_date": "2026-10-28",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-25",
+      "ex_dividend_date": "2026-09-04"
+    },
+    "KMB": {
+      "next_earnings_date": "2026-11-03",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-10-02",
+      "ex_dividend_date": "2026-09-04"
+    },
+    "KO": {
+      "next_earnings_date": "2026-10-20",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-10-01",
+      "ex_dividend_date": "2026-09-15"
+    },
+    "KR": {
+      "next_earnings_date": "2026-09-10",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-01",
+      "ex_dividend_date": "2026-08-14"
+    },
+    "LLY": {
+      "next_earnings_date": "2026-10-29",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-10",
+      "ex_dividend_date": "2026-08-14"
+    },
+    "MDLZ": {
+      "next_earnings_date": "2026-10-27",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-07-14",
+      "ex_dividend_date": "2026-06-30"
+    },
+    "MDT": {
+      "next_earnings_date": "2026-09-01",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-07-17",
+      "ex_dividend_date": "2026-06-26"
+    },
+    "MMM": {
+      "next_earnings_date": "2026-10-20",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-06-12",
+      "ex_dividend_date": "2026-05-22"
+    },
+    "MNST": {
+      "next_earnings_date": "2026-11-05",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": null,
+      "ex_dividend_date": null
+    },
+    "MRK": {
+      "next_earnings_date": "2026-10-29",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-10-07",
+      "ex_dividend_date": "2026-09-15"
+    },
+    "MSFT": {
+      "next_earnings_date": "2026-10-28",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-10",
+      "ex_dividend_date": "2026-08-20"
+    },
+    "NSC": {
+      "next_earnings_date": "2026-10-22",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-20",
+      "ex_dividend_date": "2026-08-07"
+    },
+    "NVDA": {
+      "next_earnings_date": "2026-08-26",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-06-26",
+      "ex_dividend_date": "2026-06-04"
+    },
+    "NWL": {
+      "next_earnings_date": "2026-10-30",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-06-15",
+      "ex_dividend_date": "2026-05-29"
+    },
+    "ORCL": {
+      "next_earnings_date": "2026-09-10",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-07-24",
+      "ex_dividend_date": "2026-07-10"
+    },
+    "PEP": {
+      "next_earnings_date": "2026-10-08",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-30",
+      "ex_dividend_date": "2026-09-04"
+    },
+    "PFE": {
+      "next_earnings_date": "2026-11-03",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-01",
+      "ex_dividend_date": "2026-07-24"
+    },
+    "PG": {
+      "next_earnings_date": "2026-10-22",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-17",
+      "ex_dividend_date": "2026-07-24"
+    },
+    "PH": {
+      "next_earnings_date": "2026-11-05",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-06-05",
+      "ex_dividend_date": "2026-05-08"
+    },
+    "SJM": {
+      "next_earnings_date": "2026-08-26",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-01",
+      "ex_dividend_date": "2026-08-14"
+    },
+    "SYK": {
+      "next_earnings_date": "2026-10-29",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-10-30",
+      "ex_dividend_date": "2026-09-30"
+    },
+    "TGT": {
+      "next_earnings_date": "2026-08-19",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-01",
+      "ex_dividend_date": "2026-08-12"
+    },
+    "TXN": {
+      "next_earnings_date": "2026-10-27",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-08-11",
+      "ex_dividend_date": "2026-07-31"
+    },
+    "UNP": {
+      "next_earnings_date": "2026-10-22",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-09-30",
+      "ex_dividend_date": "2026-08-31"
+    },
+    "WMT": {
+      "next_earnings_date": "2026-08-20",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2027-01-04",
+      "ex_dividend_date": "2026-08-21"
+    },
+    "ZBH": {
+      "next_earnings_date": "2026-11-05",
+      "is_past": false,
+      "earnings_date_window": null,
+      "confirmed": null,
+      "dividend_date": "2026-07-31",
+      "ex_dividend_date": "2026-06-25"
+    }
+  }
+}

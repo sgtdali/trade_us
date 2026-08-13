@@ -20,10 +20,8 @@ from ..transaction import TransactionResult, WriteTarget, check_transaction, exe
 from ..validation.findings import Finding, sort_findings
 from .compiler import CompiledComparisonPlan, compile_comparison_policies
 from .historical import evaluate_historical
-from .magic_formula import MagicFormulaFacts, evaluate_magic_formula
 from .observations import parse_comparison_observation_set
 from .peers import evaluate_peer
-from .piotroski import PiotroskiFacts, evaluate_piotroski
 from .results import assemble_valuation_comparison
 from .universe import parse_peer_universe, verify_universe_canonical_eligible
 from .validation import validate_valuation_comparison
@@ -144,7 +142,6 @@ def generate_historical_comparison(
     )
     return _finalize(artifact, findings, registry=comparison_registry, output_dir=output_dir, check_only=check_only)
 
-
 # --- peer ----------------------------------------------------------
 
 def generate_peer_comparison(
@@ -207,107 +204,5 @@ def generate_peer_comparison(
             "coverage_ratio": engine_result.statistics_or_matrix["coverage_ratio"],
         },
         eligibility_state=engine_result.eligibility_state,
-    )
-    return _finalize(artifact, findings, registry=comparison_registry, output_dir=output_dir, check_only=check_only)
-
-
-# --- diagnostics: piotroski ----------------------------------------------------------
-
-_PIOTROSKI_FACT_FIELDS = (
-    "roa_t", "roa_t1", "cfo_t", "cfoa_t", "leverage_t", "leverage_t1", "current_ratio_t", "current_ratio_t1",
-    "equity_issuance_amount_t", "gross_margin_t", "gross_margin_t1", "asset_turnover_t", "asset_turnover_t1",
-)
-
-
-def _parse_piotroski_facts(document: Mapping[str, Any]) -> PiotroskiFacts:
-    kwargs = {field: document[field] for field in _PIOTROSKI_FACT_FIELDS}
-    return PiotroskiFacts(
-        current_refs=tuple(document.get("current_refs", ())), prior_refs=tuple(document.get("prior_refs", ())),
-        opening_balance_refs=tuple(document.get("opening_balance_refs", ())), **kwargs,
-    )
-
-
-def generate_piotroski_diagnostic(
-    *, ticker: str, company_type: str, facts_path: Path, as_of_date: str, generated_at: str, engine_version: str,
-    comparison_registry: CatalogRegistry, output_dir: Path, check_only: bool = False,
-) -> ComparisonGenerationResult:
-    findings: list[Finding] = []
-    facts_doc, err = _load_json(facts_path, label="--facts")
-    findings.extend(err)
-    if facts_doc is None:
-        return ComparisonGenerationResult(findings=tuple(sort_findings(findings)), artifact=None, transaction=None)
-
-    missing = [f for f in _PIOTROSKI_FACT_FIELDS if f not in facts_doc]
-    if missing:
-        findings.append(Finding(rule_id="VAL-COMP-002", severity="blocker", scope="bundle", reason_code="comparison.exact_reference_integrity_failure", message=f"--facts is missing required field(s): {missing}"))
-        return ComparisonGenerationResult(findings=tuple(sort_findings(findings)), artifact=None, transaction=None)
-
-    plan, plan_findings = _compile_plan(comparison_registry)
-    findings.extend(plan_findings)
-    if plan is None:
-        return ComparisonGenerationResult(findings=tuple(sort_findings(findings)), artifact=None, transaction=None)
-
-    facts = _parse_piotroski_facts(facts_doc)
-    statistics_or_matrix = evaluate_piotroski(facts, company_type=company_type, policy=plan.piotroski_policy)
-
-    subject_refs = [{"subject_ref_id": "subj-a", "subject_kind": "fundamental_source", "ticker": ticker, "as_of_date": as_of_date}]
-    available = statistics_or_matrix["available_component_count"]
-    artifact = assemble_valuation_comparison(
-        comparison_type="piotroski_diagnostic", purpose="diagnostic", as_of_date=as_of_date, generated_at=generated_at,
-        engine_version=engine_version, comparison_policy_ref=f"val.policy.diagnostic.piotroski@{plan.piotroski_policy.policy_version}",
-        methodology_bundle_ref="val.bundle.comparison@1.0.0",
-        subject_refs=subject_refs, universe_ref=None,
-        method_or_dimension_scope={"scope_id": plan.piotroski_policy.diagnostic_id, "direction": "not_rankable"},
-        eligibility_records=[], observations=[], statistics_or_matrix=statistics_or_matrix, ranking_records=[],
-        confidence=_empty_confidence("high" if available == 9 else "medium"),
-        coverage={"candidate_count": 9, "eligible_count": available, "provisional_count": 0, "excluded_count": 9 - available, "coverage_numerator": available, "coverage_denominator": 9, "coverage_ratio": None},
-    )
-    return _finalize(artifact, findings, registry=comparison_registry, output_dir=output_dir, check_only=check_only)
-
-
-# --- diagnostics: magic formula ----------------------------------------------------------
-
-_MAGIC_FACT_FIELDS = ("ebit", "enterprise_value", "net_working_capital", "net_operating_fixed_assets", "revenue", "total_assets")
-
-
-def _parse_magic_facts(document: Mapping[str, Any]) -> MagicFormulaFacts:
-    kwargs = {field: document[field] for field in _MAGIC_FACT_FIELDS}
-    return MagicFormulaFacts(lease_basis_compatible=bool(document.get("lease_basis_compatible", True)), **kwargs)
-
-
-def generate_magic_formula_diagnostic(
-    *, ticker: str, facts_path: Path, as_of_date: str, generated_at: str, engine_version: str,
-    comparison_registry: CatalogRegistry, output_dir: Path, check_only: bool = False,
-) -> ComparisonGenerationResult:
-    findings: list[Finding] = []
-    facts_doc, err = _load_json(facts_path, label="--facts")
-    findings.extend(err)
-    if facts_doc is None:
-        return ComparisonGenerationResult(findings=tuple(sort_findings(findings)), artifact=None, transaction=None)
-
-    missing = [f for f in _MAGIC_FACT_FIELDS if f not in facts_doc]
-    if missing:
-        findings.append(Finding(rule_id="VAL-COMP-002", severity="blocker", scope="bundle", reason_code="comparison.exact_reference_integrity_failure", message=f"--facts is missing required field(s): {missing}"))
-        return ComparisonGenerationResult(findings=tuple(sort_findings(findings)), artifact=None, transaction=None)
-
-    plan, plan_findings = _compile_plan(comparison_registry)
-    findings.extend(plan_findings)
-    if plan is None:
-        return ComparisonGenerationResult(findings=tuple(sort_findings(findings)), artifact=None, transaction=None)
-
-    facts = _parse_magic_facts(facts_doc)
-    statistics_or_matrix = evaluate_magic_formula(facts, policy=plan.magic_formula_policy)
-
-    subject_refs = [{"subject_ref_id": "subj-a", "subject_kind": "fundamental_source", "ticker": ticker, "as_of_date": as_of_date}]
-    both_eligible = statistics_or_matrix["earnings_yield"]["eligibility"] == "eligible" and statistics_or_matrix["return_on_capital"]["eligibility"] == "eligible"
-    artifact = assemble_valuation_comparison(
-        comparison_type="magic_formula_diagnostic", purpose="diagnostic", as_of_date=as_of_date, generated_at=generated_at,
-        engine_version=engine_version, comparison_policy_ref=f"val.policy.diagnostic.magic_formula@{plan.magic_formula_policy.policy_version}",
-        methodology_bundle_ref="val.bundle.comparison@1.0.0",
-        subject_refs=subject_refs, universe_ref=None,
-        method_or_dimension_scope={"scope_id": plan.magic_formula_policy.diagnostic_id, "direction": "not_rankable"},
-        eligibility_records=[], observations=[], statistics_or_matrix=statistics_or_matrix, ranking_records=[],
-        confidence=_empty_confidence("high" if both_eligible else "medium"),
-        coverage={"candidate_count": 2, "eligible_count": sum(1 for axis in ("earnings_yield", "return_on_capital") if statistics_or_matrix[axis]["eligibility"] == "eligible"), "provisional_count": 0, "excluded_count": sum(1 for axis in ("earnings_yield", "return_on_capital") if statistics_or_matrix[axis]["eligibility"] != "eligible"), "coverage_numerator": 1, "coverage_denominator": 2, "coverage_ratio": None},
     )
     return _finalize(artifact, findings, registry=comparison_registry, output_dir=output_dir, check_only=check_only)

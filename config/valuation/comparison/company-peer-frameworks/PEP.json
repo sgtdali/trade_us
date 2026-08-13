@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:PEP:1",
+  "subject_ticker": "PEP",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "sotp_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "beverages",
+      "label": "Beverages",
+      "purpose": "Global beverage brands, pricing power, distribution, hydration, soft drinks and beverage-growth economics",
+      "members": ["KO", "KDP", "MNST"]
+    },
+    {
+      "group_id": "snacks_convenient_foods",
+      "label": "Snacks and convenient foods",
+      "purpose": "Global snacks, branded packaged foods, pricing and volume, retailer economics and consumer-staples cash generation",
+      "members": ["MDLZ", "GIS", "KHC"]
+    }
+  ],
+  "operational_references": [
+    {
+      "ticker": "NESN",
+      "lens_id": "global_consumer_staples_quality",
+      "reason": "Global food, beverage and distribution-quality reference, but the current SEC pipeline does not support Nestlé's foreign-issuer filing regime.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "PG",
+      "lens_id": "global_consumer_staples_quality",
+      "reason": "Global branded consumer-staples quality reference; category mix is too different for PepsiCo's segment medians.",
+      "included_in_numeric_comparison": false
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "PepsiCo requires separate beverage and snacks/convenient-food lenses. KO and MDLZ are the principal economic references; KDP is retained with transaction and planned-separation comparability caution."
+  }
+}

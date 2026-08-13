@@ -19,12 +19,28 @@
    "provider_symbol": "ADBE"
   },
   {
+   "internal_ticker": "ADSK",
+   "provider_symbol": "ADSK"
+  },
+  {
    "internal_ticker": "ADI",
    "provider_symbol": "ADI"
   },
   {
    "internal_ticker": "AMD",
    "provider_symbol": "AMD"
+  },
+  {
+   "internal_ticker": "AMGN",
+   "provider_symbol": "AMGN"
+  },
+  {
+   "internal_ticker": "AMZN",
+   "provider_symbol": "AMZN"
+  },
+  {
+   "internal_ticker": "ANET",
+   "provider_symbol": "ANET"
   },
   {
    "internal_ticker": "AVGO",
@@ -63,6 +79,10 @@
    "provider_symbol": "CHD"
   },
   {
+   "internal_ticker": "CHTR",
+   "provider_symbol": "CHTR"
+  },
+  {
    "internal_ticker": "CL",
    "provider_symbol": "CL"
   },
@@ -75,12 +95,20 @@
    "provider_symbol": "CMI"
   },
   {
+   "internal_ticker": "CMCSA",
+   "provider_symbol": "CMCSA"
+  },
+  {
    "internal_ticker": "COST",
    "provider_symbol": "COST"
   },
   {
    "internal_ticker": "CPB",
    "provider_symbol": "CPB"
+  },
+  {
+   "internal_ticker": "CRM",
+   "provider_symbol": "CRM"
   },
   {
    "internal_ticker": "CSCO",
@@ -103,6 +131,10 @@
    "provider_symbol": "DG"
   },
   {
+   "internal_ticker": "DIS",
+   "provider_symbol": "DIS"
+  },
+  {
    "internal_ticker": "EMR",
    "provider_symbol": "EMR"
   },
@@ -115,8 +147,16 @@
    "provider_symbol": "FIZZ"
   },
   {
+   "internal_ticker": "GILD",
+   "provider_symbol": "GILD"
+  },
+  {
    "internal_ticker": "GIS",
    "provider_symbol": "GIS"
+  },
+  {
+   "internal_ticker": "GOOGL",
+   "provider_symbol": "GOOGL"
   },
   {
    "internal_ticker": "HON",
@@ -127,8 +167,16 @@
    "provider_symbol": "HPQ"
   },
   {
+   "internal_ticker": "HUBS",
+   "provider_symbol": "HUBS"
+  },
+  {
    "internal_ticker": "ITW",
    "provider_symbol": "ITW"
+  },
+  {
+   "internal_ticker": "INTU",
+   "provider_symbol": "INTU"
   },
   {
    "internal_ticker": "JNJ",
@@ -167,6 +215,10 @@
    "provider_symbol": "MDT"
   },
   {
+   "internal_ticker": "MELI",
+   "provider_symbol": "MELI"
+  },
+  {
    "internal_ticker": "MMM",
    "provider_symbol": "MMM"
   },
@@ -179,12 +231,28 @@
    "provider_symbol": "MRK"
   },
   {
+   "internal_ticker": "MRVL",
+   "provider_symbol": "MRVL"
+  },
+  {
+   "internal_ticker": "META",
+   "provider_symbol": "META"
+  },
+  {
+   "internal_ticker": "NFLX",
+   "provider_symbol": "NFLX"
+  },
+  {
    "internal_ticker": "MSFT",
    "provider_symbol": "MSFT"
   },
   {
    "internal_ticker": "NSC",
    "provider_symbol": "NSC"
+  },
+  {
+   "internal_ticker": "NOW",
+   "provider_symbol": "NOW"
   },
   {
    "internal_ticker": "NVDA",
@@ -207,8 +275,24 @@
    "provider_symbol": "PFE"
   },
   {
+   "internal_ticker": "PINS",
+   "provider_symbol": "PINS"
+  },
+  {
    "internal_ticker": "PG",
    "provider_symbol": "PG"
+  },
+  {
+   "internal_ticker": "PSKY",
+   "provider_symbol": "PSKY"
+  },
+  {
+   "internal_ticker": "RDDT",
+   "provider_symbol": "RDDT"
+  },
+  {
+   "internal_ticker": "REGN",
+   "provider_symbol": "REGN"
   },
   {
    "internal_ticker": "PH",
@@ -219,24 +303,48 @@
    "provider_symbol": "SJM"
   },
   {
+   "internal_ticker": "SNAP",
+   "provider_symbol": "SNAP"
+  },
+  {
    "internal_ticker": "SYK",
    "provider_symbol": "SYK"
+  },
+  {
+   "internal_ticker": "T",
+   "provider_symbol": "T"
   },
   {
    "internal_ticker": "TGT",
    "provider_symbol": "TGT"
   },
   {
+   "internal_ticker": "TMUS",
+   "provider_symbol": "TMUS"
+  },
+  {
    "internal_ticker": "TXN",
    "provider_symbol": "TXN"
+  },
+  {
+   "internal_ticker": "TTD",
+   "provider_symbol": "TTD"
   },
   {
    "internal_ticker": "UNP",
    "provider_symbol": "UNP"
   },
   {
+   "internal_ticker": "VZ",
+   "provider_symbol": "VZ"
+  },
+  {
    "internal_ticker": "WMT",
    "provider_symbol": "WMT"
+  },
+  {
+   "internal_ticker": "WBD",
+   "provider_symbol": "WBD"
   },
   {
    "internal_ticker": "ZBH",

@@ -1,0 +1,130 @@
+{
+  "events": [
+    {
+      "schema_version": 1,
+      "event_id": "COMPLETE-NVDA-PREVIEW-20260812",
+      "event_type": "workflow_completed",
+      "recorded_at": "2026-08-12T14:06:12Z",
+      "run_id": "IDEA-20260812-shortlist",
+      "ticker": "NVDA",
+      "source_artifacts": [
+        {
+          "role": "result",
+          "path": "pei/2026-08-12/NVDA/preview/result.md",
+          "sha256": "63c601a24b7c74abc0e3b414ad7368e3f837656d8d0544da2caa9a1a730cff02"
+        },
+        {
+          "role": "pack",
+          "path": "pei/2026-08-12/NVDA/preview/pack.json",
+          "sha256": "85e523108eb2e4c957186424ce8e72334f358d473e9e389d98f8c504b41930e8"
+        },
+        {
+          "role": "instructions",
+          "path": "pei/2026-08-12/NVDA/preview/instructions.md",
+          "sha256": "80622352548177ac458d7ed7e5e4261b4b992e1da429e161f4b5aea4d8d69d58"
+        }
+      ],
+      "payload": {
+        "workflow": "earnings_preview",
+        "work_item_id": "WI-IDEA-20260812-shortlist-NVDA-earnings_preview",
+        "result_contract": "expectation_bar_and_triggers",
+        "position_action": "wait_for_proof",
+        "position_context": "unknown",
+        "stance": "HOLD / WAIT FOR PROOF",
+        "expectation_bar": [
+          {
+            "metric": "Q2_FY2027_revenue_consensus",
+            "value": 91.85,
+            "unit": "USD_billion",
+            "as_of": "2026-08-12"
+          },
+          {
+            "metric": "Q2_FY2027_revenue_guide_midpoint",
+            "value": 91.0,
+            "unit": "USD_billion",
+            "as_of": "2026-05-20"
+          },
+          {
+            "metric": "Q2_FY2027_revenue_guide_ceiling",
+            "value": 92.82,
+            "unit": "USD_billion",
+            "as_of": "2026-05-20"
+          },
+          {
+            "metric": "Q3_FY2027_revenue_consensus",
+            "value": 103.13,
+            "unit": "USD_billion",
+            "as_of": "2026-08-12"
+          },
+          {
+            "metric": "Q2_FY2027_non_GAAP_gross_margin_floor",
+            "value": 74.5,
+            "unit": "pct",
+            "as_of": "2026-05-20"
+          }
+        ],
+        "stock_moving_kpis": [
+          "Q2 FY2027 revenue versus 92.82B guide ceiling and 96.66B analyst high",
+          "Q3 FY2027 revenue guide midpoint versus 103.13B consensus",
+          "Non-GAAP gross margin versus the 74.5%-75.5% guide range",
+          "China Data Center revenue embedded in Q3 guidance",
+          "Blackwell 300 compute ramp and networking attach",
+          "Cash conversion and inventory/capacity commitments"
+        ],
+        "call_question_falsifiers": [
+          "Q3 revenue guide below 103.13B with demand-related commentary",
+          "Gross margin below 74.5% with persistent transition, mix, or cost pressure",
+          "Customer digestion rather than supply constraints limiting shipments",
+          "Rubin demand pulling forward or cannibalizing Blackwell orders",
+          "Working-capital build unsupported by firm non-cancellable demand"
+        ],
+        "event": {
+          "name": "Q2 FY2027 earnings",
+          "date": "2026-08-26",
+          "date_status": "confirmed",
+          "release_time": "13:20 PT",
+          "call_time": "14:00 PT"
+        },
+        "next_proof_point": "Q3 FY2027 revenue guide midpoint",
+        "data_gaps": [
+          "earnings implied move",
+          "options data",
+          "positioning",
+          "short interest",
+          "sourced whisper estimate",
+          "benchmark and active-weight context"
+        ]
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "WAIT-NVDA-Q2FY27-PRINT-20260812",
+      "event_type": "waiting_for_trigger",
+      "recorded_at": "2026-08-12T14:06:13Z",
+      "run_id": "IDEA-20260812-shortlist",
+      "ticker": "NVDA",
+      "source_artifacts": [
+        {
+          "role": "result",
+          "path": "pei/2026-08-12/NVDA/preview/result.md",
+          "sha256": "63c601a24b7c74abc0e3b414ad7368e3f837656d8d0544da2caa9a1a730cff02"
+        }
+      ],
+      "payload": {
+        "triggers": [
+          {
+            "trigger_id": "NVDA-Q2FY27-PRINT-20260826",
+            "type": "date_due",
+            "check_cadence": "event_driven",
+            "next_check_date": "2026-08-26",
+            "date": "2026-08-26",
+            "on_match": "request_workflow",
+            "workflow": "earnings_deep_dive",
+            "source_path": "pei/2026-08-12/NVDA/preview/result.md",
+            "date_status": "confirmed"
+          }
+        ]
+      }
+    }
+  ]
+}

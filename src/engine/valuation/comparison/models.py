@@ -5,7 +5,7 @@
 ``schemas.iter_schema_errors("valuation-comparison", ...)`` -- it performs
 no re-validation of shapes the JSON Schema already enforces, only
 structures access. It never computes an eligibility state, statistic, or
-diagnostic component itself: those are T74-B's job.
+comparison statistic itself: those are the evaluation engines' job.
 """
 
 from __future__ import annotations
@@ -14,31 +14,15 @@ from dataclasses import dataclass
 from types import MappingProxyType
 from typing import Any, Mapping
 
-#: The four comparison variants.
+#: The supported comparison variants.
 COMPARISON_TYPES = (
     "historical_self",
     "sector_peer",
-    "piotroski_diagnostic",
-    "magic_formula_diagnostic",
 )
 
 ELIGIBILITY_STATES = ("eligible", "provisional", "excluded_insufficient_data")
-RESULT_STATUS_STATES = ("available", "provisional", "insufficient_data", "not_comparable", "calculation_blocked", "diagnostic_only")
+RESULT_STATUS_STATES = ("available", "provisional", "insufficient_data", "not_comparable", "calculation_blocked")
 DIRECTIONS = ("higher_is_more_attractive", "lower_is_more_attractive", "neutral_contextual", "not_rankable")
-
-#: T67.7's exact nine canonical Piotroski component IDs, in canonical order.
-PIOTROSKI_COMPONENT_ORDER = (
-    "piot.roa_positive",
-    "piot.cfo_positive",
-    "piot.delta_roa_positive",
-    "piot.accrual_quality",
-    "piot.leverage_decreased",
-    "piot.current_ratio_increased",
-    "piot.no_external_equity_issuance",
-    "piot.gross_margin_increased",
-    "piot.asset_turnover_increased",
-)
-
 
 def _tuple_of(value: Any) -> tuple:
     return tuple(value) if value is not None else ()

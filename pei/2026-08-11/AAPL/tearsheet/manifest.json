@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-08-11T13:55:50.812410+00:00",
+  "built_on": "2026-08-11",
+  "last_market_session": "2026-08-07",
+  "intended_step": "tearsheet",
+  "ticker": "AAPL",
+  "source_month": "2026-08-07",
+  "source_run_root": "live/current",
+  "financials_as_of": "2026-08-07T23:59:59Z",
+  "prices_as_of": "2026-08-07",
+  "consensus_as_of": "2026-08-11",
+  "consensus_file": "data/consensus/snapshot-2026-08-11.json",
+  "companies_in_pack": 1,
+  "consensus_coverage": "1/1",
+  "consensus_missing": [],
+  "guidance_coverage": "0/1",
+  "price_drift_ge_5pct": "0/60",
+  "price_drift_worst_pct": 3.9,
+  "pack_sha256": "e3d51dc409aed9488a75dd4ee7c35d8c5844924f419336adc039f80f5a0fd737"
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:CRM:1",
+  "subject_ticker": "CRM",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "blended_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "enterprise_applications_workflow",
+      "label": "Enterprise applications and workflow",
+      "purpose": "Mission-critical enterprise applications, workflows, cloud migration, recurring subscriptions and platform expansion",
+      "members": ["NOW", "ORCL"]
+    },
+    {
+      "group_id": "crm_customer_platform",
+      "label": "CRM and customer platform",
+      "purpose": "CRM, marketing, sales, service, commerce, customer data and customer-experience platforms",
+      "members": ["HUBS", "ADBE"]
+    },
+    {
+      "group_id": "ai_software_quality",
+      "label": "AI and software quality",
+      "purpose": "Agentic-AI monetization, recurring growth, cross-sell, platform quality and high-margin enterprise software",
+      "members": ["NOW"]
+    }
+  ],
+  "operational_references": [
+    {
+      "ticker": "SAP",
+      "lens_id": "enterprise_applications_workflow",
+      "reason": "Large-enterprise ERP, CRM, data and workflow-suite reference, but the current SEC pipeline does not support SAP's foreign-issuer filing regime.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "MSFT",
+      "lens_id": "strategic_ai_software_reference",
+      "reason": "Dynamics 365, Power Platform and Copilot are direct strategic references, but Azure and Office make Microsoft's consolidated multiple unsuitable for CRM medians.",
+      "included_in_numeric_comparison": false
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "Salesforce requires separate enterprise-suite, direct customer-platform and AI/software-quality lenses. NOW is the closest quality and growth peer; HUBS is the closest product-level CRM peer at materially smaller scale."
+  }
+}

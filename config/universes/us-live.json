@@ -1,0 +1,531 @@
+{
+  "schema_version": 1,
+  "universe_id": "us_live",
+  "captured_at": "2026-08-12T00:00:00+00:00",
+  "source": "live peer-universe configuration",
+  "note": "Canli PEI evreni. Donmus us60 backtest evreninden ayridir ve canli peer/config ihtiyaclariyla genisleyebilir.",
+  "members": [
+    {
+      "ticker": "AAPL",
+      "name": "Apple Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "ABBV",
+      "name": "AbbVie Inc.",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "ABT",
+      "name": "Abbott Laboratories",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "ADBE",
+      "name": "Adobe Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "ADSK",
+      "name": "Autodesk, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "ADI",
+      "name": "Analog Devices, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "AMD",
+      "name": "Advanced Micro Devices, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "AMGN",
+      "name": "Amgen Inc.",
+      "exchange": "NASDAQ",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "AMZN",
+      "name": "Amazon.com, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "ANET",
+      "name": "Arista Networks, Inc.",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "AVGO",
+      "name": "Broadcom Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "BDX",
+      "name": "Becton, Dickinson and Company",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "BJ",
+      "name": "BJ's Wholesale Club Holdings, Inc.",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "BMY",
+      "name": "Bristol-Myers Squibb Company",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "BSX",
+      "name": "Boston Scientific Corporation",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "CAG",
+      "name": "Conagra Brands, Inc.",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "CAT",
+      "name": "Caterpillar Inc.",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "CELH",
+      "name": "Celsius Holdings, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "CHD",
+      "name": "Church & Dwight Co., Inc.",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "CHTR",
+      "name": "Charter Communications, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "communication-services"
+    },
+    {
+      "ticker": "CL",
+      "name": "Colgate-Palmolive Company",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "CLX",
+      "name": "The Clorox Company",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "CMI",
+      "name": "Cummins Inc.",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "CMCSA",
+      "name": "Comcast Corporation",
+      "exchange": "NASDAQ",
+      "sector": "communication-services"
+    },
+    {
+      "ticker": "COST",
+      "name": "Costco Wholesale Corporation",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "CPB",
+      "name": "The Campbell's Company",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "CRM",
+      "name": "Salesforce, Inc.",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "CSCO",
+      "name": "Cisco Systems, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "CSX",
+      "name": "CSX Corporation",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "DE",
+      "name": "Deere & Company",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "DELL",
+      "name": "Dell Technologies Inc.",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "DG",
+      "name": "Dollar General Corporation",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "DIS",
+      "name": "The Walt Disney Company",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "EMR",
+      "name": "Emerson Electric Co.",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "ETN",
+      "name": "Eaton Corporation plc",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "FIZZ",
+      "name": "National Beverage Corp.",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "GILD",
+      "name": "Gilead Sciences, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "GIS",
+      "name": "General Mills, Inc.",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "GOOGL",
+      "name": "Alphabet Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "HON",
+      "name": "Honeywell International Inc.",
+      "exchange": "NASDAQ",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "HPQ",
+      "name": "HP Inc.",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "HUBS",
+      "name": "HubSpot, Inc.",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "ITW",
+      "name": "Illinois Tool Works Inc.",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "INTU",
+      "name": "Intuit Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "JNJ",
+      "name": "Johnson & Johnson",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "KDP",
+      "name": "Keurig Dr Pepper Inc.",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "KHC",
+      "name": "The Kraft Heinz Company",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "KMB",
+      "name": "Kimberly-Clark Corporation",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "KO",
+      "name": "The Coca-Cola Company",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "KR",
+      "name": "The Kroger Co.",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "LLY",
+      "name": "Eli Lilly and Company",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "MDLZ",
+      "name": "Mondelez International, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "MDT",
+      "name": "Medtronic plc",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "MELI",
+      "name": "MercadoLibre, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "MMM",
+      "name": "3M Company",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "MNST",
+      "name": "Monster Beverage Corporation",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "MRK",
+      "name": "Merck & Co., Inc.",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "MRVL",
+      "name": "Marvell Technology, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "META",
+      "name": "Meta Platforms, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "NFLX",
+      "name": "Netflix, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "MSFT",
+      "name": "Microsoft Corporation",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "NSC",
+      "name": "Norfolk Southern Corporation",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "NOW",
+      "name": "ServiceNow, Inc.",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "NVDA",
+      "name": "NVIDIA Corporation",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "NWL",
+      "name": "Newell Brands Inc.",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "ORCL",
+      "name": "Oracle Corporation",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "PEP",
+      "name": "PepsiCo, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "PFE",
+      "name": "Pfizer Inc.",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "PINS",
+      "name": "Pinterest, Inc.",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "PG",
+      "name": "The Procter & Gamble Company",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "PSKY",
+      "name": "Paramount Skydance Corporation",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "RDDT",
+      "name": "Reddit, Inc.",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "REGN",
+      "name": "Regeneron Pharmaceuticals, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "PH",
+      "name": "Parker-Hannifin Corporation",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "SJM",
+      "name": "The J. M. Smucker Company",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "SNAP",
+      "name": "Snap Inc.",
+      "exchange": "NYSE",
+      "sector": "technology"
+    },
+    {
+      "ticker": "SYK",
+      "name": "Stryker Corporation",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    },
+    {
+      "ticker": "T",
+      "name": "AT&T Inc.",
+      "exchange": "NYSE",
+      "sector": "communication-services"
+    },
+    {
+      "ticker": "TGT",
+      "name": "Target Corporation",
+      "exchange": "NYSE",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "TMUS",
+      "name": "T-Mobile US, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "communication-services"
+    },
+    {
+      "ticker": "TXN",
+      "name": "Texas Instruments Incorporated",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "TTD",
+      "name": "The Trade Desk, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "UNP",
+      "name": "Union Pacific Corporation",
+      "exchange": "NYSE",
+      "sector": "industrials"
+    },
+    {
+      "ticker": "VZ",
+      "name": "Verizon Communications Inc.",
+      "exchange": "NYSE",
+      "sector": "communication-services"
+    },
+    {
+      "ticker": "WMT",
+      "name": "Walmart Inc.",
+      "exchange": "NASDAQ",
+      "sector": "consumer-staples"
+    },
+    {
+      "ticker": "WBD",
+      "name": "Warner Bros. Discovery, Inc.",
+      "exchange": "NASDAQ",
+      "sector": "technology"
+    },
+    {
+      "ticker": "ZBH",
+      "name": "Zimmer Biomet Holdings, Inc.",
+      "exchange": "NYSE",
+      "sector": "health-care"
+    }
+  ]
+}

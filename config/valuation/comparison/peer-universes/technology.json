@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
   "artifact_type": "valuation_peer_universe",
-  "artifact_id": "valuation-peer-universe:technology_us:1",
+  "artifact_id": "valuation-peer-universe:technology_us:7",
   "owner_type": "authored",
   "universe_id": "technology_us",
-  "universe_version": 1,
+  "universe_version": 7,
   "sector_family": "technology",
   "method_family_ids": [
     "val.method.earnings_yield.reported_parent",
@@ -53,6 +53,22 @@
       ]
     },
     {
+      "member_id": "adsk",
+      "ticker": "ADSK",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologySoftware"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
       "member_id": "adi",
       "ticker": "ADI",
       "cohort_tier": "primary",
@@ -87,6 +103,16 @@
         "free_cash_flow_margin",
         "current_ratio"
       ]
+    },
+    {
+      "member_id": "anet",
+      "ticker": "ANET",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologyHardware"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": ["val.method.earnings_yield.reported_parent", "gross_margin", "net_margin", "free_cash_flow_margin", "current_ratio"]
     },
     {
       "member_id": "avgo",
@@ -143,6 +169,32 @@
       ]
     },
     {
+      "member_id": "dis",
+      "ticker": "DIS",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologyMedia"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "hubs",
+      "ticker": "HUBS",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologySoftware"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": ["val.method.earnings_yield.reported_parent", "gross_margin", "net_margin", "free_cash_flow_margin", "current_ratio"]
+    },
+    {
       "member_id": "hpq",
       "ticker": "HPQ",
       "cohort_tier": "primary",
@@ -161,6 +213,66 @@
       ]
     },
     {
+      "member_id": "googl",
+      "ticker": "GOOGL",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": [
+        "MODEL:TechnologySoftware"
+      ],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "intu",
+      "ticker": "INTU",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologySoftware"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "meli",
+      "ticker": "MELI",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologyPlatform"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "mrvl",
+      "ticker": "MRVL",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologySemis"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": ["val.method.earnings_yield.reported_parent", "gross_margin", "net_margin", "free_cash_flow_margin", "current_ratio"]
+    },
+    {
       "member_id": "msft",
       "ticker": "MSFT",
       "cohort_tier": "primary",
@@ -169,6 +281,40 @@
         "MODEL:TechnologySoftware"
       ],
       "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "meta",
+      "ticker": "META",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": [
+        "MODEL:TechnologySoftware"
+      ],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "now",
+      "ticker": "NOW",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologySoftware"],
+      "effective_from": "2026-08-12",
       "effective_to": null,
       "applicable_method_family_ids": [
         "val.method.earnings_yield.reported_parent",
@@ -215,6 +361,150 @@
       ]
     },
     {
+      "member_id": "amzn",
+      "ticker": "AMZN",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologyPlatform"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "crm",
+      "ticker": "CRM",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologySoftware"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "nflx",
+      "ticker": "NFLX",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologyPlatform"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "pins",
+      "ticker": "PINS",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologyPlatform"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "psky",
+      "ticker": "PSKY",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologyMedia"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "rddt",
+      "ticker": "RDDT",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologyPlatform"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "snap",
+      "ticker": "SNAP",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologyPlatform"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "ttd",
+      "ticker": "TTD",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologySoftware"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "wbd",
+      "ticker": "WBD",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.technology_standard_corporate",
+      "classification_refs": ["MODEL:TechnologyMedia"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
       "member_id": "txn",
       "ticker": "TXN",
       "cohort_tier": "primary",
@@ -237,14 +527,14 @@
   "review": {
     "author": "fundamentaltrading",
     "reviewer": "fundamentaltrading",
-    "reviewed_at": "2026-08-05T00:00:00Z",
-    "methodology_version": "1.0.0",
+    "reviewed_at": "2026-08-12T00:00:00Z",
+    "methodology_version": "2.0.0",
     "rationale_codes": [
       "comparison.technology_standard_corporate"
     ]
   },
   "lifecycle": "approved",
-  "supersedes_ref": null,
+  "supersedes_ref": "valuation-peer-universe:technology_us:6",
   "lineage": {
     "dag": {
       "nodes": [

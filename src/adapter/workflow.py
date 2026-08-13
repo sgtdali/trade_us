@@ -25,7 +25,6 @@ from .qualitative import (
     inherit_annual_risks,
 )
 from .sec_client import SecClient
-from .market import direct_share_count_as_int, select_direct_outstanding_shares
 from .non_gaap import build_financial_operational_artifact
 from .valuation import run_us_valuation
 from .xbrl import load_facts
@@ -195,7 +194,6 @@ def run_company_workflow(
         latest_period=latest_period, fy_period=fy_period,
         latest_period_end=latest_filing.report_date, fy_period_end=annual.report_date,
         prior_interim_period=prior_interim_period,
-        annual_share_counts=_annual_share_counts(annual_filings, facts_by_accession),
         company_type=company["pipeline"]["company_type"],
         sector_module=company["pipeline"]["sector_module"],
         historical_market_observation=historical_market_observation,
@@ -204,22 +202,3 @@ def run_company_workflow(
         generate_report=generate_report,
     )
     return {"ticker": ticker, "cik": cik, "periods": processed, "valuation": valuation}
-
-
-def _annual_share_counts(
-    annual_filings, facts_by_accession: dict[str, tuple]
-) -> tuple[int | None, int | None]:
-    counts: list[int | None] = []
-    for filing in annual_filings[:2]:
-        facts = facts_by_accession.get(filing.accession)
-        if not facts:
-            counts.append(None)
-            continue
-        try:
-            selected = select_direct_outstanding_shares(facts, as_of=filing.filing_date)
-            counts.append(direct_share_count_as_int(selected))
-        except Exception:  # noqa: BLE001 -- missing cover fact makes one Piotroski component unavailable
-            counts.append(None)
-    while len(counts) < 2:
-        counts.append(None)
-    return counts[0], counts[1]

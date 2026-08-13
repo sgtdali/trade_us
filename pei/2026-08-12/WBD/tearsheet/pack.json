@@ -1,0 +1,883 @@
+{
+  "schema_version": 2,
+  "purpose": "Deterministic point-in-time pack built directly from workspace artifacts; no valuation report is parsed.",
+  "month": "2026-08-07-ddda5ff5",
+  "decision_date": "2026-08-07",
+  "cutoff_instant": "2026-08-07T23:59:59Z",
+  "execution_date": "2026-08-07",
+  "universe_count": 1,
+  "universe_coverage": {
+    "configured_count": 87,
+    "included_count": 87,
+    "missing_financial_artifacts": [],
+    "pipeline_skipped": {}
+  },
+  "known_limitations": [
+    "fixed current universe creates survivorship and universe-selection bias",
+    "historical consensus, transcripts, positioning and short-interest vintages are unavailable",
+    "guidance is available only where a range was extracted and both endpoints appear in the selected release",
+    "peer medians are supplied only for the comps step; do not invent them",
+    "each live layer carries its own as-of date; do not apply the financial artifact cutoff to refreshed market, consensus or event data"
+  ],
+  "companies": [
+    {
+      "ticker": "WBD",
+      "cohort": "TechnologyMedia",
+      "latest_reported_period": "2026-Q2 — 26 weeks ended 2026-06-30 (cumulative year-to-date)",
+      "period_label": "2026-Q2",
+      "latest_period_end": "2026-06-30",
+      "financial_publication_date": "2026-08-06",
+      "financial_age_days": 38,
+      "closing_price_usd": 27.07,
+      "market_cap_usd_m": 67964.7,
+      "market": {
+        "return_1m_pct": -0.07,
+        "return_3m_pct": -0.62,
+        "return_6m_pct": -0.51,
+        "return_12m_pct": 148.12,
+        "annualized_volatility_pct": 44.14,
+        "max_drawdown_12m_pct": -15.68,
+        "avg_dollar_volume_20d_usd_m": 642.25
+      },
+      "fundamentals": {
+        "revenue_growth": -6.3,
+        "operating_profit_growth": -905.4,
+        "operating_cash_flow_growth": -58.3,
+        "operating_margin_pre_investment": -12.67,
+        "operating_margin": -12.67,
+        "net_margin": -15.58,
+        "operating_cash_flow_margin": 3.63,
+        "free_cash_flow_margin": 0.55,
+        "current_ratio": 0.777,
+        "net_working_capital": -3604.0,
+        "free_cash_flow": 96.0,
+        "capex_to_revenue": 3.1
+      },
+      "valuation": {
+        "Earnings Yield": -4.6595,
+        "Price / Book Value": 2.0697,
+        "Price / Earnings": null,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": null,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "latest_earnings_release": {
+        "status": "available",
+        "filing_date": "2026-08-06",
+        "accession": "0001437107-26-000072",
+        "source_id": "sec-0001437107-26-000072",
+        "text_sha256": "fe60759c5b4a379baa5c833cfd1fe1bf10b9b0458ceb73a4695eead0eb487037",
+        "guidance": {
+          "status": "unavailable",
+          "reason": "no historical guidance extraction"
+        },
+        "revision_language_supported": true,
+        "excerpts": [
+          "The absence of the NBA in the current year negatively impacted the year-over-year growth rate by 20% ex-FX. • Content revenues decreased 26% ex-FX, primarily due to lower theatrical revenue at the Studios segment. • Net income available to Warner Bros.",
+          "The absence of the NBA favorably impacted the year-over-year growth rate by 30% ex-FX. • SG&A decreased 6% ex-FX, primarily driven by lower overhead costs, partially offset by higher marketing costs. • Global Linear Networks Adjusted EBITDA decreased 5% ex-FX to $1,446 million compared to the prior year quarter.",
+          "Q2 2026 Earnings Press Release | August 6, 2026 4 Corporate Three Months Ended June 30, 2026 2025 % Change $ in millions Reported Ex-FX(*) Adjusted EBITDA $ (298) $ (316) 6 % 6 % (*) A non-GAAP financial measure; see the section starting on page 11 titled Definitions & Sources for additional details. • Corporate Adjusted EBITDA improved by $18 million, primarily driven by lower overhead costs.",
+          "Free cash flow(3)(*) decreased to $572 million from $702 million, primarily driven by higher net content investment partially offset by lower tax payments and the timing of working capital.",
+          "We see meaningful opportunity to enhance the value of our platform for advertising partners and to drive better monetization through data and format innovation, and improving yield as we continue to increase still lower international fill rates while maintaining our premium positioning.",
+          "Advertising revenue grew 8% ex-FX(3) despite a significant 16% ex-FX year-over-year headwind from the absence of the NBA this year.",
+          "International advertising revenue increased 73% ex-FX following the launch of HBO Max in Germany, Italy, the U.K, and Ireland.",
+          "Streaming generated $512 million of Adjusted EBITDA during the quarter, representing 63% ex-FX year-over-year growth and a nearly 17% Adjusted EBITDA margin.",
+          "Year to date, Adjusted EBITDA margin was approximately 16%, demonstrating the great operating leverage in the business as revenue growth outpaced operating expense growth.",
+          "While we expect the timing of investments may cause quarterly margins to fluctuate (e.g. front-loaded marketing expense around the debut of the Harry Potter series in the fourth quarter), we remain confident in our long-term 20%+ Adjusted EBITDA margin target for the Streaming segment as we expect revenues to grow at a significantly faster rate annually than operating expenses. 2Q26 Shareholder Letter | August 6, 2026 3 STUDIOS Over the last four years, we transformed our Studios segment, strengthening its industry leadership through creative excellence, product portfolio diversification and operational enhancements."
+        ]
+      },
+      "source_ids": [
+        "sec-0001437107-26-000072"
+      ],
+      "consensus_estimates": {
+        "status": "available",
+        "as_of": "2026-08-12",
+        "source": "yfinance / Yahoo Finance analyst estimates",
+        "earnings_estimate": {
+          "0q": {
+            "avg": -0.00242,
+            "low": -0.23,
+            "high": 0.23,
+            "yearAgoEps": -0.06,
+            "numberOfAnalysts": 14,
+            "growth": 0.9597,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": -0.02918,
+            "low": -0.29,
+            "high": 0.2,
+            "yearAgoEps": -0.1,
+            "numberOfAnalysts": 14,
+            "growth": 0.7082,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": -1.16619,
+            "low": -1.6,
+            "high": -0.66,
+            "yearAgoEps": 0.29,
+            "numberOfAnalysts": 14,
+            "growth": -5.0213,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": -0.0589,
+            "low": -0.93,
+            "high": 0.49,
+            "yearAgoEps": -1.16619,
+            "numberOfAnalysts": 14,
+            "growth": 0.94949996,
+            "currency": "USD"
+          }
+        },
+        "revenue_estimate": {
+          "0q": {
+            "avg": 8834124430,
+            "low": 8240000000,
+            "high": 9412199860,
+            "numberOfAnalysts": 18,
+            "yearAgoRevenue": 9045000000,
+            "growth": -0.0233,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 9794519400,
+            "low": 9309000000,
+            "high": 10480752000,
+            "numberOfAnalysts": 18,
+            "yearAgoRevenue": 9460000000,
+            "growth": 0.0354,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 36269746780,
+            "low": 35306000000,
+            "high": 37146329000,
+            "numberOfAnalysts": 17,
+            "yearAgoRevenue": 37296000000,
+            "growth": -0.0275,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 37537368380,
+            "low": 35446600000,
+            "high": 39353284640,
+            "numberOfAnalysts": 20,
+            "yearAgoRevenue": 36269746780,
+            "growth": 0.0349,
+            "currency": "USD"
+          }
+        },
+        "eps_trend": {
+          "0q": {
+            "current": -0.00242,
+            "7daysAgo": 0.01178,
+            "30daysAgo": 0.01311,
+            "60daysAgo": 0.01244,
+            "90daysAgo": 0.01033,
+            "currency": "USD"
+          },
+          "+1q": {
+            "current": -0.02918,
+            "7daysAgo": 0.01556,
+            "30daysAgo": 0.01556,
+            "60daysAgo": 0.01484,
+            "90daysAgo": 0.02674,
+            "currency": "USD"
+          },
+          "0y": {
+            "current": -1.16619,
+            "7daysAgo": -1.25454,
+            "30daysAgo": -1.2474,
+            "60daysAgo": -1.24669,
+            "90daysAgo": 0.0,
+            "currency": "USD"
+          },
+          "+1y": {
+            "current": -0.0589,
+            "7daysAgo": 0.03859,
+            "30daysAgo": 0.04628,
+            "60daysAgo": 0.0144,
+            "90daysAgo": 0.00628,
+            "currency": "USD"
+          }
+        },
+        "eps_revisions": {
+          "0q": {
+            "upLast7days": 0,
+            "upLast30days": 1,
+            "downLast30days": 2,
+            "downLast7Days": 2,
+            "currency": "USD"
+          },
+          "+1q": {
+            "upLast7days": 1,
+            "upLast30days": 2,
+            "downLast30days": 1,
+            "downLast7Days": 1,
+            "currency": "USD"
+          },
+          "0y": {
+            "upLast7days": 0,
+            "upLast30days": 1,
+            "downLast30days": 3,
+            "downLast7Days": 2,
+            "currency": "USD"
+          },
+          "+1y": {
+            "upLast7days": 0,
+            "upLast30days": 0,
+            "downLast30days": 3,
+            "downLast7Days": 1,
+            "currency": "USD"
+          }
+        },
+        "price_targets": {
+          "current": 27.07,
+          "high": 31.25,
+          "low": 26.0,
+          "mean": 29.81818,
+          "median": 31.0
+        }
+      },
+      "next_events": {
+        "status": "available",
+        "as_of": "2026-08-12",
+        "source": "yfinance / Yahoo Finance calendar",
+        "next_earnings_date": "2026-11-05",
+        "date_confirmed": false,
+        "confirmation_note": "Yahoo does not distinguish a company-announced date from an estimate. Treat as estimated until the IR page confirms it.",
+        "dividend_date": null,
+        "ex_dividend_date": null
+      },
+      "transaction_filing_history": {
+        "status": "transaction-related filing history; current status not determined",
+        "current_transaction_status": "not determined from filing-form history",
+        "verification_required": true,
+        "filing_count": 35,
+        "first_filing": "2025-12-05",
+        "latest_filing": "2026-03-26",
+        "forms": [
+          "425",
+          "DEFM14A",
+          "PREM14A"
+        ],
+        "filing_role_indicator": "filed to solicit its own shareholders",
+        "filing_role_basis": "filed a merger proxy (DEFM14A/PREM14A) and no S-4",
+        "not_established_by_pack": "Whether a transaction remains pending, completed, terminated or superseded; deal terms, consideration, counterparty, closing timetable and regulatory status. Filing-form history alone does not establish current transaction status."
+      },
+      "special_situations": {
+        "status": "context only",
+        "context": [
+          {
+            "date": "2025-06-03",
+            "item": "5.03",
+            "meaning": "amended articles/bylaws, or a change of fiscal year"
+          }
+        ]
+      },
+      "roic": {
+        "status": "not computed",
+        "reason": "effective tax rate outside a usable range"
+      },
+      "market_statistics_at_cutoff": {
+        "return_1m_pct": 0.56,
+        "return_3m_pct": -1.25,
+        "return_6m_pct": 0.07,
+        "return_12m_pct": 109.38,
+        "annualized_volatility_pct": 45.58,
+        "max_drawdown_12m_pct": -15.72,
+        "avg_dollar_volume_20d_usd_m": 681.66
+      },
+      "market_statistics_at_cutoff_as_of": "2026-08-07",
+      "market_statistics_as_of": "2026-08-11",
+      "market_statistics_refresh_status": "available",
+      "price_refresh": {
+        "status": "available",
+        "price_now": 27.07,
+        "price_as_of": "2026-08-11",
+        "price_at_cutoff": 26.78,
+        "cutoff_price_as_of": "2026-08-07",
+        "change_pct": 1.08,
+        "market_cap_now_usd_m": 67964.7,
+        "valuation_at_price_now": {
+          "Earnings Yield": -4.6595,
+          "Price / Book Value": 2.0697,
+          "Price / Earnings": null,
+          "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+          "Lease-Exclusive Enterprise Value / Reported Operating Income": null,
+          "Enterprise Value / Issuer-Reported EBITDA": null
+        },
+        "not_rescaled": [],
+        "not_rescaled_reason": null,
+        "method": "Price-based multiples use the exact price ratio; enterprise-value multiples use exact current EV = refreshed market cap + filing-based net debt."
+      },
+      "net_debt": {
+        "status": "derived",
+        "period": "2026-Q2",
+        "as_of": "2026-06-30",
+        "unit": "million USD",
+        "debt_as_of": "2026-06-30",
+        "debt_is_from_an_older_period": false,
+        "total_debt": 32023,
+        "total_debt_basis": "sum of the reported components",
+        "may_be_only_part_of_the_debt": false,
+        "debt_components": {
+          "borrowings_long_term_current_portion": 1493,
+          "borrowings_long_term": 30530
+        },
+        "cash_and_investments": 3369,
+        "cash_components": {
+          "cash_and_equivalents": 3369
+        },
+        "net_debt": 28654,
+        "lease_liabilities": null,
+        "lease_note": "Leases are kept out of net debt because the valuation engine's enterprise value is lease-exclusive. Add them only if you say you are doing so.",
+        "enterprise_value": 96618.7,
+        "enterprise_value_basis": "market cap at the refreshed price"
+      },
+      "price_reconciliation": {
+        "multiples_computed_from": 26.78,
+        "multiples_price_as_of": "2026-08-07",
+        "consensus_block_price": 27.07,
+        "consensus_price_as_of": "2026-08-12",
+        "gap_pct": 1.08,
+        "note": "Every multiple in `valuation` uses multiples_computed_from. If you quote a multiple, quote that price and that date. Do not recompute multiples against the consensus-block price yourself -- see `price_refresh.valuation_at_price_now` for the already-rescaled figures."
+      },
+      "market_at_cutoff": {
+        "price_usd": 26.78,
+        "market_cap_usd_m": 67236.6,
+        "as_of": "2026-08-07"
+      },
+      "valuation_at_cutoff": {
+        "Price / Earnings": null,
+        "Earnings Yield": -4.71,
+        "Price / Book Value": 2.0475,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": null,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "valuation_at_cutoff_as_of": "2026-08-07",
+      "market_data_as_of": "2026-08-11",
+      "valuation_as_of": "2026-08-11",
+      "identity": {
+        "legal_name": "Warner Bros. Discovery, Inc.",
+        "ticker": "WBD",
+        "exchange": "NASDAQ",
+        "cik": "0001437107",
+        "sic": "4841",
+        "sic_description": "Cable & Other Pay Television Services",
+        "fiscal_year_end": "1231",
+        "headquarters": {
+          "city": "NEW YORK",
+          "stateOrCountry": "NY",
+          "zipCode": "10003"
+        },
+        "sector": "Communication Services",
+        "industry": "Entertainment",
+        "subindustry": null,
+        "actual_activity": "Streaming, Studios and Television Networks",
+        "classification_as_of": "2026-08-12",
+        "sources": {
+          "identity": "SEC submissions",
+          "classification": "SEC",
+          "sec_submissions": "sec-submissions-0001437107"
+        }
+      },
+      "business_profile": {
+        "status": "partial",
+        "company_name": "Warner Bros. Discovery, Inc.",
+        "sector": "Communication Services",
+        "industry": "Entertainment",
+        "actual_activity": "Streaming, Studios and Television Networks",
+        "latest_issuer_reported_context": {
+          "as_of": "2026-08-06",
+          "source": "sec-0001437107-26-000072",
+          "evidence": "issuer_management_claim",
+          "confidence": "high",
+          "excerpts": [
+            "The absence of the NBA in the current year negatively impacted the year-over-year growth rate by 20% ex-FX. • Content revenues decreased 26% ex-FX, primarily due to lower theatrical revenue at the Studios segment. • Net income available to Warner Bros.",
+            "The absence of the NBA favorably impacted the year-over-year growth rate by 30% ex-FX. • SG&A decreased 6% ex-FX, primarily driven by lower overhead costs, partially offset by higher marketing costs. • Global Linear Networks Adjusted EBITDA decreased 5% ex-FX to $1,446 million compared to the prior year quarter.",
+            "Q2 2026 Earnings Press Release | August 6, 2026 4 Corporate Three Months Ended June 30, 2026 2025 % Change $ in millions Reported Ex-FX(*) Adjusted EBITDA $ (298) $ (316) 6 % 6 % (*) A non-GAAP financial measure; see the section starting on page 11 titled Definitions & Sources for additional details. • Corporate Adjusted EBITDA improved by $18 million, primarily driven by lower overhead costs.",
+            "Free cash flow(3)(*) decreased to $572 million from $702 million, primarily driven by higher net content investment partially offset by lower tax payments and the timing of working capital.",
+            "We see meaningful opportunity to enhance the value of our platform for advertising partners and to drive better monetization through data and format innovation, and improving yield as we continue to increase still lower international fill rates while maintaining our premium positioning.",
+            "Advertising revenue grew 8% ex-FX(3) despite a significant 16% ex-FX year-over-year headwind from the absence of the NBA this year.",
+            "International advertising revenue increased 73% ex-FX following the launch of HBO Max in Germany, Italy, the U.K, and Ireland.",
+            "Streaming generated $512 million of Adjusted EBITDA during the quarter, representing 63% ex-FX year-over-year growth and a nearly 17% Adjusted EBITDA margin.",
+            "Year to date, Adjusted EBITDA margin was approximately 16%, demonstrating the great operating leverage in the business as revenue growth outpaced operating expense growth.",
+            "While we expect the timing of investments may cause quarterly margins to fluctuate (e.g. front-loaded marketing expense around the debut of the Harry Potter series in the fourth quarter), we remain confident in our long-term 20%+ Adjusted EBITDA margin target for the Streaming segment as we expect revenues to grow at a significantly faster rate annually than operating expenses. 2Q26 Shareholder Letter | August 6, 2026 3 STUDIOS Over the last four years, we transformed our Studios segment, strengthening its industry leadership through creative excellence, product portfolio diversification and operational enhancements."
+          ]
+        },
+        "limitation": "Normalized product, segment and geographic mix is not available; the external research layer may complete it."
+      },
+      "reported_financials": {
+        "period": "2026-Q2",
+        "period_start": "2026-01-01",
+        "period_end": "2026-06-30",
+        "period_type": "quarterly",
+        "currency": "USD",
+        "scale": "million",
+        "accounting_basis": "US_GAAP",
+        "audit_status": "unaudited",
+        "publication_date": "2026-08-06",
+        "source_revision": "0001437107-26-000075",
+        "metrics": [
+          {
+            "metric_id": "revenue_total",
+            "name": "Net Revenue",
+            "value": 17610,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": 18791,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "income_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}RevenueFromContractWithCustomerExcludingAssessedTax#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "operating_profit",
+            "name": "Operating Income",
+            "value": -2232,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": -222,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "income_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}OperatingIncomeLoss#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "net_profit_attributable_parent",
+            "name": "Net Income Attributable to Parent",
+            "value": -2767,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": 1127,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "income_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}NetIncomeLoss#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "eps_diluted_usc",
+            "name": "Diluted Earnings per Share",
+            "value": -1.11,
+            "unit": "usd_per_share",
+            "period": "2026-Q2",
+            "comparison_value": 0.45,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "income_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}EarningsPerShareDiluted#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "cash_and_equivalents",
+            "name": "Cash and Cash Equivalents",
+            "value": 3369,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": null,
+            "comparison_period": null,
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}CashAndCashEquivalentsAtCarryingValue#c-27"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "total_assets",
+            "name": "Total Assets",
+            "value": 97248,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": null,
+            "comparison_period": null,
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}Assets#c-27"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "borrowings_long_term_current_portion",
+            "name": "Current Portion of Long-term Debt",
+            "value": 1493,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": null,
+            "comparison_period": null,
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}LongTermDebtCurrent#c-27"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "borrowings_long_term",
+            "name": "Long-term Debt",
+            "value": 30530,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": null,
+            "comparison_period": null,
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}LongTermDebtAndCapitalLeaseObligations#c-27"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "total_liabilities",
+            "name": "Total Liabilities",
+            "value": 63253,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": null,
+            "comparison_period": null,
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}Liabilities#c-27"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "total_equity",
+            "name": "Total Equity",
+            "value": 33995,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": 37323,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest#c-27 + {http://fasb.org/us-gaap/2026}RedeemableNoncontrollingInterestEquityCommonCarryingAmount#c-27 + {http://fasb.org/us-gaap/2026}PreferredStockValue#c-27"
+            },
+            "evidence": "derived_calculation",
+            "confidence": "medium",
+            "calculation": "reported total_equity + {http://fasb.org/us-gaap/2026}PreferredStockValue",
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact. Includes separately presented temporary equity. Includes separately presented temporary equity."
+          },
+          {
+            "metric_id": "cf_net_operating_activities",
+            "name": "Net Cash from Operating Activities",
+            "value": 640,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": 1536,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "cash_flow_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}NetCashProvidedByUsedInOperatingActivities#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "cf_capex_ppe_intangible",
+            "name": "Capital Expenditures",
+            "value": -544,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": -532,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0001437107-26-000075",
+            "source_location": {
+              "source_file": "raw/sec-filings/WBD/0001437107-26-000075.json",
+              "sheet": "cash_flow_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}PaymentsToAcquirePropertyPlantAndEquipment#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0001437107-26-000075; dimensionless entity-wide fact."
+          }
+        ]
+      },
+      "capital_allocation": {
+        "period": "2026-Q2",
+        "dividends_paid": null,
+        "share_repurchases": null
+      },
+      "risk_factors": {
+        "status": "available",
+        "as_of": "2026-08-06",
+        "scope_note": "Son 10-Q yeni ve ayrıntılı Item 1A riskleri sunmadığı için son 10-K risk bazını devralır; üç aylık filing ayrıca kontrol edilmiştir.",
+        "risks": [
+          {
+            "risk_id": "competition_and_demand",
+            "category": "market",
+            "title": "Rekabet ve Tüketici Talebi Riski",
+            "description": "Şirket, rekabet koşulları veya tüketici talebindeki değişimlerin faaliyet sonuçlarını olumsuz etkileyebileceğini bildiriyor.",
+            "direction": "negative",
+            "severity": "medium",
+            "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+            "time_horizon": "long",
+            "evidence": [
+              {
+                "source_id": "sec-0001437107-26-000020-risk-factors",
+                "source_file": "raw/sec-filings/WBD/0001437107-26-000020-risk-factors.txt",
+                "page": null,
+                "summary": "…with the Company’s Global Linear Networks reporting unit;•increased competition for advertising expenditures associated with the Company’s Global Linear Networks and Streaming reporting units as a result of an increase in…"
+              }
+            ],
+            "mitigants": null,
+            "quantified_effect": null,
+            "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+          },
+          {
+            "risk_id": "regulation_and_litigation",
+            "category": "regulatory",
+            "title": "Düzenleyici ve Hukuki Riskler",
+            "description": "Şirket, düzenleme, vergi veya hukuki süreçlerdeki değişimlerin maliyet ve faaliyet sonuçlarını etkileyebileceğini bildiriyor.",
+            "direction": "negative",
+            "severity": "medium",
+            "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+            "time_horizon": "long",
+            "evidence": [
+              {
+                "source_id": "sec-0001437107-26-000020-risk-factors",
+                "source_file": "raw/sec-filings/WBD/0001437107-26-000020-risk-factors.txt",
+                "page": null,
+                "summary": "The Company prepares and files tax returns based on its interpretation of tax laws and regulations."
+              }
+            ],
+            "mitigants": null,
+            "quantified_effect": null,
+            "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+          },
+          {
+            "risk_id": "foreign_currency_and_macro",
+            "category": "financial",
+            "title": "Döviz ve Makroekonomik Riskler",
+            "description": "Şirket, döviz, enflasyon, faiz veya genel ekonomik koşullardaki değişimlerin sonuçlarını olumsuz etkileyebileceğini bildiriyor.",
+            "direction": "negative",
+            "severity": "medium",
+            "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+            "time_horizon": "long",
+            "evidence": [
+              {
+                "source_id": "sec-0001437107-26-000020-risk-factors",
+                "source_file": "raw/sec-filings/WBD/0001437107-26-000020-risk-factors.txt",
+                "page": null,
+                "summary": "…and equity with respect to our holdings solely as a result of changes in foreign currency. The majority of our foreign currency exposure is tied to Europe and Latin America."
+              }
+            ],
+            "mitigants": null,
+            "quantified_effect": null,
+            "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+          }
+        ]
+      },
+      "sources": [
+        {
+          "source_id": "sec-0001437107-26-000020-risk-factors",
+          "source_name": "raw/sec-filings/WBD/0001437107-26-000020-risk-factors.txt",
+          "source_type": "sec_filing_text",
+          "provider_or_owner": "SEC",
+          "as_of_date": "2026-02-27",
+          "period_covered": [],
+          "source_location": "raw/sec-filings/WBD/0001437107-26-000020-risk-factors.txt",
+          "freshness_status": "current",
+          "sha256": "a60f1d178d55de6ffdb5e24094d98db1367ba2c97d05eb3ffb3fcf77d7f569df",
+          "notes": "SEC 10-K Item 1A risk-factor text snapshot; accession 0001437107-26-000020."
+        },
+        {
+          "source_id": "sec-0001437107-26-000075",
+          "source_name": "raw/sec-filings/WBD/0001437107-26-000075.json",
+          "source_type": "sec_inline_xbrl",
+          "provider_or_owner": "SEC",
+          "as_of_date": "2026-08-06",
+          "period_covered": [
+            "2026-Q2",
+            "2025-Q2"
+          ],
+          "source_location": "raw/sec-filings/WBD/0001437107-26-000075.json",
+          "freshness_status": "current",
+          "sha256": "e6e9ba01de0b63114c809d8e29d3b8869e0f81e0aa7395ecc82e5df966b40aa7",
+          "notes": "SEC accession 0001437107-26-000075; source archive hash b16bbb0839b8a8889b595da97c161cb19c5c3029175bcb90aaef72047f1545b2."
+        },
+        {
+          "source_id": "company-config-WBD",
+          "source_name": "config/companies/WBD.json",
+          "source_type": "workspace_config",
+          "provider_or_owner": "trade_us",
+          "as_of_date": "2026-08-12",
+          "source_location": "config/companies/WBD.json",
+          "freshness_status": "current"
+        },
+        {
+          "source_id": "sec-submissions-0001437107",
+          "source_name": "SEC company submissions payload",
+          "source_type": "sec_submissions",
+          "provider_or_owner": "SEC",
+          "as_of_date": "2026-08-12",
+          "source_location": "live/current/ledger/sec-discovery-payloads/CIK0001437107.json",
+          "freshness_status": "current"
+        },
+        {
+          "source_id": "market-pack-WBD",
+          "source_name": "point-in-time market and valuation artifacts",
+          "source_type": "workspace_market_artifacts",
+          "provider_or_owner": "trade_us pipeline",
+          "as_of_date": "2026-08-11",
+          "source_location": "live/current/data/market/WBD",
+          "freshness_status": "current"
+        },
+        {
+          "source_id": "sec-0001437107-26-000072",
+          "source_name": "SEC earnings release 0001437107-26-000072",
+          "source_type": "sec_earnings_release",
+          "provider_or_owner": "SEC / issuer",
+          "as_of_date": "2026-08-06",
+          "source_location": "guidance/WBD/0001437107-26-000072",
+          "freshness_status": "current",
+          "sha256": "fe60759c5b4a379baa5c833cfd1fe1bf10b9b0458ceb73a4695eead0eb487037"
+        },
+        {
+          "source_id": "consensus-WBD",
+          "source_name": "yfinance / Yahoo Finance analyst estimates",
+          "source_type": "provider_snapshot",
+          "provider_or_owner": "yfinance / Yahoo Finance analyst estimates",
+          "as_of_date": "2026-08-12",
+          "source_location": "data/consensus/snapshot-2026-08-12.json",
+          "freshness_status": "current"
+        }
+      ],
+      "evidence_gaps": [
+        {
+          "field": "business_mix",
+          "status": "missing_required_source",
+          "reason": "product, segment and geographic mix is not normalized in workspace artifacts"
+        },
+        {
+          "field": "free_float",
+          "status": "missing_required_source",
+          "reason": "no point-in-time free-float source in the workspace"
+        },
+        {
+          "field": "index_membership_and_weight",
+          "status": "missing_required_source",
+          "reason": "no point-in-time index constituent weight source in the workspace"
+        },
+        {
+          "field": "top_holders_and_ownership_concentration",
+          "status": "missing_required_source",
+          "reason": "no point-in-time ownership source in the workspace"
+        },
+        {
+          "field": "passive_and_etf_ownership",
+          "status": "missing_required_source",
+          "reason": "no point-in-time passive ownership source in the workspace"
+        },
+        {
+          "field": "short_interest_and_borrow",
+          "status": "missing_required_source",
+          "reason": "no point-in-time short-interest or borrow source in the workspace"
+        },
+        {
+          "field": "factor_exposure",
+          "status": "missing_required_source",
+          "reason": "no point-in-time factor model in the workspace"
+        },
+        {
+          "field": "governance_detail",
+          "status": "missing_required_source",
+          "reason": "no normalized board and governance dataset in the workspace"
+        },
+        {
+          "field": "earnings_call_commentary",
+          "status": "missing_required_source",
+          "reason": "earnings-call transcripts are not stored in the workspace"
+        }
+      ]
+    }
+  ],
+  "mode": "live",
+  "pack_purpose": "Deterministic numeric input for the ChatGPT Public Equity Investing plugin. Numbers here replace the plugin's paid data connectors; the plugin should use the web only for narrative and for fields marked unavailable.",
+  "consensus_as_of": "2026-08-12",
+  "intended_step": "tearsheet",
+  "built_on": "2026-08-12",
+  "last_market_session": "2026-08-11",
+  "market_data_as_of": "2026-08-11",
+  "financial_data_cutoff": "2026-08-07T23:59:59Z",
+  "blocks_omitted_for_step": {
+    "omitted": [
+      "sector_peers",
+      "deterministic_signals",
+      "quarterly_series",
+      "pre_print_consensus"
+    ],
+    "reason": "Not part of the tearsheet step's source categories. Ask for a pack built for the owning step instead of working around the gap."
+  }
+}

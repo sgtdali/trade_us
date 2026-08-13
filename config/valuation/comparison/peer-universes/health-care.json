@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
   "artifact_type": "valuation_peer_universe",
-  "artifact_id": "valuation-peer-universe:health_care_us:1",
+  "artifact_id": "valuation-peer-universe:health_care_us:2",
   "owner_type": "authored",
   "universe_id": "health_care_us",
-  "universe_version": 1,
+  "universe_version": 2,
   "sector_family": "health_care",
   "method_family_ids": [
     "val.method.earnings_yield.reported_parent",
@@ -25,6 +25,22 @@
         "MODEL:HealthCareLargePharma"
       ],
       "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "amgn",
+      "ticker": "AMGN",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": ["MODEL:HealthCareLargePharma"],
+      "effective_from": "2026-08-12",
       "effective_to": null,
       "applicable_method_family_ids": [
         "val.method.earnings_yield.reported_parent",
@@ -97,6 +113,22 @@
         "MODEL:HealthCareMedTech"
       ],
       "effective_from": "2026-01-01",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
+      "member_id": "gild",
+      "ticker": "GILD",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": ["MODEL:HealthCareLargePharma"],
+      "effective_from": "2026-08-12",
       "effective_to": null,
       "applicable_method_family_ids": [
         "val.method.earnings_yield.reported_parent",
@@ -197,6 +229,22 @@
       ]
     },
     {
+      "member_id": "regn",
+      "ticker": "REGN",
+      "cohort_tier": "primary",
+      "inclusion_rationale_code": "comparison.health_care_standard_corporate",
+      "classification_refs": ["MODEL:HealthCareLargePharma"],
+      "effective_from": "2026-08-12",
+      "effective_to": null,
+      "applicable_method_family_ids": [
+        "val.method.earnings_yield.reported_parent",
+        "gross_margin",
+        "net_margin",
+        "free_cash_flow_margin",
+        "current_ratio"
+      ]
+    },
+    {
       "member_id": "syk",
       "ticker": "SYK",
       "cohort_tier": "primary",
@@ -244,7 +292,7 @@
     ]
   },
   "lifecycle": "approved",
-  "supersedes_ref": null,
+  "supersedes_ref": "valuation-peer-universe:health_care_us:1",
   "lineage": {
     "dag": {
       "nodes": [

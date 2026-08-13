@@ -1,0 +1,729 @@
+{
+  "schema_version": 2,
+  "purpose": "Deterministic point-in-time pack built directly from workspace artifacts; no valuation report is parsed.",
+  "month": "2026-08-07-ddda5ff5",
+  "decision_date": "2026-08-07",
+  "cutoff_instant": "2026-08-07T23:59:59Z",
+  "execution_date": "2026-08-07",
+  "universe_count": 1,
+  "universe_coverage": {
+    "configured_count": 87,
+    "included_count": 87,
+    "missing_financial_artifacts": [],
+    "pipeline_skipped": {}
+  },
+  "known_limitations": [
+    "fixed current universe creates survivorship and universe-selection bias",
+    "historical consensus, transcripts, positioning and short-interest vintages are unavailable",
+    "guidance is available only where a range was extracted and both endpoints appear in the selected release",
+    "peer medians are supplied only for the comps step; do not invent them",
+    "each live layer carries its own as-of date; do not apply the financial artifact cutoff to refreshed market, consensus or event data"
+  ],
+  "companies": [
+    {
+      "ticker": "VZ",
+      "cohort": "CommunicationServicesTelecom",
+      "latest_reported_period": "2026-Q2 — 26 weeks ended 2026-06-30 (cumulative year-to-date)",
+      "period_label": "2026-Q2",
+      "latest_period_end": "2026-06-30",
+      "financial_publication_date": "2026-07-31",
+      "financial_age_days": 38,
+      "closing_price_usd": 47.27,
+      "market_cap_usd_m": 196396.2,
+      "market": {
+        "return_1m_pct": 10.75,
+        "return_3m_pct": 0.08,
+        "return_6m_pct": 0.53,
+        "return_12m_pct": 9.55,
+        "annualized_volatility_pct": 25.17,
+        "max_drawdown_12m_pct": -18.28,
+        "avg_dollar_volume_20d_usd_m": 1202.82
+      },
+      "fundamentals": {
+        "revenue_growth": 1.0,
+        "operating_profit_growth": -4.5,
+        "net_profit_growth": -10.0,
+        "operating_cash_flow_growth": 9.9,
+        "operating_margin_pre_investment": 22.45,
+        "operating_margin": 22.45,
+        "net_margin": 13.24,
+        "operating_cash_flow_margin": 26.81,
+        "current_ratio": 0.604,
+        "net_working_capital": -24640.0,
+        "lease_liability_total": 23227.0,
+        "ocf_to_net_profit": 2.03
+      },
+      "valuation": {
+        "Price / Earnings": 12.1443,
+        "Earnings Yield": 8.2333,
+        "Price / Book Value": null,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 12.6588,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "deterministic_signals": {
+        "favorable": [
+          "operating_cash_flow_trend",
+          "cash_conversion_trend"
+        ],
+        "adverse": [
+          "net_profit_trend",
+          "operating_margin_trend",
+          "net_margin_trend"
+        ],
+        "other": [
+          "revenue_growth_trend",
+          "operating_profit_before_investment_trend",
+          "operating_profit_including_investments_trend",
+          "free_cash_flow_trend",
+          "gross_margin_trend",
+          "liquidity_trend",
+          "leverage_trend",
+          "lease_burden_trend",
+          "deferred_revenue_trend"
+        ]
+      },
+      "latest_earnings_release": {
+        "status": "available",
+        "filing_date": "2026-07-24",
+        "accession": "0000732712-26-000040",
+        "source_id": "sec-0000732712-26-000040",
+        "text_sha256": "3ff000c63422d4af3cafaa0aced650e3fc30c031a043ee67a60b5dfc928ca1bc",
+        "guidance": {
+          "status": "unavailable",
+          "reason": "no historical guidance extraction"
+        },
+        "revision_language_supported": true,
+        "excerpts": [
+          "Intense operational discipline and improved unit economics translated directly into subscriber growth, lower churn, strong operating cash flow and industry-leading free cash flow¹ generation.",
+          "With these results, Verizon raised its full-year guidance for the second consecutive quarter.",
+          "Verizon also expanded its full-year share buyback target to up to $4.5 billion. “We’re putting customers at the center of every decision we make,” said Dan Schulman, Verizon CEO. “With recent updates including our new Simplicity plans, Verizon One converged offerings, and an industry-leading loyalty program, we are gaining subscribers and earning long-term retention based on real value rather than subsidized promotions.",
+          "By compounding lower churn with healthier unit economics, we have generated the strongest operating position we have seen in years.",
+          "This decline resulted primarily from significantly lower upgrade volumes, as the average time customers keep their mobile devices continues to increase, and the company's strategic decision to reduce spending on device subsidies.",
+          "The full-year share repurchase target has been raised to up to $4.5 billion.",
+          "Page 3 VlpHU09DSUQyMDE5UTE= VZQTR20FIN Given the strong second-quarter performance and visibility into the second half of the year, Verizon is raising guidance as follows: • Mobility and broadband service revenue growth for 2026 to be 2.5 to 3.0 percent, with wireless service revenue growth approximately flat in 2026 as the company transitions to sustainable volume-based growth.",
+          "Free Cash Flow Forecast for Full Year 2026 (dollars in millions) Revised Original Unaudited Forecast Forecast Net Cash Provided by Operating Activities Forecast $ 37,940 - 38,640 $ 37,500 - 38,000 Capital expenditures forecast (including capitalized software) (16,000 - 16,500) (16,000 - 16,500) Free Cash Flow Forecast $ 21,940 - 22,140 $ 21,500 Net Cash Provided by Operating Activities Growth Forecast % 2.2 % - 4.0 % 1.0 % - 2.3 % Free Cash Flow Growth Forecast % 9.0 % - 10.0 % 6.8 % Verizon Communications Inc.",
+          "Ended 6/30/25 Operating Income $ 8,032 $ 7,643 $ 15,746 $ 15,067 Add: Depreciation and amortization expense 3,787 3,582 7,517 7,125 Segment EBITDA $ 11,819 $ 11,225 $ 23,263 $ 22,192 Year over year change % 5.3 % 4.8 % Total operating revenues $ 26,242 $ 26,648 $ 52,695 $ 52,266 Operating Income Margin 30.6 % 28.7 % 29.9 % 28.8 % Segment EBITDA Margin 45.0 % 42.1 % 44.1 % 42.5 % Business (dollars in millions) Unaudited 3 Mos.",
+          "Ended 6/30/25 Operating Income $ 991 $ 724 $ 1,947 $ 1,470 Add: Depreciation and amortization expense 1,091 998 2,140 1,987 Segment EBITDA $ 2,082 $ 1,722 $ 4,087 $ 3,457 Year over year change % 20.9 % 18.2 % Total operating revenues $ 7,155 $ 6,973 $ 14,285 $ 13,975 Operating Income Margin 13.9 % 10.4 % 13.6 % 10.5 % Segment EBITDA Margin 29.1 % 24.7 % 28.6 % 24.7 % Footnote: In the second quarter of 2026, the net assets representing Verizon's international wireline connectivity and managed network services business were classified as assets and liabilities held for sale and moved from the Business segment to Corporate and other."
+        ]
+      },
+      "source_ids": [
+        "sec-0000732712-26-000040"
+      ],
+      "consensus_estimates": {
+        "status": "available",
+        "as_of": "2026-08-12",
+        "source": "yfinance / Yahoo Finance analyst estimates",
+        "earnings_estimate": {
+          "0q": {
+            "avg": 1.28508,
+            "low": 1.23,
+            "high": 1.38,
+            "yearAgoEps": 1.21,
+            "numberOfAnalysts": 19,
+            "growth": 0.062,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 1.14685,
+            "low": 1.05,
+            "high": 1.21,
+            "yearAgoEps": 1.09,
+            "numberOfAnalysts": 17,
+            "growth": 0.052199997,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 5.01242,
+            "low": 4.85,
+            "high": 5.22,
+            "yearAgoEps": 4.71,
+            "numberOfAnalysts": 26,
+            "growth": 0.0642,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 5.28049,
+            "low": 5.04,
+            "high": 5.51,
+            "yearAgoEps": 5.01242,
+            "numberOfAnalysts": 25,
+            "growth": 0.0535,
+            "currency": "USD"
+          }
+        },
+        "revenue_estimate": {
+          "0q": {
+            "avg": 34805591780,
+            "low": 34193000000,
+            "high": 35324000000,
+            "numberOfAnalysts": 18,
+            "yearAgoRevenue": 33821000000,
+            "growth": 0.0291,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 37345087310,
+            "low": 36758000000,
+            "high": 37834583650,
+            "numberOfAnalysts": 16,
+            "yearAgoRevenue": 36381000000,
+            "growth": 0.026500002,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 140911270240,
+            "low": 139545561210,
+            "high": 143093000000,
+            "numberOfAnalysts": 21,
+            "yearAgoRevenue": 138191000000,
+            "growth": 0.0197,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 143591664920,
+            "low": 140490900000,
+            "high": 147908939750,
+            "numberOfAnalysts": 23,
+            "yearAgoRevenue": 140911270240,
+            "growth": 0.019,
+            "currency": "USD"
+          }
+        },
+        "eps_trend": {
+          "0q": {
+            "current": 1.28508,
+            "7daysAgo": 1.28592,
+            "30daysAgo": 1.29526,
+            "60daysAgo": 1.29264,
+            "90daysAgo": 1.29422,
+            "currency": "USD"
+          },
+          "+1q": {
+            "current": 1.14685,
+            "7daysAgo": 1.14685,
+            "30daysAgo": 1.12065,
+            "60daysAgo": 1.13058,
+            "90daysAgo": 1.12606,
+            "currency": "USD"
+          },
+          "0y": {
+            "current": 5.01242,
+            "7daysAgo": 5.02707,
+            "30daysAgo": 4.94113,
+            "60daysAgo": 4.97301,
+            "90daysAgo": 4.95537,
+            "currency": "USD"
+          },
+          "+1y": {
+            "current": 5.28049,
+            "7daysAgo": 5.27369,
+            "30daysAgo": 5.27019,
+            "60daysAgo": 5.27221,
+            "90daysAgo": 5.27379,
+            "currency": "USD"
+          }
+        },
+        "eps_revisions": {
+          "0q": {
+            "upLast7days": 1,
+            "upLast30days": 4,
+            "downLast30days": 4,
+            "downLast7Days": 2,
+            "currency": "USD"
+          },
+          "+1q": {
+            "upLast7days": 3,
+            "upLast30days": 7,
+            "downLast30days": 1,
+            "downLast7Days": 0,
+            "currency": "USD"
+          },
+          "0y": {
+            "upLast7days": 7,
+            "upLast30days": 10,
+            "downLast30days": 2,
+            "downLast7Days": 1,
+            "currency": "USD"
+          },
+          "+1y": {
+            "upLast7days": 4,
+            "upLast30days": 9,
+            "downLast30days": 4,
+            "downLast7Days": 4,
+            "currency": "USD"
+          }
+        },
+        "price_targets": {
+          "current": 47.27,
+          "high": 71.0,
+          "low": 44.0,
+          "mean": 51.55652,
+          "median": 51.0
+        }
+      },
+      "next_events": {
+        "status": "available",
+        "as_of": "2026-08-12",
+        "source": "yfinance / Yahoo Finance calendar",
+        "next_earnings_date": "2026-10-20",
+        "date_confirmed": false,
+        "confirmation_note": "Yahoo does not distinguish a company-announced date from an estimate. Treat as estimated until the IR page confirms it.",
+        "dividend_date": "2026-08-03",
+        "ex_dividend_date": "2026-07-10"
+      },
+      "transaction_filing_history": {
+        "status": "transaction-related filing history; current status not determined",
+        "current_transaction_status": "not determined from filing-form history",
+        "verification_required": true,
+        "filing_count": 4,
+        "first_filing": "2024-12-06",
+        "latest_filing": "2025-10-02",
+        "forms": [
+          "S-4",
+          "S-4/A"
+        ],
+        "filing_role_indicator": "filed to register securities for a transaction",
+        "filing_role_basis": "filed an S-4 and no merger proxy",
+        "not_established_by_pack": "Whether a transaction remains pending, completed, terminated or superseded; deal terms, consideration, counterparty, closing timetable and regulatory status. Filing-form history alone does not establish current transaction status."
+      },
+      "special_situations": {
+        "status": "context only",
+        "context": [
+          {
+            "date": "2024-12-06",
+            "item": "5.03",
+            "meaning": "amended articles/bylaws, or a change of fiscal year"
+          }
+        ]
+      },
+      "roic": {
+        "status": "derived",
+        "value_pct": 6.67,
+        "period": "2026-Q2",
+        "annualized_from_days": 180,
+        "invested_capital_musd": 347975,
+        "definition": "NOPAT / invested capital, where NOPAT is operating profit after the effective tax rate, annualized from the period length, and invested capital is total assets less current liabilities",
+        "caveat": "Derived here, not reported by the company. No total-debt line exists in our statements, so invested capital uses the assets-less-current-liabilities simplification and will differ from a provider's ROIC."
+      },
+      "market_statistics_at_cutoff": {
+        "return_1m_pct": 13.32,
+        "return_3m_pct": 1.64,
+        "return_6m_pct": 3.21,
+        "return_12m_pct": 18.87,
+        "annualized_volatility_pct": 24.9,
+        "max_drawdown_12m_pct": -17.0,
+        "avg_dollar_volume_20d_usd_m": 1225.07
+      },
+      "market_statistics_at_cutoff_as_of": "2026-08-07",
+      "market_statistics_as_of": "2026-08-11",
+      "market_statistics_refresh_status": "available",
+      "price_refresh": {
+        "status": "available",
+        "price_now": 47.27,
+        "price_as_of": "2026-08-11",
+        "price_at_cutoff": 47.06,
+        "cutoff_price_as_of": "2026-08-07",
+        "change_pct": 0.45,
+        "market_cap_now_usd_m": 196396.2,
+        "valuation_at_price_now": {
+          "Price / Earnings": 12.1443,
+          "Earnings Yield": 8.2333,
+          "Price / Book Value": null,
+          "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+          "Lease-Exclusive Enterprise Value / Reported Operating Income": 12.6588,
+          "Enterprise Value / Issuer-Reported EBITDA": null
+        },
+        "not_rescaled": [],
+        "not_rescaled_reason": null,
+        "method": "Price-based multiples use the exact price ratio; enterprise-value multiples use exact current EV = refreshed market cap + filing-based net debt."
+      },
+      "net_debt": {
+        "status": "derived",
+        "period": "2026-Q2",
+        "as_of": "2026-06-30",
+        "unit": "million USD",
+        "debt_as_of": "2026-06-30",
+        "debt_is_from_an_older_period": false,
+        "total_debt": 165231,
+        "total_debt_basis": "sum of the reported components",
+        "may_be_only_part_of_the_debt": false,
+        "debt_components": {
+          "borrowings_long_term_current_portion": 21783,
+          "borrowings_long_term": 143448
+        },
+        "cash_and_investments": 1752,
+        "cash_components": {
+          "cash_and_equivalents": 1752
+        },
+        "net_debt": 163479,
+        "lease_liabilities": 23227,
+        "lease_note": "Leases are kept out of net debt because the valuation engine's enterprise value is lease-exclusive. Add them only if you say you are doing so.",
+        "enterprise_value": 359875.2,
+        "enterprise_value_basis": "market cap at the refreshed price"
+      },
+      "price_reconciliation": {
+        "multiples_computed_from": 47.06,
+        "multiples_price_as_of": "2026-08-07",
+        "consensus_block_price": 47.27,
+        "consensus_price_as_of": "2026-08-12",
+        "gap_pct": 0.45,
+        "note": "Every multiple in `valuation` uses multiples_computed_from. If you quote a multiple, quote that price and that date. Do not recompute multiples against the consensus-block price yourself -- see `price_refresh.valuation_at_price_now` for the already-rescaled figures."
+      },
+      "market_at_cutoff": {
+        "price_usd": 47.06,
+        "market_cap_usd_m": 195523.7,
+        "as_of": "2026-08-07"
+      },
+      "valuation_at_cutoff": {
+        "Price / Earnings": 12.0903,
+        "Earnings Yield": 8.27,
+        "Price / Book Value": null,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 12.6281,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "valuation_at_cutoff_as_of": "2026-08-07",
+      "market_data_as_of": "2026-08-11",
+      "valuation_as_of": "2026-08-11"
+    }
+  ],
+  "mode": "live",
+  "sector_peers": {
+    "status": "available",
+    "framework_type": "company_specific_multi_lens",
+    "framework_id": "company-peer-framework:VZ:1",
+    "framework_version": 1,
+    "framework_source": "config/valuation/comparison/company-peer-frameworks/VZ.json",
+    "effective_from": "2026-08-12",
+    "methodology": "blended_multi_lens",
+    "single_combined_peer_median": false,
+    "peer_count": 4,
+    "missing_numeric_peers": [],
+    "groups": [
+      {
+        "group_id": "integrated_telecom",
+        "label": "Integrated telecom valuation",
+        "purpose": "Wireless and fiber convergence, network capital intensity, spectrum, leverage, dividends and free-cash-flow economics",
+        "member_count": 1,
+        "missing_members": [],
+        "medians": {
+          "valuation": {
+            "Price / Earnings": 7.79,
+            "Earnings Yield": 12.84,
+            "Lease-Exclusive Enterprise Value / Reported Operating Income": 11.84
+          },
+          "fundamentals": {
+            "revenue_growth": 2.6,
+            "operating_margin": 21.72,
+            "net_margin": 14.57
+          },
+          "consensus": {
+            "revenue_growth_current_year_pct": 2.88,
+            "revenue_growth_next_year_pct": 2.09,
+            "eps_growth_current_year_pct": 10.27,
+            "eps_growth_next_year_pct": 9.67,
+            "current_year_eps_analyst_count": 24,
+            "current_year_eps_revision_net_30d": 12
+          },
+          "quality": {
+            "roic_pct": 5.95
+          }
+        },
+        "members": [
+          {
+            "ticker": "T",
+            "as_of": {
+              "financial_period_end": "2026-06-30",
+              "financial_publication_date": "2026-07-22",
+              "market": "2026-08-11",
+              "valuation": "2026-08-11",
+              "consensus": "2026-08-12"
+            },
+            "closing_price_usd": 24.5,
+            "market_cap_usd_m": 167883.5,
+            "valuation": {
+              "Price / Earnings": 7.7875,
+              "Earnings Yield": 12.8369,
+              "Price / Book Value": null,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": 11.8379,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": 2.6,
+              "operating_margin": 21.72,
+              "net_margin": 14.57
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "derived",
+              "value_pct": 5.95,
+              "period": "2026-Q2",
+              "annualized_from_days": 180,
+              "invested_capital_musd": 374977,
+              "definition": "NOPAT / invested capital, where NOPAT is operating profit after the effective tax rate, annualized from the period length, and invested capital is total assets less current liabilities",
+              "caveat": "Derived here, not reported by the company. No total-debt line exists in our statements, so invested capital uses the assets-less-current-liabilities simplification and will differ from a provider's ROIC."
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-12",
+              "revenue_growth_current_year_pct": 2.88,
+              "revenue_growth_next_year_pct": 2.09,
+              "eps_growth_current_year_pct": 10.27,
+              "eps_growth_next_year_pct": 9.67,
+              "current_year_eps_analyst_count": 24,
+              "current_year_eps_revision_net_30d": 12
+            }
+          }
+        ]
+      },
+      {
+        "group_id": "wireless_quality_growth",
+        "label": "Wireless quality and growth",
+        "purpose": "Subscriber growth, ARPU, churn, spectrum efficiency and national wireless-network economics",
+        "member_count": 1,
+        "missing_members": [],
+        "medians": {
+          "valuation": {
+            "Price / Earnings": 18.14,
+            "Earnings Yield": 5.52,
+            "Price / Book Value": 3.4,
+            "Parent-Attributed Free Cash Flow Yield (Proxy)": 9.6
+          },
+          "fundamentals": {
+            "revenue_growth": 9.2,
+            "operating_margin": 21.76,
+            "net_margin": 12.51,
+            "operating_cash_flow_margin": 32.08,
+            "free_cash_flow_margin": 20.47,
+            "ocf_to_net_profit": 2.56
+          },
+          "consensus": {
+            "revenue_growth_current_year_pct": 6.86,
+            "revenue_growth_next_year_pct": 4.49,
+            "eps_growth_current_year_pct": 12.61,
+            "eps_growth_next_year_pct": 26.95,
+            "current_year_eps_analyst_count": 21,
+            "current_year_eps_revision_net_30d": 12
+          },
+          "quality": {
+            "roic_pct": 8.61
+          }
+        },
+        "members": [
+          {
+            "ticker": "TMUS",
+            "as_of": {
+              "financial_period_end": "2026-06-30",
+              "financial_publication_date": "2026-07-23",
+              "market": "2026-08-11",
+              "valuation": "2026-08-11",
+              "consensus": "2026-08-12"
+            },
+            "closing_price_usd": 178.58,
+            "market_cap_usd_m": 191557.7,
+            "valuation": {
+              "Price / Earnings": 18.1399,
+              "Earnings Yield": 5.5167,
+              "Price / Book Value": 3.4046,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": 9.6047,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": null,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": 9.2,
+              "operating_margin": 21.76,
+              "net_margin": 12.51,
+              "operating_cash_flow_margin": 32.08,
+              "free_cash_flow_margin": 20.47,
+              "ocf_to_net_profit": 2.56
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "derived",
+              "value_pct": 8.61,
+              "period": "2026-Q2",
+              "annualized_from_days": 180,
+              "invested_capital_musd": 189999,
+              "definition": "NOPAT / invested capital, where NOPAT is operating profit after the effective tax rate, annualized from the period length, and invested capital is total assets less current liabilities",
+              "caveat": "Derived here, not reported by the company. No total-debt line exists in our statements, so invested capital uses the assets-less-current-liabilities simplification and will differ from a provider's ROIC."
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-12",
+              "revenue_growth_current_year_pct": 6.86,
+              "revenue_growth_next_year_pct": 4.49,
+              "eps_growth_current_year_pct": 12.61,
+              "eps_growth_next_year_pct": 26.95,
+              "current_year_eps_analyst_count": 21,
+              "current_year_eps_revision_net_30d": 12
+            }
+          }
+        ]
+      },
+      {
+        "group_id": "broadband_mobile_convergence",
+        "label": "Broadband and mobile convergence",
+        "purpose": "Fixed broadband, cable distribution and mobile-bundle competition",
+        "member_count": 2,
+        "missing_members": [],
+        "medians": {
+          "valuation": {
+            "Price / Earnings": 5.97,
+            "Earnings Yield": 19.24,
+            "Price / Book Value": 1.06,
+            "Parent-Attributed Free Cash Flow Yield (Proxy)": 21.6,
+            "Lease-Exclusive Enterprise Value / Reported Operating Income": 9.25
+          },
+          "fundamentals": {
+            "revenue_growth": 0.3,
+            "operating_margin": 19.13,
+            "net_margin": 9.75,
+            "operating_cash_flow_margin": 27.37,
+            "free_cash_flow_margin": 12.54,
+            "ocf_to_net_profit": 2.8
+          },
+          "consensus": {
+            "revenue_growth_current_year_pct": -1.72,
+            "revenue_growth_next_year_pct": -1.41,
+            "eps_growth_current_year_pct": -1.33,
+            "eps_growth_next_year_pct": 5.5,
+            "current_year_eps_analyst_count": 20.0,
+            "current_year_eps_revision_net_30d": -2.0
+          },
+          "quality": {
+            "roic_pct": 6.89
+          }
+        },
+        "members": [
+          {
+            "ticker": "CHTR",
+            "as_of": {
+              "financial_period_end": "2026-06-30",
+              "financial_publication_date": "2026-07-24",
+              "market": "2026-08-11",
+              "valuation": "2026-08-11",
+              "consensus": "2026-08-12"
+            },
+            "closing_price_usd": 157.69,
+            "market_cap_usd_m": 18808.9,
+            "valuation": {
+              "Price / Earnings": 3.8198,
+              "Earnings Yield": 26.1814,
+              "Price / Book Value": 1.1095,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": 19.8441,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": 9.3492,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": -1.4,
+              "operating_margin": 23.12,
+              "net_margin": 10.64,
+              "operating_cash_flow_margin": 30.34,
+              "free_cash_flow_margin": 9.23,
+              "ocf_to_net_profit": 2.85
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "derived",
+              "value_pct": 7.62,
+              "period": "2026-Q2",
+              "annualized_from_days": 180,
+              "invested_capital_musd": 141840,
+              "definition": "NOPAT / invested capital, where NOPAT is operating profit after the effective tax rate, annualized from the period length, and invested capital is total assets less current liabilities",
+              "caveat": "Derived here, not reported by the company. No total-debt line exists in our statements, so invested capital uses the assets-less-current-liabilities simplification and will differ from a provider's ROIC."
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-12",
+              "revenue_growth_current_year_pct": -0.96,
+              "revenue_growth_next_year_pct": -1.0,
+              "eps_growth_current_year_pct": 15.77,
+              "eps_growth_next_year_pct": 7.97,
+              "current_year_eps_analyst_count": 17,
+              "current_year_eps_revision_net_30d": -4
+            }
+          },
+          {
+            "ticker": "CMCSA",
+            "as_of": {
+              "financial_period_end": "2026-06-30",
+              "financial_publication_date": "2026-07-23",
+              "market": "2026-08-11",
+              "valuation": "2026-08-11",
+              "consensus": "2026-08-12"
+            },
+            "closing_price_usd": 25.65,
+            "market_cap_usd_m": 91022.5,
+            "valuation": {
+              "Price / Earnings": 8.1277,
+              "Earnings Yield": 12.2994,
+              "Price / Book Value": 1.0141,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": 23.3628,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": 9.1595,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": 2.0,
+              "operating_margin": 15.14,
+              "net_margin": 8.87,
+              "operating_cash_flow_margin": 24.4,
+              "free_cash_flow_margin": 15.85,
+              "ocf_to_net_profit": 2.75
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "derived",
+              "value_pct": 6.17,
+              "period": "2026-Q2",
+              "annualized_from_days": 180,
+              "invested_capital_musd": 224455,
+              "definition": "NOPAT / invested capital, where NOPAT is operating profit after the effective tax rate, annualized from the period length, and invested capital is total assets less current liabilities",
+              "caveat": "Derived here, not reported by the company. No total-debt line exists in our statements, so invested capital uses the assets-less-current-liabilities simplification and will differ from a provider's ROIC."
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-12",
+              "revenue_growth_current_year_pct": -2.48,
+              "revenue_growth_next_year_pct": -1.82,
+              "eps_growth_current_year_pct": -18.43,
+              "eps_growth_next_year_pct": 3.03,
+              "current_year_eps_analyst_count": 23,
+              "current_year_eps_revision_net_30d": 0
+            }
+          }
+        ]
+      }
+    ],
+    "operational_references": [
+      {
+        "ticker": "BCE",
+        "lens_id": "international_integrated_telecom",
+        "reason": "Wireless, fixed broadband, dividends and capital-intensity reference; Canadian regulation and market structure make BCE unsuitable for US core medians.",
+        "included_in_numeric_comparison": false
+      },
+      {
+        "ticker": "TU",
+        "lens_id": "international_integrated_telecom",
+        "reason": "TELUS provides wireless, broadband and capital-intensity context, but Canadian regulation and market structure make it unsuitable for US core medians.",
+        "included_in_numeric_comparison": false
+      }
+    ],
+    "median_caveat": "Each median belongs only to its stated economic lens. Do not combine the groups into one median and do not treat convergence as evidence without an independent operating or fundamental justification."
+  },
+  "pack_purpose": "Deterministic numeric input for the ChatGPT Public Equity Investing plugin. Numbers here replace the plugin's paid data connectors; the plugin should use the web only for narrative and for fields marked unavailable.",
+  "consensus_as_of": "2026-08-12",
+  "intended_step": "pitch",
+  "built_on": "2026-08-12",
+  "last_market_session": "2026-08-11",
+  "market_data_as_of": "2026-08-11",
+  "financial_data_cutoff": "2026-08-07T23:59:59Z",
+  "blocks_omitted_for_step": {
+    "omitted": [
+      "quarterly_series",
+      "pre_print_consensus"
+    ],
+    "reason": "Not part of the pitch step's source categories. Ask for a pack built for the owning step instead of working around the gap."
+  }
+}

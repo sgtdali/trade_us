@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:ADBE:1",
+  "subject_ticker": "ADBE",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "blended_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "creative_professional_software",
+      "label": "Creative and professional software",
+      "purpose": "Mission-critical professional workflows, subscription economics, switching costs and AI-enabled workflow monetization",
+      "members": ["ADSK"]
+    },
+    {
+      "group_id": "enterprise_marketing_experience",
+      "label": "Enterprise marketing and experience",
+      "purpose": "Enterprise customer experience, marketing, data, workflow platforms and recurring subscription economics",
+      "members": ["CRM", "NOW"]
+    },
+    {
+      "group_id": "subscription_software_quality",
+      "label": "High-quality subscription software",
+      "purpose": "ARR growth, pricing power, high-margin recurring revenue and platform quality",
+      "members": ["INTU", "NOW", "ADSK"]
+    }
+  ],
+  "operational_references": [
+    {
+      "ticker": "MSFT",
+      "lens_id": "ai_software_quality",
+      "reason": "Document productivity and AI-enabled software-quality reference; Azure and the broader enterprise stack make the consolidated multiple unsuitable for Adobe medians.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "GOOGL",
+      "lens_id": "ai_software_quality",
+      "reason": "AI content-creation and marketing-ecosystem reference; advertising economics make Alphabet a weak direct valuation peer.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "ORCL",
+      "lens_id": "enterprise_software_context",
+      "reason": "Enterprise software and platform multiple reference with limited relevance to Creative Cloud economics.",
+      "included_in_numeric_comparison": false
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "Adobe requires separate creative-workflow, enterprise-experience and subscription-quality lenses. ADSK is the closest operating peer and CRM the closest enterprise-platform reference; no combined peer median is appropriate."
+  }
+}

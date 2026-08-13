@@ -1,5 +1,8 @@
 # Public Equity Investing eklentisini sistematik calistirma
 
+Kalici, oturumdan bagimsiz calistirma durumunun kanonik tasarimi:
+[PEI workflow orchestrator tasarimi](pei-workflow-orchestrator.md).
+
 Kaynak: eklentinin kendi `SKILL.md` dosyalari okunarak cikarildi
 (`~/.codex/plugins/cache/openai-curated-remote/public-equity-investing/0.1.31`).
 Tahmin yok; her madde bir dosyaya dayaniyor.
@@ -87,7 +90,7 @@ Elde tek kisi ve manuel ChatGPT kosulari var. Tasarim buna gore.
 
 ```
 AYLIK, evren seviyesi, TEK kosu
-  idea-generation  +  60 sirketlik paket
+  idea-generation  +  canli evren paketi
         |
         v
    A kovasi (tipik 5-12 isim)
@@ -116,11 +119,11 @@ Her sirkete her ay tam zincir kosulmaz -- olceklenmez ve gerekmez.
 
 ### Adim 0 -- idea-generation (aylik, evren)
 
-**Veriyi ver:** `us/pei/<tarih>/pack.json` (60 sirket) + `instructions.md`.
+**Veriyi ver:** `pei/<tarih>/pack.json` (canli evren) + `instructions.md`.
 
 **Ek talimat (skill'i bozmaz, kendi diliyle):**
 > The attached pack satisfies the `market_data_estimates` and
-> `company_filings_ir` source categories for all 60 names. Treat it as the
+> `company_filings_ir` source categories for all live-universe names. Treat it as the
 > user-named source and prefer it over web retrieval for those categories.
 
 **Kaydet:** ticker, bucket (A/B/C/Reject -- kendi kapali sozlugu), variant
@@ -154,7 +157,51 @@ Dogru kadans:
 
 Yani "yeni isim mi" degil, "**elimde guncel bir taban var mi**".
 
-**Veriyi ver:** o sirketin paket kaydi -- 60'lik paketin tamami DEGIL.
+**Veriyi ver:** o sirketin paket kaydi -- canli evrenin tamami DEGIL.
+
+`--for tearsheet` paketi, ortak sayisal bloklara ek olarak repodaki mevcut
+artefaktlardan su kanitli bloklari da tasir:
+
+- `identity`: sirket adi, borsa, CIK/SIC, mali yil sonu, merkez ve siniflandirma,
+- `business_profile`: siniflandirma ve son issuer release alintilari; normalize
+  urun/segment/cografya kirilimi yoksa kismi olarak etiketlenir,
+- `reported_financials`: SEC XBRL'den mutlak gelir tablosu, bilanco ve nakit
+  akisi metrikleri; her satir source, evidence ve confidence tasir,
+- `capital_allocation` ve `risk_factors`,
+- `sources`: kullanilan SEC, config, piyasa ve konsensus kaynak defteri,
+- `evidence_gaps`: repo disindan tamamlanmasi gereken ownership, positioning,
+  factor, governance, transcript ve benzeri alanlar.
+
+Bu bloklar yalniz tearsheet adiminda eklenir. Diger adim paketlerinin kapsami
+ve mevcut sayisal tanimlari degismez.
+
+Gunluk pakette `valuation`, `closing_price_usd` ve `market_cap_usd_m` son
+tamamlanmis piyasa seansinin kanonik degerleridir. Eski aylik kesit
+`valuation_at_cutoff` ve `market_at_cutoff` altinda korunur. Fiyat tabanli
+carpanlar fiyat oraniyla; EV tabanli carpanlar ise guncel piyasa degeri ile
+dosyalama bazli net borcun toplami kullanilarak yeniden hesaplanir. Tam net
+borc koprusu kurulamayan bir EV carpani guncel `valuation` icinde `null` kalir
+ve `price_refresh.not_rescaled` listesinde acikca belirtilir.
+
+Tarih alanlari birbirinden ayridir: `latest_period_end` finansal donem sonu,
+`financial_publication_date` dosyalama/yayin tarihi, `financial_data_cutoff`
+pakete girebilecek bilginin kesimi, `market_data_as_of` ve `valuation_as_of`
+ise son piyasa seansidir.
+
+`us_pei_pack.py` yalniz canli ureticidir; eski bir `--month` verilirse durur.
+Gecmis/replay kosulari ayri backtest araclarina aittir. Canli kosuda kapanis
+fiyatiyla birlikte 1/3/6/12 aylik getiriler, volatilite, drawdown ve 20 gunluk
+ADV de son tamamlanmis piyasa seansina yenilenir ve
+`market_statistics_as_of` ile tarih tasir. Tarihsel degerleme serisi geriye
+donuk degistirilmez; bunun yerine kanonik guncel carpan `current_value` ve
+`current_sits` alanlariyla mevcut tarihsel dagilimin icine yerlestirilir.
+
+İşlem formu semantiği: 425, S-4, DEFM14A, PREM14A veya SC 13E3 görülmesi
+yalnız `transaction_filing_history` üretir. Bu kayıt form türü, tarih ve
+form-temelli rol göstergesidir; işlemin bugün beklediğini, tamamlandığını veya
+sona erdiğini kanıtlamaz. Güncel durum, karşı taraf, şartlar ve düzenleyici
+süreç ayrıca doğrulanmadan pack bunlar hakkında hüküm vermez. Eski
+`pending_transaction` çıkarımı bu nedenle kullanılmaz.
 
 **Ek talimat:**
 > Do not classify this name. The tearsheet's output contract ends at
@@ -180,8 +227,18 @@ position action (kendi sozlugunden), call-question falsifier'lari.
 
 ### Adim 3 -- comps-valuation (soru fiyatsa)
 
-**Veriyi ver:** hedef + emsal grubu carpanlari, ayni tanimla. Emsal gruplari
-`us/config/valuation/comparison/peer-universes/`.
+**Veriyi ver:** hedef + emsal gruplarinin ayni tanimla hesaplanmis carpanlari,
+temel gostergeleri, ROIC'i, konsensus buyume/revizyon ozeti ve her veri
+katmaninin as-of tarihi. Genel aday havuzlari
+`config/valuation/comparison/peer-universes/`; hedef şirkete hangi peer'in
+hangi ekonomik rolle bağlandığı ise
+`config/valuation/comparison/company-peer-frameworks/` altında tutulur.
+
+Şirket-özel framework varsa her lensin medyanı ayrı hesaplanır; tek bir karma
+peer medyanı üretilmez. Framework yoksa çıktı bunu açıkça `sector_fallback`
+olarak etiketler. AAPL için platform/services core (`MSFT`, `GOOGL`), hardware
+floor (`DELL`, `HPQ`) ve quality/growth anchors (`NVDA`, `META`) ayrıdır.
+`SONY` ve Samsung sayısal medyana girmeyen operasyonel referanslardır.
 
 **Ek talimat -- bizim olctugumuz seyi soyleriz:**
 > Peer-median convergence is not evidence on its own. In this universe,
@@ -276,7 +333,7 @@ hicbir sey.
 
 ## 6. Once yapilacak uc sey
 
-1. **Tek sirketlik paket cikaricisi.** Bugun 60'lik paket var; tearsheet ve
+1. **Tek sirketlik paket cikaricisi.** Bugun canli evren paketi var; tearsheet ve
    preview tek isim istiyor. `us_pei_pack.py --only TICKER`.
 2. **SCHEMAS.md CSV cikaricisi** earnings-preview icin. Uretemediklerimiz bos
    header.
@@ -284,4 +341,4 @@ hicbir sey.
    sirkette geciyorsa uyari.
 
 Sirasi onemli: 1 olmadan tearsheet'e dogru veri veremiyoruz, ki ORCL
-kosusunda olan da buydu -- paket verilmedi cunku 60 sirketlikti.
+kosusunda olan da buydu -- paket verilmedi cunku tam evren paketiydi.

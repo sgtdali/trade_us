@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:NFLX:1",
+  "subject_ticker": "NFLX",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "blended_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "streaming_content_core",
+      "label": "Streaming and content core",
+      "purpose": "Direct-to-consumer streaming, content spending, libraries, international expansion and streaming profitability",
+      "members": ["DIS", "WBD", "PSKY"]
+    }
+  ],
+  "operational_references": [
+    {
+      "ticker": "SPOT",
+      "lens_id": "subscription_platform_quality",
+      "reason": "Global subscription, pricing, churn and engagement reference, but music-royalty economics differ and the current SEC pipeline does not support its foreign-issuer filing regime.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "GOOGL",
+      "lens_id": "consumer_attention_advertising_optionality",
+      "reason": "YouTube is a major attention competitor, but Alphabet is advertising-led and is not a direct Netflix valuation peer.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "META",
+      "lens_id": "consumer_attention_advertising_optionality",
+      "reason": "Consumer-attention and advertising-quality reference; not a subscription-content valuation peer.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "AMZN",
+      "lens_id": "mega_platform_bundled_content",
+      "reason": "Prime Video is an important bundled-content competitor, but AWS and retail make Amazon's consolidated multiple unsuitable for Netflix medians.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "ROKU",
+      "lens_id": "connected_tv_distribution",
+      "reason": "Connected-TV advertising and distribution reference; its economics differ from Netflix's subscription-content model.",
+      "included_in_numeric_comparison": false
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "Netflix has no clean public comparable. DIS, WBD and PSKY form the narrow content-and-streaming core; subscription quality, attention competition, advertising optionality and bundled content remain separate non-median references."
+  }
+}

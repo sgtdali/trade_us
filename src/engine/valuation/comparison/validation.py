@@ -18,7 +18,7 @@ from ..catalogs import CatalogRegistry
 from ..errors import ArtifactReferenceError
 from ..references import verify_artifact_reference
 from ..validation.findings import Finding, sort_findings
-from .models import COMPARISON_TYPES, PIOTROSKI_COMPONENT_ORDER
+from .models import COMPARISON_TYPES
 from .statistics import to_canonical_decimal
 
 _FORBIDDEN_KEY_SUBSTRINGS = (
@@ -29,7 +29,6 @@ _FORBIDDEN_KEY_SUBSTRINGS = (
 
 _VARIANT_SUBJECT_COUNT = {
     "historical_self": 1, "sector_peer": 1,
-    "piotroski_diagnostic": 1, "magic_formula_diagnostic": 1,
 }
 
 
@@ -100,41 +99,6 @@ def validate_variant_shape(artifact: Mapping[str, Any]) -> list[Finding]:
             reason_code="comparison.peer_universe_ref_missing", message="sector_peer comparison requires a non-null universe_ref",
         ))
 
-    return findings
-
-
-def validate_piotroski_total_consistency(artifact: Mapping[str, Any]) -> list[Finding]:
-    """Recompute the Piotroski total from ``components[]`` -- an integer
-    sum only when all nine are ``complete``, else ``null``, never a
-    partial "x/9" (T74.5 Section 6; VAL-COMP-004)."""
-    findings: list[Finding] = []
-    matrix = artifact.get("statistics_or_matrix") or {}
-    if matrix.get("variant_kind") != "piotroski_diagnostic":
-        return findings
-    components = matrix.get("components", ())
-    component_ids = tuple(c.get("component_id") for c in components)
-    if component_ids != PIOTROSKI_COMPONENT_ORDER:
-        findings.append(Finding(
-            rule_id="VAL-COMP-001", severity="blocker", scope="artifact", json_pointer="/statistics_or_matrix/components",
-            reason_code="comparison.piotroski_component_order_incoherent",
-            message=f"components[] must be exactly the nine canonical component_id values in order, got {component_ids!r}",
-        ))
-        return findings
-    complete = [c for c in components if c.get("status") == "complete"]
-    expected_total = sum(c["binary_value"] for c in complete) if len(complete) == 9 else None
-    if matrix.get("total") != expected_total:
-        findings.append(Finding(
-            rule_id="VAL-COMP-004", severity="blocker", scope="artifact", json_pointer="/statistics_or_matrix/total",
-            reason_code="comparison.piotroski_total_forged",
-            message=f"stored total {matrix.get('total')!r} does not match recomputed total {expected_total!r} from components[]",
-        ))
-    available_component_count = len(complete)
-    if matrix.get("available_component_count") != available_component_count:
-        findings.append(Finding(
-            rule_id="VAL-COMP-004", severity="blocker", scope="artifact", json_pointer="/statistics_or_matrix/available_component_count",
-            reason_code="comparison.piotroski_available_count_forged",
-            message=f"stored available_component_count {matrix.get('available_component_count')!r} does not match recomputed {available_component_count}",
-        ))
     return findings
 
 
@@ -250,7 +214,6 @@ def validate_valuation_comparison(
     findings: list[Finding] = []
     findings.extend(validate_variant_shape(artifact))
     findings.extend(validate_forbidden_semantics(artifact))
-    findings.extend(validate_piotroski_total_consistency(artifact))
     findings.extend(validate_peer_coverage_consistency(artifact))
     findings.extend(validate_lineage_acyclic(artifact))
     if loaded_subjects is not None:

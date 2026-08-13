@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:AAPL:1",
+  "subject_ticker": "AAPL",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "blended_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "platform_services_core",
+      "label": "Platform and services core",
+      "purpose": "Ecosystem control, recurring services and quality premium",
+      "members": ["MSFT", "GOOGL"]
+    },
+    {
+      "group_id": "hardware_floor",
+      "label": "Hardware valuation floor",
+      "purpose": "Device economics, supply-chain exposure and hardware valuation floor",
+      "members": ["DELL", "HPQ"]
+    },
+    {
+      "group_id": "quality_growth_anchors",
+      "label": "Mega-cap quality and growth anchors",
+      "purpose": "High-growth, high-ROIC mega-cap valuation reference; not direct operating peers",
+      "members": ["NVDA", "META"]
+    }
+  ],
+  "operational_references": [
+    {
+      "ticker": "SONY",
+      "reason": "Premium consumer electronics plus services/content ecosystem",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "SAMSUNG",
+      "reason": "Closest broad smartphone and consumer-device operating reference",
+      "included_in_numeric_comparison": false
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "Apple has no single clean public comparable; peer roles are separated by economic purpose."
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "events": [
+    {
+      "schema_version": 1,
+      "event_id": "LEGACY-IDEA-20260812",
+      "event_type": "legacy_imported",
+      "recorded_at": "2026-08-12T13:11:25+00:00",
+      "run_id": "IDEA-20260812-shortlist",
+      "ticker": null,
+      "source_artifacts": [
+        {"role": "pack", "path": "pei/2026-08-12/shortlist/idea/pack.json", "sha256": "73fcd5d71471ff5c8e706062b001f3587d25079b0f7ebe65de4cc54f483a99f4"},
+        {"role": "instructions", "path": "pei/2026-08-12/shortlist/idea/instructions.md", "sha256": "7e9edf4c30be26f00628b14ca7b45f8bb986cb35580f5933c54d17df6e4688be"},
+        {"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}
+      ],
+      "payload": {
+        "state": "result_attached",
+        "artifact_dir": "pei/2026-08-12/shortlist/idea",
+        "tickers": ["AAPL", "ABBV", "ADBE", "AMZN", "CRM", "GOOGL", "META", "MSFT", "NFLX", "NVDA", "PEP", "VZ"]
+      }
+    },
+    {
+      "schema_version": 1,
+      "event_id": "LEGACY-RESULT-20260812",
+      "event_type": "result_attached",
+      "recorded_at": "2026-08-12T13:20:00+00:00",
+      "run_id": "IDEA-20260812-shortlist",
+      "ticker": null,
+      "source_artifacts": [
+        {"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}
+      ],
+      "payload": {"result_path": "pei/2026-08-12/shortlist/idea/result.md", "workflow": "idea", "work_item_id": null}
+    },
+    {
+      "schema_version": 1,
+      "event_id": "LEGACY-SCREEN-20260812",
+      "event_type": "screen_run_recorded",
+      "recorded_at": "2026-08-12T13:21:00+00:00",
+      "run_id": "IDEA-20260812-shortlist",
+      "ticker": null,
+      "source_artifacts": [
+        {"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}
+      ],
+      "payload": {"candidate_count": 12, "bucket_counts": {"A": 5, "B": 4, "C": 3, "Reject": 0}}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-AAPL-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:01+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "AAPL",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "C", "setup": "Yuksek kalite ve nakit akisi, fakat 34.5x P/E ve yuksek tarihsel degerleme.", "variant_wedge": "China AI localization urun dongusu anlatimini iyilestirebilir.", "first_rejection": "Gecici tarife faydasi ve talepkar degerleme hata payini daraltiyor.", "suggested_workflow": "comps-valuation", "mapped_workflow": "comps", "route_status": "supported"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-ABBV-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:02+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "ABBV",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "B", "setup": "Skyrizi ve Rinvoq Humira erozyonunu dengeliyor.", "variant_wedge": "Apogee immunoloji buyume pistini uzatabilir.", "first_rejection": "EPS revizyonlari, satin alma sulanmasi ve tarihsel olarak ucuz olmayan FCF degerlemesi.", "suggested_workflow": "scenario-sensitivity-generator", "mapped_workflow": null, "route_status": "unsupported", "manual_review_date": "2026-08-19"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-ADBE-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:03+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "ADBE",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "A", "setup": "Dusuk carpanlar ve yuksek FCF marji AI monetizasyon kaniti ile birlikte incelenmeli.", "variant_wedge": "Piyasa AI ikamesini fiyatlarken kurulu taban AI gelirine donusebilir.", "first_rejection": "AI ARR halen kucuk; Semrush katkisi ve yonetim gecisi organik kaniti bulandiriyor.", "suggested_workflow": "long-short-pitch", "mapped_workflow": "pitch", "route_status": "supported"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-AMZN-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:04+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "AMZN",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "A", "setup": "AWS hizlanmasi yuksek AI yatiriminin karsiligini test ediyor.", "variant_wedge": "Yuksek yatirim bulut talebini ve karli buyumeyi simdiden uretiyor olabilir.", "first_rejection": "AWS yavaslarken negatif FCF surerse buyume sermaye ile satin alinmis olur.", "suggested_workflow": "scenario-sensitivity-generator", "mapped_workflow": null, "route_status": "unsupported"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-CRM-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:05+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "CRM",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "C", "setup": "Optik degerleme cekici, fakat screen sonucu veri kalitesi beklemesi oneriyor.", "variant_wedge": "Agentforce organik abonelik hizlanmasina donusebilir.", "first_rejection": "Screen metni 5 Agustos 8-K kaydini yeni donemsel print olarak yorumluyor; bu yorum duzeltilmeli.", "suggested_workflow": "earnings-deep-dive", "mapped_workflow": "earnings_deep_dive", "route_status": "supported"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-GOOGL-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:06+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "GOOGL",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "A", "setup": "Guclu faaliyet buyumesi, ancak headline P/E paydasinda sureklilik sorusu.", "variant_wedge": "Search ve Cloud ekonomisi FCF basligindan daha guclu olabilir.", "first_rejection": "Diger gelir ve capex etkisi temizlenmeden ucuzluk sonucu guvenilir degil.", "suggested_workflow": "financials-normalizer -> comps-valuation", "mapped_workflow": null, "route_status": "unsupported"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-META-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:07+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "META",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "B", "setup": "Guclu reklam cekirdegi ile artan altyapi harcamasi arasindaki gerilim.", "variant_wedge": "Cekirdek reklam isi AI yatirim dongusunu finanse edebilir.", "first_rejection": "Capex ve gider buyumesi topline kazancinin ekonomik degerini tuketebilir.", "suggested_workflow": "scenario-sensitivity-generator", "mapped_workflow": null, "route_status": "unsupported", "manual_review_date": "2026-08-19"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-MSFT-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:08+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "MSFT",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "A", "setup": "Guclu Azure ve RPO kaniti, fakat dusuk FCF getirisi ve hizli fiyat artisi.", "variant_wedge": "Kapasite kisitlari asiri yatirimdan cok talep kaniti olabilir.", "first_rejection": "Yeniden fiyatlama sonrasinda bulut yatirim getirisi istisnai kalmak zorunda.", "suggested_workflow": "long-short-pitch", "mapped_workflow": "pitch", "route_status": "supported"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-NFLX-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:09+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "NFLX",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "B", "setup": "Iyi FCF ekonomisi ve fiyat gerilemesi, fakat negatif EPS revizyonlari.", "variant_wedge": "Reklam ikinci bir kazanc buyume bacagi acabilir.", "first_rejection": "Reklam gelirinin beklentiyi karsilamamasi ve zayif gorunum anlatimi kanitsiz birakir.", "suggested_workflow": "earnings-deep-dive", "mapped_workflow": "earnings_deep_dive", "route_status": "supported", "manual_review_date": "2026-08-19"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-NVDA-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:10+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "NVDA",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "A", "setup": "Yuksek buyume, marj ve ROIC; 26 Agustos bilançosu oncesi olay kapisi.", "variant_wedge": "China haric talep arzi emebilir ve Blackwell ivmesini koruyabilir.", "first_rejection": "108 gunluk finansallar yaklasan baski oncesinde beklenti cubugunu temsil etmiyor.", "suggested_workflow": "earnings-preview", "mapped_workflow": "earnings_preview", "route_status": "supported"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-PEP-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:11+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "PEP",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "C", "setup": "Tarihsel olarak ucuz degerleme, fakat asagi EPS revizyonlari.", "variant_wedge": "Hacim toparlanmasi ve verimlilik defansif degeri gercek kilabilir.", "first_rejection": "Raporlanan kar buyumesi impairment ve M&A etkilerinden yararlaniyor.", "suggested_workflow": "earnings-deep-dive", "mapped_workflow": "earnings_deep_dive", "route_status": "supported"}
+    },
+    {
+      "schema_version": 1, "event_id": "SCREEN-VZ-20260812", "event_type": "candidate_screened", "recorded_at": "2026-08-12T13:22:12+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "VZ",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"bucket": "B", "setup": "Dusuk carpan ve iyilesen musteri metrikleri, fakat faaliyet kari henuz donmedi.", "variant_wedge": "Musteri kazanimi nakit akisi inflection'ina donusebilir.", "first_rejection": "Abone momentumu tekrarlanan GAAP kazanc buyumesini henuz kanitlamadi.", "suggested_workflow": "thesis-tracker / earnings-deep-dive", "mapped_workflow": null, "route_status": "unsupported", "manual_review_date": "2026-08-19"}
+    },
+    {
+      "schema_version": 1, "event_id": "REVIEW-AMZN-20260812", "event_type": "manual_review_required", "recorded_at": "2026-08-12T13:23:01+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "AMZN", "source_artifacts": [],
+      "payload": {"review_date": "2026-08-13", "reason": "scenario-sensitivity-generator workflow katalogunda desteklenmiyor"}
+    },
+    {
+      "schema_version": 1, "event_id": "REVIEW-GOOGL-20260812", "event_type": "manual_review_required", "recorded_at": "2026-08-12T13:23:02+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "GOOGL", "source_artifacts": [],
+      "payload": {"review_date": "2026-08-13", "reason": "financials-normalizer zinciri workflow katalogunda desteklenmiyor"}
+    },
+    {
+      "schema_version": 1, "event_id": "CORRECTION-CRM-20260812", "event_type": "source_interpretation_corrected", "recorded_at": "2026-08-12T13:24:00+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "CRM",
+      "source_artifacts": [{"role": "result", "path": "pei/2026-08-12/shortlist/idea/result.md", "sha256": "84e506c6cf4c19f91f9d90dbaeb37bd552f91e9ab5ebf551a426df00753514b8"}],
+      "payload": {"original_claim": "5 Agustos 8-K yeni bir finansal print olarak alinmali", "correction": "5 Agustos 8-K yeni bir 10-Q veya 10-K degildir; eksik donemsel filing sonucu cikarilamaz"}
+    },
+    {
+      "schema_version": 1, "event_id": "THESIS-AAPL-LEGACY-20260812", "event_type": "thesis_opened", "recorded_at": "2026-08-12T13:25:01+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "AAPL",
+      "source_artifacts": [{"role": "thesis_tracker", "path": "data/thesis-tracker/AAPL/AAPL-20260812-supply-ai-inflection.jsonl", "sha256": "2305ed77b1dc00dbffe11112d4f6f9c0d039359b5020844892ba4c463b23adcb"}],
+      "payload": {"thesis_id": "AAPL-20260812-supply-ai-inflection"}
+    },
+    {
+      "schema_version": 1, "event_id": "THESIS-VZ-LEGACY-20260812", "event_type": "thesis_opened", "recorded_at": "2026-08-12T13:25:02+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "VZ",
+      "source_artifacts": [{"role": "thesis_tracker", "path": "data/thesis-tracker/VZ/VZ-20260812-operational-stabilization.jsonl", "sha256": "f57df7d01a55aabf3225a1363db0f09f592957486fd35e846334459251623df2"}],
+      "payload": {"thesis_id": "VZ-20260812-operational-stabilization"}
+    },
+    {
+      "schema_version": 1, "event_id": "PREPARED-NVDA-LEGACY-20260812", "event_type": "workflow_prepared", "recorded_at": "2026-08-12T13:26:00+00:00", "run_id": "IDEA-20260812-shortlist", "ticker": "NVDA",
+      "source_artifacts": [
+        {"role": "pack", "path": "pei/2026-08-12/NVDA/preview/pack.json", "sha256": "85e523108eb2e4c957186424ce8e72334f358d473e9e389d98f8c504b41930e8"},
+        {"role": "instructions", "path": "pei/2026-08-12/NVDA/preview/instructions.md", "sha256": "80622352548177ac458d7ed7e5e4261b4b992e1da429e161f4b5aea4d8d69d58"}
+      ],
+      "payload": {"workflow": "earnings_preview", "requested_workflow": "earnings_preview", "work_item_id": "WI-IDEA-20260812-shortlist-NVDA-earnings_preview", "artifact_dir": "pei/2026-08-12/NVDA/preview", "required_context_artifacts": [], "command": ["python", "scripts/us_pei_pack.py", "--only", "NVDA", "--for", "preview", "--no-refresh"]}
+    }
+  ]
+}

@@ -1,0 +1,883 @@
+{
+  "schema_version": 2,
+  "purpose": "Deterministic point-in-time pack built directly from workspace artifacts; no valuation report is parsed.",
+  "month": "2026-08-07-ddda5ff5",
+  "decision_date": "2026-08-07",
+  "cutoff_instant": "2026-08-07T23:59:59Z",
+  "execution_date": "2026-08-07",
+  "universe_count": 1,
+  "universe_coverage": {
+    "configured_count": 87,
+    "included_count": 87,
+    "missing_financial_artifacts": [],
+    "pipeline_skipped": {}
+  },
+  "known_limitations": [
+    "fixed current universe creates survivorship and universe-selection bias",
+    "historical consensus, transcripts, positioning and short-interest vintages are unavailable",
+    "guidance is available only where a range was extracted and both endpoints appear in the selected release",
+    "peer medians are supplied only for the comps step; do not invent them",
+    "each live layer carries its own as-of date; do not apply the financial artifact cutoff to refreshed market, consensus or event data"
+  ],
+  "companies": [
+    {
+      "ticker": "VZ",
+      "cohort": "CommunicationServicesTelecom",
+      "latest_reported_period": "2026-Q2 — 26 weeks ended 2026-06-30 (cumulative year-to-date)",
+      "period_label": "2026-Q2",
+      "latest_period_end": "2026-06-30",
+      "financial_publication_date": "2026-07-31",
+      "financial_age_days": 38,
+      "closing_price_usd": 47.27,
+      "market_cap_usd_m": 196396.2,
+      "market": {
+        "return_1m_pct": 10.75,
+        "return_3m_pct": 0.08,
+        "return_6m_pct": 0.53,
+        "return_12m_pct": 9.55,
+        "annualized_volatility_pct": 25.17,
+        "max_drawdown_12m_pct": -18.28,
+        "avg_dollar_volume_20d_usd_m": 1202.82
+      },
+      "fundamentals": {
+        "revenue_growth": 1.0,
+        "operating_profit_growth": -4.5,
+        "net_profit_growth": -10.0,
+        "operating_cash_flow_growth": 9.9,
+        "operating_margin_pre_investment": 22.45,
+        "operating_margin": 22.45,
+        "net_margin": 13.24,
+        "operating_cash_flow_margin": 26.81,
+        "current_ratio": 0.604,
+        "net_working_capital": -24640.0,
+        "lease_liability_total": 23227.0,
+        "ocf_to_net_profit": 2.03
+      },
+      "valuation": {
+        "Price / Earnings": 12.1443,
+        "Earnings Yield": 8.2333,
+        "Price / Book Value": null,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 12.6588,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "latest_earnings_release": {
+        "status": "available",
+        "filing_date": "2026-07-24",
+        "accession": "0000732712-26-000040",
+        "source_id": "sec-0000732712-26-000040",
+        "text_sha256": "3ff000c63422d4af3cafaa0aced650e3fc30c031a043ee67a60b5dfc928ca1bc",
+        "guidance": {
+          "status": "unavailable",
+          "reason": "no historical guidance extraction"
+        },
+        "revision_language_supported": true,
+        "excerpts": [
+          "Intense operational discipline and improved unit economics translated directly into subscriber growth, lower churn, strong operating cash flow and industry-leading free cash flow¹ generation.",
+          "With these results, Verizon raised its full-year guidance for the second consecutive quarter.",
+          "Verizon also expanded its full-year share buyback target to up to $4.5 billion. “We’re putting customers at the center of every decision we make,” said Dan Schulman, Verizon CEO. “With recent updates including our new Simplicity plans, Verizon One converged offerings, and an industry-leading loyalty program, we are gaining subscribers and earning long-term retention based on real value rather than subsidized promotions.",
+          "By compounding lower churn with healthier unit economics, we have generated the strongest operating position we have seen in years.",
+          "This decline resulted primarily from significantly lower upgrade volumes, as the average time customers keep their mobile devices continues to increase, and the company's strategic decision to reduce spending on device subsidies.",
+          "The full-year share repurchase target has been raised to up to $4.5 billion.",
+          "Page 3 VlpHU09DSUQyMDE5UTE= VZQTR20FIN Given the strong second-quarter performance and visibility into the second half of the year, Verizon is raising guidance as follows: • Mobility and broadband service revenue growth for 2026 to be 2.5 to 3.0 percent, with wireless service revenue growth approximately flat in 2026 as the company transitions to sustainable volume-based growth.",
+          "Free Cash Flow Forecast for Full Year 2026 (dollars in millions) Revised Original Unaudited Forecast Forecast Net Cash Provided by Operating Activities Forecast $ 37,940 - 38,640 $ 37,500 - 38,000 Capital expenditures forecast (including capitalized software) (16,000 - 16,500) (16,000 - 16,500) Free Cash Flow Forecast $ 21,940 - 22,140 $ 21,500 Net Cash Provided by Operating Activities Growth Forecast % 2.2 % - 4.0 % 1.0 % - 2.3 % Free Cash Flow Growth Forecast % 9.0 % - 10.0 % 6.8 % Verizon Communications Inc.",
+          "Ended 6/30/25 Operating Income $ 8,032 $ 7,643 $ 15,746 $ 15,067 Add: Depreciation and amortization expense 3,787 3,582 7,517 7,125 Segment EBITDA $ 11,819 $ 11,225 $ 23,263 $ 22,192 Year over year change % 5.3 % 4.8 % Total operating revenues $ 26,242 $ 26,648 $ 52,695 $ 52,266 Operating Income Margin 30.6 % 28.7 % 29.9 % 28.8 % Segment EBITDA Margin 45.0 % 42.1 % 44.1 % 42.5 % Business (dollars in millions) Unaudited 3 Mos.",
+          "Ended 6/30/25 Operating Income $ 991 $ 724 $ 1,947 $ 1,470 Add: Depreciation and amortization expense 1,091 998 2,140 1,987 Segment EBITDA $ 2,082 $ 1,722 $ 4,087 $ 3,457 Year over year change % 20.9 % 18.2 % Total operating revenues $ 7,155 $ 6,973 $ 14,285 $ 13,975 Operating Income Margin 13.9 % 10.4 % 13.6 % 10.5 % Segment EBITDA Margin 29.1 % 24.7 % 28.6 % 24.7 % Footnote: In the second quarter of 2026, the net assets representing Verizon's international wireline connectivity and managed network services business were classified as assets and liabilities held for sale and moved from the Business segment to Corporate and other."
+        ]
+      },
+      "source_ids": [
+        "sec-0000732712-26-000040"
+      ],
+      "consensus_estimates": {
+        "status": "available",
+        "as_of": "2026-08-12",
+        "source": "yfinance / Yahoo Finance analyst estimates",
+        "earnings_estimate": {
+          "0q": {
+            "avg": 1.28508,
+            "low": 1.23,
+            "high": 1.38,
+            "yearAgoEps": 1.21,
+            "numberOfAnalysts": 19,
+            "growth": 0.062,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 1.14685,
+            "low": 1.05,
+            "high": 1.21,
+            "yearAgoEps": 1.09,
+            "numberOfAnalysts": 17,
+            "growth": 0.052199997,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 5.01242,
+            "low": 4.85,
+            "high": 5.22,
+            "yearAgoEps": 4.71,
+            "numberOfAnalysts": 26,
+            "growth": 0.0642,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 5.28049,
+            "low": 5.04,
+            "high": 5.51,
+            "yearAgoEps": 5.01242,
+            "numberOfAnalysts": 25,
+            "growth": 0.0535,
+            "currency": "USD"
+          }
+        },
+        "revenue_estimate": {
+          "0q": {
+            "avg": 34805591780,
+            "low": 34193000000,
+            "high": 35324000000,
+            "numberOfAnalysts": 18,
+            "yearAgoRevenue": 33821000000,
+            "growth": 0.0291,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 37345087310,
+            "low": 36758000000,
+            "high": 37834583650,
+            "numberOfAnalysts": 16,
+            "yearAgoRevenue": 36381000000,
+            "growth": 0.026500002,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 140911270240,
+            "low": 139545561210,
+            "high": 143093000000,
+            "numberOfAnalysts": 21,
+            "yearAgoRevenue": 138191000000,
+            "growth": 0.0197,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 143591664920,
+            "low": 140490900000,
+            "high": 147908939750,
+            "numberOfAnalysts": 23,
+            "yearAgoRevenue": 140911270240,
+            "growth": 0.019,
+            "currency": "USD"
+          }
+        },
+        "eps_trend": {
+          "0q": {
+            "current": 1.28508,
+            "7daysAgo": 1.28592,
+            "30daysAgo": 1.29526,
+            "60daysAgo": 1.29264,
+            "90daysAgo": 1.29422,
+            "currency": "USD"
+          },
+          "+1q": {
+            "current": 1.14685,
+            "7daysAgo": 1.14685,
+            "30daysAgo": 1.12065,
+            "60daysAgo": 1.13058,
+            "90daysAgo": 1.12606,
+            "currency": "USD"
+          },
+          "0y": {
+            "current": 5.01242,
+            "7daysAgo": 5.02707,
+            "30daysAgo": 4.94113,
+            "60daysAgo": 4.97301,
+            "90daysAgo": 4.95537,
+            "currency": "USD"
+          },
+          "+1y": {
+            "current": 5.28049,
+            "7daysAgo": 5.27369,
+            "30daysAgo": 5.27019,
+            "60daysAgo": 5.27221,
+            "90daysAgo": 5.27379,
+            "currency": "USD"
+          }
+        },
+        "eps_revisions": {
+          "0q": {
+            "upLast7days": 1,
+            "upLast30days": 4,
+            "downLast30days": 4,
+            "downLast7Days": 2,
+            "currency": "USD"
+          },
+          "+1q": {
+            "upLast7days": 3,
+            "upLast30days": 7,
+            "downLast30days": 1,
+            "downLast7Days": 0,
+            "currency": "USD"
+          },
+          "0y": {
+            "upLast7days": 7,
+            "upLast30days": 10,
+            "downLast30days": 2,
+            "downLast7Days": 1,
+            "currency": "USD"
+          },
+          "+1y": {
+            "upLast7days": 4,
+            "upLast30days": 9,
+            "downLast30days": 4,
+            "downLast7Days": 4,
+            "currency": "USD"
+          }
+        },
+        "price_targets": {
+          "current": 47.27,
+          "high": 71.0,
+          "low": 44.0,
+          "mean": 51.55652,
+          "median": 51.0
+        }
+      },
+      "next_events": {
+        "status": "available",
+        "as_of": "2026-08-12",
+        "source": "yfinance / Yahoo Finance calendar",
+        "next_earnings_date": "2026-10-20",
+        "date_confirmed": false,
+        "confirmation_note": "Yahoo does not distinguish a company-announced date from an estimate. Treat as estimated until the IR page confirms it.",
+        "dividend_date": "2026-08-03",
+        "ex_dividend_date": "2026-07-10"
+      },
+      "transaction_filing_history": {
+        "status": "transaction-related filing history; current status not determined",
+        "current_transaction_status": "not determined from filing-form history",
+        "verification_required": true,
+        "filing_count": 4,
+        "first_filing": "2024-12-06",
+        "latest_filing": "2025-10-02",
+        "forms": [
+          "S-4",
+          "S-4/A"
+        ],
+        "filing_role_indicator": "filed to register securities for a transaction",
+        "filing_role_basis": "filed an S-4 and no merger proxy",
+        "not_established_by_pack": "Whether a transaction remains pending, completed, terminated or superseded; deal terms, consideration, counterparty, closing timetable and regulatory status. Filing-form history alone does not establish current transaction status."
+      },
+      "special_situations": {
+        "status": "context only",
+        "context": [
+          {
+            "date": "2024-12-06",
+            "item": "5.03",
+            "meaning": "amended articles/bylaws, or a change of fiscal year"
+          }
+        ]
+      },
+      "roic": {
+        "status": "derived",
+        "value_pct": 6.67,
+        "period": "2026-Q2",
+        "annualized_from_days": 180,
+        "invested_capital_musd": 347975,
+        "definition": "NOPAT / invested capital, where NOPAT is operating profit after the effective tax rate, annualized from the period length, and invested capital is total assets less current liabilities",
+        "caveat": "Derived here, not reported by the company. No total-debt line exists in our statements, so invested capital uses the assets-less-current-liabilities simplification and will differ from a provider's ROIC."
+      },
+      "market_statistics_at_cutoff": {
+        "return_1m_pct": 13.32,
+        "return_3m_pct": 1.64,
+        "return_6m_pct": 3.21,
+        "return_12m_pct": 18.87,
+        "annualized_volatility_pct": 24.9,
+        "max_drawdown_12m_pct": -17.0,
+        "avg_dollar_volume_20d_usd_m": 1225.07
+      },
+      "market_statistics_at_cutoff_as_of": "2026-08-07",
+      "market_statistics_as_of": "2026-08-11",
+      "market_statistics_refresh_status": "available",
+      "price_refresh": {
+        "status": "available",
+        "price_now": 47.27,
+        "price_as_of": "2026-08-11",
+        "price_at_cutoff": 47.06,
+        "cutoff_price_as_of": "2026-08-07",
+        "change_pct": 0.45,
+        "market_cap_now_usd_m": 196396.2,
+        "valuation_at_price_now": {
+          "Price / Earnings": 12.1443,
+          "Earnings Yield": 8.2333,
+          "Price / Book Value": null,
+          "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+          "Lease-Exclusive Enterprise Value / Reported Operating Income": 12.6588,
+          "Enterprise Value / Issuer-Reported EBITDA": null
+        },
+        "not_rescaled": [],
+        "not_rescaled_reason": null,
+        "method": "Price-based multiples use the exact price ratio; enterprise-value multiples use exact current EV = refreshed market cap + filing-based net debt."
+      },
+      "net_debt": {
+        "status": "derived",
+        "period": "2026-Q2",
+        "as_of": "2026-06-30",
+        "unit": "million USD",
+        "debt_as_of": "2026-06-30",
+        "debt_is_from_an_older_period": false,
+        "total_debt": 165231,
+        "total_debt_basis": "sum of the reported components",
+        "may_be_only_part_of_the_debt": false,
+        "debt_components": {
+          "borrowings_long_term_current_portion": 21783,
+          "borrowings_long_term": 143448
+        },
+        "cash_and_investments": 1752,
+        "cash_components": {
+          "cash_and_equivalents": 1752
+        },
+        "net_debt": 163479,
+        "lease_liabilities": 23227,
+        "lease_note": "Leases are kept out of net debt because the valuation engine's enterprise value is lease-exclusive. Add them only if you say you are doing so.",
+        "enterprise_value": 359875.2,
+        "enterprise_value_basis": "market cap at the refreshed price"
+      },
+      "price_reconciliation": {
+        "multiples_computed_from": 47.06,
+        "multiples_price_as_of": "2026-08-07",
+        "consensus_block_price": 47.27,
+        "consensus_price_as_of": "2026-08-12",
+        "gap_pct": 0.45,
+        "note": "Every multiple in `valuation` uses multiples_computed_from. If you quote a multiple, quote that price and that date. Do not recompute multiples against the consensus-block price yourself -- see `price_refresh.valuation_at_price_now` for the already-rescaled figures."
+      },
+      "market_at_cutoff": {
+        "price_usd": 47.06,
+        "market_cap_usd_m": 195523.7,
+        "as_of": "2026-08-07"
+      },
+      "valuation_at_cutoff": {
+        "Price / Earnings": 12.0903,
+        "Earnings Yield": 8.27,
+        "Price / Book Value": null,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 12.6281,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "valuation_at_cutoff_as_of": "2026-08-07",
+      "market_data_as_of": "2026-08-11",
+      "valuation_as_of": "2026-08-11",
+      "identity": {
+        "legal_name": "VERIZON COMMUNICATIONS INC",
+        "ticker": "VZ",
+        "exchange": "NYSE",
+        "cik": "0000732712",
+        "sic": "4813",
+        "sic_description": "Telephone Communications (No Radiotelephone)",
+        "fiscal_year_end": "1231",
+        "headquarters": {
+          "city": "NEW YORK",
+          "stateOrCountry": "NY",
+          "zipCode": "10036"
+        },
+        "sector": "Communication Services",
+        "industry": "Telecom Services",
+        "subindustry": null,
+        "actual_activity": "Integrated Wireless and Broadband Telecommunications",
+        "classification_as_of": "2026-08-12",
+        "sources": {
+          "identity": "SEC submissions",
+          "classification": "SEC",
+          "sec_submissions": "sec-submissions-0000732712"
+        }
+      },
+      "business_profile": {
+        "status": "partial",
+        "company_name": "VERIZON COMMUNICATIONS INC",
+        "sector": "Communication Services",
+        "industry": "Telecom Services",
+        "actual_activity": "Integrated Wireless and Broadband Telecommunications",
+        "latest_issuer_reported_context": {
+          "as_of": "2026-07-24",
+          "source": "sec-0000732712-26-000040",
+          "evidence": "issuer_management_claim",
+          "confidence": "high",
+          "excerpts": [
+            "Intense operational discipline and improved unit economics translated directly into subscriber growth, lower churn, strong operating cash flow and industry-leading free cash flow¹ generation.",
+            "With these results, Verizon raised its full-year guidance for the second consecutive quarter.",
+            "Verizon also expanded its full-year share buyback target to up to $4.5 billion. “We’re putting customers at the center of every decision we make,” said Dan Schulman, Verizon CEO. “With recent updates including our new Simplicity plans, Verizon One converged offerings, and an industry-leading loyalty program, we are gaining subscribers and earning long-term retention based on real value rather than subsidized promotions.",
+            "By compounding lower churn with healthier unit economics, we have generated the strongest operating position we have seen in years.",
+            "This decline resulted primarily from significantly lower upgrade volumes, as the average time customers keep their mobile devices continues to increase, and the company's strategic decision to reduce spending on device subsidies.",
+            "The full-year share repurchase target has been raised to up to $4.5 billion.",
+            "Page 3 VlpHU09DSUQyMDE5UTE= VZQTR20FIN Given the strong second-quarter performance and visibility into the second half of the year, Verizon is raising guidance as follows: • Mobility and broadband service revenue growth for 2026 to be 2.5 to 3.0 percent, with wireless service revenue growth approximately flat in 2026 as the company transitions to sustainable volume-based growth.",
+            "Free Cash Flow Forecast for Full Year 2026 (dollars in millions) Revised Original Unaudited Forecast Forecast Net Cash Provided by Operating Activities Forecast $ 37,940 - 38,640 $ 37,500 - 38,000 Capital expenditures forecast (including capitalized software) (16,000 - 16,500) (16,000 - 16,500) Free Cash Flow Forecast $ 21,940 - 22,140 $ 21,500 Net Cash Provided by Operating Activities Growth Forecast % 2.2 % - 4.0 % 1.0 % - 2.3 % Free Cash Flow Growth Forecast % 9.0 % - 10.0 % 6.8 % Verizon Communications Inc.",
+            "Ended 6/30/25 Operating Income $ 8,032 $ 7,643 $ 15,746 $ 15,067 Add: Depreciation and amortization expense 3,787 3,582 7,517 7,125 Segment EBITDA $ 11,819 $ 11,225 $ 23,263 $ 22,192 Year over year change % 5.3 % 4.8 % Total operating revenues $ 26,242 $ 26,648 $ 52,695 $ 52,266 Operating Income Margin 30.6 % 28.7 % 29.9 % 28.8 % Segment EBITDA Margin 45.0 % 42.1 % 44.1 % 42.5 % Business (dollars in millions) Unaudited 3 Mos.",
+            "Ended 6/30/25 Operating Income $ 991 $ 724 $ 1,947 $ 1,470 Add: Depreciation and amortization expense 1,091 998 2,140 1,987 Segment EBITDA $ 2,082 $ 1,722 $ 4,087 $ 3,457 Year over year change % 20.9 % 18.2 % Total operating revenues $ 7,155 $ 6,973 $ 14,285 $ 13,975 Operating Income Margin 13.9 % 10.4 % 13.6 % 10.5 % Segment EBITDA Margin 29.1 % 24.7 % 28.6 % 24.7 % Footnote: In the second quarter of 2026, the net assets representing Verizon's international wireline connectivity and managed network services business were classified as assets and liabilities held for sale and moved from the Business segment to Corporate and other."
+          ]
+        },
+        "limitation": "Normalized product, segment and geographic mix is not available; the external research layer may complete it."
+      },
+      "reported_financials": {
+        "period": "2026-Q2",
+        "period_start": "2026-01-01",
+        "period_end": "2026-06-30",
+        "period_type": "quarterly",
+        "currency": "USD",
+        "scale": "million",
+        "accounting_basis": "US_GAAP",
+        "audit_status": "unaudited",
+        "publication_date": "2026-07-31",
+        "source_revision": "0000732712-26-000046",
+        "metrics": [
+          {
+            "metric_id": "revenue_total",
+            "name": "Net Revenue",
+            "value": 68693,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": 67989,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "income_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}Revenues#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "operating_profit",
+            "name": "Operating Income",
+            "value": 15421,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": 16150,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "income_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}OperatingIncomeLoss#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "net_profit_attributable_parent",
+            "name": "Net Income Attributable to Parent",
+            "value": 8880,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": 9882,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "income_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}NetIncomeLoss#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "eps_diluted_usc",
+            "name": "Diluted Earnings per Share",
+            "value": 2.12,
+            "unit": "usd_per_share",
+            "period": "2026-Q2",
+            "comparison_value": 2.34,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "income_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}EarningsPerShareDiluted#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "cash_and_equivalents",
+            "name": "Cash and Cash Equivalents",
+            "value": 1752,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": null,
+            "comparison_period": null,
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}CashAndCashEquivalentsAtCarryingValue#c-39"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "total_assets",
+            "name": "Total Assets",
+            "value": 410186,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": null,
+            "comparison_period": null,
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}Assets#c-39"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "borrowings_long_term_current_portion",
+            "name": "Current Portion of Long-term Debt",
+            "value": 21783,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": null,
+            "comparison_period": null,
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}LongTermDebtCurrent#c-39"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "borrowings_long_term",
+            "name": "Long-term Debt",
+            "value": 143448,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": null,
+            "comparison_period": null,
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}LongTermDebtAndCapitalLeaseObligations#c-39"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "total_equity",
+            "name": "Total Equity",
+            "value": 105196,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": 104361,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "balance_sheet",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest#c-39 + {http://fasb.org/us-gaap/2026}PreferredStockValue#c-39"
+            },
+            "evidence": "derived_calculation",
+            "confidence": "medium",
+            "calculation": "reported total_equity + {http://fasb.org/us-gaap/2026}PreferredStockValue",
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact. Includes separately presented temporary equity."
+          },
+          {
+            "metric_id": "cf_net_operating_activities",
+            "name": "Net Cash from Operating Activities",
+            "value": 18419,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": 16757,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "cash_flow_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}NetCashProvidedByUsedInOperatingActivities#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "cf_dividends_paid",
+            "name": "Dividends Paid",
+            "value": -5864,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": -5712,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "cash_flow_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}PaymentsOfDividends#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          },
+          {
+            "metric_id": "cf_share_repurchases",
+            "name": "Share Repurchases",
+            "value": -3500,
+            "unit": "million_usd",
+            "period": "2026-Q2",
+            "comparison_value": 0,
+            "comparison_period": "2025-Q2",
+            "status": "available",
+            "source": "sec-0000732712-26-000046",
+            "source_location": {
+              "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+              "sheet": "cash_flow_statement",
+              "cell_or_range": "{http://fasb.org/us-gaap/2026}PaymentsForRepurchaseOfCommonStock#c-1"
+            },
+            "evidence": "fact_source_reported",
+            "confidence": "high",
+            "calculation": null,
+            "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+          }
+        ]
+      },
+      "capital_allocation": {
+        "period": "2026-Q2",
+        "dividends_paid": {
+          "metric_id": "cf_dividends_paid",
+          "name": "Dividends Paid",
+          "value": -5864,
+          "unit": "million_usd",
+          "period": "2026-Q2",
+          "comparison_value": -5712,
+          "comparison_period": "2025-Q2",
+          "status": "available",
+          "source": "sec-0000732712-26-000046",
+          "source_location": {
+            "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+            "sheet": "cash_flow_statement",
+            "cell_or_range": "{http://fasb.org/us-gaap/2026}PaymentsOfDividends#c-1"
+          },
+          "evidence": "fact_source_reported",
+          "confidence": "high",
+          "calculation": null,
+          "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+        },
+        "share_repurchases": {
+          "metric_id": "cf_share_repurchases",
+          "name": "Share Repurchases",
+          "value": -3500,
+          "unit": "million_usd",
+          "period": "2026-Q2",
+          "comparison_value": 0,
+          "comparison_period": "2025-Q2",
+          "status": "available",
+          "source": "sec-0000732712-26-000046",
+          "source_location": {
+            "source_file": "raw/sec-filings/VZ/0000732712-26-000046.json",
+            "sheet": "cash_flow_statement",
+            "cell_or_range": "{http://fasb.org/us-gaap/2026}PaymentsForRepurchaseOfCommonStock#c-1"
+          },
+          "evidence": "fact_source_reported",
+          "confidence": "high",
+          "calculation": null,
+          "notes": "SEC accession 0000732712-26-000046; dimensionless entity-wide fact."
+        }
+      },
+      "risk_factors": {
+        "status": "available",
+        "as_of": "2026-07-31",
+        "scope_note": "10-Q Item 1A risk metninden deterministik olarak çıkarılmıştır; önem derecesi ve parasal etki tahmin edilmemiştir.",
+        "risks": [
+          {
+            "risk_id": "regulation_and_litigation",
+            "category": "regulatory",
+            "title": "Düzenleyici ve Hukuki Riskler",
+            "description": "Şirket, düzenleme, vergi veya hukuki süreçlerdeki değişimlerin maliyet ve faaliyet sonuçlarını etkileyebileceğini bildiriyor.",
+            "direction": "negative",
+            "severity": "medium",
+            "severity_rationale": "Önem derecesi, SEC filingindeki risk açıklamasının varlığını gösterir; olasılık veya parasal etki tahmin edilmemiştir.",
+            "time_horizon": "long",
+            "evidence": [
+              {
+                "source_id": "sec-0000732712-26-000046-risk-factors",
+                "source_file": "raw/sec-filings/VZ/0000732712-26-000046-risk-factors.txt",
+                "page": null,
+                "summary": "…our Annual Report on Form 10-K for the year ended December 31, 2025. See Note 12 to the condensed consolidated financial statements for additional information regarding legal proceedings. Item 1A."
+              }
+            ],
+            "mitigants": null,
+            "quantified_effect": null,
+            "notes": "SEC Item 1A metninden deterministik anahtar kelime eşlemesiyle sınıflandırıldı."
+          }
+        ]
+      },
+      "sources": [
+        {
+          "source_id": "sec-0000732712-26-000046",
+          "source_name": "raw/sec-filings/VZ/0000732712-26-000046.json",
+          "source_type": "sec_inline_xbrl",
+          "provider_or_owner": "SEC",
+          "as_of_date": "2026-07-31",
+          "period_covered": [
+            "2026-Q2",
+            "2025-Q2"
+          ],
+          "source_location": "raw/sec-filings/VZ/0000732712-26-000046.json",
+          "freshness_status": "current",
+          "sha256": "38b0aa6238704388dc079b0124db0a71a83b44af4a5c94054c70e6108bd7bb0b",
+          "notes": "SEC accession 0000732712-26-000046; source archive hash 3b0b9d86f31a2220c6661c664049afbf895db7fd5ca348e09cfb081700f74e2b."
+        },
+        {
+          "source_id": "sec-0000732712-26-000046-risk-factors",
+          "source_name": "raw/sec-filings/VZ/0000732712-26-000046-risk-factors.txt",
+          "source_type": "sec_filing_text",
+          "provider_or_owner": "SEC",
+          "as_of_date": "2026-07-31",
+          "period_covered": [],
+          "source_location": "raw/sec-filings/VZ/0000732712-26-000046-risk-factors.txt",
+          "freshness_status": "current",
+          "sha256": "8d04bfe4317e81f163f4f5554f995dcafed831fd34b1b2f16c1342ed3e2afd4c",
+          "notes": "SEC 10-Q Item 1A risk-factor text snapshot; accession 0000732712-26-000046."
+        },
+        {
+          "source_id": "company-config-VZ",
+          "source_name": "config/companies/VZ.json",
+          "source_type": "workspace_config",
+          "provider_or_owner": "trade_us",
+          "as_of_date": "2026-08-12",
+          "source_location": "config/companies/VZ.json",
+          "freshness_status": "current"
+        },
+        {
+          "source_id": "sec-submissions-0000732712",
+          "source_name": "SEC company submissions payload",
+          "source_type": "sec_submissions",
+          "provider_or_owner": "SEC",
+          "as_of_date": "2026-08-12",
+          "source_location": "live/current/ledger/sec-discovery-payloads/CIK0000732712.json",
+          "freshness_status": "current"
+        },
+        {
+          "source_id": "market-pack-VZ",
+          "source_name": "point-in-time market and valuation artifacts",
+          "source_type": "workspace_market_artifacts",
+          "provider_or_owner": "trade_us pipeline",
+          "as_of_date": "2026-08-11",
+          "source_location": "live/current/data/market/VZ",
+          "freshness_status": "current"
+        },
+        {
+          "source_id": "sec-0000732712-26-000040",
+          "source_name": "SEC earnings release 0000732712-26-000040",
+          "source_type": "sec_earnings_release",
+          "provider_or_owner": "SEC / issuer",
+          "as_of_date": "2026-07-24",
+          "source_location": "guidance/VZ/0000732712-26-000040",
+          "freshness_status": "current",
+          "sha256": "3ff000c63422d4af3cafaa0aced650e3fc30c031a043ee67a60b5dfc928ca1bc"
+        },
+        {
+          "source_id": "consensus-VZ",
+          "source_name": "yfinance / Yahoo Finance analyst estimates",
+          "source_type": "provider_snapshot",
+          "provider_or_owner": "yfinance / Yahoo Finance analyst estimates",
+          "as_of_date": "2026-08-12",
+          "source_location": "data/consensus/snapshot-2026-08-12.json",
+          "freshness_status": "current"
+        }
+      ],
+      "evidence_gaps": [
+        {
+          "field": "business_mix",
+          "status": "missing_required_source",
+          "reason": "product, segment and geographic mix is not normalized in workspace artifacts"
+        },
+        {
+          "field": "free_float",
+          "status": "missing_required_source",
+          "reason": "no point-in-time free-float source in the workspace"
+        },
+        {
+          "field": "index_membership_and_weight",
+          "status": "missing_required_source",
+          "reason": "no point-in-time index constituent weight source in the workspace"
+        },
+        {
+          "field": "top_holders_and_ownership_concentration",
+          "status": "missing_required_source",
+          "reason": "no point-in-time ownership source in the workspace"
+        },
+        {
+          "field": "passive_and_etf_ownership",
+          "status": "missing_required_source",
+          "reason": "no point-in-time passive ownership source in the workspace"
+        },
+        {
+          "field": "short_interest_and_borrow",
+          "status": "missing_required_source",
+          "reason": "no point-in-time short-interest or borrow source in the workspace"
+        },
+        {
+          "field": "factor_exposure",
+          "status": "missing_required_source",
+          "reason": "no point-in-time factor model in the workspace"
+        },
+        {
+          "field": "governance_detail",
+          "status": "missing_required_source",
+          "reason": "no normalized board and governance dataset in the workspace"
+        },
+        {
+          "field": "earnings_call_commentary",
+          "status": "missing_required_source",
+          "reason": "earnings-call transcripts are not stored in the workspace"
+        }
+      ]
+    }
+  ],
+  "mode": "live",
+  "pack_purpose": "Deterministic numeric input for the ChatGPT Public Equity Investing plugin. Numbers here replace the plugin's paid data connectors; the plugin should use the web only for narrative and for fields marked unavailable.",
+  "consensus_as_of": "2026-08-12",
+  "intended_step": "tearsheet",
+  "built_on": "2026-08-12",
+  "last_market_session": "2026-08-11",
+  "market_data_as_of": "2026-08-11",
+  "financial_data_cutoff": "2026-08-07T23:59:59Z",
+  "blocks_omitted_for_step": {
+    "omitted": [
+      "sector_peers",
+      "deterministic_signals",
+      "quarterly_series",
+      "pre_print_consensus"
+    ],
+    "reason": "Not part of the tearsheet step's source categories. Ask for a pack built for the owning step instead of working around the gap."
+  }
+}

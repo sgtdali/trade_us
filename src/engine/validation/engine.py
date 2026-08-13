@@ -15,10 +15,16 @@ from .reports import validate_report_markdown
 from .result import ValidationFinding, ValidationResult
 
 
-def validate_company_routing(ticker: str, allow_inactive: bool = False, data_root: Path | None = None) -> ValidationResult:
+def validate_company_routing(
+    ticker: str, allow_inactive: bool = False, data_root: Path | None = None,
+    config_root: Path | None = None,
+) -> ValidationResult:
     result = ValidationResult()
     try:
-        company = load_company(ticker, allow_inactive=allow_inactive, data_root=data_root)
+        company = load_company(
+            ticker, allow_inactive=allow_inactive,
+            data_root=data_root, config_root=config_root,
+        )
     except Exception as e:
         result.add(ValidationFinding("company_config_error", "error", str(e)))
         return result
@@ -37,7 +43,9 @@ def validate_inputs(context: AnalysisContext) -> ValidationResult:
     """Validate the authored/normalized inputs: company config, source
     manifest, direct financials, financial-operational data, risks."""
     result = ValidationResult()
-    result.merge(validate_company_routing(context.ticker, data_root=context.data_root))
+    result.merge(validate_company_routing(
+        context.ticker, data_root=context.data_root, config_root=context.config_root,
+    ))
     result.merge(schema.validate_against_schema("company", context.company_config, f"config/companies/{context.ticker}.json"))
 
     if context.source_manifest is not None:

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:ABBV:1",
+  "subject_ticker": "ABBV",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "blended_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "core_large_biopharma",
+      "label": "Core large biopharma valuation peers",
+      "purpose": "Patent-cliff management, replacement franchises, cash generation, pipeline durability and mature-product erosion",
+      "members": ["BMY", "AMGN", "MRK", "GILD"]
+    },
+    {
+      "group_id": "secondary_pharma_references",
+      "label": "Secondary pharma references",
+      "purpose": "Large-cap pharma, biologics, immunology, R&D quality and business-development context",
+      "members": ["JNJ", "PFE", "REGN"]
+    }
+  ],
+  "operational_references": [
+    {
+      "ticker": "LLY",
+      "lens_id": "high_growth_quality_ceiling",
+      "reason": "High-growth pharma quality and valuation ceiling; obesity and diabetes growth place Lilly in a different valuation regime from AbbVie.",
+      "included_in_numeric_comparison": false
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "AbbVie is evaluated primarily against mature cash-generative biopharma companies managing patent cliffs and replacement franchises. BMY and AMGN are the closest overall matches; LLY is explicitly excluded from medians."
+  }
+}

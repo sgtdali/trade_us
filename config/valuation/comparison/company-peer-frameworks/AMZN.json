@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "artifact_type": "company_peer_framework",
+  "artifact_id": "company-peer-framework:AMZN:1",
+  "subject_ticker": "AMZN",
+  "framework_version": 1,
+  "effective_from": "2026-08-12",
+  "methodology": "sotp_multi_lens",
+  "single_combined_peer_median": false,
+  "groups": [
+    {
+      "group_id": "aws_cloud_ai",
+      "label": "AWS cloud and AI",
+      "purpose": "Hyperscale cloud, enterprise workloads, AI infrastructure and capital-intensity economics",
+      "members": ["MSFT", "GOOGL", "ORCL"]
+    },
+    {
+      "group_id": "stores_marketplace_logistics",
+      "label": "Stores, marketplace and logistics",
+      "purpose": "Large-scale retail, marketplace, fulfillment, logistics and merchant monetization",
+      "members": ["WMT", "MELI"]
+    },
+    {
+      "group_id": "advertising",
+      "label": "Advertising",
+      "purpose": "Digital advertising growth, monetization and profitability",
+      "members": ["GOOGL", "META", "WMT"]
+    },
+    {
+      "group_id": "prime_subscriptions_media",
+      "label": "Prime, subscriptions and media",
+      "purpose": "Streaming video, subscriptions and consumer-attention economics",
+      "members": ["NFLX"]
+    }
+  ],
+  "operational_references": [
+    {
+      "ticker": "BABA",
+      "reason": "Marketplace, cloud and merchant-advertising economics make Alibaba a close structural peer, but the current live SEC pipeline does not support its foreign-issuer filing regime.",
+      "included_in_numeric_comparison": false
+    },
+    {
+      "ticker": "SHOP",
+      "reason": "E-commerce ecosystem and merchant-services reference, but the current live SEC pipeline does not support its foreign-issuer filing regime.",
+      "included_in_numeric_comparison": false
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "rationale": "Amazon requires an SOTP-style framework because AWS, retail and marketplace, advertising, and subscriptions/media should not share one consolidated peer median. MSFT, GOOGL, WMT and BABA are the core economic reference set, with BABA held outside numeric medians until its filing regime is supported."
+  }
+}

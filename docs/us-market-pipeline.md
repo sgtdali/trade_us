@@ -56,8 +56,8 @@ tests/us/                         # yalnız adaptör/orkestratör testleri
 7. En güncel iki 10-K ile son 10-Q birlikte işlenir. 10-Q'nun kendi karşılaştırma
    sütunu ayrı dönem artifact'ına dönüştürülür; böylece ortak motor TTM bazını
    `son FY + güncel YTD - önceki yıl YTD` olarak gerçek dönemlerden kurar.
-8. Mevcut ortak motor oranları, sinyalleri, teknik görünümü, Piotroski ve Magic
-   Formula tanılarını üretir; değerleme motoru mevcut yöntemleri çalıştırır.
+8. Mevcut ortak motor oranları, sinyalleri ve teknik görünümü üretir;
+   değerleme motoru mevcut yöntemleri çalıştırır.
 9. SEC filing metnindeki Item 1A bölümü deterministik risk sınıflarına; yıllık
    filing içindeki standart US-GAAP dipnot fact'leri borç/ASC 842 vade, faiz ve
    açıklanmış tahvil para birimi profiline çevrilir.
@@ -177,8 +177,7 @@ varsayımla tek sınıfa indirmek yasaktır.
 
 On raporun tamamında beş boyutlu emsal artifact'ı üretilir; raporda ekonomik
 karşılaştırılabilirliği korunabilen Current Ratio ve Earnings Yield işletme modeli
-eşleşmiş medyanla gösterilir. Belge kaynaklı riskler, teknik görünüm, Piotroski
-F-Score ve Magic Formula tanısı da bulunur. Ara
+eşleşmiş medyanla gösterilir. Belge kaynaklı riskler ve teknik görünüm de bulunur. Ara
 dönemi en güncel finansal baz olan sekiz şirkette gerçek TTM değerleri kullanılır;
 `GIS` ve `SJM` için en güncel dönem yıllık olduğundan rapor doğal olarak FY bazlıdır.
 Kiralama sunum dili US-GAAP için ASC 842 olarak gösterilir. ABD değerleme raporları
@@ -250,9 +249,6 @@ ekonomik doğruluk ve yanlış yönlendirme riski taşıyan bulgular uygulandı:
 - Authored geniş evren raporda işletme-modeli eşleşmesine göre bölünür: WMT/COST
   Retail, KO/PEP Beverages, GIS/KHC/MDLZ/SJM Packaged Food, CL/PG Household and
   Personal Care. Ticker'a özel hesaplama koşulu yoktur; sınıflandırma veridir.
-- Küçük tangible-operating-capital paydasından doğan aşırı Magic Formula çıktısı
-  ham denetim değeri olarak korunur fakat `not comparable` etiketlenir; KO'nun
-  %167,33 sonucu güçlü pozitif sinyal değildir.
 - Mali yıl etiketi takvim yılıyla aynı olmak zorunda değildir. Özellikle WMT
   FY2027 Q1'in 2026'da bitmesi issuer fiscal-year convention notuyla açıklanır.
 

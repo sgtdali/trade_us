@@ -66,7 +66,6 @@ def test_us_template_is_separate_and_contains_only_english_section_titles():
     assert "source_file" not in template
     assert "data/valuation-results" not in template
     assert "price_vs_sma_50.status == 'available'" in template
-    assert "available_component_count" in template
     assert "**Peer cohort:**" in template
     assert "**Median basis:**" in template
     assert "**Comparable metrics:**" in template
