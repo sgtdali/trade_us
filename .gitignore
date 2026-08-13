@@ -18,3 +18,16 @@ pei/kpi/
 # Canli kosu koku: neredeyse tamami SEC belge onbellegi, us_live_history.py
 # ile yeniden uretilebilir.
 /live/
+
+# Gunluk konsensus/olay takvimi anlik goruntuleri: us_consensus_snapshot.py
+# ve us_events_snapshot.py ile her kosuda yeniden uretilir, events.jsonl
+# icinde kanit olarak referans edilmez.
+/data/consensus/
+/data/events/
+
+# Web panelinin gecici yapistirma/taslak alani. Onaylanan sonuc zaten
+# ilgili is ogesinin artifact_dir'ine (pei/ veya data/pei-workflow/runs/)
+# attach-result ile kopyalanir; buradaki kopya kalici kanit degildir.
+/data/pei-workflow/dashboard-scratch/
+
+# web/ Next.js paneli kendi .gitignore'unu tasir (node_modules, .next, vb).

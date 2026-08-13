@@ -38,7 +38,11 @@ Varsayimlar:
 - Aylik idea-generation, haftalik kontrol ve olay-tetikli inceleme.
 - Sistem kullanici komutuyla calisir; surekli arka plan servisi yoktur.
 - Mevcut pack ureticisi sayisal kaynak katmani olmaya devam eder.
-- Semantik cikarma Codex tarafindan yapilir; repo araci LLM/API cagrisi yapmaz.
+- Semantik cikarma idea-generation ekrani icin `agy` (Gemini CLI, sema-zorlamali
+  `--json-schema`) ile otomatik yapilir (bkz. 2026-08-13 karar gunlugu);
+  diger workflow sonuclari (tearsheet/pitch/comps) icin hala Codex elle yapar.
+  Ikisinde de repo araci kendi basina API anahtari tutmaz, yalniz yerel CLI
+  cagirir.
 - Gecersiz veya belirsiz durumlarda sistem fail-closed davranir.
 
 Kapsam disi:
@@ -52,13 +56,18 @@ Kapsam disi:
 
 ### 4.1 Degismez kosu artefaktlari
 
+Gercek uygulanan yol (bkz. [repo-map.md](repo-map.md)):
+
 ```text
-pei/<tarih>/<kapsam>/<skill>/
+data/pei-workflow/runs/<run_id>/work/<work_item_id>/<tarih>/<ticker>/<adim>/
   pack.json
   instructions.md
   result.md
   manifest.json
 ```
+
+`pei/<tarih>/<ticker>/<adim>/` eski, elle kosulan donemin (2026-08-12'ye
+kadar) klasor sekli; dondu, yeni yazma yok. Ikisi de git'e tracked.
 
 Bu dosyalar bir kosunun kanitidir. Bir yorum daha sonra hatali bulunursa
 `result.md` degistirilmez; duzeltme yeni bir workflow olayi olarak eklenir.
@@ -354,6 +363,18 @@ degerlendirilir. `status` son kontrol zamanini acikca gostermelidir.
    kontrolu ayni giris noktasindan yonetilecek.
 9. **Mevcut artefaktlar korunacak.** Legacy kosular silinmeden yeni olay
    gunlugune baglanacak.
+10. **(2026-08-13) Idea-generation taslak cikarma agy'ye tasindi.** Onceki
+    regex/tablo ayristirici (`parse_screen_table`) yalniz ChatGPT'nin belirli
+    bir markdown tablosu uretmesi halinde calisiyordu; serbest metin
+    cevaplarda sessizce yanlis/eksik taslak uretme riski tasiyordu (bkz.
+    [repo-map.md](repo-map.md) bulgusu). Yerine `agy --json-schema` ile
+    semaya zorlanmis gercek bir LLM cikarimi konuldu
+    (`extract_candidates_via_agy`, `src/adapter/pei_workflow.py`); sonuc
+    `structured_output` alanindan okunur (`response` alani agy'nin kendi
+    onarim denemelerini icerebilir, guvenilmez). Workflow eslemesi
+    (`suggested_workflow` -> `mapped_workflow`) hala deterministik kodda,
+    LLM'e birakilmadi. 24.000 karakter ustu sonuclar komut satiri sinirina
+    takilir ve acik hatayla durur (sessiz bozulma yerine fail-closed).
 
 ## 13. Uygulama sirasi
 
