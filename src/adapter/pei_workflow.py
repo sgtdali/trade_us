@@ -889,6 +889,17 @@ WORKFLOW_EXTRACTION = {
             "-- metinde acikca yoksa null."
         ),
     },
+    "scenario": {
+        "schema": "pei-scenario-extraction.schema.json",
+        "task": (
+            "Asagidaki metin bir scenario-sensitivity-generator ciktisidir. "
+            "Once kirilan surucuyu (primary driver), skew etiketini, "
+            "PM aksiyonunu ve o aksiyona bagli sayisal/tarihli esigi, "
+            "goruşu degistirecek kaniti ve onerilen sonraki adimi semaya "
+            "uygun JSON olarak cikar. Yalniz metinde acikca yazan bilgiyi "
+            "cikar, bir alan metinde yoksa null birak, uydurma."
+        ),
+    },
 }
 
 
@@ -905,6 +916,8 @@ WORKFLOW_MAP = {
     "company-tearsheet": "tearsheet",
     "tearsheet": "tearsheet",
     "thesis-tracker": "thesis_tracker",
+    "scenario-sensitivity-generator": "scenario",
+    "scenario-sensitivity": "scenario",
 }
 
 
@@ -921,12 +934,14 @@ def generate_draft_events(
     result_path: Path | None = None
     target_ticker: str | None = None
     target_workflow: str = "idea"
+    requested_workflow: str | None = None
 
     if work_item_id:
         work_item = projection["work_items"].get(work_item_id)
         if work_item:
             target_ticker = work_item["ticker"]
             target_workflow = work_item["workflow"]
+            requested_workflow = work_item.get("requested_workflow", target_workflow)
             target_dir = safe_repo_path(repo_root, work_item["artifact_dir"])
             result_path = target_dir / "result.md"
     else:
@@ -1031,6 +1046,37 @@ def generate_draft_events(
                 except json.JSONDecodeError:
                     pass
 
+        # Rotalar bir zincir degil, her isim icin ayri ayri sorulan bagimsiz
+        # kapilardir (docs/pei-akis-diyagram.md Faz 1) -- idea-generation'in
+        # aylar once verdigi statik hedef (requested_workflow) degil, BU
+        # adimin kendi guncel next_route/suggested_workflow onerisi esas
+        # alinir; sadece o katalogda karsiliksizsa eski statik hedefe
+        # dusulur. target_workflow burada hazirlanan ADIM (ör. tearsheet);
+        # asagidaki next_workflow farkliysa bu sadece bir on kosuldu, zincir
+        # burada durmamali.
+        fresh_route = payload.get("next_route") or payload.get("suggested_workflow")
+        mapped_next: str | None = None
+        route_unsupported = False
+        if fresh_route:
+            for key, val in WORKFLOW_MAP.items():
+                if key in fresh_route.lower() and val in catalog and val != target_workflow:
+                    mapped_next = val
+                    break
+            else:
+                route_unsupported = True
+        if mapped_next:
+            payload["next_workflow"] = mapped_next
+        elif not route_unsupported and requested_workflow and requested_workflow != target_workflow:
+            # Bu adim kendi rotasini onermedi (bos/None) -- eski, daha az
+            # bilgili hedefe duselim, makul bir varsayilan.
+            payload["next_workflow"] = requested_workflow
+        # route_unsupported: bu adim acikca bir rota onerdi ama katalogda
+        # karsiligi yok (ör. "initiating coverage"). Eski statik hedefe
+        # (requested_workflow) SESSIZCE dusulmez -- bu, modelin taze
+        # onerisini gormezden gelip uydurma bir esdegerlik kurmak olurdu.
+        # candidate_screened'deki route_status="unsupported" ile ayni ilke:
+        # katalogda olmayan oneri calistirilmaz, insan kararina birakilir.
+
         draft_events.append(make_event(
             event_id=_event_id(f"COMPLETE-{target_ticker or 'WORKFLOW'}"),
             event_type="workflow_completed",
@@ -1040,6 +1086,20 @@ def generate_draft_events(
             payload=payload,
             recorded_at=utc_now(),
         ))
+
+        if route_unsupported:
+            draft_events.append(make_event(
+                event_id=_event_id(f"REVIEW-{target_ticker or 'WORKFLOW'}"),
+                event_type="manual_review_required",
+                run_id=run_id,
+                ticker=target_ticker,
+                source_artifacts=source_artifacts,
+                payload={
+                    "review_date": date.today().isoformat(),
+                    "reason": f"unsupported route: {fresh_route}",
+                },
+                recorded_at=utc_now(),
+            ))
 
     return {"events": draft_events}
 

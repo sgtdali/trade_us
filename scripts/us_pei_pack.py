@@ -122,6 +122,13 @@ STEP_BLOCKS = {
              "own_valuation_history": True,
              "next_events": True, "roic": True, "special_situations": True,
             "quarterly_series": False, "pre_print_consensus": False, "net_debt": True},
+    # pitch ile ayni -- sector_peers disinda. scenario-sensitivity-generator
+    # sirketin KENDI rakamlarinin araligini hesapliyor, emsal karsilastirmasi
+    # yapmiyor (referances/*.md hicbir tabloda peer verisi istemiyor).
+    "scenario": {"sector_peers": False, "deterministic_signals": True,
+                 "own_valuation_history": True,
+                 "next_events": True, "roic": True, "special_situations": True,
+                "quarterly_series": False, "pre_print_consensus": False, "net_debt": True},
 }
 
 
@@ -918,6 +925,83 @@ def flag_special_situations(pack: dict, source_run: Path,
                       "wholly organic."),
         }
         _mark_broken_comparisons(entry, high, cutoff)
+        hit += 1
+        names.append(entry["ticker"])
+    return hit, names
+
+
+EARNINGS_QUALITY_GAP_THRESHOLD_PCT = 25.0
+
+
+def flag_earnings_quality(pack: dict, horizon: str) -> tuple[int, list[str]]:
+    """Net kar ile faaliyet kari arasindaki buyuk sapmayi bayrakla.
+
+    GOOGL 2026-Q2'de faaliyet kari $80.5B, net kar $174.8B -- fark
+    muhtemelen faaliyet-disi bir kalemden (ör. halka acik hisse
+    yatirimlarinin gerceklesmemis deger artisi) geliyor ve P/E'yi
+    carpitiyor. idea-generation skill'i bunu kendi basina dogru teshis
+    etti ("17.2x P/E is contaminated by exceptional other income") ve
+    kataloğumuzda olmayan bir "financials-normalizer" adimi istedi --
+    asil eksik olan ayri bir workflow degil, bu sapmayi gosteren bir
+    pack alaniydi.
+
+    `entry["reported_financials"]` yalniz tearsheet adiminda ve tek
+    sirket icin doluyor (attach_tearsheet_context), o yuzden buradan
+    okunamaz -- attach_roic gibi ham filing dosyalarindan hesaplanir ki
+    her `--for` adiminda ve butun evrende calissin.
+    """
+    source = pack.get("_financial_root")
+    if source is None:
+        return 0, []
+    root = Path(source)
+    hit, names = 0, []
+    for entry in pack["companies"]:
+        folder = root / entry["ticker"]
+        files = sorted(p for p in folder.glob("*.json")
+                       if "derived" not in p.name) if folder.is_dir() else []
+        income = None
+        for path in sorted(files, reverse=True):
+            try:
+                candidate = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            published = candidate.get("publication_date")
+            if published and published > horizon:
+                continue
+            inc = {i["metric_id"]: i.get("value")
+                   for i in candidate.get("income_statement", [])}
+            if isinstance(inc.get("operating_profit"), (int, float)) and (
+                isinstance(inc.get("net_profit_for_period"), (int, float))
+                or isinstance(inc.get("net_profit_attributable_parent"), (int, float))
+            ):
+                income = inc
+                break
+        if income is None:
+            continue
+        operating = income["operating_profit"]
+        net = income.get("net_profit_for_period", income.get("net_profit_attributable_parent"))
+        if operating == 0:
+            continue
+        gap_pct = round((net - operating) / abs(operating) * 100, 1)
+        if abs(gap_pct) < EARNINGS_QUALITY_GAP_THRESHOLD_PCT:
+            continue
+        direction = "higher" if gap_pct > 0 else "lower"
+        entry["earnings_quality_flags"] = [{
+            "flag": "net_income_diverges_from_operating_income",
+            "operating_profit_musd": operating,
+            "net_profit_musd": net,
+            "gap_pct": gap_pct,
+            "note": (
+                f"Net income is {abs(gap_pct):.0f}% {direction} than operating "
+                "income for this period. This is typically driven by "
+                "non-operating items (investment gains/losses, other "
+                "income/expense, tax items) rather than the core business. "
+                "P/E and other net-income-based multiples may be misleading "
+                "here; consider EV/EBIT or an operating-income-based multiple "
+                "instead, or adjust net income for the flagged gap before "
+                "comparing to peers."
+            ),
+        }]
         hit += 1
         names.append(entry["ticker"])
     return hit, names
@@ -1905,6 +1989,22 @@ The pack is here for the current numbers; no new raw data is needed.
 
 Every threshold must carry a number and a date. A threshold without one is not
 a threshold.""",
+
+    "scenario": """Use scenario-sensitivity-generator for {ticker}.
+
+This pack does not contain sector_peers -- this workflow works from the
+company's own numbers (EBITDA-based EV multiple, net debt with components,
+FCF, forward EPS consensus range), not a peer comparison. Focus on
+`valuation_sensitivity` and `eps_revision_sensitivity`; only use
+`equity_liquidity_downside` or `kpi_driver_sensitivity` if you explicitly flag
+that revolver/covenant data and segment-level KPIs are not in this pack rather
+than estimating them.
+
+State the driver that breaks first, whether upside depends on multiple
+expansion or estimate revisions, and the explicit PM action rule (add / press
+/ hold / trim / exit / hedge / wait for proof) tied to a numeric threshold and
+date. Do not present a probability-weighted value without labeling its source
+posture (model-validated, source-derived, or illustrative).""",
 }
 
 
@@ -2001,6 +2101,7 @@ def main() -> int:
     pack["_financial_root"] = str(source_run / "data" / "financial")
     special_n, special_names = flag_special_situations(pack, source_run)
     roic_n, roic_skipped = attach_roic(pack, horizon)
+    eq_n, eq_names = flag_earnings_quality(pack, horizon)
     pack.pop("_financial_root", None)
     series_n, series_skipped = attach_quarterly_series(pack, source_run, horizon)
     prior_n, prior_as_of = attach_prior_consensus(pack, horizon)
@@ -2288,6 +2389,8 @@ def main() -> int:
               + (f"   cikarilamayan: {', '.join(debt_missing)}" if debt_missing else ""))
     print(f"  ozel durum {special_n}/{universe_count}"
           + (f"   {', '.join(special_names)}" if special_names else ""))
+    if eq_names:
+        print(f"  kazanc kalitesi bayragi {eq_n}/{universe_count}   {', '.join(eq_names)}")
     deal_names = [c["ticker"] for c in pack["companies"]
                   if c.get("transaction_filing_history")]
     broken = [c["ticker"] for c in pack["companies"] if c.get("fundamentals_comparability")]

@@ -166,6 +166,7 @@ denip reddedilmek için kullanıldı.
 |---|:--:|:--:|:--:|:--:|:--:|:--:|
 | net_debt | ● | ● | ● | ● | ● | ● |
 | special_situations | ● | ● | ● | ● | ● | ● |
+| earnings_quality_flags | ● | ● | ● | ● | ● | ● |
 | next_events | ● | ● | ● | – | ● | ● |
 | roic | ● | ● | – | ● | ● | ● |
 | own_valuation_history | ● | ● | – | ● | – | ● |

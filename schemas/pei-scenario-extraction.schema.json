@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trade-us.local/schemas/pei-scenario-extraction.schema.json",
+  "title": "PEI scenario-sensitivity-generator extraction (agy structured output)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "primary_driver", "skew_label", "pm_action", "pm_action_threshold",
+    "what_would_change_view", "next_route"
+  ],
+  "properties": {
+    "primary_driver": {"type": ["string", "null"]},
+    "skew_label": {"type": ["string", "null"]},
+    "pm_action": {"type": ["string", "null"]},
+    "pm_action_threshold": {"type": ["string", "null"]},
+    "what_would_change_view": {"type": ["string", "null"]},
+    "next_route": {"type": ["string", "null"]}
+  }
+}

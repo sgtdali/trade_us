@@ -36,6 +36,12 @@
       "required_workflows": ["pitch"],
       "allowed_next": [],
       "result_contract": "append_only_thesis_record"
+    },
+    "scenario": {
+      "pack_step": "scenario",
+      "required_workflows": [],
+      "allowed_next": ["pitch", "thesis_tracker"],
+      "result_contract": "scenario_ranges_and_pm_action_thresholds"
     }
   }
 }

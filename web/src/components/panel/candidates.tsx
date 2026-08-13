@@ -105,10 +105,18 @@ function CandidateDetail({ c }: { c: Candidate }) {
             </div>
 
             <div className="rounded-lg border border-border/60 bg-card p-3">
-              <div className="text-[11px] text-muted-foreground">Önerilen Workflow</div>
+              <div className="text-[11px] text-muted-foreground">
+                İlk Tarama Önerisi (idea-generation, güncellenmez)
+              </div>
               <div className="font-mono text-xs font-semibold mt-1 text-primary">
                 {c.suggested_workflow ?? "-"}
               </div>
+              {c.status_reason && (
+                <div className="text-[11px] text-muted-foreground mt-2 pt-2 border-t border-border/40">
+                  Güncel durum nedeni yukarıdaki rozette — bu ikisi
+                  farklıysa güncel olan geçerlidir.
+                </div>
+              )}
             </div>
 
             <div className="rounded-lg border border-border/60 bg-card p-3">
