@@ -375,6 +375,22 @@ degerlendirilir. `status` son kontrol zamanini acikca gostermelidir.
     (`suggested_workflow` -> `mapped_workflow`) hala deterministik kodda,
     LLM'e birakilmadi. 24.000 karakter ustu sonuclar komut satiri sinirina
     takilir ve acik hatayla durur (sessiz bozulma yerine fail-closed).
+11. **(2026-08-13) agy cikarimi tearsheet/earnings-preview/comps/pitch'e
+    genisletildi.** `generate_draft_events`'in tek-workflow dalı (idea
+    disindaki her sey) onceden yalniz ChatGPT'nin kendi yazdigi
+    ` ```json ``` ` blogunu ariyordu -- boyle bir blok yoksa payload neredeyse
+    bostu. Her workflow tipi icin ayri sema eklendi
+    (`schemas/pei-*-extraction.schema.json`, alanlar
+    [pei-workflow.md](pei-workflow.md) SS3'teki "Kaydet" listesinden birebir).
+    `WORKFLOW_EXTRACTION` sozlugu workflow'u semaya esler; katalogda semasi
+    olmayan bir workflow icin eski `json` blok yolu korunur (fail-safe, hata
+    vermez, sadece daha az yapilandirilmis kalir). Ayrica iki gercek hata
+    bulunup duzeltildi: (a) `re` modulu hic import edilmemisti (else dali her
+    zaman crash ediyordu), (b) en/em dash, kivrik tirnak, ± gibi "akilli"
+    tipografi karakterleri Windows'ta agy'ye komut satiri argumani olarak
+    giderken kayboluyordu (Turkce aksanli harfler etkilenmiyor) --
+    `_sanitize_for_agy_cli` bunlari once bilinen bir haritayla, sonra NFKD
+    ile genel olarak ASCII'ye indirger.
 
 ## 13. Uygulama sirasi
 

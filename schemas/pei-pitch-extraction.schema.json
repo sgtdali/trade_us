@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trade-us.local/schemas/pei-pitch-extraction.schema.json",
+  "title": "PEI long-short-pitch extraction (agy structured output)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "actionability", "variant_perception", "what_must_be_true",
+    "kill_criteria", "catalyst", "catalyst_date"
+  ],
+  "properties": {
+    "actionability": {"type": ["string", "null"]},
+    "variant_perception": {"type": ["string", "null"]},
+    "what_must_be_true": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "kill_criteria": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "catalyst": {"type": ["string", "null"]},
+    "catalyst_date": {"type": ["string", "null"]}
+  }
+}

@@ -3,10 +3,12 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import unicodedata
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable
@@ -721,19 +723,58 @@ AGY_MODEL = "gemini-3.6-flash-medium"
 AGY_MAX_INLINE_CHARS = 24000
 
 
-def extract_candidates_via_agy(
+# "Akilli" tipografi karakterleri (en/em dash, kivrik tirnak) Windows'ta
+# subprocess.run'un agy.exe'ye komut satiri argumani olarak aktardigi
+# metinde kayboluyor -- Turkce aksanli harfler (ç, ş, ğ, ı, ö, ü) etkilenmiyor,
+# yalniz bu belirli noktalama kumesi. Kaynak dosyanin kendisi dogru UTF-8;
+# sorun agy'ye giden argv'de. Guvenli ASCII esdegerine indirgeniyor --
+# anlam kaybolmaz, yalniz tipografi.
+_AGY_CLI_UNSAFE_CHARS = {
+    "–": "-", "—": "--", "‘": "'", "’": "'",
+    "“": '"', "”": '"', "…": "...",
+    "±": "+/-", "×": "x", "°": " derece", "→": "->", "≈": "~",
+}
+
+
+_TURKISH_SAFE_CHARS = set("çÇşŞğĞıİöÖüÜ")
+
+
+def _sanitize_for_agy_cli(text: str) -> str:
+    for bad, good in _AGY_CLI_UNSAFE_CHARS.items():
+        text = text.replace(bad, good)
+    # Bilinen listenin disinda kalan, ASCII olmayan ve Turkce de olmayan her
+    # karakter icin genel bir yedek: aksanli Latin harflerini NFKD ile temel
+    # harfe indirger (é -> e), gercekten karsiligi olmayanlari (emoji vb.) "?"
+    # ile degistirir. Boylece bilmedigimiz baska bir karakter de argv'de
+    # sessizce bozulmaz.
+    out = []
+    for ch in text:
+        if ord(ch) < 128 or ch in _TURKISH_SAFE_CHARS:
+            out.append(ch)
+            continue
+        base = "".join(
+            c for c in unicodedata.normalize("NFKD", ch) if not unicodedata.combining(c)
+        )
+        out.append(base if base and ord(base[0]) < 128 else "?")
+    return "".join(out)
+
+
+def call_agy_structured(
     repo_root: Path,
-    result_text: str,
     *,
+    task: str,
+    result_text: str,
+    schema_filename: str,
     runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
-) -> list[dict[str, Any]]:
-    """Idea-generation serbest metnini agy (Gemini CLI) ile semaya zorlayarak yapilandirir.
+) -> dict[str, Any]:
+    """agy (Gemini CLI) ile semaya zorlanmis genel amacli cikarim cagrisi.
 
     Regex/tablo ayrıştırma yerine gercek bir LLM cagrisi -- ChatGPT'nin cevabi
     tablo olsun ya da duzyazi olsun calisir. `--json-schema` ile agy'nin kendi
     strict semasi zorlanir; sonuc `structured_output` alanindan okunur
     (`response` alani agy'nin kendi onarim denemelerini de icerebilir, guvenilmez).
     """
+    result_text = _sanitize_for_agy_cli(result_text)
     if len(result_text) > AGY_MAX_INLINE_CHARS:
         raise PeiWorkflowError(
             f"Sonuc metni cok uzun ({len(result_text)} karakter, sinir "
@@ -741,15 +782,13 @@ def extract_candidates_via_agy(
             "sonucu bolup ayri ayri isleyin."
         )
 
-    schema_path = repo_root / "schemas" / "pei-idea-screen-extraction.schema.json"
+    schema_path = repo_root / "schemas" / schema_filename
     if not schema_path.is_file():
-        raise PeiWorkflowError(f"idea screen extraction semasi bulunamadi: {schema_path}")
+        raise PeiWorkflowError(f"extraction semasi bulunamadi: {schema_path}")
 
     prompt = (
-        "Asagidaki metin bir idea-generation hisse taramasi ciktisidir. "
-        "Icindeki HER aday sirket icin, semaya uygun JSON uret. Yalniz "
-        "metinde acikca yazan bilgiyi cikar, yorum ekleme; bir alan metinde "
-        "yoksa null birak, uydurma.\n\n---\n" + result_text
+        f"{task} Yalniz metinde acikca yazan bilgiyi cikar, yorum ekleme; "
+        "bir alan metinde yoksa null birak, uydurma.\n\n---\n" + result_text
     )
 
     try:
@@ -778,10 +817,79 @@ def extract_candidates_via_agy(
         raise PeiWorkflowError(f"agy hata dondurdu: {parsed.get('error') or parsed}")
 
     structured = parsed.get("structured_output")
-    if not isinstance(structured, dict) or not isinstance(structured.get("candidates"), list):
+    if not isinstance(structured, dict):
         raise PeiWorkflowError("agy structured_output beklenen sekilde degil")
 
+    return structured
+
+
+def extract_candidates_via_agy(
+    repo_root: Path,
+    result_text: str,
+    *,
+    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> list[dict[str, Any]]:
+    """Idea-generation serbest metnini agy ile aday listesine cikarir."""
+    structured = call_agy_structured(
+        repo_root,
+        task=(
+            "Asagidaki metin bir idea-generation hisse taramasi ciktisidir. "
+            "Icindeki HER aday sirket icin semaya uygun JSON uret."
+        ),
+        result_text=result_text,
+        schema_filename="pei-idea-screen-extraction.schema.json",
+        runner=runner,
+    )
+    if not isinstance(structured.get("candidates"), list):
+        raise PeiWorkflowError("agy structured_output beklenen sekilde degil (candidates yok)")
     return structured["candidates"]
+
+
+# Her workflow tipinin docs/pei-workflow.md SS3'te tanimli, farkli "Kaydet"
+# alanlari var. Skill'in kendi kapali sozlugune sahip oldugu yerlerde semadaki
+# enum bunu yansitir; serbest metin alanlar duzyazi kalir.
+WORKFLOW_EXTRACTION = {
+    "tearsheet": {
+        "schema": "pei-tearsheet-extraction.schema.json",
+        "task": (
+            "Asagidaki metin bir company-tearsheet ciktisidir. Tearsheet'in "
+            "kendi sozlesmesi geregi HUKUM icermez (add/trim/watch gibi bir "
+            "pozisyon aksiyonu yazma). Yalniz onerilen sonraki adimi ve veri "
+            "bosluklarini semaya uygun JSON olarak cikar."
+        ),
+    },
+    "earnings_preview": {
+        "schema": "pei-earnings-preview-extraction.schema.json",
+        "task": (
+            "Asagidaki metin bir earnings-preview ciktisidir. Beklenti "
+            "cubugunu (metrik + esik), 3-6 hisse-hareket ettirici KPI'yi, "
+            "pozisyon aksiyonunu ve call-question falsifier'larini semaya "
+            "uygun JSON olarak cikar. position_action alani icin YALNIZ su "
+            "degerlerden birini kullan: add, press, hold, trim, exit, "
+            "hedge, watchlist, wait_for_proof -- metinde acikca yoksa null."
+        ),
+    },
+    "comps": {
+        "schema": "pei-comps-extraction.schema.json",
+        "task": (
+            "Asagidaki metin bir comps-valuation ciktisidir. Fiyatin ima "
+            "ettigi beklentiyi, yukselisin kaynak dagilimini ve hangi "
+            "carpanin varsayildigini semaya uygun JSON olarak cikar."
+        ),
+    },
+    "pitch": {
+        "schema": "pei-pitch-extraction.schema.json",
+        "task": (
+            "Asagidaki metin bir long-short-pitch ciktisidir. "
+            "Actionability hukmunu, variant perception'i, "
+            "what-must-be-true listesini, kill criteria'yi ve katalizoru "
+            "(varsa tarihiyle) semaya uygun JSON olarak cikar. "
+            "actionability alani icin YALNIZ su degerlerden birini kullan: "
+            "actionable_candidate, watchlist, pass_for_now, red_team_only "
+            "-- metinde acikca yoksa null."
+        ),
+    },
+}
 
 
 WORKFLOW_MAP = {
@@ -897,19 +1005,31 @@ def generate_draft_events(
             if inst_file.is_file():
                 source_artifacts.append(_artifact("instructions", repo_root, inst_file))
 
-        # Look for explicit JSON block generated by LLM
         payload: dict[str, Any] = {"workflow": target_workflow}
         if work_item_id:
             payload["work_item_id"] = work_item_id
 
-        json_match = re.search(r"```json\s*(\{.*?\})\s*```", result_text, re.DOTALL)
-        if json_match:
-            try:
-                parsed_json = json.loads(json_match.group(1))
-                if isinstance(parsed_json, dict):
-                    payload.update(parsed_json)
-            except json.JSONDecodeError:
-                pass
+        extraction = WORKFLOW_EXTRACTION.get(target_workflow)
+        if extraction:
+            structured = call_agy_structured(
+                repo_root,
+                task=extraction["task"],
+                result_text=result_text,
+                schema_filename=extraction["schema"],
+            )
+            payload.update(structured)
+        else:
+            # Katalogda tanimli olmayan/henuz semasi olmayan bir workflow --
+            # eskisi gibi ChatGPT'nin kendi yazdigi ```json``` blogu varsa onu
+            # al, yoksa payload yalniz workflow/work_item_id ile kalir.
+            json_match = re.search(r"```json\s*(\{.*?\})\s*```", result_text, re.DOTALL)
+            if json_match:
+                try:
+                    parsed_json = json.loads(json_match.group(1))
+                    if isinstance(parsed_json, dict):
+                        payload.update(parsed_json)
+                except json.JSONDecodeError:
+                    pass
 
         draft_events.append(make_event(
             event_id=_event_id(f"COMPLETE-{target_ticker or 'WORKFLOW'}"),

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trade-us.local/schemas/pei-comps-extraction.schema.json",
+  "title": "PEI comps-valuation extraction (agy structured output)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["implied_expectation", "upside_source", "assumed_multiple"],
+  "properties": {
+    "implied_expectation": {"type": ["string", "null"]},
+    "upside_source": {"type": ["string", "null"]},
+    "assumed_multiple": {"type": ["string", "null"]}
+  }
+}

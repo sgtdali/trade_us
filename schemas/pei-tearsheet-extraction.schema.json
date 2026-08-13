@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trade-us.local/schemas/pei-tearsheet-extraction.schema.json",
+  "title": "PEI company-tearsheet extraction (agy structured output)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["next_route", "data_gaps"],
+  "properties": {
+    "next_route": {"type": ["string", "null"]},
+    "data_gaps": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}

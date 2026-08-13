@@ -414,13 +414,82 @@ export function WorkQueue({
   onChanged: () => void;
 }) {
   const [selected, setSelected] = useState<NextItem | null>(items.length > 0 ? items[0] : null);
+  const [batchSelected, setBatchSelected] = useState<Set<string>>(new Set());
+  const [batchBusy, setBatchBusy] = useState(false);
+
+  const preparable = items.filter((i) => i.action === "prepare" && i.work_item_id);
+
+  const toggleBatch = (id: string) => {
+    setBatchSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleBatchAll = () => {
+    setBatchSelected((prev) =>
+      prev.size === preparable.length
+        ? new Set()
+        : new Set(preparable.map((i) => i.work_item_id as string)),
+    );
+  };
+
+  const runBatchPrepare = async () => {
+    const ids = Array.from(batchSelected);
+    if (!ids.length) return;
+    setBatchBusy(true);
+    const results = await Promise.allSettled(
+      ids.map((work_item_id) => callApi("/api/prepare", { work_item_id, no_refresh: true })),
+    );
+    const failed = results.filter((r) => r.status === "rejected").length;
+    if (failed) {
+      toast.error(`${ids.length - failed}/${ids.length} hazırlandı, ${failed} başarısız`);
+    } else {
+      toast.success(`${ids.length} paket hazırlandı`);
+    }
+    setBatchSelected(new Set());
+    setBatchBusy(false);
+    onChanged();
+  };
 
   return (
     <div className="space-y-6">
+      {preparable.length > 0 && (
+        <div className="flex items-center gap-3">
+          <Button
+            size="sm"
+            onClick={runBatchPrepare}
+            disabled={batchBusy || batchSelected.size === 0}
+            className="gap-1.5"
+          >
+            {batchBusy ? (
+              <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Play className="h-3.5 w-3.5" />
+            )}
+            Seçilenleri Hazırla ({batchSelected.size})
+          </Button>
+          <span className="text-xs text-muted-foreground">
+            veriyi tazele kapalı çalışır (hızlı, güvenli varsayılan)
+          </span>
+        </div>
+      )}
+
       <div className="rounded-lg border border-border/80 overflow-hidden bg-card/60 shadow-xs">
         <Table>
           <TableHeader className="bg-muted/40">
             <TableRow>
+              <TableHead className="w-8">
+                {preparable.length > 0 && (
+                  <input
+                    type="checkbox"
+                    checked={batchSelected.size === preparable.length && preparable.length > 0}
+                    onChange={toggleBatchAll}
+                  />
+                )}
+              </TableHead>
               <TableHead className="w-28 font-bold">Ticker</TableHead>
               <TableHead className="w-36">Workflow</TableHead>
               <TableHead className="w-36">Durum / Aksiyon</TableHead>
@@ -436,6 +505,15 @@ export function WorkQueue({
                   key={item.work_item_id ?? `${item.run_id}-${item.ticker}`}
                   className={isSelected ? "bg-primary/10 font-medium" : "hover:bg-muted/20"}
                 >
+                  <TableCell>
+                    {item.action === "prepare" && item.work_item_id && (
+                      <input
+                        type="checkbox"
+                        checked={batchSelected.has(item.work_item_id)}
+                        onChange={() => toggleBatch(item.work_item_id as string)}
+                      />
+                    )}
+                  </TableCell>
                   <TableCell className="font-bold font-mono text-sm">
                     <span className="text-primary mr-0.5">$</span>
                     {item.ticker}
