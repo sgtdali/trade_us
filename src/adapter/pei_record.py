@@ -521,10 +521,11 @@ def approve_draft(
 
 def _write_text_atomic(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    safe_text = text.encode("utf-8", errors="replace").decode("utf-8")
     fd, temp_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
-            handle.write(text)
+        with os.fdopen(fd, "w", encoding="utf-8", errors="replace", newline="\n") as handle:
+            handle.write(safe_text)
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(temp_name, path)
