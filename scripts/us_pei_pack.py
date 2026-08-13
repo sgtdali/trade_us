@@ -640,10 +640,16 @@ def refresh_prices(pack: dict) -> tuple[int, str | None]:
     quotes: dict[str, float] = {}
     current_market: dict[str, dict] = {}
     try:
+        # threads=False: yfinance'in threaded indiricisi curl_cffi'yi
+        # esas alan native HTTP istemcisini paralel cagirir; Windows'ta bu
+        # curl_cffi native cagrilari arasinda araliksiz segfault'a yol
+        # aciyordu (PYTHONFAULTHANDLER ile yfinance/multi.py -> curl_cffi
+        # icinde SIGSEGV olarak dogrulandi). Seri indirme daha yavas ama
+        # kararli.
         data = yf.download(symbols, period="18mo", progress=False,
-                           auto_adjust=False, threads=True)["Close"]
+                           auto_adjust=False, threads=False)["Close"]
         volume_data = yf.download(symbols, period="18mo", progress=False,
-                                  auto_adjust=False, threads=True)["Volume"]
+                                  auto_adjust=False, threads=False)["Volume"]
         for symbol in symbols:
             close_column = data[symbol] if len(symbols) > 1 else data
             volume_column = volume_data[symbol] if len(symbols) > 1 else volume_data
