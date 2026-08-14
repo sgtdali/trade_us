@@ -1,5 +1,9 @@
-import { Dashboard } from "@/components/dashboard";
+"use client";
+
+import { Overview } from "@/components/panel/overview";
+import { useAppData } from "@/lib/app-data";
 
 export default function Home() {
-  return <Dashboard />;
+  const { status, refresh } = useAppData();
+  return <Overview status={status} onChanged={refresh} />;
 }

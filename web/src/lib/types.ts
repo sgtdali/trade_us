@@ -10,9 +10,17 @@ export interface Trigger {
   date_status?: string;
 }
 
+// source_interpretation_corrected olayinin gercek payload sekli. Iki farkli
+// senaryodan gelir: (1) kataloga sonradan eklenen bir skill icin rota
+// yeniden esleme (mapped_workflow), (2) B->A otomatik terfi degerlendirmesi
+// (promoted_to + resolution_status + confidence, bkz. evaluate_promotion).
 export interface Correction {
-  original_claim: string;
-  correction: string;
+  mapped_workflow?: string | null;
+  route_status?: string;
+  promoted_to?: string | null;
+  resolution_status?: "resolved" | "unresolved" | "indeterminate";
+  confidence?: number | null;
+  reason?: string | null;
 }
 
 export interface Candidate {
