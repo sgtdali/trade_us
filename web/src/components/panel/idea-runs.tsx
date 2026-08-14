@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
-import { Play, RefreshCw, Sparkles } from "lucide-react";
+import { ArrowUpRight, Play, RefreshCw, Sparkles } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -18,11 +19,12 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { WorkItemDetail } from "@/components/panel/work-queue";
 import { callApi } from "@/lib/api";
+import { useAppData } from "@/lib/app-data";
 import type { NextItem, RunSummary, UniverseMember } from "@/lib/types";
 
 const STATE_LABEL: Record<string, string> = {
-  waiting_for_result: "ChatGPT sonucu bekleniyor",
-  result_attached: "Sonuç bağlandı",
+  waiting_for_result: "ChatGPT/Codex sonucu bekleniyor",
+  result_attached: "Sonuç bağlandı, taslak çıkarılabilir",
   screen_recorded: "Tarama kaydedildi",
 };
 
@@ -30,6 +32,13 @@ const STATE_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
   waiting_for_result: "outline",
   result_attached: "secondary",
   screen_recorded: "default",
+};
+
+const BUCKET_DOT: Record<string, string> = {
+  A: "bg-emerald-500",
+  B: "bg-sky-500",
+  C: "bg-amber-500",
+  Reject: "bg-rose-500",
 };
 
 function runToItem(r: RunSummary): NextItem {
@@ -45,9 +54,25 @@ function runToItem(r: RunSummary): NextItem {
   };
 }
 
-export function IdeaRuns({ runs, onChanged }: { runs: RunSummary[]; onChanged: () => void }) {
-  const [activeItem, setActiveItem] = useState<NextItem | null>(null);
+// Bir taramanin "state"i (result_attached vb.) sonsuza kadar ayni kalir --
+// tarama sonucunda ne kadar aday cikip onaylandigini yansitmaz. Gercek
+// sonuc, o run_id'ye ait onaylanmis candidate_screened olaylarindan (yani
+// status.candidates icinden) turetilir.
+function bucketSummary(runId: string, candidates: { run_id: string; bucket: string | null }[]) {
+  const counts: Record<string, number> = {};
+  for (const c of candidates) {
+    if (c.run_id !== runId || !c.bucket) continue;
+    counts[c.bucket] = (counts[c.bucket] ?? 0) + 1;
+  }
+  return counts;
+}
 
+export function IdeaRuns({ onChanged }: { onChanged: () => void }) {
+  const { status } = useAppData();
+  const runs = status?.runs ?? [];
+  const candidates = status?.candidates ?? [];
+
+  const [activeItem, setActiveItem] = useState<NextItem | null>(null);
   const [universe, setUniverse] = useState<UniverseMember[]>([]);
   const [universeFilter, setUniverseFilter] = useState("");
   const [tickers, setTickers] = useState("");
@@ -59,10 +84,10 @@ export function IdeaRuns({ runs, onChanged }: { runs: RunSummary[]; onChanged: (
       .catch(() => undefined);
   }, []);
 
-  const selectedTickers = tickers
-    .split(",")
-    .map((t) => t.trim().toUpperCase())
-    .filter(Boolean);
+  const selectedTickers = useMemo(
+    () => tickers.split(",").map((t) => t.trim().toUpperCase()).filter(Boolean),
+    [tickers],
+  );
 
   const toggleTicker = (t: string) => {
     const list = selectedTickers.includes(t)
@@ -87,7 +112,7 @@ export function IdeaRuns({ runs, onChanged }: { runs: RunSummary[]; onChanged: (
       const data = await callApi<{ run_id: string; artifact_dir: string }>("/api/start-idea", {
         tickers: selectedTickers,
       });
-      toast.success(`Akış başlatıldı: ${data.run_id}`);
+      toast.success(`Tarama başlatıldı: ${data.run_id}`);
       setTickers("");
       setActiveItem({
         run_id: data.run_id,
@@ -95,13 +120,13 @@ export function IdeaRuns({ runs, onChanged }: { runs: RunSummary[]; onChanged: (
         bucket: null,
         workflow: "idea",
         requested_workflow: "idea",
-        reason: "idea-generation pack hazır; ChatGPT sonucu bekleniyor",
+        reason: "Veri paketi hazır; codex ile çalıştırın veya sonucu yapıştırın",
         action: "attach_result",
         artifact_dir: data.artifact_dir,
       });
       onChanged();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Fikir başlatma başarısız oldu");
+      toast.error(err instanceof Error ? err.message : "Tarama başlatma başarısız oldu");
     } finally {
       setBusy(false);
     }
@@ -113,10 +138,11 @@ export function IdeaRuns({ runs, onChanged }: { runs: RunSummary[]; onChanged: (
         <CardHeader>
           <CardTitle className="text-sm font-semibold flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-primary" />
-            Yeni Idea-Generation Başlat
+            Yeni Tarama Başlat
           </CardTitle>
           <CardDescription className="text-xs">
-            SEC verilerini çekip taramak istediğiniz ABD hisse ticker&apos;larını girin.
+            SEC verilerini çekip taramak istediğiniz ABD hisse ticker&apos;larını seçin. Pack hazır olduktan
+            sonra codex ile tek tıkla çalıştırabilirsiniz.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -166,43 +192,76 @@ export function IdeaRuns({ runs, onChanged }: { runs: RunSummary[]; onChanged: (
         </CardContent>
       </Card>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Run ID</TableHead>
-            <TableHead>Ticker sayısı</TableHead>
-            <TableHead>Durum</TableHead>
-            <TableHead>Son olay</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {runs.map((r) => (
-            <TableRow
-              key={r.run_id}
-              className="cursor-pointer"
-              onClick={() => setActiveItem(runToItem(r))}
-            >
-              <TableCell className="font-mono text-xs">{r.run_id}</TableCell>
-              <TableCell>{r.tickers.length}</TableCell>
-              <TableCell>
-                <Badge variant={STATE_VARIANT[r.state] ?? "outline"}>
-                  {STATE_LABEL[r.state] ?? r.state}
-                </Badge>
-              </TableCell>
-              <TableCell className="font-mono text-xs text-muted-foreground">
-                {r.last_event_at}
-              </TableCell>
-            </TableRow>
-          ))}
-          {runs.length === 0 && (
+      <div className="rounded-lg border border-border/80 overflow-hidden bg-card/60 shadow-xs">
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={4} className="text-center text-muted-foreground">
-                -
-              </TableCell>
+              <TableHead>Tarama</TableHead>
+              <TableHead className="w-24">Ticker</TableHead>
+              <TableHead className="w-40">İşlem Durumu</TableHead>
+              <TableHead className="w-64">Tarama Sonucu</TableHead>
+              <TableHead className="w-40">Son olay</TableHead>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {runs.map((r) => {
+              const counts = bucketSummary(r.run_id, candidates);
+              const hasResult = Object.keys(counts).length > 0;
+              return (
+                <TableRow
+                  key={r.run_id}
+                  className="cursor-pointer hover:bg-muted/20"
+                  onClick={() => setActiveItem(runToItem(r))}
+                >
+                  <TableCell className="font-mono text-xs">{r.run_id}</TableCell>
+                  <TableCell>{r.tickers.length}</TableCell>
+                  <TableCell>
+                    <Badge variant={STATE_VARIANT[r.state] ?? "outline"} className="text-[11px]">
+                      {STATE_LABEL[r.state] ?? r.state}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {hasResult ? (
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 text-xs font-mono">
+                          {(["A", "B", "C", "Reject"] as const).map(
+                            (b) =>
+                              counts[b] > 0 && (
+                                <span key={b} className="flex items-center gap-1">
+                                  <span className={`h-1.5 w-1.5 rounded-full ${BUCKET_DOT[b]}`} />
+                                  {counts[b]}{b}
+                                </span>
+                              ),
+                          )}
+                        </div>
+                        <Link
+                          href="/companies"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center gap-0.5 text-[11px] text-primary hover:underline"
+                        >
+                          Şirketlerde gör <ArrowUpRight className="h-3 w-3" />
+                        </Link>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Henüz taranmadı</span>
+                    )}
+                  </TableCell>
+                  <TableCell className="font-mono text-[11px] text-muted-foreground">
+                    {r.last_event_at}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+            {runs.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                  Henüz bir tarama başlatılmadı.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
       {activeItem && <WorkItemDetail item={activeItem} onDone={onChanged} />}
     </div>

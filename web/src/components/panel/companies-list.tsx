@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronRight, Filter } from "lucide-react";
+import { AlertTriangle, ChevronRight, Filter } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -64,6 +64,22 @@ export function CompaniesList({
     return true;
   });
 
+  // A once, sonra B/C/Reject/bucket-siz -- next_items()'in oncelik
+  // sirasiyla ayni ilke, boylece "en cok dikkat isteyen" hep ustte.
+  const BUCKET_PRIORITY: Record<string, number> = { A: 0, B: 1, C: 2, Reject: 3 };
+  const sortedCandidates = [...filteredCandidates].sort((a, b) => {
+    const pa = a.bucket ? BUCKET_PRIORITY[a.bucket] ?? 4 : 4;
+    const pb = b.bucket ? BUCKET_PRIORITY[b.bucket] ?? 4 : 4;
+    if (pa !== pb) return pa - pb;
+    return a.ticker.localeCompare(b.ticker);
+  });
+
+  const isOverdue = (c: Candidate) =>
+    c.triggers.some((t) => {
+      const due = t.date ?? t.next_check_date;
+      return due && new Date(due) <= new Date();
+    });
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg border border-border/80 bg-card/60">
@@ -119,20 +135,27 @@ export function CompaniesList({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredCandidates.map((c) => {
+            {sortedCandidates.map((c) => {
               const nx = nextByTicker.get(c.ticker);
               const route = nx
                 ? `${nx.workflow}${nx.workflow !== nx.requested_workflow ? ` → ${nx.requested_workflow}` : ""}`
                 : (c.next_workflow ?? "-");
               const bucketCfg = c.bucket ? BUCKET_CONFIG[c.bucket] : null;
               const stateCfg = STATE_CONFIG[c.state] || { label: c.state, dot: "bg-slate-400", text: "" };
+              const overdue = isOverdue(c);
 
               return (
                 <TableRow key={c.ticker} className="hover:bg-muted/20 border-b border-border/40">
                   <TableCell className="font-bold font-mono text-sm p-0">
-                    <Link href={`/companies/${c.ticker}`} className="flex items-center px-4 py-2.5">
+                    <Link href={`/companies/${c.ticker}`} className="flex items-center gap-1.5 px-4 py-2.5">
                       <span className="text-primary mr-0.5">$</span>
                       {c.ticker}
+                      {overdue && (
+                        <AlertTriangle
+                          className="h-3.5 w-3.5 text-amber-500"
+                          aria-label="Tetikleyici vadesi geçti"
+                        />
+                      )}
                     </Link>
                   </TableCell>
                   <TableCell>
@@ -148,6 +171,11 @@ export function CompaniesList({
                     <div className="flex items-center gap-1.5 text-xs font-medium">
                       <span className={cn("h-2 w-2 rounded-full", stateCfg.dot)} />
                       <span className={stateCfg.text}>{stateCfg.label}</span>
+                      {overdue && (
+                        <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                          vadesi geçti
+                        </span>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell>

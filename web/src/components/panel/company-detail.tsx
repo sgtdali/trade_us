@@ -1,10 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
   CheckCircle2,
+  ChevronDown,
+  ChevronRight,
   Clock,
+  FileText,
   ListTodo,
   ShieldAlert,
 } from "lucide-react";
@@ -18,8 +22,10 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { callApi } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import type { Candidate, NextItem } from "@/lib/types";
+import type { Candidate, NextItem, WorkflowEvent } from "@/lib/types";
 
 const BUCKET_CONFIG: Record<string, { badgeVariant: "default" | "secondary" | "outline" | "destructive"; className?: string }> = {
   A: { badgeVariant: "default", className: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 font-bold" },
@@ -37,14 +43,185 @@ const STATE_CONFIG: Record<string, { label: string; dot: string; text: string }>
   deprioritized: { label: "Önceliksiz", dot: "bg-slate-400", text: "text-muted-foreground" },
 };
 
+// Bu alanlar baska yerde (Sonraki Adim karti, tetikleyiciler) zaten
+// gosteriliyor -- bulgular bolumunde tekrar etmesin diye elenir.
+const PAYLOAD_SKIP_KEYS = new Set(["workflow", "work_item_id", "promotion_evaluation"]);
+
+function prettyLabel(key: string): string {
+  return key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function PayloadValue({ value }: { value: unknown }) {
+  if (value === null || value === undefined || value === "") return <span className="text-muted-foreground">-</span>;
+  if (Array.isArray(value)) {
+    if (value.length === 0) return <span className="text-muted-foreground">-</span>;
+    return (
+      <ul className="list-disc list-inside space-y-1">
+        {value.map((v, i) => (
+          <li key={i} className="text-xs text-foreground leading-relaxed">
+            {typeof v === "object" ? JSON.stringify(v) : String(v)}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  if (typeof value === "object") {
+    return (
+      <div className="space-y-1 pl-3 border-l-2 border-border/60">
+        {Object.entries(value as Record<string, unknown>).map(([k, v]) => (
+          <div key={k} className="text-xs">
+            <span className="text-muted-foreground">{prettyLabel(k)}: </span>
+            <span className="text-foreground">{typeof v === "object" ? JSON.stringify(v) : String(v)}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return <span className="text-xs text-foreground leading-relaxed">{String(value)}</span>;
+}
+
+function PromotionEvaluationBadge({ evaluation }: { evaluation: Record<string, unknown> }) {
+  const status = evaluation.resolution_status as string | undefined;
+  const confidence = evaluation.confidence as number | undefined;
+  if (!status) return null;
+  return (
+    <div className="flex items-center gap-2 text-xs p-2 rounded-md bg-muted/40 border border-border/50">
+      <span className="font-semibold">Terfi değerlendirmesi:</span>
+      <Badge variant={status === "resolved" ? "default" : "secondary"} className="font-mono text-[10px]">
+        {status}
+        {typeof confidence === "number" && ` (${Math.round(confidence * 100)}%)`}
+      </Badge>
+      {typeof evaluation.reason === "string" && <span className="text-muted-foreground">{evaluation.reason}</span>}
+    </div>
+  );
+}
+
+function ArtifactLink({ path, label }: { path: string; label: string }) {
+  const [content, setContent] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const toggle = async () => {
+    if (open) {
+      setOpen(false);
+      return;
+    }
+    if (!content) {
+      setLoading(true);
+      try {
+        const data = await callApi<{ content: string }>(`/api/artifact?path=${encodeURIComponent(path)}`);
+        setContent(data.content);
+      } catch {
+        setContent("(dosya okunamadı)");
+      } finally {
+        setLoading(false);
+      }
+    }
+    setOpen(true);
+  };
+
+  return (
+    <div>
+      <button
+        onClick={toggle}
+        className="flex items-center gap-1.5 text-[11px] text-sky-600 dark:text-sky-400 hover:underline"
+      >
+        <FileText className="h-3 w-3" />
+        {label}
+        {loading ? "..." : open ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+      </button>
+      {open && content && (
+        <ScrollArea className="h-56 mt-2 rounded-md border border-border/80 bg-background/80 p-3">
+          <pre className="font-mono text-xs text-foreground/90 whitespace-pre-wrap">{content}</pre>
+        </ScrollArea>
+      )}
+    </div>
+  );
+}
+
+// Idea-generation'in orijinal gerekcesi (setup/variant_wedge) her zaman
+// ayni kalir -- gercek arastirma bulgulari (hedef fiyat, tez sutunlari, kill
+// criteria, expectation bar...) tamamlanan her workflow'un kendi payload'inda
+// yasar ve eskiden hic gosterilmiyordu. Bu bolum, o eksigi kapatir.
+function ResearchHistory({ events }: { events: WorkflowEvent[] }) {
+  const relevant = events
+    .filter((e) => e.event_type === "workflow_completed" || e.event_type === "result_attached")
+    .sort((a, b) => (a.recorded_at < b.recorded_at ? 1 : -1));
+
+  if (relevant.length === 0) return null;
+
+  return (
+    <Card className="border-border/60 bg-card/60">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold">Araştırma Bulguları</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {relevant.map((e) => {
+          if (e.event_type === "result_attached") {
+            const resultArtifact = e.source_artifacts.find((a) => a.role === "result");
+            return (
+              <div key={e.event_id} className="flex items-center justify-between p-2.5 rounded-md border border-border/50 bg-muted/20">
+                <div className="flex items-center gap-2 text-xs">
+                  <Badge variant="outline" className="text-[10px]">Sonuç Bağlandı</Badge>
+                  <span className="font-mono text-[11px] text-muted-foreground">{e.recorded_at}</span>
+                </div>
+                {resultArtifact && <ArtifactLink path={resultArtifact.path} label="Ham analiz metnini gör" />}
+              </div>
+            );
+          }
+
+          const payload = e.payload;
+          const workflow = typeof payload.workflow === "string" ? payload.workflow : null;
+          const entries = Object.entries(payload).filter(
+            ([k, v]) => !PAYLOAD_SKIP_KEYS.has(k) && v !== null && v !== undefined && v !== "",
+          );
+          const promotionEval = payload.promotion_evaluation as Record<string, unknown> | undefined;
+          const resultArtifact = e.source_artifacts.find((a) => a.role === "result");
+
+          return (
+            <div key={e.event_id} className="rounded-lg border border-border/60 p-3.5 space-y-2.5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  {workflow && (
+                    <Badge variant="default" className="font-mono text-[11px]">
+                      {workflow}
+                    </Badge>
+                  )}
+                  <span className="font-mono text-[11px] text-muted-foreground">{e.recorded_at}</span>
+                </div>
+                {resultArtifact && <ArtifactLink path={resultArtifact.path} label="Kaynak analizi gör" />}
+              </div>
+
+              {promotionEval && <PromotionEvaluationBadge evaluation={promotionEval} />}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+                {entries.map(([key, value]) => (
+                  <div key={key} className={Array.isArray(value) && value.length > 2 ? "sm:col-span-2" : ""}>
+                    <div className="text-[11px] text-muted-foreground font-medium">{prettyLabel(key)}</div>
+                    <div className="mt-0.5">
+                      <PayloadValue value={value} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+    </Card>
+  );
+}
+
 export function CompanyDetail({
   ticker,
   candidate,
   queueItem,
+  events,
 }: {
   ticker: string;
   candidate: Candidate | null;
   queueItem: NextItem | null;
+  events: WorkflowEvent[];
 }) {
   if (!candidate) {
     return (
@@ -104,34 +281,6 @@ export function CompanyDetail({
         )}
       </div>
 
-      {/* Tez özeti */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border-border/60 bg-card/60">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Setup</CardTitle>
-          </CardHeader>
-          <CardContent className="text-xs text-foreground font-medium leading-relaxed pt-0">
-            {candidate.setup || "-"}
-          </CardContent>
-        </Card>
-        <Card className="border-border/60 bg-card/60">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Variant Wedge</CardTitle>
-          </CardHeader>
-          <CardContent className="text-xs text-foreground font-medium leading-relaxed pt-0">
-            {candidate.variant_wedge || "-"}
-          </CardContent>
-        </Card>
-        <Card className="border-border/60 bg-card/60">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">First Rejection</CardTitle>
-          </CardHeader>
-          <CardContent className="text-xs text-foreground font-medium leading-relaxed pt-0">
-            {candidate.first_rejection || "-"}
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Sonraki adım */}
       <Card className="border-border/60 bg-card/60">
         <CardHeader className="pb-3">
@@ -167,6 +316,41 @@ export function CompanyDetail({
           )}
         </CardContent>
       </Card>
+
+      {/* Gercek arastirma bulgulari -- hedef fiyat, tez sutunlari, kill
+          criteria, expectation bar vb. Her tamamlanan workflow'un kendi
+          payload'indan, genel bir alan render'iyla. */}
+      <ResearchHistory events={events} />
+
+      {/* Ilk tarama gerekcesi (idea-generation) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="border-border/60 bg-card/60">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+              Setup (ilk tarama)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-xs text-foreground font-medium leading-relaxed pt-0">
+            {candidate.setup || "-"}
+          </CardContent>
+        </Card>
+        <Card className="border-border/60 bg-card/60">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Variant Wedge</CardTitle>
+          </CardHeader>
+          <CardContent className="text-xs text-foreground font-medium leading-relaxed pt-0">
+            {candidate.variant_wedge || "-"}
+          </CardContent>
+        </Card>
+        <Card className="border-border/60 bg-card/60">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">First Rejection</CardTitle>
+          </CardHeader>
+          <CardContent className="text-xs text-foreground font-medium leading-relaxed pt-0">
+            {candidate.first_rejection || "-"}
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Tamamlanan workflow'lar */}
       <Card className="border-border/60 bg-card/60">

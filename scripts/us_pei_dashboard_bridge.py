@@ -15,7 +15,10 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
 from adapter.pei_workflow import (  # noqa: E402
+    CODEX_MODEL_DEFAULT,
     PeiWorkflowError,
+    SKILL_MODEL_CONFIG,
+    STEP_TO_SKILL,
     approve_draft,
     attach_result,
     check_triggers,
@@ -143,7 +146,20 @@ def cmd_events(args: dict) -> dict:
 
 
 def cmd_catalog(_args: dict) -> dict:
-    return load_catalog(REPO)
+    catalog = load_catalog(REPO)
+    # Panel, her workflow icin hangi skill'in ve codex modelinin/reasoning
+    # effort'unun kullanilacagini gostersin diye zenginlestiriliyor -- ayri
+    # bir endpoint yerine katalogla ayni yerde, cunku zaten workflow'a gore
+    # gruplu.
+    for workflow_id, definition in catalog.get("workflows", {}).items():
+        skill = STEP_TO_SKILL.get(workflow_id)
+        if not skill:
+            continue
+        model, effort = SKILL_MODEL_CONFIG.get(skill, CODEX_MODEL_DEFAULT)
+        definition["skill"] = skill
+        definition["codex_model"] = model
+        definition["codex_effort"] = effort
+    return catalog
 
 
 THESIS_ROOT = REPO / "data" / "thesis-tracker"

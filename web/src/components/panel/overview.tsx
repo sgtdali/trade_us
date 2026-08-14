@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import {
   Activity,
+  AlertTriangle,
   ArrowUpRight,
   CheckCircle2,
   Clock,
@@ -17,6 +19,14 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { callApi } from "@/lib/api";
@@ -92,6 +102,22 @@ export function Overview({
     if (c.bucket && c.bucket in bucketCounts) bucketCounts[c.bucket]++;
     if (c.state in stateCounts) stateCounts[c.state]++;
   }
+
+  // Sirket sayfalarina dagilmis her tetikleyiciyi tek bir takvimde topla --
+  // tek tek her /companies/[ticker]'a girmeden "sirada ne var, ne zaman"
+  // gorulsun. Tarihe gore artan siralama: en yakin/geciken en ustte.
+  const allTriggers = (status?.candidates ?? [])
+    .flatMap((c) => c.triggers.map((t) => ({ ticker: c.ticker, trigger: t })))
+    .map(({ ticker, trigger }) => {
+      const dueDate = trigger.date ?? trigger.next_check_date ?? null;
+      return {
+        ticker,
+        trigger,
+        dueDate,
+        overdue: Boolean(dueDate && new Date(dueDate) <= new Date()),
+      };
+    })
+    .sort((a, b) => (a.dueDate ?? "9999").localeCompare(b.dueDate ?? "9999"));
 
   const runCheckTriggers = async (refresh: boolean) => {
     setBusy(true);
@@ -267,9 +293,9 @@ export function Overview({
       </div>
 
       {/* Control Actions Hub */}
-      <div className="grid grid-cols-1 gap-6 max-w-md">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Triggers Control Box */}
-        <Card className="border-border/80 bg-card/60">
+        <Card className="border-border/80 bg-card/60 lg:col-span-1">
           <CardHeader>
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <Activity className="h-4 w-4 text-amber-500" />
@@ -290,12 +316,12 @@ export function Overview({
               </p>
             </div>
 
-            <div className="flex gap-2 pt-1">
+            <div className="flex flex-col gap-2 pt-1">
               <Button
                 variant="secondary"
                 onClick={() => runCheckTriggers(false)}
                 disabled={busy}
-                className="flex-1 gap-1.5 text-xs"
+                className="gap-1.5 text-xs"
               >
                 <RefreshCw className={`h-3.5 w-3.5 ${busy ? "animate-spin" : ""}`} />
                 Tetikleyicileri Kontrol Et
@@ -304,12 +330,81 @@ export function Overview({
                 variant="outline"
                 onClick={() => runCheckTriggers(true)}
                 disabled={busy}
-                className="flex-1 gap-1.5 text-xs border-primary/30 text-primary hover:bg-primary/10"
+                className="gap-1.5 text-xs border-primary/30 text-primary hover:bg-primary/10"
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 Veri ile Tazele & Kontrol Et
               </Button>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Trigger Calendar -- her sirket sayfasina tek tek girmeden tum
+            bekleyen tetikleyicileri tek yerde gorme */}
+        <Card className="border-border/80 bg-card/60 lg:col-span-2">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-sky-500" />
+                Tetikleyici Takvimi
+              </span>
+              {allTriggers.length > 0 && (
+                <Badge variant="outline" className="font-mono text-[10px]">
+                  {allTriggers.length} bekliyor
+                </Badge>
+              )}
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Tüm adaylardaki bekleyen tetikleyiciler, tarihe göre sıralı.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            {allTriggers.length > 0 ? (
+              <Table>
+                <TableHeader className="bg-muted/40">
+                  <TableRow>
+                    <TableHead className="h-8 text-[11px] w-24">Ticker</TableHead>
+                    <TableHead className="h-8 text-[11px]">Tarih</TableHead>
+                    <TableHead className="h-8 text-[11px]">Tip</TableHead>
+                    <TableHead className="h-8 text-[11px]">Sonraki Workflow</TableHead>
+                    <TableHead className="h-8 text-[11px]">Durum</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {allTriggers.map(({ ticker, trigger, dueDate, overdue }) => (
+                    <TableRow key={trigger.trigger_id} className="h-9 text-xs">
+                      <TableCell className="font-mono font-bold p-0">
+                        <Link href={`/companies/${ticker}`} className="flex items-center gap-1 px-4 py-2 hover:underline">
+                          {overdue && <AlertTriangle className="h-3 w-3 text-amber-500" />}
+                          {ticker}
+                        </Link>
+                      </TableCell>
+                      <TableCell className={`font-mono text-[11px] ${overdue ? "text-amber-600 dark:text-amber-400 font-semibold" : ""}`}>
+                        {dueDate ?? "-"}
+                        {overdue && <span className="ml-1.5 text-[10px]">(vadesi geçti)</span>}
+                      </TableCell>
+                      <TableCell className="text-[11px] text-muted-foreground">{trigger.type}</TableCell>
+                      <TableCell>
+                        {trigger.workflow ? (
+                          <Badge variant="outline" className="font-mono text-[10px]">{trigger.workflow}</Badge>
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={trigger.date_status === "confirmed" ? "default" : "secondary"} className="text-[10px]">
+                          {trigger.date_status ?? "-"}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="p-6 text-center text-xs text-muted-foreground">
+                Bekleyen bir tetikleyici yok.
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -7,10 +7,11 @@ import { useAppData } from "@/lib/app-data";
 export default function CompanyDetailPage() {
   const params = useParams<{ ticker: string }>();
   const ticker = (params.ticker ?? "").toUpperCase();
-  const { status } = useAppData();
+  const { status, events } = useAppData();
 
   const candidate = status?.candidates.find((c) => c.ticker === ticker) ?? null;
   const queueItem = status?.next.find((n) => n.ticker === ticker) ?? null;
+  const tickerEvents = (events?.events ?? []).filter((e) => e.ticker === ticker);
 
-  return <CompanyDetail ticker={ticker} candidate={candidate} queueItem={queueItem} />;
+  return <CompanyDetail ticker={ticker} candidate={candidate} queueItem={queueItem} events={tickerEvents} />;
 }

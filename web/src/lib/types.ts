@@ -104,6 +104,9 @@ export interface CatalogWorkflow {
   required_workflows: string[];
   allowed_next: string[];
   result_contract: string;
+  skill?: string;
+  codex_model?: string;
+  codex_effort?: string;
 }
 
 export interface CatalogPayload {
