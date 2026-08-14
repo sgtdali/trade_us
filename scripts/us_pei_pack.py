@@ -129,6 +129,15 @@ STEP_BLOCKS = {
                  "own_valuation_history": True,
                  "next_events": True, "roic": True, "special_situations": True,
                 "quarterly_series": False, "pre_print_consensus": False, "net_debt": True},
+    # pitch ile ayni genislik: initiating-coverage tam bir baslangic raporu
+    # icin butun deterministik katmanlari istiyor. Segment/urun duzeyinde
+    # cok yillik model ve klinik/anlasma detayi kasten YOK -- bu skill onu
+    # web aramasiyla kendi kuruyor (bkz. ABBV test koşusu); pack yalnizca
+    # fiyat/degerleme/konsensus/ozel durum icin "source of truth" katmani.
+    "initiation": {"sector_peers": True, "deterministic_signals": True,
+                   "own_valuation_history": True,
+                   "next_events": True, "roic": True, "special_situations": True,
+                  "quarterly_series": False, "pre_print_consensus": False, "net_debt": True},
 }
 
 
@@ -1569,8 +1578,16 @@ def flag_superseded(pack: dict, source_run: Path) -> tuple[int, list[str]]:
                              .read_text(encoding="utf-8"))
                   .get("filings", {}).get("recent", {}))
         forms, dates = recent.get("form", []), recent.get("filingDate", [])
+        items = recent.get("items", [""] * len(forms))
         periodic = [d for f, d in zip(forms, dates) if f in ("10-K", "10-Q")]
-        eight_k = [d for f, d in zip(forms, dates) if f == "8-K"]
+        # Sadece Item 2.02 (Results of Operations and Financial Condition)
+        # tasiyan 8-K'ler kazanc bulteni sayilir. Baska bir 8-K (yonetici
+        # degisikligi, M&A, borc ihraci vb.) "daha yeni ceyrek acildi"
+        # anlamina gelmez -- olculdu: CRM'in 2026-08-05 8-K'si Item 5.02
+        # (yonetici atamasi/ayrilisi), kazanc degildi ama filtre olmadan
+        # yanlislikla "announced_but_not_filed" olarak isaretlendi.
+        eight_k = [d for f, d, it in zip(forms, dates, items)
+                   if f == "8-K" and "2.02" in (it or "").split(",")]
         if not periodic or not eight_k:
             continue
         last_periodic, last_8k = max(periodic), max(eight_k)
@@ -2005,6 +2022,23 @@ expansion or estimate revisions, and the explicit PM action rule (add / press
 / hold / trim / exit / hedge / wait for proof) tied to a numeric threshold and
 date. Do not present a probability-weighted value without labeling its source
 posture (model-validated, source-derived, or illustrative).""",
+
+    "initiation": """Use initiating-coverage for {ticker}.
+
+This pack gives you the deterministic source-of-truth layer only: current
+price and valuation, consensus, net debt, ROIC, special situations and
+earnings-quality flags. It deliberately does NOT contain segment- or
+product-level revenue, multi-year forecast drivers, deal terms, or clinical/
+regulatory detail -- build that yourself from web search per your own
+Non-Negotiables (label facts, company claims, model-derived values and
+assumptions distinctly; state what remains missing rather than fabricating
+it).
+
+Do not treat this pack's single-period multiples as sufficient valuation
+support on their own if the Capital-Intensive And Financed Growth Gate
+applies to {ticker} -- build the pro forma capitalization / EV bridge and
+after-financing return evidence the gate requires before a positive
+underwriting conclusion or target price.""",
 }
 
 
@@ -2176,6 +2210,8 @@ def main() -> int:
         )
         stale_names = [c["ticker"] for c in here if c.get("announced_but_not_filed")]
         stale_n = len(stale_names)
+        eq_names = [c["ticker"] for c in here if c.get("earnings_quality_flags")]
+        eq_n = len(eq_names)
         pack["subset"] = {
             "kind": subset_kind,
             "name": subset_label,
@@ -2204,8 +2240,32 @@ def main() -> int:
         peers = peer_block(pack, ticker, sector_of()) if blocks["sector_peers"] else None
         pack["companies"] = target
         pack["universe_count"] = 1
+        universe_count = 1
         if peers is not None:
             pack["sector_peers"] = peers
+        # Ozet sayilar (roic_n, debt_n, special_n, eq_n, events_n, history_n,
+        # current_valuation_n, priced_n...) tek sirkete daraltmadan ONCE,
+        # butun evren uzerinde hesaplanmisti -- align_subset_coverage yalniz
+        # --tickers/--sector yolunda calisiyor, --only tek sirket yolunda
+        # calismiyordu. Ayni "82/1" turu yaniltici satiri onlemek icin tek
+        # sirketten yeniden sayilir (align_subset_coverage'daki _have ile
+        # ayni mantik).
+        def _have_one(key, inner="status", good=("available", "derived")):
+            value = entry.get(key)
+            return 1 if isinstance(value, dict) and value.get(inner) in good else 0
+        roic_n = _have_one("roic")
+        roic_skipped = 1 - roic_n
+        debt_n = 1 if (entry.get("net_debt") or {}).get("net_debt") is not None else 0
+        debt_missing = [] if debt_n else [ticker]
+        special_n = 1 if (entry.get("special_situations") or {}).get("status", "").startswith("structural") else 0
+        special_names = [ticker] if special_n else []
+        events_n = _have_one("next_events")
+        history_n = _have_one("own_valuation_history")
+        current_valuation_n = 1 if entry.get("valuation_as_of") is not None else 0
+        current_valuation_missing = [] if current_valuation_n else [ticker]
+        priced_n = 1 if (entry.get("price_refresh") or {}).get("status") == "available" else 0
+        eq_n = 1 if entry.get("earnings_quality_flags") else 0
+        eq_names = [ticker] if eq_n else []
         if step == "tearsheet":
             attach_tearsheet_context(pack, source_run)
         gap = (entry.get("price_reconciliation") or {}).get("gap_pct")
