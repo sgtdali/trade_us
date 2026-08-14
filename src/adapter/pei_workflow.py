@@ -1425,6 +1425,52 @@ def generate_draft_events(
                 },
                 recorded_at=utc_now(),
             ))
+        elif payload.get("next_workflow") is None and target_ticker:
+            # Workflow tamamlandi ama ileri bir rota onermedi -- tipik olarak
+            # position_action/pm_action wait_for_proof/hold/watchlist demek.
+            # "Beklemek" kayda geciyordu ama NE ZAMAN tekrar bakilacagi
+            # hicbir yere yazilmiyordu (bu run'da CRM/META/NVDA'nin basina
+            # geldi). Pack'teki next_earnings_date zaten deterministik ve
+            # elimizde -- LLM'e sormaya gerek yok. check_triggers() bu tarih
+            # geldiginde otomatik manual_review_required/trigger_satisfied
+            # uretsin diye bir waiting_for_trigger olayina ceviriyoruz.
+            next_earnings, date_confirmed = None, False
+            if target_dir and target_dir.is_dir():
+                pack_file = target_dir / "pack.json"
+                if pack_file.is_file():
+                    try:
+                        pack_data = json.loads(pack_file.read_text(encoding="utf-8"))
+                    except (OSError, json.JSONDecodeError):
+                        pack_data = {}
+                    entry = next(
+                        (c for c in pack_data.get("companies", [])
+                         if c.get("ticker") == target_ticker), None,
+                    )
+                    if entry:
+                        events_block = entry.get("next_events") or {}
+                        next_earnings = events_block.get("next_earnings_date")
+                        date_confirmed = bool(events_block.get("date_confirmed"))
+            if next_earnings:
+                draft_events.append(make_event(
+                    event_id=_event_id(f"WAIT-{target_ticker}"),
+                    event_type="waiting_for_trigger",
+                    run_id=run_id,
+                    ticker=target_ticker,
+                    source_artifacts=source_artifacts,
+                    payload={
+                        "triggers": [{
+                            "trigger_id": f"EARN-{target_ticker}-{next_earnings}",
+                            "type": "date_due",
+                            "check_cadence": "event_driven",
+                            "next_check_date": next_earnings,
+                            "date": next_earnings,
+                            "on_match": "request_workflow",
+                            "workflow": "earnings_deep_dive",
+                            "date_status": "confirmed" if date_confirmed else "estimated",
+                        }],
+                    },
+                    recorded_at=utc_now(),
+                ))
 
     return {"events": draft_events}
 
