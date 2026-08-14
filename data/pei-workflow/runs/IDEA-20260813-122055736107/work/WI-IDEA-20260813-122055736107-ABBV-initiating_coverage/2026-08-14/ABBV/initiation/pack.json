@@ -1,0 +1,914 @@
+{
+  "schema_version": 2,
+  "purpose": "Deterministic point-in-time pack built directly from workspace artifacts; no valuation report is parsed.",
+  "month": "2026-08-13-849dd686",
+  "decision_date": "2026-08-14",
+  "cutoff_instant": "2026-08-13T12:53:21.605685Z",
+  "execution_date": "2026-08-12",
+  "universe_count": 1,
+  "universe_coverage": {
+    "configured_count": 87,
+    "included_count": 87,
+    "missing_financial_artifacts": [],
+    "pipeline_skipped": {}
+  },
+  "known_limitations": [
+    "fixed current universe creates survivorship and universe-selection bias",
+    "historical consensus, transcripts, positioning and short-interest vintages are unavailable",
+    "guidance is available only where a range was extracted and both endpoints appear in the selected release",
+    "peer medians are supplied only for the comps step; do not invent them",
+    "each live layer carries its own as-of date; do not apply the financial artifact cutoff to refreshed market, consensus or event data"
+  ],
+  "companies": [
+    {
+      "ticker": "ABBV",
+      "cohort": "HealthCareLargePharma",
+      "latest_reported_period": "2026-Q2 — 26 weeks ended 2026-06-30 (cumulative year-to-date)",
+      "period_label": "2026-Q2",
+      "latest_period_end": "2026-06-30",
+      "financial_publication_date": "2026-08-03",
+      "financial_age_days": 44,
+      "closing_price_usd": 250.82,
+      "market_cap_usd_m": 443228.3,
+      "market": {
+        "return_1m_pct": 2.47,
+        "return_3m_pct": 20.67,
+        "return_6m_pct": 12.76,
+        "return_12m_pct": 26.27,
+        "annualized_volatility_pct": 26.12,
+        "max_drawdown_12m_pct": -19.23,
+        "avg_dollar_volume_20d_usd_m": 1396.29
+      },
+      "fundamentals": {
+        "revenue_growth": 11.2,
+        "gross_profit_growth": 15.0,
+        "operating_profit_growth": 20.8,
+        "net_profit_growth": 93.4,
+        "operating_cash_flow_growth": 7.0,
+        "gross_margin": 73.4,
+        "operating_margin_pre_investment": 32.58,
+        "operating_margin": 32.58,
+        "net_margin": 13.48,
+        "operating_cash_flow_margin": 22.71,
+        "free_cash_flow_margin": 20.87,
+        "current_ratio": 0.809,
+        "net_working_capital": -7973.0,
+        "financial_debt": 70822.0,
+        "debt_to_equity": -12.028,
+        "free_cash_flow": 6678.0,
+        "ocf_to_net_profit": 1.68,
+        "capex_to_revenue": 1.8
+      },
+      "valuation": {
+        "Price / Earnings": 70.2422,
+        "Earnings Yield": 1.4224,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.1003,
+        "Price / Book Value": null,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 30.0847,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "deterministic_signals": {
+        "favorable": [
+          "revenue_growth_trend",
+          "operating_profit_before_investment_trend",
+          "operating_profit_including_investments_trend",
+          "net_profit_trend",
+          "operating_cash_flow_trend",
+          "free_cash_flow_trend",
+          "gross_margin_trend",
+          "operating_margin_trend",
+          "net_margin_trend"
+        ],
+        "adverse": [
+          "cash_conversion_trend"
+        ],
+        "other": [
+          "liquidity_trend",
+          "leverage_trend",
+          "lease_burden_trend",
+          "deferred_revenue_trend"
+        ]
+      },
+      "latest_earnings_release": {
+        "status": "available",
+        "filing_date": "2026-07-31",
+        "accession": "0001551152-26-000023",
+        "source_id": "sec-0001551152-26-000023",
+        "text_sha256": "d8c96ca493d37fa85245d765d3304f4725fe679b7c9d06539c45937fac77bbf1",
+        "guidance": {
+          "status": "available",
+          "metric": "company-defined adjusted diluted EPS guidance",
+          "low": 13.87,
+          "high": 14.07,
+          "midpoint": 13.97,
+          "source_verification": "both range endpoints found verbatim in selected release"
+        },
+        "revision_language_supported": false,
+        "excerpts": [
+          "The adjusted gross margin ratio was 84.7 percent. • On a GAAP basis, selling, general and administrative (SG&A) expense was 21.4 percent of net revenues.",
+          "The adjusted R&D expense was 13.6 percent of net revenues. • Acquired IPR&D and milestones expense was 1.7 percent of net revenues. • On a GAAP basis, the operating margin ratio in the second quarter was 37.9 percent.",
+          "The adjusted operating margin ratio was 48.3 percent. • Net interest expense was $679 million. • On a GAAP basis, the tax rate in the quarter was 15.5 percent.",
+          "Note: \"Operational\" comparisons are presented at constant currency rates that reflect comparative local currency net revenues at the prior year's foreign exchange rates. 2 Recent Events • AbbVie and Apogee Therapeutics announced a definitive agreement under which AbbVie will acquire Apogee and its diverse pipeline of clinical-stage candidates in development across inflammatory and immunological diseases.",
+          "The acquisition holds potential for substantial shareholder value creation, with mega-blockbuster peak sales potential across Apogee's pipeline of assets, and is expected to close in the third quarter of 2026.",
+          "The safety profile of Epkinly when administered in combination with lenalidomide was consistent with the known safety profiles of the individual agents. • At the American Society of Clinical Oncology (ASCO) Annual Meeting, AbbVie announced new data demonstrating the breadth and momentum of its next-generation oncology pipeline.",
+          "Featured data from AbbVie's blood cancer portfolio and pipeline included 21 oral and poster presentations, which highlighted etentamig (ABBV-383), Epkinly and Decnupaz.",
+          "This approval gives clinicians an option to initiate treatment as soon as acute infection is confirmed and makes Maviret the only treatment approved in the EU for both acute and chronic HCV infection. 4 Full-Year 2026 Outlook AbbVie is updating its adjusted diluted EPS guidance to include the impact of the proposed Apogee Therapeutics acquisition, which is expected to be $0.14 dilutive in 2026, based upon an anticipated close in the third quarter of this year.",
+          "As a result, AbbVie is updating its adjusted diluted EPS guidance range for the full year 2026 from $13.91 - $14.11 to $13.87 - $14.07, reflecting a change of $0.04 at the midpoint.",
+          "The company's 2026 adjusted diluted EPS guidance includes an unfavorable impact of $0.58 per share related to acquired IPR&D and milestones expense incurred year-to-date through the second quarter 2026."
+        ]
+      },
+      "source_ids": [
+        "sec-0001551152-26-000023"
+      ],
+      "consensus_estimates": {
+        "status": "available",
+        "as_of": "2026-08-13",
+        "source": "yfinance / Yahoo Finance analyst estimates",
+        "earnings_estimate": {
+          "0q": {
+            "avg": 3.84439,
+            "low": 3.7728,
+            "high": 3.87,
+            "yearAgoEps": 1.86,
+            "numberOfAnalysts": 16,
+            "growth": 1.0669,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 3.86559,
+            "low": 3.76,
+            "high": 3.98,
+            "yearAgoEps": 2.71,
+            "numberOfAnalysts": 16,
+            "growth": 0.4264,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 14.00918,
+            "low": 13.9,
+            "high": 14.1,
+            "yearAgoEps": 10.0,
+            "numberOfAnalysts": 23,
+            "growth": 0.4009,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 16.25868,
+            "low": 15.13207,
+            "high": 17.59,
+            "yearAgoEps": 14.00918,
+            "numberOfAnalysts": 23,
+            "growth": 0.16059999,
+            "currency": "USD"
+          }
+        },
+        "revenue_estimate": {
+          "0q": {
+            "avg": 17311670730,
+            "low": 17198000000,
+            "high": 17477467000,
+            "numberOfAnalysts": 17,
+            "yearAgoRevenue": 15776000000,
+            "growth": 0.09729999,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 18312835140,
+            "low": 18058559000,
+            "high": 18527225000,
+            "numberOfAnalysts": 17,
+            "yearAgoRevenue": 16618000000,
+            "growth": 0.102,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 67582666630,
+            "low": 67113331710,
+            "high": 67766000000,
+            "numberOfAnalysts": 21,
+            "yearAgoRevenue": 61160000000,
+            "growth": 0.105,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 73510931770,
+            "low": 70908379400,
+            "high": 74989315150,
+            "numberOfAnalysts": 21,
+            "yearAgoRevenue": 67582666630,
+            "growth": 0.0877,
+            "currency": "USD"
+          }
+        },
+        "eps_trend": {
+          "0q": {
+            "current": 3.84439,
+            "7daysAgo": 3.84386,
+            "30daysAgo": 3.85705,
+            "60daysAgo": 3.84598,
+            "90daysAgo": 3.84515,
+            "currency": "USD"
+          },
+          "+1q": {
+            "current": 3.86559,
+            "7daysAgo": 3.86079,
+            "30daysAgo": 4.02654,
+            "60daysAgo": 3.99015,
+            "90daysAgo": 3.99347,
+            "currency": "USD"
+          },
+          "0y": {
+            "current": 14.00918,
+            "7daysAgo": 14.00186,
+            "30daysAgo": 14.19993,
+            "60daysAgo": 14.24201,
+            "90daysAgo": 14.24684,
+            "currency": "USD"
+          },
+          "+1y": {
+            "current": 16.25868,
+            "7daysAgo": 16.30504,
+            "30daysAgo": 16.28621,
+            "60daysAgo": 16.21947,
+            "90daysAgo": 16.21193,
+            "currency": "USD"
+          }
+        },
+        "eps_revisions": {
+          "0q": {
+            "upLast7days": 1,
+            "upLast30days": 5,
+            "downLast30days": 5,
+            "downLast7Days": 1,
+            "currency": "USD"
+          },
+          "+1q": {
+            "upLast7days": 0,
+            "upLast30days": 6,
+            "downLast30days": 3,
+            "downLast7Days": 1,
+            "currency": "USD"
+          },
+          "0y": {
+            "upLast7days": 0,
+            "upLast30days": 0,
+            "downLast30days": 19,
+            "downLast7Days": 5,
+            "currency": "USD"
+          },
+          "+1y": {
+            "upLast7days": 0,
+            "upLast30days": 7,
+            "downLast30days": 4,
+            "downLast7Days": 1,
+            "currency": "USD"
+          }
+        },
+        "price_targets": {
+          "current": 248.76,
+          "high": 328.0,
+          "low": 200.0,
+          "mean": 275.39285,
+          "median": 280.0
+        }
+      },
+      "next_events": {
+        "status": "available",
+        "as_of": "2026-08-13",
+        "source": "yfinance / Yahoo Finance calendar",
+        "next_earnings_date": "2026-10-29",
+        "date_confirmed": false,
+        "confirmation_note": "Yahoo does not distinguish a company-announced date from an estimate. Treat as estimated until the IR page confirms it.",
+        "dividend_date": "2026-08-14",
+        "ex_dividend_date": "2026-07-15"
+      },
+      "own_valuation_history": {
+        "status": "available",
+        "span": [
+          "2021-08-31",
+          "2026-07-31"
+        ],
+        "cross_sections": 32,
+        "note": "Historical distribution ends at history_through. current_value is the live valuation placed against that unchanged historical distribution.",
+        "unit_warning": "Historical yields use fractions; current_display_value keeps the reader-facing percentage while current_value is converted to the historical fraction scale before current_sits is calculated.",
+        "methods": {
+          "Earnings Yield": {
+            "lower_is_cheaper": false,
+            "observations": 32,
+            "first_as_of": "2021-08-31",
+            "last_as_of": "2026-07-31",
+            "min": 0.0082,
+            "p25": 0.0128,
+            "median": 0.0311,
+            "p75": 0.035,
+            "max": 0.0533,
+            "n": 32,
+            "historical_last_value": 0.0082,
+            "historical_last_sits": "at or below its own 25th percentile",
+            "current_value": 0.014224,
+            "current_display_value": 1.4224,
+            "current_as_of": "2026-08-13",
+            "current_sits": "between its 25th percentile and median"
+          },
+          "Parent-Attributed Free Cash Flow Yield (Proxy)": {
+            "lower_is_cheaper": false,
+            "observations": 32,
+            "first_as_of": "2021-08-31",
+            "last_as_of": "2026-07-31",
+            "min": 0.0445,
+            "p25": 0.0482,
+            "median": 0.0766,
+            "p75": 0.0905,
+            "max": 0.1025,
+            "n": 32,
+            "historical_last_value": 0.045,
+            "historical_last_sits": "at or below its own 25th percentile",
+            "current_value": 0.041003,
+            "current_display_value": 4.1003,
+            "current_as_of": "2026-08-13",
+            "current_sits": "at or below its own 25th percentile"
+          },
+          "Price / Book Value": {
+            "lower_is_cheaper": true,
+            "observations": 28,
+            "first_as_of": "2021-08-31",
+            "last_as_of": "2025-07-31",
+            "last_value": 235.1306,
+            "min": 15.1663,
+            "p25": 16.9814,
+            "median": 20.161,
+            "p75": 53.5913,
+            "max": 235.1306,
+            "n": 28,
+            "latest_sits": "at or above its own 75th percentile",
+            "current_value": null,
+            "current_sits": null
+          },
+          "Lease-Exclusive Enterprise Value / Reported Operating Income": {
+            "lower_is_cheaper": true,
+            "observations": 32,
+            "first_as_of": "2021-08-31",
+            "last_as_of": "2026-07-31",
+            "min": 16.9909,
+            "p25": 18.1402,
+            "median": 27.3392,
+            "p75": 34.0329,
+            "max": 47.2295,
+            "n": 32,
+            "historical_last_value": 33.0596,
+            "historical_last_sits": "between its median and 75th percentile",
+            "current_value": 30.0847,
+            "current_display_value": 30.0847,
+            "current_as_of": "2026-08-13",
+            "current_sits": "between its median and 75th percentile"
+          }
+        },
+        "history_through": "2026-07-31",
+        "current_valuation_as_of": "2026-08-13"
+      },
+      "special_situations": {
+        "status": "structural event in the last two years",
+        "high_signal": [
+          {
+            "date": "2025-01-10",
+            "item": "2.06",
+            "meaning": "material impairment"
+          }
+        ],
+        "amended_periodic_filings": [],
+        "context": [
+          {
+            "date": "2024-09-10",
+            "item": "5.03",
+            "meaning": "amended articles/bylaws, or a change of fiscal year"
+          }
+        ],
+        "why_it_matters": "A completed acquisition or disposition changes what the company is. Year-over-year comparisons in this pack place the current period beside the prior-year figure without restating either, so across such an event the two are not the same business. An amended 10-Q or 10-K means a previously filed period was revised.",
+        "scope": "Any growth rate or multiple built across the event date spans the change, so the movement it shows is not wholly organic."
+      },
+      "roic": {
+        "status": "derived",
+        "value_pct": 20.08,
+        "period": "2026-Q2",
+        "annualized_from_days": 180,
+        "invested_capital_musd": 93473,
+        "definition": "NOPAT / invested capital, where NOPAT is operating profit after the effective tax rate, annualized from the period length, and invested capital is total assets less current liabilities",
+        "caveat": "Derived here, not reported by the company. No total-debt line exists in our statements, so invested capital uses the assets-less-current-liabilities simplification and will differ from a provider's ROIC."
+      },
+      "earnings_quality_flags": [
+        {
+          "flag": "net_income_diverges_from_operating_income",
+          "operating_profit_musd": 10422,
+          "net_profit_musd": 4313,
+          "gap_pct": -58.6,
+          "note": "Net income is 59% lower than operating income for this period. This is typically driven by non-operating items (investment gains/losses, other income/expense, tax items) rather than the core business. P/E and other net-income-based multiples may be misleading here; consider EV/EBIT or an operating-income-based multiple instead, or adjust net income for the flagged gap before comparing to peers."
+        }
+      ],
+      "market_statistics_at_cutoff": {
+        "return_1m_pct": 2.35,
+        "return_3m_pct": 20.53,
+        "return_6m_pct": 13.57,
+        "return_12m_pct": 29.15,
+        "annualized_volatility_pct": 26.06,
+        "max_drawdown_12m_pct": -17.29,
+        "avg_dollar_volume_20d_usd_m": 1380.32
+      },
+      "market_statistics_at_cutoff_as_of": "2026-08-12",
+      "market_statistics_as_of": "2026-08-13",
+      "market_statistics_refresh_status": "available",
+      "price_refresh": {
+        "status": "available",
+        "price_now": 250.82,
+        "price_as_of": "2026-08-13",
+        "price_at_cutoff": 246.04,
+        "cutoff_price_as_of": "2026-08-12",
+        "change_pct": 1.94,
+        "market_cap_now_usd_m": 443228.3,
+        "valuation_at_price_now": {
+          "Price / Earnings": 70.2422,
+          "Earnings Yield": 1.4224,
+          "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.1003,
+          "Price / Book Value": null,
+          "Lease-Exclusive Enterprise Value / Reported Operating Income": 30.0847,
+          "Enterprise Value / Issuer-Reported EBITDA": null
+        },
+        "not_rescaled": [],
+        "not_rescaled_reason": null,
+        "method": "Price-based multiples use the exact price ratio; enterprise-value multiples use exact current EV = refreshed market cap + filing-based net debt."
+      },
+      "net_debt": {
+        "status": "derived",
+        "period": "2026-Q2",
+        "as_of": "2026-06-30",
+        "unit": "million USD",
+        "debt_as_of": "2026-06-30",
+        "debt_is_from_an_older_period": false,
+        "total_debt": 70822,
+        "total_debt_basis": "sum of the reported components",
+        "may_be_only_part_of_the_debt": false,
+        "debt_components": {
+          "borrowings_short_term": 0,
+          "borrowings_long_term_current_portion": 8341,
+          "borrowings_long_term": 62481
+        },
+        "cash_and_investments": 6569,
+        "cash_components": {
+          "cash_and_equivalents": 6569
+        },
+        "net_debt": 64253,
+        "lease_liabilities": null,
+        "lease_note": "Leases are kept out of net debt because the valuation engine's enterprise value is lease-exclusive. Add them only if you say you are doing so.",
+        "enterprise_value": 507481.3,
+        "enterprise_value_basis": "market cap at the refreshed price"
+      },
+      "price_reconciliation": {
+        "multiples_computed_from": 246.04,
+        "multiples_price_as_of": "2026-08-12",
+        "consensus_block_price": 248.76,
+        "consensus_price_as_of": "2026-08-13",
+        "gap_pct": 1.11,
+        "note": "Every multiple in `valuation` uses multiples_computed_from. If you quote a multiple, quote that price and that date. Do not recompute multiples against the consensus-block price yourself -- see `price_refresh.valuation_at_price_now` for the already-rescaled figures."
+      },
+      "market_at_cutoff": {
+        "price_usd": 246.04,
+        "market_cap_usd_m": 434781.5,
+        "as_of": "2026-08-12"
+      },
+      "valuation_at_cutoff": {
+        "Price / Earnings": 68.9036,
+        "Earnings Yield": 1.45,
+        "Price / Book Value": null,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.18,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 29.584,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "valuation_at_cutoff_as_of": "2026-08-12",
+      "market_data_as_of": "2026-08-13",
+      "valuation_as_of": "2026-08-13"
+    }
+  ],
+  "mode": "live",
+  "sector_peers": {
+    "status": "available",
+    "framework_type": "company_specific_multi_lens",
+    "framework_id": "company-peer-framework:ABBV:1",
+    "framework_version": 1,
+    "framework_source": "config/valuation/comparison/company-peer-frameworks/ABBV.json",
+    "effective_from": "2026-08-12",
+    "methodology": "blended_multi_lens",
+    "single_combined_peer_median": false,
+    "peer_count": 7,
+    "missing_numeric_peers": [],
+    "groups": [
+      {
+        "group_id": "core_large_biopharma",
+        "label": "Core large biopharma valuation peers",
+        "purpose": "Patent-cliff management, replacement franchises, cash generation, pipeline durability and mature-product erosion",
+        "member_count": 4,
+        "missing_members": [],
+        "medians": {
+          "valuation": {
+            "Price / Earnings": 25.84,
+            "Earnings Yield": 2.41,
+            "Price / Book Value": 11.23,
+            "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.81,
+            "Lease-Exclusive Enterprise Value / Reported Operating Income": 23.56
+          },
+          "fundamentals": {
+            "revenue_growth": 6.2,
+            "gross_margin": 72.34,
+            "net_margin": 2.75,
+            "operating_cash_flow_margin": 30.7,
+            "free_cash_flow_margin": 24.55,
+            "ocf_to_net_profit": 1.11,
+            "operating_margin": -9.89
+          },
+          "consensus": {
+            "revenue_growth_current_year_pct": 3.83,
+            "revenue_growth_next_year_pct": 3.72,
+            "eps_growth_current_year_pct": -32.06,
+            "eps_growth_next_year_pct": 126.69,
+            "current_year_eps_analyst_count": 24.5,
+            "current_year_eps_revision_net_30d": 1.5
+          },
+          "quality": {
+            "roic_pct": 15.97
+          }
+        },
+        "members": [
+          {
+            "ticker": "BMY",
+            "as_of": {
+              "financial_period_end": "2026-06-30",
+              "financial_publication_date": "2026-07-30",
+              "market": "2026-08-13",
+              "valuation": "2026-08-13",
+              "consensus": "2026-08-13"
+            },
+            "closing_price_usd": 64.65,
+            "market_cap_usd_m": 132061.5,
+            "valuation": {
+              "Price / Earnings": 14.2277,
+              "Earnings Yield": 7.0276,
+              "Price / Book Value": 5.917,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": 8.6694,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": null,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": 4.2,
+              "gross_margin": 70.79,
+              "net_margin": 24.5,
+              "operating_cash_flow_margin": 18.38,
+              "free_cash_flow_margin": 15.72,
+              "ocf_to_net_profit": 0.75
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "not computed",
+              "reason": "no filing at or before the horizon carries operating profit, tax, total assets and current liabilities together"
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-13",
+              "revenue_growth_current_year_pct": 3.43,
+              "revenue_growth_next_year_pct": -3.45,
+              "eps_growth_current_year_pct": 12.95,
+              "eps_growth_next_year_pct": -5.71,
+              "current_year_eps_analyst_count": 25,
+              "current_year_eps_revision_net_30d": 6
+            }
+          },
+          {
+            "ticker": "AMGN",
+            "as_of": {
+              "financial_period_end": "2026-06-30",
+              "financial_publication_date": "2026-08-05",
+              "market": "2026-08-13",
+              "valuation": "2026-08-13",
+              "consensus": "2026-08-13"
+            },
+            "closing_price_usd": 417.84,
+            "market_cap_usd_m": 225897.7,
+            "valuation": {
+              "Price / Earnings": 25.8375,
+              "Earnings Yield": 3.875,
+              "Price / Book Value": 19.3273,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.5045,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": 23.5614,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": 7.8,
+              "gross_margin": 70.25,
+              "operating_margin": 33.1,
+              "net_margin": 22.46,
+              "operating_cash_flow_margin": 33.16,
+              "free_cash_flow_margin": 26.6,
+              "ocf_to_net_profit": 1.48
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "derived",
+              "value_pct": 15.97,
+              "period": "2026-Q2",
+              "annualized_from_days": 180,
+              "invested_capital_musd": 70137,
+              "definition": "NOPAT / invested capital, where NOPAT is operating profit after the effective tax rate, annualized from the period length, and invested capital is total assets less current liabilities",
+              "caveat": "Derived here, not reported by the company. No total-debt line exists in our statements, so invested capital uses the assets-less-current-liabilities simplification and will differ from a provider's ROIC."
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-13",
+              "revenue_growth_current_year_pct": 5.84,
+              "revenue_growth_next_year_pct": 2.68,
+              "eps_growth_current_year_pct": 5.34,
+              "eps_growth_next_year_pct": 5.28,
+              "current_year_eps_analyst_count": 31,
+              "current_year_eps_revision_net_30d": -9
+            }
+          },
+          {
+            "ticker": "MRK",
+            "as_of": {
+              "financial_period_end": "2026-06-30",
+              "financial_publication_date": "2026-08-07",
+              "market": "2026-08-13",
+              "valuation": "2026-08-13",
+              "consensus": "2026-08-13"
+            },
+            "closing_price_usd": 135.55,
+            "market_cap_usd_m": 334425.1,
+            "valuation": {
+              "Price / Earnings": 105.3971,
+              "Earnings Yield": 0.9486,
+              "Price / Book Value": 7.9752,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.8093,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": null,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": 5.0,
+              "gross_margin": 73.89,
+              "net_margin": -16.96,
+              "operating_cash_flow_margin": 28.24,
+              "free_cash_flow_margin": 22.51
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "not computed",
+              "reason": "no filing at or before the horizon carries operating profit, tax, total assets and current liabilities together"
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-13",
+              "revenue_growth_current_year_pct": 3.24,
+              "revenue_growth_next_year_pct": 4.77,
+              "eps_growth_current_year_pct": -69.46,
+              "eps_growth_next_year_pct": 248.09,
+              "current_year_eps_analyst_count": 24,
+              "current_year_eps_revision_net_30d": -1
+            }
+          },
+          {
+            "ticker": "GILD",
+            "as_of": {
+              "financial_period_end": "2026-06-30",
+              "financial_publication_date": "2026-08-06",
+              "market": "2026-08-13",
+              "valuation": "2026-08-13",
+              "consensus": "2026-08-13"
+            },
+            "closing_price_usd": 138.14,
+            "market_cap_usd_m": 171287.4,
+            "valuation": {
+              "Earnings Yield": -1.8901,
+              "Price / Book Value": 14.4803,
+              "Price / Earnings": null,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": null,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": null,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": 7.4,
+              "gross_margin": 79.52,
+              "operating_margin": -52.89,
+              "net_margin": -57.41,
+              "operating_cash_flow_margin": 41.43,
+              "free_cash_flow_margin": 39.69
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "not computed",
+              "reason": "effective tax rate outside a usable range"
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-13",
+              "revenue_growth_current_year_pct": 4.24,
+              "revenue_growth_next_year_pct": 6.46,
+              "eps_growth_current_year_pct": -105.43,
+              "eps_growth_next_year_pct": 2330.11,
+              "current_year_eps_analyst_count": 24,
+              "current_year_eps_revision_net_30d": 4
+            }
+          }
+        ]
+      },
+      {
+        "group_id": "secondary_pharma_references",
+        "label": "Secondary pharma references",
+        "purpose": "Large-cap pharma, biologics, immunology, R&D quality and business-development context",
+        "member_count": 3,
+        "missing_members": [],
+        "medians": {
+          "valuation": {
+            "Price / Earnings": 30.02,
+            "Earnings Yield": 3.33,
+            "Price / Book Value": 2.62,
+            "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.54
+          },
+          "fundamentals": {
+            "revenue_growth": 8.2,
+            "gross_margin": 70.68,
+            "net_margin": 21.81,
+            "operating_cash_flow_margin": 22.54,
+            "free_cash_flow_margin": 17.74,
+            "ocf_to_net_profit": 1.03,
+            "operating_margin": 24.52
+          },
+          "consensus": {
+            "revenue_growth_current_year_pct": 7.36,
+            "revenue_growth_next_year_pct": 7.56,
+            "eps_growth_current_year_pct": 2.43,
+            "eps_growth_next_year_pct": 11.35,
+            "current_year_eps_analyst_count": 25,
+            "current_year_eps_revision_net_30d": -1
+          },
+          "quality": {
+            "roic_pct": 8.95
+          }
+        },
+        "members": [
+          {
+            "ticker": "JNJ",
+            "as_of": {
+              "financial_period_end": "2026-06-28",
+              "financial_publication_date": "2026-07-23",
+              "market": "2026-08-13",
+              "valuation": "2026-08-13",
+              "consensus": "2026-08-13"
+            },
+            "closing_price_usd": 262.08,
+            "market_cap_usd_m": 631586.2,
+            "valuation": {
+              "Price / Earnings": 30.0226,
+              "Earnings Yield": 3.3335,
+              "Price / Book Value": 7.4329,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": 3.5214,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": null,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": 8.2,
+              "gross_margin": 67.27,
+              "net_margin": 21.81,
+              "operating_cash_flow_margin": 22.54,
+              "free_cash_flow_margin": 17.74,
+              "ocf_to_net_profit": 1.03
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "not computed",
+              "reason": "no filing at or before the horizon carries operating profit, tax, total assets and current liabilities together"
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-13",
+              "revenue_growth_current_year_pct": 7.36,
+              "revenue_growth_next_year_pct": 7.56,
+              "eps_growth_current_year_pct": 2.43,
+              "eps_growth_next_year_pct": 11.35,
+              "current_year_eps_analyst_count": 4,
+              "current_year_eps_revision_net_30d": 21
+            }
+          },
+          {
+            "ticker": "PFE",
+            "as_of": {
+              "financial_period_end": "2026-06-28",
+              "financial_publication_date": "2026-08-04",
+              "market": "2026-08-13",
+              "valuation": "2026-08-13",
+              "consensus": "2026-08-13"
+            },
+            "closing_price_usd": 26.8,
+            "market_cap_usd_m": 152751.3,
+            "valuation": {
+              "Price / Earnings": 35.2449,
+              "Earnings Yield": 2.8358,
+              "Price / Book Value": 1.7931,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": 7.1293,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": null,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": 3.9,
+              "gross_margin": 74.09,
+              "net_margin": 8.34,
+              "operating_cash_flow_margin": 11.7,
+              "free_cash_flow_margin": 8.41,
+              "ocf_to_net_profit": 1.4
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "not computed",
+              "reason": "no filing at or before the horizon carries operating profit, tax, total assets and current liabilities together"
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-13",
+              "revenue_growth_current_year_pct": -0.55,
+              "revenue_growth_next_year_pct": -3.83,
+              "eps_growth_current_year_pct": -7.71,
+              "eps_growth_next_year_pct": -2.71,
+              "current_year_eps_analyst_count": 25,
+              "current_year_eps_revision_net_30d": -1
+            }
+          },
+          {
+            "ticker": "REGN",
+            "as_of": {
+              "financial_period_end": "2026-06-30",
+              "financial_publication_date": "2026-07-30",
+              "market": "2026-08-13",
+              "valuation": "2026-08-13",
+              "consensus": "2026-08-13"
+            },
+            "closing_price_usd": 805.97,
+            "market_cap_usd_m": 82978.7,
+            "valuation": {
+              "Price / Earnings": 19.1694,
+              "Earnings Yield": 5.2163,
+              "Price / Book Value": 2.6167,
+              "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.5351,
+              "Lease-Exclusive Enterprise Value / Reported Operating Income": null,
+              "Enterprise Value / Issuer-Reported EBITDA": null
+            },
+            "fundamentals": {
+              "revenue_growth": 17.8,
+              "operating_margin": 24.52,
+              "net_margin": 25.63,
+              "operating_cash_flow_margin": 23.96,
+              "free_cash_flow_margin": 18.0,
+              "ocf_to_net_profit": 0.93
+            },
+            "fundamentals_comparability": null,
+            "roic": {
+              "status": "derived",
+              "value_pct": 8.95,
+              "period": "2026-Q2",
+              "annualized_from_days": 180,
+              "invested_capital_musd": 36200.0,
+              "definition": "NOPAT / invested capital, where NOPAT is operating profit after the effective tax rate, annualized from the period length, and invested capital is total assets less current liabilities",
+              "caveat": "Derived here, not reported by the company. No total-debt line exists in our statements, so invested capital uses the assets-less-current-liabilities simplification and will differ from a provider's ROIC."
+            },
+            "consensus": {
+              "status": "available",
+              "as_of": "2026-08-13",
+              "revenue_growth_current_year_pct": 17.75,
+              "revenue_growth_next_year_pct": 8.59,
+              "eps_growth_current_year_pct": 19.62,
+              "eps_growth_next_year_pct": 19.04,
+              "current_year_eps_analyst_count": 28,
+              "current_year_eps_revision_net_30d": -14
+            }
+          }
+        ]
+      }
+    ],
+    "operational_references": [
+      {
+        "ticker": "LLY",
+        "lens_id": "high_growth_quality_ceiling",
+        "reason": "High-growth pharma quality and valuation ceiling; obesity and diabetes growth place Lilly in a different valuation regime from AbbVie.",
+        "included_in_numeric_comparison": false
+      }
+    ],
+    "median_caveat": "Each median belongs only to its stated economic lens. Do not combine the groups into one median and do not treat convergence as evidence without an independent operating or fundamental justification."
+  },
+  "pack_purpose": "Deterministic numeric input for the ChatGPT Public Equity Investing plugin. Numbers here replace the plugin's paid data connectors; the plugin should use the web only for narrative and for fields marked unavailable.",
+  "consensus_as_of": "2026-08-13",
+  "intended_step": "initiation",
+  "built_on": "2026-08-14",
+  "last_market_session": "2026-08-13",
+  "market_data_as_of": "2026-08-13",
+  "financial_data_cutoff": "2026-08-13T12:53:21.605685Z",
+  "blocks_omitted_for_step": {
+    "omitted": [
+      "quarterly_series",
+      "pre_print_consensus"
+    ],
+    "reason": "Not part of the initiation step's source categories. Ask for a pack built for the owning step instead of working around the gap."
+  }
+}

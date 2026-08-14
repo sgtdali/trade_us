@@ -1,0 +1,403 @@
+{
+  "schema_version": 2,
+  "purpose": "Deterministic point-in-time pack built directly from workspace artifacts; no valuation report is parsed.",
+  "month": "2026-08-13-849dd686",
+  "decision_date": "2026-08-14",
+  "cutoff_instant": "2026-08-13T12:53:21.605685Z",
+  "execution_date": "2026-08-12",
+  "universe_count": 1,
+  "universe_coverage": {
+    "configured_count": 87,
+    "included_count": 87,
+    "missing_financial_artifacts": [],
+    "pipeline_skipped": {}
+  },
+  "known_limitations": [
+    "fixed current universe creates survivorship and universe-selection bias",
+    "historical consensus, transcripts, positioning and short-interest vintages are unavailable",
+    "guidance is available only where a range was extracted and both endpoints appear in the selected release",
+    "peer medians are supplied only for the comps step; do not invent them",
+    "each live layer carries its own as-of date; do not apply the financial artifact cutoff to refreshed market, consensus or event data"
+  ],
+  "companies": [
+    {
+      "ticker": "PEP",
+      "cohort": "Beverages",
+      "latest_reported_period": "2026-Q2 — 24 weeks ended 2026-06-13 (cumulative year-to-date)",
+      "period_label": "2026-Q2",
+      "latest_period_end": "2026-06-13",
+      "financial_publication_date": "2026-07-09",
+      "financial_age_days": 61,
+      "closing_price_usd": 140.62,
+      "market_cap_usd_m": 191931.0,
+      "market": {
+        "return_1m_pct": 3.86,
+        "return_3m_pct": -5.79,
+        "return_6m_pct": -16.87,
+        "return_12m_pct": -4.26,
+        "annualized_volatility_pct": 21.22,
+        "max_drawdown_12m_pct": -20.85,
+        "avg_dollar_volume_20d_usd_m": 1036.89
+      },
+      "fundamentals": {
+        "revenue_growth": 7.3,
+        "gross_profit_growth": 6.4,
+        "operating_profit_growth": 65.5,
+        "net_profit_growth": 71.1,
+        "operating_cash_flow_growth": 137.4,
+        "gross_margin": 54.65,
+        "operating_margin_pre_investment": 16.59,
+        "operating_margin": 16.59,
+        "net_margin": 12.25,
+        "operating_cash_flow_margin": 5.42,
+        "free_cash_flow_margin": 2.52,
+        "current_ratio": 0.934,
+        "cash_and_st_investments_to_current_liabilities": 0.305,
+        "net_working_capital": -2331.0,
+        "financial_debt": 54814.0,
+        "debt_to_equity": 2.461,
+        "free_cash_flow": 1099.0,
+        "ocf_to_net_profit": 0.44,
+        "capex_to_revenue": 2.9
+      },
+      "valuation": {
+        "Price / Earnings": 18.3649,
+        "Earnings Yield": 5.4473,
+        "Price / Book Value": 8.6854,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.8047,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 16.4791,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "deterministic_signals": {
+        "favorable": [
+          "revenue_growth_trend",
+          "operating_profit_before_investment_trend",
+          "operating_profit_including_investments_trend",
+          "net_profit_trend",
+          "operating_cash_flow_trend",
+          "free_cash_flow_trend",
+          "operating_margin_trend",
+          "net_margin_trend",
+          "cash_conversion_trend"
+        ],
+        "adverse": [
+          "gross_margin_trend"
+        ],
+        "other": [
+          "liquidity_trend",
+          "leverage_trend",
+          "lease_burden_trend",
+          "deferred_revenue_trend"
+        ]
+      },
+      "latest_earnings_release": {
+        "status": "available",
+        "filing_date": "2026-07-09",
+        "accession": "0000077476-26-000037",
+        "source_id": "sec-0000077476-26-000037",
+        "text_sha256": "a94e4de64845c5d510619156a15aa351daafcc95dd2e64000d0911988717846c",
+        "guidance": {
+          "status": "unavailable",
+          "reason": "no full-year adjusted (non-GAAP) diluted EPS guidance in this release. That is the only basis this ledger carries. The company may still guide -- on revenue, margins, a percentage, or on a GAAP basis -- and such a figure is deliberately not carried here, because mixing bases would make the field incomparable across companies. Read the release itself if the expectation bar matters for this name."
+        },
+        "revision_language_supported": true,
+        "excerpts": [
+          "\"Our second quarter results featured strong organic volume and net revenue growth for the global convenient foods and global beverages businesses.",
+          "Year-to-date, PepsiCo's global organic volume has increased at the highest rate since 2022 - aided by the strength of the international business and the continued evolution of the portfolio to offer more choices through portion control varieties, diverse ingredients, functional benefits such as hydration, protein and fiber, energy and zero sugar beverage varieties,\" said Chairman and CEO, Ramon Laguarta.",
+          "Please refer to PepsiCo’s Quarterly Report on Form 10-Q for the 12 and 24 weeks ended June 13, 2026 (Q2 2026 Form 10-Q) filed with the Securities and Exchange Commission (SEC) for additional information regarding PepsiCo’s financial results. 1 Second-Quarter Results Discussion • Net revenue increased 6.4% due to 2.4% organic revenue growth, a 2.2-percentage-point benefit from foreign exchange translation and a 1.8-percentage-point net benefit from acquisitions and divestitures.",
+          "Convenient foods net revenue declined and primarily reflects lower effective net pricing.",
+          "The core operating profit performance was primarily driven by productivity savings and effective net pricing, partially offset by certain operating cost increases. • EPS increased 137% and core EPS increased 4%, primarily driven by operating profit growth.",
+          "Year-to-Date Results Discussion • Net revenue increased 7.3% due to a 2.7-percentage-point benefit from foreign exchange translation, 2.5% organic revenue growth and a 2.1-percentage-point net benefit from acquisitions and divestitures.",
+          "Convenient foods net revenue grew slightly, reflecting organic volume growth and benefits of an acquisition, offset by lower effective net pricing.",
+          "The beverages business delivered strong net revenue growth, primarily reflecting acquisitions made in 2025 and organic growth. ◦ The international businesses performed well with each segment delivering strong net revenue growth - aided by organic volume growth within Asia Pacific Foods, Europe, Middle East and Africa and International Beverages Franchise. • Operating profit increased 65% and operating margin expanded 585 basis points, reflecting prior-year impairment charges related to the Rockstar and Be & Cheery brands, a favorable net impact of acquisition and divestiture-related charges/credits and lower restructuring charges.",
+          "For 2026, the Company continues to expect: • Organic revenue to increase between 2 and 4 percent; • Core constant currency EPS to increase between 4 and 6 percent; • A core annual effective tax rate of approximately 22 percent; • Capital spending to be below 5 percent of net revenue; • A free cash flow conversion ratio of at least 80 percent; and • Total cash returns to shareholders of approximately $8.9 billion, comprised of dividends of $7.9 billion and share repurchases of $1.0 billion.",
+          "(b) The impact of items affecting comparability on our effective tax rate represents the difference in the effective tax rate resulting from a higher or lower tax rate as applicable to the items affecting comparability."
+        ]
+      },
+      "source_ids": [
+        "sec-0000077476-26-000037"
+      ],
+      "consensus_estimates": {
+        "status": "available",
+        "as_of": "2026-08-13",
+        "source": "yfinance / Yahoo Finance analyst estimates",
+        "earnings_estimate": {
+          "0q": {
+            "avg": 2.29973,
+            "low": 2.26,
+            "high": 2.33,
+            "yearAgoEps": 2.29,
+            "numberOfAnalysts": 17,
+            "growth": 0.0042,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 2.43651,
+            "low": 2.35,
+            "high": 2.55,
+            "yearAgoEps": 2.26,
+            "numberOfAnalysts": 17,
+            "growth": 0.078099996,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 8.55981,
+            "low": 8.44,
+            "high": 8.68,
+            "yearAgoEps": 8.14,
+            "numberOfAnalysts": 23,
+            "growth": 0.051599998,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 8.97844,
+            "low": 8.59,
+            "high": 9.25,
+            "yearAgoEps": 8.55981,
+            "numberOfAnalysts": 23,
+            "growth": 0.048899997,
+            "currency": "USD"
+          }
+        },
+        "revenue_estimate": {
+          "0q": {
+            "avg": 25009337460,
+            "low": 24653205000,
+            "high": 25412200000,
+            "numberOfAnalysts": 14,
+            "yearAgoRevenue": 23937000000,
+            "growth": 0.0448,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 30385180150,
+            "low": 29849780000,
+            "high": 30977700000,
+            "numberOfAnalysts": 14,
+            "yearAgoRevenue": 29343000000,
+            "growth": 0.0355,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 98954475110,
+            "low": 97926000000,
+            "high": 100014000000,
+            "numberOfAnalysts": 21,
+            "yearAgoRevenue": 93925000000,
+            "growth": 0.0535,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 101862021770,
+            "low": 100886000000,
+            "high": 103729000000,
+            "numberOfAnalysts": 21,
+            "yearAgoRevenue": 98954475110,
+            "growth": 0.0294,
+            "currency": "USD"
+          }
+        },
+        "eps_trend": {
+          "0q": {
+            "current": 2.29973,
+            "7daysAgo": 2.29973,
+            "30daysAgo": 2.43305,
+            "60daysAgo": 2.44265,
+            "90daysAgo": 2.44265,
+            "currency": "USD"
+          },
+          "+1q": {
+            "current": 2.43651,
+            "7daysAgo": 2.43651,
+            "30daysAgo": 2.41201,
+            "60daysAgo": 2.41404,
+            "90daysAgo": 2.41404,
+            "currency": "USD"
+          },
+          "0y": {
+            "current": 8.55981,
+            "7daysAgo": 8.56459,
+            "30daysAgo": 8.64959,
+            "60daysAgo": 8.66028,
+            "90daysAgo": 8.65945,
+            "currency": "USD"
+          },
+          "+1y": {
+            "current": 8.97844,
+            "7daysAgo": 8.9867,
+            "30daysAgo": 9.10219,
+            "60daysAgo": 9.14746,
+            "90daysAgo": 9.15301,
+            "currency": "USD"
+          }
+        },
+        "eps_revisions": {
+          "0q": {
+            "upLast7days": 0,
+            "upLast30days": 0,
+            "downLast30days": 15,
+            "downLast7Days": 15,
+            "currency": "USD"
+          },
+          "+1q": {
+            "upLast7days": 12,
+            "upLast30days": 11,
+            "downLast30days": 3,
+            "downLast7Days": 2,
+            "currency": "USD"
+          },
+          "0y": {
+            "upLast7days": 1,
+            "upLast30days": 1,
+            "downLast30days": 18,
+            "downLast7Days": 16,
+            "currency": "USD"
+          },
+          "+1y": {
+            "upLast7days": 1,
+            "upLast30days": 1,
+            "downLast30days": 19,
+            "downLast7Days": 19,
+            "currency": "USD"
+          }
+        },
+        "price_targets": {
+          "current": 138.7,
+          "high": 183.0,
+          "low": 124.0,
+          "mean": 155.0,
+          "median": 155.0
+        }
+      },
+      "next_events": {
+        "status": "available",
+        "as_of": "2026-08-13",
+        "source": "yfinance / Yahoo Finance calendar",
+        "next_earnings_date": "2026-10-08",
+        "date_confirmed": false,
+        "confirmation_note": "Yahoo does not distinguish a company-announced date from an estimate. Treat as estimated until the IR page confirms it.",
+        "dividend_date": "2026-09-30",
+        "ex_dividend_date": "2026-09-04"
+      },
+      "special_situations": {
+        "status": "context only",
+        "context": [
+          {
+            "date": "2024-09-20",
+            "item": "5.03",
+            "meaning": "amended articles/bylaws, or a change of fiscal year"
+          }
+        ]
+      },
+      "earnings_quality_flags": [
+        {
+          "flag": "net_income_diverges_from_operating_income",
+          "operating_profit_musd": 7236,
+          "net_profit_musd": 5342,
+          "gap_pct": -26.2,
+          "note": "Net income is 26% lower than operating income for this period. This is typically driven by non-operating items (investment gains/losses, other income/expense, tax items) rather than the core business. P/E and other net-income-based multiples may be misleading here; consider EV/EBIT or an operating-income-based multiple instead, or adjust net income for the flagged gap before comparing to peers."
+        }
+      ],
+      "market_statistics_at_cutoff": {
+        "return_1m_pct": 2.4,
+        "return_3m_pct": -7.7,
+        "return_6m_pct": -15.3,
+        "return_12m_pct": -0.44,
+        "annualized_volatility_pct": 21.19,
+        "max_drawdown_12m_pct": -19.29,
+        "avg_dollar_volume_20d_usd_m": 1047.36
+      },
+      "market_statistics_at_cutoff_as_of": "2026-08-12",
+      "market_statistics_as_of": "2026-08-13",
+      "market_statistics_refresh_status": "available",
+      "price_refresh": {
+        "status": "available",
+        "price_now": 140.62,
+        "price_as_of": "2026-08-13",
+        "price_at_cutoff": 139.02,
+        "cutoff_price_as_of": "2026-08-12",
+        "change_pct": 1.15,
+        "market_cap_now_usd_m": 191931.0,
+        "valuation_at_price_now": {
+          "Price / Earnings": 18.3649,
+          "Earnings Yield": 5.4473,
+          "Price / Book Value": 8.6854,
+          "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.8047,
+          "Lease-Exclusive Enterprise Value / Reported Operating Income": 16.4791,
+          "Enterprise Value / Issuer-Reported EBITDA": null
+        },
+        "not_rescaled": [],
+        "not_rescaled_reason": null,
+        "method": "Price-based multiples use the exact price ratio; enterprise-value multiples use exact current EV = refreshed market cap + filing-based net debt."
+      },
+      "net_debt": {
+        "status": "derived",
+        "period": "2026-Q2",
+        "as_of": "2026-06-13",
+        "unit": "million USD",
+        "debt_as_of": "2026-06-13",
+        "debt_is_from_an_older_period": false,
+        "total_debt": 54814,
+        "total_debt_basis": "sum of the reported components",
+        "may_be_only_part_of_the_debt": false,
+        "debt_components": {
+          "borrowings_short_term": 10602,
+          "borrowings_long_term_current_portion": 1600,
+          "borrowings_long_term": 42612
+        },
+        "cash_and_investments": 10716,
+        "cash_components": {
+          "cash_and_equivalents": 10251,
+          "financial_investments_current": 465
+        },
+        "net_debt": 44098,
+        "lease_liabilities": null,
+        "lease_note": "Leases are kept out of net debt because the valuation engine's enterprise value is lease-exclusive. Add them only if you say you are doing so.",
+        "enterprise_value": 236029.0,
+        "enterprise_value_basis": "market cap at the refreshed price"
+      },
+      "price_reconciliation": {
+        "multiples_computed_from": 139.02,
+        "multiples_price_as_of": "2026-08-12",
+        "consensus_block_price": 138.7,
+        "consensus_price_as_of": "2026-08-13",
+        "gap_pct": -0.23,
+        "note": "Every multiple in `valuation` uses multiples_computed_from. If you quote a multiple, quote that price and that date. Do not recompute multiples against the consensus-block price yourself -- see `price_refresh.valuation_at_price_now` for the already-rescaled figures."
+      },
+      "market_at_cutoff": {
+        "price_usd": 139.02,
+        "market_cap_usd_m": 189747.2,
+        "as_of": "2026-08-12"
+      },
+      "valuation_at_cutoff": {
+        "Price / Earnings": 18.1559,
+        "Earnings Yield": 5.51,
+        "Price / Book Value": 8.5866,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": 4.86,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 16.3266,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "valuation_at_cutoff_as_of": "2026-08-12",
+      "market_data_as_of": "2026-08-13",
+      "valuation_as_of": "2026-08-13"
+    }
+  ],
+  "mode": "live",
+  "pack_purpose": "Deterministic numeric input for the ChatGPT Public Equity Investing plugin. Numbers here replace the plugin's paid data connectors; the plugin should use the web only for narrative and for fields marked unavailable.",
+  "consensus_as_of": "2026-08-13",
+  "intended_step": "preview",
+  "built_on": "2026-08-14",
+  "last_market_session": "2026-08-13",
+  "market_data_as_of": "2026-08-13",
+  "financial_data_cutoff": "2026-08-13T12:53:21.605685Z",
+  "blocks_omitted_for_step": {
+    "omitted": [
+      "sector_peers",
+      "own_valuation_history",
+      "roic",
+      "quarterly_series",
+      "pre_print_consensus"
+    ],
+    "reason": "Not part of the preview step's source categories. Ask for a pack built for the owning step instead of working around the gap."
+  }
+}

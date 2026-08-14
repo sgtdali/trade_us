@@ -1,0 +1,380 @@
+{
+  "schema_version": 2,
+  "purpose": "Deterministic point-in-time pack built directly from workspace artifacts; no valuation report is parsed.",
+  "month": "2026-08-13-849dd686",
+  "decision_date": "2026-08-14",
+  "cutoff_instant": "2026-08-13T12:53:21.605685Z",
+  "execution_date": "2026-08-12",
+  "universe_count": 1,
+  "universe_coverage": {
+    "configured_count": 87,
+    "included_count": 87,
+    "missing_financial_artifacts": [],
+    "pipeline_skipped": {}
+  },
+  "known_limitations": [
+    "fixed current universe creates survivorship and universe-selection bias",
+    "historical consensus, transcripts, positioning and short-interest vintages are unavailable",
+    "guidance is available only where a range was extracted and both endpoints appear in the selected release",
+    "peer medians are supplied only for the comps step; do not invent them",
+    "each live layer carries its own as-of date; do not apply the financial artifact cutoff to refreshed market, consensus or event data"
+  ],
+  "companies": [
+    {
+      "ticker": "NVDA",
+      "cohort": "TechnologySemis",
+      "latest_reported_period": "2027-Q1 — 13 weeks ended 2026-04-26 (discrete quarter)",
+      "period_label": "2027-Q1",
+      "latest_period_end": "2026-04-26",
+      "financial_publication_date": "2026-05-20",
+      "financial_age_days": 109,
+      "closing_price_usd": 225.3,
+      "market_cap_usd_m": 5452260.3,
+      "market": {
+        "return_1m_pct": 6.02,
+        "return_3m_pct": -0.23,
+        "return_6m_pct": 18.55,
+        "return_12m_pct": 23.01,
+        "annualized_volatility_pct": 36.75,
+        "max_drawdown_12m_pct": -20.22,
+        "avg_dollar_volume_20d_usd_m": 25807.74
+      },
+      "fundamentals": {
+        "revenue_growth": 85.2,
+        "gross_profit_growth": 129.3,
+        "operating_profit_growth": 147.4,
+        "net_profit_growth": 210.6,
+        "operating_cash_flow_growth": 83.6,
+        "gross_margin": 74.93,
+        "operating_margin_pre_investment": 65.6,
+        "operating_margin": 65.6,
+        "net_margin": 71.46,
+        "operating_cash_flow_margin": 61.68,
+        "free_cash_flow_margin": 59.53,
+        "current_ratio": 3.441,
+        "net_working_capital": 107111.0,
+        "lease_liability_total": 4344.0,
+        "free_cash_flow": 48587.0,
+        "ocf_to_net_profit": 0.86,
+        "capex_to_revenue": 2.2
+      },
+      "valuation": {
+        "Price / Earnings": 34.1593,
+        "Earnings Yield": 2.9225,
+        "Price / Book Value": 27.8925,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": 2.1869,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 33.5674,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "deterministic_signals": {
+        "favorable": [
+          "revenue_growth_trend",
+          "operating_profit_before_investment_trend",
+          "operating_profit_including_investments_trend",
+          "net_profit_trend",
+          "operating_cash_flow_trend",
+          "free_cash_flow_trend",
+          "gross_margin_trend",
+          "operating_margin_trend",
+          "net_margin_trend"
+        ],
+        "adverse": [
+          "cash_conversion_trend"
+        ],
+        "other": [
+          "liquidity_trend",
+          "leverage_trend",
+          "lease_burden_trend",
+          "deferred_revenue_trend"
+        ]
+      },
+      "latest_earnings_release": {
+        "status": "available",
+        "filing_date": "2026-05-20",
+        "accession": "0001045810-26-000051",
+        "source_id": "sec-0001045810-26-000051",
+        "text_sha256": "7fa0881c679a66ffc993f17d267a05ccc419a4034ac93ec4167ebe74ac64f977",
+        "guidance": {
+          "status": "unavailable",
+          "reason": "no full-year adjusted (non-GAAP) diluted EPS guidance in this release. That is the only basis this ledger carries. The company may still guide -- on revenue, margins, a percentage, or on a GAAP basis -- and such a figure is deliberately not carried here, because mixing bases would make the field incomparable across companies. Read the release itself if the expectation bar matters for this name."
+        },
+        "revision_language_supported": true,
+        "excerpts": [
+          "Data Center revenue for the first quarter was a record $75.2 billion, up 92% from a year ago and up 21% sequentially, driven by the ramp of our Blackwell 300 products and demand for our InfiniBand, Spectrum-X™ Ethernet, and NVLink™ solutions.",
+          "Gross Margin GAAP and non-GAAP gross margins for the first quarter increased from a year ago on lower inventory provisions, primarily due to the prior year’s $4.5 billion charge associated with H20 excess inventory and purchase obligations.",
+          "GAAP effective tax rate for the first quarter was 16.6%, an increase from a year ago, primarily due to a lower impact from stock-based compensation tax benefits.",
+          "We have strategically secured inventory and capacity to meet demand beyond the next several quarters.",
+          "The year-on-year increase reflects growth in revenue, while the sequential increase was driven by higher revenue and lower cash taxes.",
+          "Outlook Outlook for the second quarter of fiscal 2027 is as follows: • Revenue is expected to be $91.0 billion, plus or minus 2%.",
+          "We are not assuming any Data Center compute revenue from China in our outlook. • GAAP and non-GAAP gross margins are expected to be 74.9% and 75.0%, respectively, plus or minus 50 basis points. • GAAP and non-GAAP operating expenses are expected to be approximately $8.5 billion and $8.3 billion, respectively.",
+          "For the full year fiscal 2027, we expect GAAP and non-GAAP tax rates to be between 16.0% and 18.0%, excluding any discrete items and material changes to our tax environment. ______________ For further information, contact: Toshiya Hari Mylene Mangalindan Investor Relations Corporate Communications NVIDIA Corporation NVIDIA Corporation toshiyah@nvidia.com press@nvidia.com Non-GAAP Measures To supplement NVIDIA’s condensed consolidated financial statements presented in accordance with GAAP, the company uses non-GAAP measures of certain components of financial performance.",
+          "These non-GAAP measures include non-GAAP gross profit, non-GAAP gross margin, non-GAAP operating expenses, non-GAAP operating income, non-GAAP other income (expense), net, non-GAAP net income, non-GAAP net income, or earnings, per diluted share, and free cash flow.",
+          "NVIDIA is not assuming any Data Center compute revenue from China in its outlook. • GAAP and non-GAAP gross margins are expected to be 74.9% and 75.0%, respectively, plus or minus 50 basis points. • GAAP and non-GAAP operating expenses are expected to be approximately $8.5 billion and $8.3 billion, respectively."
+        ]
+      },
+      "source_ids": [
+        "sec-0001045810-26-000051"
+      ],
+      "consensus_estimates": {
+        "status": "available",
+        "as_of": "2026-08-13",
+        "source": "yfinance / Yahoo Finance analyst estimates",
+        "earnings_estimate": {
+          "0q": {
+            "avg": 2.083,
+            "low": 2.03128,
+            "high": 2.2,
+            "yearAgoEps": 1.05,
+            "numberOfAnalysts": 40,
+            "growth": 0.9838,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 2.35239,
+            "low": 2.13,
+            "high": 2.63,
+            "yearAgoEps": 1.3,
+            "numberOfAnalysts": 40,
+            "growth": 0.8095,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 8.99574,
+            "low": 8.2,
+            "high": 9.85,
+            "yearAgoEps": 4.77,
+            "numberOfAnalysts": 50,
+            "growth": 0.88589996,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 12.89043,
+            "low": 9.65,
+            "high": 16.0,
+            "yearAgoEps": 8.99574,
+            "numberOfAnalysts": 50,
+            "growth": 0.4329,
+            "currency": "USD"
+          }
+        },
+        "revenue_estimate": {
+          "0q": {
+            "avg": 91846098240,
+            "low": 90302000000,
+            "high": 96655000000,
+            "numberOfAnalysts": 42,
+            "yearAgoRevenue": 46743000000,
+            "growth": 0.96489996,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 103131206160,
+            "low": 91996000000,
+            "high": 110657391000,
+            "numberOfAnalysts": 40,
+            "yearAgoRevenue": 57006000000,
+            "growth": 0.80910003,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 393852732100,
+            "low": 358367000000,
+            "high": 415524773220,
+            "numberOfAnalysts": 53,
+            "yearAgoRevenue": 215938000000,
+            "growth": 0.8239,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 561509439870,
+            "low": 416398000000,
+            "high": 710010000000,
+            "numberOfAnalysts": 55,
+            "yearAgoRevenue": 393852732100,
+            "growth": 0.4257,
+            "currency": "USD"
+          }
+        },
+        "eps_trend": {
+          "0q": {
+            "current": 2.083,
+            "7daysAgo": 2.083,
+            "30daysAgo": 2.08,
+            "60daysAgo": 2.07925,
+            "90daysAgo": 1.95177,
+            "currency": "USD"
+          },
+          "+1q": {
+            "current": 2.35239,
+            "7daysAgo": 2.35239,
+            "30daysAgo": 2.34655,
+            "60daysAgo": 2.3463,
+            "90daysAgo": 2.17732,
+            "currency": "USD"
+          },
+          "0y": {
+            "current": 8.99574,
+            "7daysAgo": 8.99574,
+            "30daysAgo": 8.97674,
+            "60daysAgo": 8.96014,
+            "90daysAgo": 8.34053,
+            "currency": "USD"
+          },
+          "+1y": {
+            "current": 12.89043,
+            "7daysAgo": 12.89043,
+            "30daysAgo": 12.79063,
+            "60daysAgo": 12.72715,
+            "90daysAgo": 11.27388,
+            "currency": "USD"
+          }
+        },
+        "eps_revisions": {
+          "0q": {
+            "upLast7days": 2,
+            "upLast30days": 4,
+            "downLast30days": 0,
+            "downLast7Days": 0,
+            "currency": "USD"
+          },
+          "+1q": {
+            "upLast7days": 2,
+            "upLast30days": 4,
+            "downLast30days": 0,
+            "downLast7Days": 0,
+            "currency": "USD"
+          },
+          "0y": {
+            "upLast7days": 2,
+            "upLast30days": 4,
+            "downLast30days": 0,
+            "downLast7Days": 0,
+            "currency": "USD"
+          },
+          "+1y": {
+            "upLast7days": 2,
+            "upLast30days": 4,
+            "downLast30days": 0,
+            "downLast7Days": 0,
+            "currency": "USD"
+          }
+        },
+        "price_targets": {
+          "current": 224.09,
+          "high": 500.0,
+          "low": 180.0,
+          "mean": 302.82758,
+          "median": 300.0
+        }
+      },
+      "next_events": {
+        "status": "available",
+        "as_of": "2026-08-13",
+        "source": "yfinance / Yahoo Finance calendar",
+        "next_earnings_date": "2026-08-26",
+        "date_confirmed": false,
+        "confirmation_note": "Yahoo does not distinguish a company-announced date from an estimate. Treat as estimated until the IR page confirms it.",
+        "dividend_date": "2026-06-26",
+        "ex_dividend_date": "2026-06-04"
+      },
+      "market_statistics_at_cutoff": {
+        "return_1m_pct": 5.8,
+        "return_3m_pct": 1.62,
+        "return_6m_pct": 19.0,
+        "return_12m_pct": 23.25,
+        "annualized_volatility_pct": 36.76,
+        "max_drawdown_12m_pct": -20.21,
+        "avg_dollar_volume_20d_usd_m": 25969.6
+      },
+      "market_statistics_at_cutoff_as_of": "2026-08-12",
+      "market_statistics_as_of": "2026-08-13",
+      "market_statistics_refresh_status": "available",
+      "price_refresh": {
+        "status": "available",
+        "price_now": 225.3,
+        "price_as_of": "2026-08-13",
+        "price_at_cutoff": 223.96,
+        "cutoff_price_as_of": "2026-08-12",
+        "change_pct": 0.6,
+        "market_cap_now_usd_m": 5452260.3,
+        "valuation_at_price_now": {
+          "Price / Earnings": 34.1593,
+          "Earnings Yield": 2.9225,
+          "Price / Book Value": 27.8925,
+          "Parent-Attributed Free Cash Flow Yield (Proxy)": 2.1869,
+          "Lease-Exclusive Enterprise Value / Reported Operating Income": 33.5674,
+          "Enterprise Value / Issuer-Reported EBITDA": null
+        },
+        "not_rescaled": [],
+        "not_rescaled_reason": null,
+        "method": "Price-based multiples use the exact price ratio; enterprise-value multiples use exact current EV = refreshed market cap + filing-based net debt."
+      },
+      "net_debt": {
+        "status": "derived",
+        "period": "2027-Q1",
+        "as_of": "2026-04-26",
+        "unit": "million USD",
+        "debt_as_of": "2026-04-26",
+        "debt_is_from_an_older_period": false,
+        "total_debt": 8470,
+        "total_debt_basis": "reported total current debt plus long-term debt",
+        "may_be_only_part_of_the_debt": false,
+        "debt_components": {
+          "borrowings_current_total": 1000,
+          "borrowings_long_term": 7470
+        },
+        "cash_and_investments": 13237,
+        "cash_components": {
+          "cash_and_equivalents": 13237
+        },
+        "net_debt": -4767,
+        "lease_liabilities": 4344,
+        "lease_note": "Leases are kept out of net debt because the valuation engine's enterprise value is lease-exclusive. Add them only if you say you are doing so.",
+        "enterprise_value": 5447493.3,
+        "enterprise_value_basis": "market cap at the refreshed price"
+      },
+      "price_reconciliation": {
+        "multiples_computed_from": 223.96,
+        "multiples_price_as_of": "2026-08-12",
+        "consensus_block_price": 224.09,
+        "consensus_price_as_of": "2026-08-13",
+        "gap_pct": 0.06,
+        "note": "Every multiple in `valuation` uses multiples_computed_from. If you quote a multiple, quote that price and that date. Do not recompute multiples against the consensus-block price yourself -- see `price_refresh.valuation_at_price_now` for the already-rescaled figures."
+      },
+      "market_at_cutoff": {
+        "price_usd": 223.96,
+        "market_cap_usd_m": 5419832.2,
+        "as_of": "2026-08-12"
+      },
+      "valuation_at_cutoff": {
+        "Price / Earnings": 33.9561,
+        "Earnings Yield": 2.94,
+        "Price / Book Value": 27.7266,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": 2.2,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 33.3676,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "valuation_at_cutoff_as_of": "2026-08-12",
+      "market_data_as_of": "2026-08-13",
+      "valuation_as_of": "2026-08-13"
+    }
+  ],
+  "mode": "live",
+  "pack_purpose": "Deterministic numeric input for the ChatGPT Public Equity Investing plugin. Numbers here replace the plugin's paid data connectors; the plugin should use the web only for narrative and for fields marked unavailable.",
+  "consensus_as_of": "2026-08-13",
+  "intended_step": "preview",
+  "built_on": "2026-08-14",
+  "last_market_session": "2026-08-13",
+  "market_data_as_of": "2026-08-13",
+  "financial_data_cutoff": "2026-08-13T12:53:21.605685Z",
+  "blocks_omitted_for_step": {
+    "omitted": [
+      "sector_peers",
+      "own_valuation_history",
+      "roic",
+      "quarterly_series",
+      "pre_print_consensus"
+    ],
+    "reason": "Not part of the preview step's source categories. Ask for a pack built for the owning step instead of working around the gap."
+  }
+}

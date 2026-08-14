@@ -1,0 +1,405 @@
+{
+  "schema_version": 2,
+  "purpose": "Deterministic point-in-time pack built directly from workspace artifacts; no valuation report is parsed.",
+  "month": "2026-08-13-849dd686",
+  "decision_date": "2026-08-14",
+  "cutoff_instant": "2026-08-13T12:53:21.605685Z",
+  "execution_date": "2026-08-12",
+  "universe_count": 1,
+  "universe_coverage": {
+    "configured_count": 87,
+    "included_count": 87,
+    "missing_financial_artifacts": [],
+    "pipeline_skipped": {}
+  },
+  "known_limitations": [
+    "fixed current universe creates survivorship and universe-selection bias",
+    "historical consensus, transcripts, positioning and short-interest vintages are unavailable",
+    "guidance is available only where a range was extracted and both endpoints appear in the selected release",
+    "peer medians are supplied only for the comps step; do not invent them",
+    "each live layer carries its own as-of date; do not apply the financial artifact cutoff to refreshed market, consensus or event data"
+  ],
+  "companies": [
+    {
+      "ticker": "NFLX",
+      "cohort": "TechnologyPlatform",
+      "latest_reported_period": "2026-Q2 — 26 weeks ended 2026-06-30 (cumulative year-to-date)",
+      "period_label": "2026-Q2",
+      "latest_period_end": "2026-06-30",
+      "financial_publication_date": "2026-07-17",
+      "financial_age_days": 44,
+      "closing_price_usd": 78.24,
+      "market_cap_usd_m": 325786.6,
+      "market": {
+        "return_1m_pct": 6.19,
+        "return_3m_pct": -10.64,
+        "return_6m_pct": -1.73,
+        "return_12m_pct": -36.15,
+        "annualized_volatility_pct": 35.17,
+        "max_drawdown_12m_pct": -46.49,
+        "avg_dollar_volume_20d_usd_m": 3159.45
+      },
+      "fundamentals": {
+        "revenue_growth": 14.7,
+        "gross_profit_growth": 16.8,
+        "operating_profit_growth": 14.4,
+        "net_profit_growth": 44.4,
+        "operating_cash_flow_growth": 34.9,
+        "gross_margin": 51.93,
+        "operating_margin_pre_investment": 32.85,
+        "operating_margin": 32.85,
+        "net_margin": 35.0,
+        "operating_cash_flow_margin": 28.35,
+        "free_cash_flow_margin": 26.68,
+        "current_ratio": 1.142,
+        "cash_and_st_investments_to_current_liabilities": 0.752,
+        "net_working_capital": 1718.4,
+        "lease_liability_total": 2330.4,
+        "free_cash_flow": 6619.2,
+        "ocf_to_net_profit": 0.81,
+        "capex_to_revenue": 1.7
+      },
+      "valuation": {
+        "Price / Earnings": 23.8677,
+        "Earnings Yield": 4.1884,
+        "Price / Book Value": 10.8048,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": 3.4208,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 23.0588,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "deterministic_signals": {
+        "favorable": [
+          "revenue_growth_trend",
+          "operating_profit_before_investment_trend",
+          "operating_profit_including_investments_trend",
+          "net_profit_trend",
+          "operating_cash_flow_trend",
+          "free_cash_flow_trend",
+          "gross_margin_trend",
+          "net_margin_trend"
+        ],
+        "adverse": [],
+        "other": [
+          "operating_margin_trend",
+          "cash_conversion_trend",
+          "liquidity_trend",
+          "leverage_trend",
+          "lease_burden_trend",
+          "deferred_revenue_trend"
+        ]
+      },
+      "latest_earnings_release": {
+        "status": "available",
+        "filing_date": "2026-07-16",
+        "accession": "0001065280-26-000211",
+        "source_id": "sec-0001065280-26-000211",
+        "text_sha256": "87d642c8e9eef23b404de615a3f309be33b1b5770bbf12caae956c5a2195a4c7",
+        "guidance": {
+          "status": "unavailable",
+          "reason": "no historical guidance extraction"
+        },
+        "revision_language_supported": true,
+        "excerpts": [
+          "NFLX Form 8-K Item 2.02, filed 2026-07-16 EX-99.1 2 ex991_q226.htm EX-99.1 Document Exhibit 99.1 July 16, 2026 Fellow shareholders, • Our financial performance remains solid and we’re on track to meet our objectives for the year: ◦ Q2 revenue grew 13% year over year (+12% on a FX-neutral basis 1 ) to $12.6B, and operating margin was 33%.",
+          "Assumes foreign exchange rates remained constant with foreign exchange rates from each of the corresponding months of the prior-year period. 1 Q2 Results and Forecast Q2 revenue of $12.6B was in-line with forecast and grew 13% year over year (+12% on a foreign exchange (F/X) neutral basis), driven primarily by membership growth, pricing and increased ad revenue.",
+          "As we noted in previous letters, operating income in Q2 grew slower than revenue because our content amortization growth is higher in the first half of the year; we continue to expect content amortization to grow slower in the second half of the year and to increase ~10% for 2026.",
+          "For Q3, we expect revenue growth of 12% (or 11% F/X neutral) driven by growth in memberships, pricing, and ad revenue.",
+          "Our 2026 outlook is consistent with our prior forecast: we are narrowing our revenue forecast to $51.0-$51.4B, which represents 13%-14% growth (~12% F/X neutral), driven by growth in memberships and pricing, and a projected rough doubling of our ads revenue to approximately $3 billion.",
+          "Our forecast implies annual operating income growth of 20%+ for 2026.",
+          "We work every day to raise the bar on our core series and film offering, which we have successfully done since we launched streaming in 2007.",
+          "And Netflix Playground, our app for kids games, has experienced 3x growth in daily players since its launch in April, and has fueled growth in our kids mobile games engagement, which is up 600% year over year 9 .",
+          "We are increasingly leveraging these tools to deliver higher quality output more quickly and at a lower cost than traditional methods.",
+          "YTD 2026 As Reported Revenue $ 24,809,695 Operating Expenses 16,660,088 Operating Profit $ 8,149,607 Operating Margin 32.8 % FX Impact Revenue $ 87,127 Operating Expenses 20,139 Operating Profit $ 66,988 Adjusted* Revenue $ 24,722,568 Operating Expenses 16,639,949 Operating Profit $ 8,082,619 Operating Margin 32.7 % * Based on F/X rates at the beginning of each year including our F/X hedges at that time."
+        ]
+      },
+      "source_ids": [
+        "sec-0001065280-26-000211"
+      ],
+      "consensus_estimates": {
+        "status": "available",
+        "as_of": "2026-08-13",
+        "source": "yfinance / Yahoo Finance analyst estimates",
+        "earnings_estimate": {
+          "0q": {
+            "avg": 0.82233,
+            "low": 0.79,
+            "high": 0.87,
+            "yearAgoEps": 0.587,
+            "numberOfAnalysts": 34,
+            "growth": 0.4009,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 0.72953,
+            "low": 0.67,
+            "high": 0.82,
+            "yearAgoEps": 0.56,
+            "numberOfAnalysts": 32,
+            "growth": 0.3027,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 3.58322,
+            "low": 3.51,
+            "high": 3.69,
+            "yearAgoEps": 2.53,
+            "numberOfAnalysts": 40,
+            "growth": 0.4163,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 3.81213,
+            "low": 3.48,
+            "high": 4.09,
+            "yearAgoEps": 3.58322,
+            "numberOfAnalysts": 45,
+            "growth": 0.0639,
+            "currency": "USD"
+          }
+        },
+        "revenue_estimate": {
+          "0q": {
+            "avg": 12880047060,
+            "low": 12804000000,
+            "high": 13030000000,
+            "numberOfAnalysts": 38,
+            "yearAgoRevenue": 11510307000,
+            "growth": 0.118999995,
+            "currency": "USD"
+          },
+          "+1q": {
+            "avg": 13533335420,
+            "low": 13297000000,
+            "high": 13722000000,
+            "numberOfAnalysts": 37,
+            "yearAgoRevenue": 12050762000,
+            "growth": 0.123,
+            "currency": "USD"
+          },
+          "0y": {
+            "avg": 51219495630,
+            "low": 50954000000,
+            "high": 51513430150,
+            "numberOfAnalysts": 46,
+            "yearAgoRevenue": 45183036000,
+            "growth": 0.1336,
+            "currency": "USD"
+          },
+          "+1y": {
+            "avg": 57004492440,
+            "low": 55889000000,
+            "high": 58333158000,
+            "numberOfAnalysts": 45,
+            "yearAgoRevenue": 51219495630,
+            "growth": 0.1129,
+            "currency": "USD"
+          }
+        },
+        "eps_trend": {
+          "0q": {
+            "current": 0.82233,
+            "7daysAgo": 0.82119,
+            "30daysAgo": 0.84195,
+            "60daysAgo": 0.84225,
+            "90daysAgo": 0.84225,
+            "currency": "USD"
+          },
+          "+1q": {
+            "current": 0.72953,
+            "7daysAgo": 0.72921,
+            "30daysAgo": 0.73768,
+            "60daysAgo": 0.73705,
+            "90daysAgo": 0.73705,
+            "currency": "USD"
+          },
+          "0y": {
+            "current": 3.58322,
+            "7daysAgo": 3.58135,
+            "30daysAgo": 3.59028,
+            "60daysAgo": 3.59207,
+            "90daysAgo": 3.59232,
+            "currency": "USD"
+          },
+          "+1y": {
+            "current": 3.81213,
+            "7daysAgo": 3.81326,
+            "30daysAgo": 3.83084,
+            "60daysAgo": 3.82672,
+            "90daysAgo": 3.82763,
+            "currency": "USD"
+          }
+        },
+        "eps_revisions": {
+          "0q": {
+            "upLast7days": 2,
+            "upLast30days": 8,
+            "downLast30days": 20,
+            "downLast7Days": 2,
+            "currency": "USD"
+          },
+          "+1q": {
+            "upLast7days": 1,
+            "upLast30days": 9,
+            "downLast30days": 17,
+            "downLast7Days": 1,
+            "currency": "USD"
+          },
+          "0y": {
+            "upLast7days": 3,
+            "upLast30days": 12,
+            "downLast30days": 23,
+            "downLast7Days": 1,
+            "currency": "USD"
+          },
+          "+1y": {
+            "upLast7days": 4,
+            "upLast30days": 13,
+            "downLast30days": 24,
+            "downLast7Days": 4,
+            "currency": "USD"
+          }
+        },
+        "price_targets": {
+          "current": 74.21,
+          "high": 135.0,
+          "low": 70.0,
+          "mean": 94.03667,
+          "median": 93.0
+        }
+      },
+      "next_events": {
+        "status": "available",
+        "as_of": "2026-08-13",
+        "source": "yfinance / Yahoo Finance calendar",
+        "next_earnings_date": "2026-10-20",
+        "date_confirmed": false,
+        "confirmation_note": "Yahoo does not distinguish a company-announced date from an estimate. Treat as estimated until the IR page confirms it.",
+        "dividend_date": null,
+        "ex_dividend_date": null
+      },
+      "transaction_filing_history": {
+        "status": "transaction-related filing history; current status not determined",
+        "current_transaction_status": "not determined from filing-form history",
+        "verification_required": true,
+        "filing_count": 21,
+        "first_filing": "2025-12-05",
+        "latest_filing": "2026-01-16",
+        "forms": [
+          "425"
+        ],
+        "filing_role_indicator": "not determinable from form mix",
+        "filing_role_basis": "filed neither form, or both",
+        "not_established_by_pack": "Whether a transaction remains pending, completed, terminated or superseded; deal terms, consideration, counterparty, closing timetable and regulatory status. Filing-form history alone does not establish current transaction status."
+      },
+      "special_situations": {
+        "status": "context only",
+        "context": [
+          {
+            "date": "2025-11-14",
+            "item": "5.03",
+            "meaning": "amended articles/bylaws, or a change of fiscal year"
+          }
+        ]
+      },
+      "market_statistics_at_cutoff": {
+        "return_1m_pct": 0.92,
+        "return_3m_pct": -15.34,
+        "return_6m_pct": -9.73,
+        "return_12m_pct": 509.12,
+        "annualized_volatility_pct": 892.51,
+        "max_drawdown_12m_pct": -40.75,
+        "avg_dollar_volume_20d_usd_m": 3285.96
+      },
+      "market_statistics_at_cutoff_as_of": "2026-08-12",
+      "market_statistics_as_of": "2026-08-13",
+      "market_statistics_refresh_status": "available",
+      "price_refresh": {
+        "status": "available",
+        "price_now": 78.24,
+        "price_as_of": "2026-08-13",
+        "price_at_cutoff": 74.14,
+        "cutoff_price_as_of": "2026-08-12",
+        "change_pct": 5.53,
+        "market_cap_now_usd_m": 325786.6,
+        "valuation_at_price_now": {
+          "Price / Earnings": 23.8677,
+          "Earnings Yield": 4.1884,
+          "Price / Book Value": 10.8048,
+          "Parent-Attributed Free Cash Flow Yield (Proxy)": 3.4208,
+          "Lease-Exclusive Enterprise Value / Reported Operating Income": 23.0588,
+          "Enterprise Value / Issuer-Reported EBITDA": null
+        },
+        "not_rescaled": [],
+        "not_rescaled_reason": null,
+        "method": "Price-based multiples use the exact price ratio; enterprise-value multiples use exact current EV = refreshed market cap + filing-based net debt."
+      },
+      "net_debt": {
+        "status": "derived",
+        "period": "2026-Q2",
+        "as_of": "2026-06-30",
+        "unit": "million USD",
+        "debt_as_of": "2026-06-30",
+        "debt_is_from_an_older_period": false,
+        "total_debt": 14309.3,
+        "total_debt_basis": "sum of the reported components",
+        "may_be_only_part_of_the_debt": false,
+        "debt_components": {
+          "borrowings_short_term": 2483.8,
+          "borrowings_long_term": 11825.5
+        },
+        "cash_and_investments": 9127.9,
+        "cash_components": {
+          "cash_and_equivalents": 9099.2,
+          "financial_investments_current": 28.7
+        },
+        "net_debt": 5181.4,
+        "lease_liabilities": 2330.4,
+        "lease_note": "Leases are kept out of net debt because the valuation engine's enterprise value is lease-exclusive. Add them only if you say you are doing so.",
+        "enterprise_value": 330968.0,
+        "enterprise_value_basis": "market cap at the refreshed price"
+      },
+      "price_reconciliation": {
+        "multiples_computed_from": 74.14,
+        "multiples_price_as_of": "2026-08-12",
+        "consensus_block_price": 74.21,
+        "consensus_price_as_of": "2026-08-13",
+        "gap_pct": 0.09,
+        "note": "Every multiple in `valuation` uses multiples_computed_from. If you quote a multiple, quote that price and that date. Do not recompute multiples against the consensus-block price yourself -- see `price_refresh.valuation_at_price_now` for the already-rescaled figures."
+      },
+      "market_at_cutoff": {
+        "price_usd": 74.14,
+        "market_cap_usd_m": 308714.5,
+        "as_of": "2026-08-12"
+      },
+      "valuation_at_cutoff": {
+        "Price / Earnings": 22.617,
+        "Earnings Yield": 4.42,
+        "Price / Book Value": 10.2386,
+        "Parent-Attributed Free Cash Flow Yield (Proxy)": 3.61,
+        "Lease-Exclusive Enterprise Value / Reported Operating Income": 21.8694,
+        "Enterprise Value / Issuer-Reported EBITDA": null
+      },
+      "valuation_at_cutoff_as_of": "2026-08-12",
+      "market_data_as_of": "2026-08-13",
+      "valuation_as_of": "2026-08-13"
+    }
+  ],
+  "mode": "live",
+  "pack_purpose": "Deterministic numeric input for the ChatGPT Public Equity Investing plugin. Numbers here replace the plugin's paid data connectors; the plugin should use the web only for narrative and for fields marked unavailable.",
+  "consensus_as_of": "2026-08-13",
+  "intended_step": "preview",
+  "built_on": "2026-08-14",
+  "last_market_session": "2026-08-13",
+  "market_data_as_of": "2026-08-13",
+  "financial_data_cutoff": "2026-08-13T12:53:21.605685Z",
+  "blocks_omitted_for_step": {
+    "omitted": [
+      "sector_peers",
+      "own_valuation_history",
+      "roic",
+      "quarterly_series",
+      "pre_print_consensus"
+    ],
+    "reason": "Not part of the preview step's source categories. Ask for a pack built for the owning step instead of working around the gap."
+  }
+}
