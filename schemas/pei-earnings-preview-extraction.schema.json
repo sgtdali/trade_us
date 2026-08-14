@@ -6,9 +6,10 @@
   "additionalProperties": false,
   "required": [
     "expectation_bar", "stock_moving_kpis", "position_action",
-    "call_question_falsifiers"
+    "call_question_falsifiers", "next_route"
   ],
   "properties": {
+    "next_route": {"type": ["string", "null"]},
     "expectation_bar": {
       "type": "array",
       "items": {

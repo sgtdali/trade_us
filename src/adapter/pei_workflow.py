@@ -1130,10 +1130,11 @@ WORKFLOW_EXTRACTION = {
         "task": (
             "Asagidaki metin bir earnings-preview ciktisidir. Beklenti "
             "cubugunu (metrik + esik), 3-6 hisse-hareket ettirici KPI'yi, "
-            "pozisyon aksiyonunu ve call-question falsifier'larini semaya "
-            "uygun JSON olarak cikar. position_action alani icin YALNIZ su "
-            "degerlerden birini kullan: add, press, hold, trim, exit, "
-            "hedge, watchlist, wait_for_proof -- metinde acikca yoksa null."
+            "pozisyon aksiyonunu, call-question falsifier'larini ve onerilen "
+            "sonraki adimi (next_route) semaya uygun JSON olarak cikar. "
+            "position_action alani icin YALNIZ su degerlerden birini kullan: "
+            "add, press, hold, trim, exit, hedge, watchlist, wait_for_proof "
+            "-- metinde acikca yoksa null."
         ),
     },
     "comps": {
