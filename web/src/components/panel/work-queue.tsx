@@ -93,6 +93,38 @@ export function WorkItemDetail({ item, onDone }: { item: NextItem; onDone: () =>
     }
   }, [item]);
 
+  const [codexRunning, setCodexRunning] = useState(false);
+
+  const runCodexAuto = useCallback(async () => {
+    setCodexRunning(true);
+    try {
+      const data = await callApi<{ result_path: string }>("/api/run-codex", {
+        run_id: item.run_id,
+        work_item_id: item.work_item_id,
+      });
+      toast.success(`Codex analizi tamamlandı: ${data.result_path}`);
+      const content = await callApi<{ content: string }>(
+        `/api/artifact?path=${encodeURIComponent(data.result_path)}`,
+      );
+      setResultText(content.content);
+      try {
+        const draftRes = await callApi<{ draft_json: string }>("/api/generate-draft", {
+          run_id: item.run_id,
+          work_item_id: item.work_item_id,
+        });
+        setDraftText(draftRes.draft_json);
+        toast.success("Taslak dolduruldu — onaylamadan önce gözden geçirin");
+      } catch {
+        // non-blocking
+      }
+      onDone();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Codex çalıştırılamadı");
+    } finally {
+      setCodexRunning(false);
+    }
+  }, [item, onDone]);
+
   const submitAttach = useCallback(async () => {
     if (!resultText.trim()) {
       toast.error("Yapıştırılan analiz sonucu boş olamaz");
@@ -130,10 +162,24 @@ export function WorkItemDetail({ item, onDone }: { item: NextItem; onDone: () =>
   const submitValidate = useCallback(async () => {
     setBusy(true);
     try {
+      // draftText bos olabilir: sonuc bu oturumun disinda (ör. otomatik
+      // codex/agy akisiyla) uretilmis olabilir, bu durumda state hic
+      // doldurulmamis olur. Bos string'i dogrudan backend'e gondermek
+      // "draft cannot be read: Expecting value" hatasina yol aciyordu --
+      // once taze taslagi kendimiz cekelim.
+      let draft = draftText;
+      if (!draft.trim()) {
+        const draftRes = await callApi<{ draft_json: string }>("/api/generate-draft", {
+          run_id: item.run_id,
+          work_item_id: item.work_item_id,
+        });
+        draft = draftRes.draft_json;
+        setDraftText(draft);
+      }
       const data = await callApi<{ report: ValidationReport }>("/api/validate", {
         run_id: item.run_id,
         work_item_id: item.work_item_id,
-        draft: draftText,
+        draft,
       });
       setValidation(data.report);
       if (data.report.status === "rejected") {
@@ -149,6 +195,10 @@ export function WorkItemDetail({ item, onDone }: { item: NextItem; onDone: () =>
   }, [item, draftText]);
 
   const submitApprove = useCallback(async () => {
+    if (!draftText.trim() || validation?.status !== "valid") {
+      toast.error("Önce taslağı doğrulayın (Validate) — yalnız geçerli bir taslak kaydedilebilir");
+      return;
+    }
     setBusy(true);
     try {
       const data = await callApi<{ approved_path: string }>("/api/approve", {
@@ -163,7 +213,7 @@ export function WorkItemDetail({ item, onDone }: { item: NextItem; onDone: () =>
     } finally {
       setBusy(false);
     }
-  }, [item, draftText, onDone]);
+  }, [item, draftText, validation, onDone]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -307,12 +357,34 @@ export function WorkItemDetail({ item, onDone }: { item: NextItem; onDone: () =>
               <Sparkles className="h-4 w-4 text-sky-500" />
               Adım 2: ChatGPT / LLM Analiz Sonucunu Bağla
             </div>
-            {resultText && (
-              <span className="text-[11px] font-mono text-muted-foreground">
-                {resultText.length} karakter
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {resultText && (
+                <span className="text-[11px] font-mono text-muted-foreground">
+                  {resultText.length} karakter
+                </span>
+              )}
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={runCodexAuto}
+                disabled={codexRunning || busy}
+                className="h-7 text-xs gap-1.5 border-violet-500/40 text-violet-500 hover:bg-violet-500/10 font-medium"
+              >
+                {codexRunning ? (
+                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Terminal className="h-3.5 w-3.5" />
+                )}
+                Codex ile Otomatik Çalıştır
+              </Button>
+            </div>
           </div>
+
+          {codexRunning && (
+            <p className="text-[11px] text-muted-foreground">
+              codex CLI web aramasıyla çalışıyor, birkaç dakika sürebilir...
+            </p>
+          )}
 
           <Textarea
             placeholder="ChatGPT veya LLM'den aldığınız yanıt çıktısını buraya yapıştırın..."
@@ -370,7 +442,12 @@ export function WorkItemDetail({ item, onDone }: { item: NextItem; onDone: () =>
               <Sparkles className="h-3.5 w-3.5 text-amber-500" />
               Doğrula (Validate)
             </Button>
-            <Button size="sm" onClick={submitApprove} disabled={busy} className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Button
+              size="sm"
+              onClick={submitApprove}
+              disabled={busy || validation?.status !== "valid"}
+              className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
               <CheckCircle2 className="h-3.5 w-3.5" />
               Onayla ve Kaydet (Approve)
             </Button>

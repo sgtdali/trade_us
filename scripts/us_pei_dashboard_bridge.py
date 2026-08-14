@@ -27,6 +27,7 @@ from adapter.pei_workflow import (  # noqa: E402
     project,
     read_events,
     refresh_trigger_data,
+    run_codex_analysis,
     safe_repo_path,
     start_idea,
     validate_draft,
@@ -103,6 +104,13 @@ def cmd_attach_result(args: dict) -> dict:
     write_text_atomic(source, text)
     target = attach_result(
         args["run_id"], source, repo_root=REPO, work_item_id=args.get("work_item_id") or None,
+    )
+    return {"result_path": target.relative_to(REPO).as_posix()}
+
+
+def cmd_run_codex(args: dict) -> dict:
+    target = run_codex_analysis(
+        args["run_id"], repo_root=REPO, work_item_id=args.get("work_item_id") or None,
     )
     return {"result_path": target.relative_to(REPO).as_posix()}
 
@@ -231,6 +239,7 @@ COMMANDS = {
     "artifact": cmd_artifact,
     "prepare": cmd_prepare,
     "attach-result": cmd_attach_result,
+    "run-codex": cmd_run_codex,
     "validate": cmd_validate,
     "approve": cmd_approve,
     "events": cmd_events,

@@ -42,6 +42,12 @@
       "required_workflows": [],
       "allowed_next": ["pitch", "thesis_tracker"],
       "result_contract": "scenario_ranges_and_pm_action_thresholds"
+    },
+    "initiating_coverage": {
+      "pack_step": "initiation",
+      "required_workflows": [],
+      "allowed_next": ["pitch", "thesis_tracker"],
+      "result_contract": "initiation_thesis_valuation_and_underwriting_status"
     }
   }
 }

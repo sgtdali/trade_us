@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trade-us.local/schemas/pei-initiating-coverage-extraction.schema.json",
+  "title": "PEI initiating-coverage extraction (agy structured output)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "research_view", "target_price", "current_price", "upside_pct",
+    "underwriting_status", "evidence_confidence", "thesis_pillars",
+    "kill_criteria", "next_route"
+  ],
+  "properties": {
+    "research_view": {"type": ["string", "null"]},
+    "target_price": {"type": ["number", "null"]},
+    "current_price": {"type": ["number", "null"]},
+    "upside_pct": {"type": ["number", "null"]},
+    "underwriting_status": {"type": ["string", "null"]},
+    "evidence_confidence": {"type": ["string", "null"]},
+    "thesis_pillars": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "kill_criteria": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "next_route": {"type": ["string", "null"]}
+  }
+}

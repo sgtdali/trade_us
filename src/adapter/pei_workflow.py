@@ -439,14 +439,31 @@ def project(events: Iterable[dict[str, Any]]) -> dict[str, Any]:
                     f"unsupported route: {payload.get('suggested_workflow')}"
                 )
             elif bucket == "B":
-                candidate["next_workflow"] = None
-                candidate["state"] = "waiting" if (
-                    payload.get("triggers") or payload.get("manual_review_date")
-                ) else "blocked"
-                candidate["status_reason"] = (
-                    f"manual review due {payload.get('manual_review_date')}"
-                    if payload.get("manual_review_date") else "waiting for trigger"
-                )
+                # B, "hicbir sey yapma, tarihi bekle" degil -- agy'nin B icin
+                # bulduğu spesifik eksik-kapatici rota (ör. financials-
+                # normalizer, comps-valuation, earnings-preview, scenario)
+                # varsa hemen calistirilir; sonucu A'ya terfi ya da
+                # thesis-tracker'a (izlemede kal) karar verir. Rota yoksa
+                # (agy hicbir sey onermedi ya da kataloğumuzda karsiligi
+                # yoksa) eskisi gibi trigger/manual_review_date'i bekler --
+                # o guvenlik agi kaldirilmadi, yalniz rota varken artik
+                # oncelikli degil.
+                mapped = payload.get("mapped_workflow")
+                if mapped:
+                    candidate["next_workflow"] = mapped
+                    candidate["state"] = "ready"
+                    candidate["status_reason"] = (
+                        f"B bucket -- watchlist research: {payload.get('suggested_workflow')}"
+                    )
+                else:
+                    candidate["next_workflow"] = None
+                    candidate["state"] = "waiting" if (
+                        payload.get("triggers") or payload.get("manual_review_date")
+                    ) else "blocked"
+                    candidate["status_reason"] = (
+                        f"manual review due {payload.get('manual_review_date')}"
+                        if payload.get("manual_review_date") else "waiting for trigger"
+                    )
             else:
                 candidate["next_workflow"] = None
                 candidate["state"] = "deprioritized"
@@ -506,6 +523,28 @@ def project(events: Iterable[dict[str, Any]]) -> dict[str, Any]:
             candidate["next_workflow"] = None
         elif event_type == "source_interpretation_corrected":
             candidate["corrections"].append(payload)
+            # Bir duzeltme, orijinal candidate_screened'in rotasini da
+            # degistirebilir -- ör. o an kataloğumuzda olmayan bir skill
+            # (initiating-coverage gibi) sonradan eklendiginde, eski
+            # kaydi EZMEDEN (append-only) rotayi guncel kataloga gore
+            # yeniden turetiriz. `mapped_workflow` payload'da varsa
+            # candidate_screened'deki A/B mantigiyla ayni sekilde
+            # next_workflow/state yeniden hesaplanir.
+            if "promoted_to" in payload:
+                # B->A otomatik terfi (evaluate_promotion). Insan onayi
+                # yok -- karar agy'nin resolved/unresolved/indeterminate
+                # ciktisina dayanir, bu event onu kalici hale getirir.
+                candidate["bucket"] = payload.get("promoted_to")
+            if "mapped_workflow" in payload:
+                mapped = payload.get("mapped_workflow")
+                candidate["target_workflow"] = mapped
+                if candidate.get("bucket") in ("A", "B"):
+                    candidate["next_workflow"] = mapped
+                    candidate["state"] = "ready" if mapped else candidate["state"]
+                    candidate["status_reason"] = (
+                        payload.get("reason")
+                        or (f"corrected route: {mapped}" if mapped else candidate["status_reason"])
+                    )
         elif event_type == "thesis_opened":
             candidate["state"] = "thesis_opened"
             candidate["next_workflow"] = None
@@ -718,6 +757,182 @@ def attach_result(
     return target
 
 
+# Katalog workflow'undan eklentideki gercek skill klasoru adina esleme.
+# config/pei-workflows.json'daki her workflow, plugin'in skills/ altinda
+# ayni islevi goren bir klasore karsilik gelir (isimler farkli yazilir).
+STEP_TO_SKILL = {
+    "idea": "idea-generation",
+    "tearsheet": "company-tearsheet",
+    "earnings_preview": "earnings-preview",
+    "earnings_deep_dive": "earnings-deep-dive",
+    "comps": "comps-valuation",
+    "pitch": "long-short-pitch",
+    "thesis_tracker": "thesis-tracker",
+    "scenario": "scenario-sensitivity-generator",
+    "initiating_coverage": "initiating-coverage",
+}
+
+CODEX_ANALYSIS_TIMEOUT_SECONDS = 900
+
+# Skill -> (model, reasoning effort). Gorevin karmasikligina/hata maliyetine
+# gore secildi -- yalniz maliyet degil. Terra = gpt-5.6-terra (dengeli,
+# fact-gathering + orta senteze uygun), Sol = gpt-5.6-sol (frontier; yatirim
+# karari/model mimarisi/hata-avlama gibi hata maliyeti yuksek isler), Luna =
+# gpt-5.6-luna (hizli/ucuz; tekrarlayan izleme veya dusuk-riskli isler).
+# `codex -c model_reasoning_effort=<level>` ile verilir (--effort diye ayri
+# bir bayrak yok, agy'nin bayragiyla karistirilmasin). Kataloğumuzda henuz
+# olmayan skill'ler de dahil -- eklendikce hazir olsun diye.
+SKILL_MODEL_CONFIG: dict[str, tuple[str, str]] = {
+    "idea-generation": ("gpt-5.6-terra", "high"),
+    "company-tearsheet": ("gpt-5.6-terra", "medium"),
+    "financials-normalizer": ("gpt-5.6-terra", "high"),
+    "initiating-coverage": ("gpt-5.6-sol", "xhigh"),
+    "earnings-preview": ("gpt-5.6-sol", "high"),
+    "earnings-deep-dive": ("gpt-5.6-sol", "high"),
+    "comps-valuation": ("gpt-5.6-terra", "high"),
+    "three-statement-model-builder": ("gpt-5.6-sol", "xhigh"),
+    "dcf-model-builder": ("gpt-5.6-sol", "high"),
+    "equity-model-update": ("gpt-5.6-terra", "high"),
+    "model-audit-tieout": ("gpt-5.6-sol", "xhigh"),
+    "scenario-sensitivity-generator": ("gpt-5.6-terra", "high"),
+    "event-driven-analyzer": ("gpt-5.6-sol", "xhigh"),
+    "economic-impact-report": ("gpt-5.6-sol", "high"),
+    "long-short-pitch": ("gpt-5.6-sol", "xhigh"),
+    "portfolio-risk-management": ("gpt-5.6-sol", "xhigh"),
+    "thesis-tracker": ("gpt-5.6-luna", "medium"),
+    "catalyst-calendar": ("gpt-5.6-luna", "low"),
+    "memo-builder": ("gpt-5.6-sol", "high"),
+    "meeting-prep": ("gpt-5.6-terra", "medium"),
+    "deck-report-qc": ("gpt-5.6-terra", "high"),
+    "user-context": ("gpt-5.6-luna", "low"),
+}
+CODEX_MODEL_DEFAULT: tuple[str, str] = ("gpt-5.6-sol", "high")
+
+
+def _find_pei_plugin_root() -> Path | None:
+    """~/.codex/plugins/cache altindaki public-equity-investing eklenti kokunu bulur.
+
+    Surum klasoru (ör. 0.1.31) makineden makineye ve zamanla degisir; en
+    yuksek surumu secer. PEI_PLUGIN_ROOT ortam degiskeni ile override
+    edilebilir.
+    """
+    override = os.environ.get("PEI_PLUGIN_ROOT")
+    if override:
+        path = Path(override)
+        return path if path.is_dir() else None
+    base = (Path.home() / ".codex" / "plugins" / "cache" / "openai-curated-remote"
+            / "public-equity-investing")
+    if not base.is_dir():
+        return None
+    versions = sorted((p for p in base.iterdir() if p.is_dir()), key=lambda p: p.name)
+    return versions[-1] if versions else None
+
+
+def run_codex_analysis(
+    run_id: str,
+    *,
+    repo_root: Path,
+    work_item_id: str | None = None,
+    timeout: int = CODEX_ANALYSIS_TIMEOUT_SECONDS,
+    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> Path:
+    """codex CLI (ChatGPT/Codex, gercek PEI eklentisiyle) calistirip ciktiyi kaydeder.
+
+    Tarayicida ChatGPT'ye pack.json + instructions.md yapistirip cevabi elle
+    kopyalamanin otomatik esdegeri. pack.json/instructions.md zaten hazir
+    olmali (start_idea / prepare_work_item). Eklenti Codex CLI'da resmi bir
+    marketplace olarak kayitli degil (yalnizca disk uzerinde bir cache), bu
+    yuzden --add-dir ile eklenti kokune dosya-sistemi erisimi verilip ilgili
+    SKILL.md'yi kendi okumasi istenir; boylece skill'in kendi operating
+    rules/output contract'i (sadece bizim instructions.md'miz degil) gercekten
+    uygulanir. Rota onerileri kataloğumuzda olmayan gercek skill isimlerine
+    (ör. equity-model-update) cikabilir -- bilinerek serbest birakildi,
+    generate_draft_events'teki route_unsupported/manual_review_required kapisi
+    bunu zaten guvenli sekilde yakalar.
+
+    Donen result.md, elle yapistirilanla ayni yoldan (attach_result ->
+    generate_draft_events -> agy cikarimi -> validate_draft -> approve_draft)
+    gecer; bu fonksiyon yalniz "sonucu nasil ürettik" kismini degistirir.
+    """
+    events = read_events(repo_root)
+    projection = project(events)
+    if work_item_id:
+        work_item = projection["work_items"].get(work_item_id)
+        if not work_item or work_item["run_id"] != run_id:
+            raise PeiWorkflowError(f"unknown work item for run: {work_item_id}")
+        artifact_dir = safe_repo_path(repo_root, work_item["artifact_dir"])
+        workflow = work_item["workflow"]
+    else:
+        run = projection["runs"].get(run_id)
+        if not run or not run.get("artifact_dir"):
+            raise PeiWorkflowError(f"unknown run: {run_id}")
+        artifact_dir = safe_repo_path(repo_root, run["artifact_dir"])
+        workflow = "idea"
+
+    pack_path = artifact_dir / "pack.json"
+    instructions_path = artifact_dir / "instructions.md"
+    if not pack_path.is_file() or not instructions_path.is_file():
+        raise PeiWorkflowError(f"pack.json/instructions.md bulunamadi: {artifact_dir}")
+
+    skill_name = STEP_TO_SKILL.get(workflow)
+    if not skill_name:
+        raise PeiWorkflowError(f"codex icin skill eslesmesi yok: {workflow}")
+
+    plugin_root = _find_pei_plugin_root()
+    if plugin_root is None:
+        raise PeiWorkflowError(
+            "public-equity-investing eklenti koku bulunamadi "
+            "(~/.codex/plugins/cache/openai-curated-remote/public-equity-investing). "
+            "PEI_PLUGIN_ROOT ortam degiskeniyle elle belirtin."
+        )
+    skill_path = plugin_root / "skills" / skill_name / "SKILL.md"
+    if not skill_path.is_file():
+        raise PeiWorkflowError(f"SKILL.md bulunamadi: {skill_path}")
+
+    output_file = artifact_dir / "codex-result.md"
+    prompt = (
+        f"Your PEI plugin skill files live at {plugin_root}. Load and follow "
+        f"{skill_path} (and any shared contracts/playbooks it references, "
+        "such as ../public-equity-investing/SKILL.md and ../../shared/ "
+        "files) for analytical method and operating rules. Then, in your "
+        "working directory, read instructions.md and pack.json and complete "
+        "the task exactly as instructions.md specifies -- instructions.md "
+        "governs deliverable format, scope and source-of-truth rules; "
+        "SKILL.md governs how to do the analysis. Use web search for news, "
+        "events and commentary the pack does not contain."
+    )
+
+    model, effort = SKILL_MODEL_CONFIG.get(skill_name, CODEX_MODEL_DEFAULT)
+
+    # shell=True gerekli: codex Windows'ta npm .cmd sarmalayicisi olarak
+    # kurulu, shell=False CreateProcess PATHEXT'i cozemiyor (FileNotFoundError).
+    # Prompt argv yerine stdin'den verilir -- cmd.exe'nin &, %, ^ gibi ozel
+    # karakterleri argv icinde bozma riskini tamamen ortadan kaldirir.
+    # --model/-c model_reasoning_effort GLOBAL bayraklar, "exec"ten ONCE
+    # gelmeli (--search ile ayni yer) -- exec'in kendi --effort'u yok.
+    command = [
+        "codex", "--search", "-m", model, "-c", f"model_reasoning_effort={effort}",
+        "exec", "-C", str(artifact_dir), "--add-dir", str(plugin_root),
+        "-s", "read-only", "-o", str(output_file), "-",
+    ]
+    try:
+        completed = runner(
+            command, cwd=repo_root, input=prompt, text=True, capture_output=True,
+            encoding="utf-8", timeout=timeout, shell=True,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise PeiWorkflowError(f"codex CLI calistirilamadi: {exc}") from exc
+    if completed.returncode != 0:
+        raise PeiWorkflowError(
+            f"codex CLI basarisiz (exit {completed.returncode}): "
+            f"{(completed.stderr or completed.stdout).strip()[:1000]}"
+        )
+    if not output_file.is_file() or not output_file.read_text(encoding="utf-8").strip():
+        raise PeiWorkflowError("codex bir sonuc dosyasi uretmedi")
+
+    return attach_result(run_id, output_file, repo_root=repo_root, work_item_id=work_item_id)
+
+
 AGY_MODEL = "gemini-3.6-flash-medium"
 # Windows komut satiri sinirinin (~32767 kar) altinda kalmak icin guvenli tavan.
 AGY_MAX_INLINE_CHARS = 24000
@@ -845,6 +1060,58 @@ def extract_candidates_via_agy(
     return structured["candidates"]
 
 
+# B kokenli bir aday, hicbir zaman A'ya terfi etmeden bu "karar katmani"
+# skill'lerine gecemez -- comps/earnings-preview/scenario gibi arastirma
+# adimlarinin kendi "next_route" onerisine korlemene guvenmek, idea-
+# generation'in B siniflandirmasini dolanmis olurdu (bkz. ADBE ornegi:
+# comps "pitch dusunulebilir" dedi diye otomatik pitch'e gecmek).
+GATED_DECISION_WORKFLOWS = {"pitch", "portfolio_risk_management", "memo_builder"}
+# Terfi kosulu saglanmadiginda (unresolved/indeterminate) B, insanla
+# beklemek yerine otomatik olarak izleme hattina duser.
+PROMOTION_FALLBACK_WORKFLOW = "thesis_tracker"
+
+
+def evaluate_promotion(
+    repo_root: Path,
+    *,
+    b_reason_text: str,
+    evidence_text: str,
+    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> dict[str, Any]:
+    """B->A terfi kapisini insansiz degerlendirir (agy, Gemini flash).
+
+    Workflow'un kendi "next_route" onerisine (ör. "pitch dusunulebilir")
+    guvenmek yerine, idea-generation'in B'ye sebep olan orijinal gerekcesini
+    (b_reason_text) yeni adimin urettigi somut kanitla (evidence_text)
+    karsilastirip resolved/unresolved/indeterminate karari verdirir. Workflow
+    kendi kendini "cozuldu" ilan etmez -- bu ayri, kucuk ve ucuz bir agy
+    cagrisidir (web aramasi yok, Sol/Terra degil).
+    """
+    combined = (
+        "=== B siniflandirmasinin orijinal gerekcesi (idea-generation) ===\n"
+        + b_reason_text
+        + "\n\n=== Yeni workflow'un urettigi kanit ===\n"
+        + evidence_text
+    )
+    return call_agy_structured(
+        repo_root,
+        task=(
+            "Asagida iki blok var: once bir hissenin neden 'B -- watchlist' "
+            "kovasina dustugunun orijinal gerekcesi, sonra o gerekceyi "
+            "kapatmak icin calistirilan bir arastirma adiminin urettigi "
+            "kanit. GOREV: orijinal B gerekcesindeki engel/soru, ikinci "
+            "bloktaki somut kanitla gercekten kapandi mi? Yalniz ikinci "
+            "bloktaki metinde acikca yazan kanita dayan, yorum katma ya da "
+            "kendi gorusunu uydurma. Kanit net ve olumluysa 'resolved', "
+            "engel hala gecerliyse 'unresolved', kanit yetersiz/belirsizse "
+            "'indeterminate' don. confidence 0-1 arasi bir sayi olsun."
+        ),
+        result_text=combined,
+        schema_filename="pei-promotion-evaluation-extraction.schema.json",
+        runner=runner,
+    )
+
+
 # Her workflow tipinin docs/pei-workflow.md SS3'te tanimli, farkli "Kaydet"
 # alanlari var. Skill'in kendi kapali sozlugune sahip oldugu yerlerde semadaki
 # enum bunu yansitir; serbest metin alanlar duzyazi kalir.
@@ -900,6 +1167,19 @@ WORKFLOW_EXTRACTION = {
             "cikar, bir alan metinde yoksa null birak, uydurma."
         ),
     },
+    "initiating_coverage": {
+        "schema": "pei-initiating-coverage-extraction.schema.json",
+        "task": (
+            "Asagidaki metin bir initiating-coverage ciktisidir. Arastirma "
+            "gorusunu, hedef fiyati, cari fiyati, yukselis yuzdesini, "
+            "underwriting durumunu (ör. preliminary initiation underwrite, "
+            "watchlist initiation, full initiation), kanit guvenini, tez "
+            "sutunlarini (thesis_pillars), tezi curutecek kanitlari "
+            "(kill_criteria) ve onerilen sonraki adimi semaya uygun JSON "
+            "olarak cikar. Yalniz metinde acikca yazan bilgiyi cikar, bir "
+            "alan metinde yoksa null/bos liste birak, uydurma."
+        ),
+    },
 }
 
 
@@ -918,6 +1198,9 @@ WORKFLOW_MAP = {
     "thesis-tracker": "thesis_tracker",
     "scenario-sensitivity-generator": "scenario",
     "scenario-sensitivity": "scenario",
+    "initiating-coverage": "initiating_coverage",
+    "initiating_coverage": "initiating_coverage",
+    "initiation": "initiating_coverage",
 }
 
 
@@ -1064,8 +1347,48 @@ def generate_draft_events(
                     break
             else:
                 route_unsupported = True
+        promotion_events: list[dict[str, Any]] = []
         if mapped_next:
             payload["next_workflow"] = mapped_next
+            # B kokenli bir aday, hicbir zaman A'ya terfi etmeden karar
+            # katmani skill'lerine (pitch/portfolio-risk/memo-builder)
+            # gecemez -- bu adimin kendi "pitch dusunulebilir" gibi bir
+            # onerisine korlemene guvenmek yerine, agy'ye (insan degil)
+            # orijinal B gerekcesiyle bu adimin urettigi kaniti karsilastirtip
+            # gercekten resolved mi diye sorulur. Degilse otomatik olarak
+            # thesis_tracker'a duser, insan beklemez.
+            candidate = (
+                projection["candidates"].get(f"{run_id}:{target_ticker}")
+                if target_ticker else None
+            )
+            if candidate and candidate.get("bucket") == "B" and mapped_next in GATED_DECISION_WORKFLOWS:
+                b_reason_text = "\n".join(filter(None, [
+                    f"Setup: {candidate.get('setup')}",
+                    f"Variant wedge (ne olursa yatirilabilir hale gelir): {candidate.get('variant_wedge')}",
+                    f"First rejection: {candidate.get('first_rejection')}",
+                ]))
+                evaluation = evaluate_promotion(
+                    repo_root, b_reason_text=b_reason_text, evidence_text=result_text,
+                )
+                payload["promotion_evaluation"] = evaluation
+                if evaluation.get("resolution_status") == "resolved":
+                    promotion_events.append(make_event(
+                        event_id=_event_id(f"PROMOTE-{target_ticker}"),
+                        event_type="source_interpretation_corrected",
+                        run_id=run_id, ticker=target_ticker,
+                        source_artifacts=source_artifacts,
+                        payload={
+                            "promoted_to": "A",
+                            "mapped_workflow": mapped_next,
+                            "resolution_status": "resolved",
+                            "confidence": evaluation.get("confidence"),
+                            "reason": evaluation.get("reason")
+                                      or f"B->A promotion gate passed for {mapped_next}",
+                        },
+                        recorded_at=utc_now(),
+                    ))
+                else:
+                    payload["next_workflow"] = PROMOTION_FALLBACK_WORKFLOW
         elif not route_unsupported and requested_workflow and requested_workflow != target_workflow:
             # Bu adim kendi rotasini onermedi (bos/None) -- eski, daha az
             # bilgili hedefe duselim, makul bir varsayilan.
@@ -1086,6 +1409,7 @@ def generate_draft_events(
             payload=payload,
             recorded_at=utc_now(),
         ))
+        draft_events.extend(promotion_events)
 
         if route_unsupported:
             draft_events.append(make_event(

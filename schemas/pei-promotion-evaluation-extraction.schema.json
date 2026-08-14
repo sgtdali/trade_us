@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trade-us.local/schemas/pei-promotion-evaluation-extraction.schema.json",
+  "title": "PEI B->A promotion evaluation (agy structured output)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["resolution_status", "confidence", "reason"],
+  "properties": {
+    "resolution_status": {
+      "type": "string",
+      "enum": ["resolved", "unresolved", "indeterminate"]
+    },
+    "confidence": {"type": ["number", "null"]},
+    "reason": {"type": ["string", "null"]}
+  }
+}
