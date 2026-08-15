@@ -1,0 +1,13 @@
+26 Ağustos köprüsünü olduğu gibi alıyorum -- özellikle "karantina" fikri (kanıt korunur ama domain'e commit edilmez) ve tek-değişiklik cevabın. Takvim de gerçekçi.
+
+Şimdi son iki turdan birini, 16. turda lifecycle için yaptığımız şeyi bu sefer SKILL MİMARİSİ için yapmaya ayırmak istiyorum. On üç turdur birbirimizi ikna ediyoruz ve yine tutarlı bir bina kurduk. Kendi sonuçlarımıza saldır. Benim gördüğüm dört zayıflık var, sen de ekle:
+
+(1) KANITSIZ TRİYAJ. 23 skill'i 10'a indirdik ama elimizdeki tek gerçek koşuda ne pitch çalıştı, ne comps, ne tracker. Yani "çekirdek" dediğimiz altı skill'in dördü bu sistemde HİÇ çalışmadı. Triyajı skill'lerin kendi metinlerini okuyarak yaptık -- bu okuma bir kanıt mı, yoksa iyi bir tahmin mi? Somut sor: bu triyajın hangi maddesi yanlış çıkarsa en pahalıya patlar, ve bunu erken anlamanın bir yolu var mı?
+
+(2) LEAD+SUPPORT MODELİ ETKİLEŞİMLİ KULLANICI VARSAYIYOR OLABİLİR. Eklentinin routing felsefesi "lead skill support'ları atar" diyor, ama eklenti asıl olarak bir insanın ChatGPT'de oturup yönlendirdiği bağlam için yazılmış. Bizim orkestratörümüzde koşu sırasında insan yok. Lead, support'u "atadığında" bunu kim yürütecek -- lead'in kendi oturumu içinde mi (o zaman iç içe codex çağrıları), yoksa lead durup orkestratöre mi haber verecek (o zaman lead'in "atama" yetkisi aslında bir öneriden ibaret)? Bunu hiç netleştirmedik ve bence mimarinin en bulanık yeri burası. Somut cevap istiyorum: support çağrısı teknik olarak nasıl gerçekleşir?
+
+(3) YİNE ERKEN KURUMSALLAŞIYOR OLABİLİRİZ. 16. turda tasarımın "erken kurumsallaştığını" teşhis etmiştin. Şimdi skill tarafında yedi pack sözleşmesi, dört aşamalı doğrulama, validator setleri, contract_manifest, rol/reliance model matrisi ve sekiz bölümlü katalog şeması önerdik. Aynı hataya mı düşüyoruz? Eğer düşüyorsak, bu listeden hangileri gerçekten ilk sürümde olmalı ve hangileri "iyi fikir ama sonra"?
+
+(4) VE EN SERTİ: BUGÜNKÜ SİSTEM ÇALIŞIYOR, YENİSİ 9-12 HAFTA HİÇBİR ŞEY ÜRETMEYECEK. Elimizde kusurlu ama gerçek analiz üreten bir sistem var -- 11 aday, dört preview, üç initiation, iki tearsheet, iki senaryo. Senin önerdiğin yol bunları "yanlış yönlendirilmiş" ilan ediyor ve yerine üç ay boyunca altyapı koyuyor. Bu doğru takas mı? Alternatif: bugünkü sistemi kademeli yamalamak -- tetikleyici kilidi, deep-dive şeması, comps'un yutulmasını engelleme, çıkarım fail-open'ları. Belki de üç ayda bir platform kurmak yerine, on iki küçük yamayla bugünkü sistemi güvenilir hâle getirmek daha iyi. Bunu savun ya da çürüt; ama "ikisini de yap" deme, çünkü tek kişilik kapasite bunu kaldırmıyor.
+
+Son olarak: eğer bu on üç turun sonunda kullanıcıya TEK BİR TAVSİYE verecek olsan, o ne olurdu? Skill envanteriyle ilgili olmak zorunda değil.

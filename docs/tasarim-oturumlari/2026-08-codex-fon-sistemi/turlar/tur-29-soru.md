@@ -1,0 +1,13 @@
+Üç ayrı grafiğin ayrılması (support politikası / artefakt bağımlılığı / dispatch), `allowed_next`'in tamamen silinmesi, `hard_artifact_requirements`'ın skill completion yerine yetenek istemesi, ve katalog şemasının sekiz üst bölüme ayrılması -- hepsini alıyorum. 10 çalıştırılabilir + 1 non-executable meta girdisi net bir hedef. "thesis_opened tracker çağırmaz, monitoring programını deterministik kurar" ayrımı da önemliydi.
+
+Son dört turda toparlamaya başlıyoruz. Bu turda iki şeyi bitirmek istiyorum: BOŞLUKLAR ve KAPASİTE.
+
+(1) HİÇBİR SKILL'İN KARŞILAMADIĞI İŞLER. Bu on bir turda sürekli "bunu skill yapmaz, biz yaparız" dedik ve şimdi o listenin toplamını görmek istiyorum. Aklımda kalanlar: kanonik olay defteri ve commit kapısı, projection, evidence collector (8-K item 2.02 gözlemi), mekanik monitoring motoru (typed rule değerlendirme), pack builder'lar, contract validator, adjudication yüzeyi ve P0-P4 kuyruğu, portföy defteri ve uzlaştırma, trigger/window yönetimi, artefakt kimliği ve hash deposu, contract_manifest üretimi. Bunları düzgün bir liste hâline getir ve her biri için söyle: (a) V1 için zorunlu mu, (b) kabaca ne kadarlık bir iş (küçük/orta/büyük), (c) hangisi bir diğerini bloklar. Ayrıca benim atladığım varsa ekle.
+
+Özellikle şunu merak ediyorum: bu listedeki işlerin toplamı, skill'leri çağırmaktan daha mı büyük? Yani bu sistem aslında bir "skill orkestratörü" mü, yoksa skill'lerin küçük bir parça olduğu bir araştırma platformu mu? Cevap mimariyi değiştirir.
+
+(2) KAPASİTE KONTROLÜ. 15. turda haftada 5-7 saat demiştin (iyi araçla). O tahmin, bu on bir turda eklediğimiz her şeyden ÖNCEydi. Şimdi elimizde: 10 çalıştırılabilir workflow, yedi pack sözleşmesi, dört aşamalı doğrulama, adjudication kapıları, evidence collector, monitoring motoru. Tahminini güncelle -- ama bu sefer iki ayrı sayı istiyorum: (a) V1 KURULDUKTAN SONRA haftalık işletme yükü, (b) V1'i KURMANIN kendisi kaç haftalık iş (tek kişi, kısmi zaman, Claude/codex yardımıyla).
+
+İkincisi önemli çünkü kullanıcı bu sistemi kurmaya başlayacak ve "dokuz adımlık plan" soyut bir şey. Gerçekçi bir süre söyle. Eğer süre makul değilse, V1'in kendisini daha da kesmek gerekir -- o zaman neyi keserdin?
+
+(3) Ve dürüst bir soru: bu on bir turda skill envanterini çıkardık ama aynı zamanda sistemin skill'lere olan bağımlılığını AZALTTIK (23'ten 10'a indi, üstelik ikisi koşullu birine escalation). Eğer sonunda çekirdek yalnız altı skill ise ve geri kalan her şeyi biz yazıyorsak, eklentiye bağlı kalmanın hâlâ doğru olduğundan emin miyiz? Alternatif: kendi ince promptlarımızı yazıp eklentiyi tamamen bırakmak. Bunu savunmuyorum ama sınamak istiyorum -- eklentinin bize kattığı şey somut olarak ne, ve o değer altı skill için taşınan bağımlılık maliyetine değer mi?
