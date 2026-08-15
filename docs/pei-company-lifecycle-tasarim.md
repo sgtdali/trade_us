@@ -1,7 +1,8 @@
 # Şirket / portföy ömür döngüsü tasarımı
 
-Durum: **Gündem belirlendi, tasarım henüz yapılmadı** (brainstorming
-devam ediyor).
+Durum: **Yedi başlığın hepsi karara bağlandı (2026-08-15).** Hiçbir karar
+henüz koda dökülmedi. Birleşik resim için "Uçtan uca akış" bölümüne,
+uygulamadan önce çözülmesi gerekenler için "Açık işler" bölümüne bakın.
 Başlangıç: 2026-08-14.
 
 ## Neden bu doküman var
@@ -103,8 +104,14 @@ mekanizması mı olacak?
 
 ## Durum
 
-Gündem kullanıcı tarafından onaylandı (2026-08-14). Başlık 1 üzerinde
-çalışılıyor (brainstorming skill aktif).
+Gündem kullanıcı tarafından onaylandı (2026-08-14); Başlık 0-6'nın hepsi
+2026-08-15'te karara bağlandı. Henüz hiçbir karar koda dökülmedi.
+
+Tasarım sırasında iki karar sonradan geçersiz kaldı ve yerinde öyle
+işaretlendi: Başlık 1'in C-kovası hatırlatıcısı (Başlık 3 + 6 onu
+gereksiz kıldı) ve Başlık 2'nin taramaya bağlı `re-underwrite`
+tetikleyicisi (Başlık 3 tezli isimleri taramadan çıkardı; sorumluluk
+Başlık 4'e geçti).
 
 ## Karar günlüğü
 
@@ -160,13 +167,19 @@ adayı: AAPL.
 
 **Kararlar:**
 
-1. **C kovasına hafif, zamanlı bir hatırlatıcı eklenir.** B'nin tetikleyici
+1. ~~**C kovasına hafif, zamanlı bir hatırlatıcı eklenir.** B'nin tetikleyici
    mekanizmasına benzer ama gevşek: **3 ay** sonra `manual_review_required`
    üretilir (C, "bu ekranda ilginç değil" demek, kısa vadeli bir olaya değil
-   zamana bağlı bir yeniden-bakış).
-2. **Hatırlatıcı tarihi geldiğinde otomatik yeniden tarama YAPILMAZ** --
+   zamana bağlı bir yeniden-bakış).~~
+2. ~~**Hatırlatıcı tarihi geldiğinde otomatik yeniden tarama YAPILMAZ** --
    yalnız insana işaret edilir (`manual_review_required`). Gerçekten yeniden
-   taramayı başlatmak insanın kararı.
+   taramayı başlatmak insanın kararı.~~
+
+   > **1. ve 2. MADDELER GEÇERSİZ (Başlık 3 + 6, 2026-08-15).** Evren artık
+   > turlar hâlinde sürekli yeniden taranıyor ve keşif havuzundan yalnız
+   > açık tezliler dışlanıyor. C'deki bir isim bir sonraki turda zaten
+   > yeniden değerlendirilecek; ayrı bir 3 aylık hatırlatıcı boşa çalışan
+   > bir mekanizma olurdu. **Kurulmayacak.**
 3. **`route_unsupported` (bloklu) isimler için ayrı bir hatırlatıcıya gerek
    yok.** Fail-closed davranış zaten doğru; bir isim sonsuza kadar bloklu
    kalabilir. Asıl çözüm hatırlatma değil, **eksik skill'leri (ör.
@@ -241,7 +254,334 @@ mimarimiz bunu hiç yakalamıyor.
   Zincir, o ticker için ilk gerçek per-ticker adımdan (ör. tearsheet)
   başlar.
 
-## Karar günlüğü
+### Başlık 2 — Çoklu / kademeli kohortlar (2026-08-15)
 
-*(Her başlık netleştikçe buraya eklenecek: ne karar verildi, hangi
-alternatifler değerlendirildi, neden bu seçildi.)*
+Somut senaryo: T0'da "Tech sektörü" taraması NVDA'yı A'ya koyup zinciri
+yürütüyor; T15'te "Genel piyasa" taraması aynı ticker'ı bu sefer B'ye
+koyuyor. Bugünkü kodda bu iki koşu birbirinden habersiz iki ayrı candidate
+üretiyor ve iş kuyruğunda NVDA için ikinci, sıfırdan bir zincir beliriyor.
+
+**Kararlar:**
+
+1. **Candidate anahtarı `run_id:ticker` yerine sadece `ticker`.** Bir
+   ticker = tek kayıt. Hangi olayın hangi koşudan geldiği zaten her
+   event'in kendi `run_id`'sinde duruyor, denetim izi kaybolmuyor. Bu
+   yeniden icat değil, `pei-workflow-orchestrator.md` Bölüm 6'daki onaylı
+   ticker-sürekli kimlik ilkesine geri dönüş.
+   *Reddedilen alternatif:* bir ticker'ın birden fazla paralel araştırma
+   ipliği (sektör taraması vs. genel tarama ayrı ayrı ilerler) taşıması --
+   sonunda tek tez ve tek portföy pozisyonu olacağı için iplikleri
+   birleştirme problemi doğuruyor, karşılığı olmayan karmaşıklık.
+
+2. **Kademe kuralı: yeni screen aktif işi kesmez.** `thesis_opened`
+   durumundaki bir isim yeni bir taramadan doğrudan etkilenmez. Diğer tüm
+   durumlar (`ready` / `waiting` / `blocked` / `deprioritized` /
+   `completed`) yeni screen ile serbestçe güncellenir.
+   *Reddedilen alternatifler:* "en son tarama koşulsuz kazanır" (ilerlemiş
+   işi geri sarar), "her çakışma insana sorulur" (haftalık taramada el işi
+   biriktirir).
+
+3. **`in_progress` için özel davranış tanımlanmadı.** Tüm akış insan
+   tetiklemeli ve seri (`cmd_start_idea` / `cmd_prepare` / `cmd_run_codex`
+   / `cmd_attach_result`, `scripts/us_pei_dashboard_bridge.py`); bir iş
+   sürerken yeni tarama başlatmak pratikte olmuyor. Kod bunu engellemiyor
+   ama fail-closed bir guard eklenmedi -- bilerek yarım bırakılmış bloklu
+   bir işin başka taramaları kilitlememesi için. Disiplinle çözülür.
+
+4. **Bayatlama, bucket/setup değişimine bağlı.** Yeni screen aynı bucket +
+   aynı setup diyorsa `completed_workflows` korunur, zincir kaldığı yerden
+   devam eder. Bucket veya setup değiştiyse eski analiz artık farklı bir
+   soruyu cevaplıyor demektir -- ilgili adımlar bayat sayılır ve
+   `_first_missing_prerequisite` onları yeniden çalıştırır.
+   Gerekçe: sinyal zaten screen'in kendisinde, ayrı bir gün-sayısı
+   konfigürasyonu gerekmiyor.
+   *Reddedilen alternatifler:* workflow başına tazelik penceresi (her adım
+   için gün sayısı kararlaştırma yükü), her screen'in zinciri sıfırlaması
+   (haftalık taramada hiçbir zincir bitmez), bayatlamanın hiç olmaması
+   (bugünkü davranış -- 2 ay eski tearsheet üzerine pitch yazılabiliyor).
+
+5. **Artifact dizinleri ticker-merkezli olur.** Per-ticker adımlar
+   `data/pei-workflow/runs/<run_id>/work/...` altından çıkıp ticker altında
+   toplanır; run dizini yalnız idea-generation çıktısı (evren/kohort
+   seviyesi, bir ticker'a ait değil) için kalır. Bir ticker'ın tüm geçmişi
+   tek yerde okunur. Göç gerekiyor ama bugün tek gerçek run olduğu için
+   ucuz.
+   *Açık uçlu detay (uygulama sırasında netleşecek):* aynı ticker aynı
+   workflow'u bayatlama sonrası ikinci kez çalıştırabileceği için dizin ve
+   iş kalemi kimliği tarih ayırıcı taşımalı (ör.
+   `companies/<ticker>/<tarih>-<workflow>/`); `run_id`'nin iş kalemi
+   kimliğindeki rolü de buna göre yeniden düşünülmeli.
+
+**Kademe kuralının sonucu (Başlık 0'a bağlanıyor):** Tezi açık bir isim
+yeni taramada düşerse (ör. A→C) bu sinyal sessizce olay günlüğüne
+gömülmez -- yeni screen teze **evidence** olarak eklenir ve `position`
+ekseni `re-underwrite`'a çekilir. Tez ayakta kalır, otomatik iş
+tetiklenmez; haftalık kontrolde "tez hâlâ geçerli mi" sorusu bu kayıtla
+cevaplanır. thesis-tracker'ın mevcut sözlüğü kullanılıyor, yeni kavram
+icat edilmiyor.
+*Reddedilen alternatifler:* `manual_review_required` üretmek (candidate
+blocked'a düşer, tez durumuyla çelişir), yalnız panelde bir "conflicting
+screen" rozeti (tezin kendi kaydında iz bırakmadığı için tez okunduğunda
+sinyal kaybolur).
+
+> **SONRADAN GEÇERSİZ KALDI (Başlık 3, 2026-08-15).** Başlık 3'te tezli
+> isimlerin tarama hattına hiç girmemesine karar verildi. Tezli bir isim
+> hiç screen edilmiyorsa "yeni taramada düşme" olayı da hiç gerçekleşmez
+> -- yani bu tetikleyici mekanizmasız kaldı. Karar (yeni kanıt gelince
+> `re-underwrite`) hâlâ doğru, ama **tetikleyicisini Başlık 4 (portföyde
+> olan tezler) ve Başlık 5 (tezi olup fonlanmamışlar) tanımlamak
+> zorunda** -- aksi hâlde açık tezler hiçbir kaynaktan beslenmez.
+
+### Başlık 3 — Kapsama ve kademeli tarama (2026-08-15)
+
+Başlık 3 gündemde "aynı kohortun zaman içinde tekrar taranması" olarak
+yazılmıştı; konuşuldukça asıl sorunun **evren büyüdüğünde taramanın nasıl
+kademelendirileceği** olduğu ortaya çıktı. Evren bugün 87 isim ama sabit
+değil, ileride S&P 500 ölçeğine çıkabilir. Tek bir taramaya 500 isim
+verilirse -- pack inceltilse bile -- çıktı kalitesi düşer. Dilimleme
+şart. Ama dilimleme "haftada bir dilim" demek değil; aynı gün birkaç
+dilim ayrı oturumlarda çalıştırılabilir.
+
+**Ampirik olduğu için burada karara bağlanmayanlar** (config parametresi
+olarak dışarı alınacak, ilk turda ölçülüp ayarlanacak; koda gömülmeyecek):
+dilim boyutu (bir oturumda kaç ticker) ve pack inceltmesi (ticker başına
+hangi alanlar kalır). İkisi de ölçmeden bilinemez.
+
+**Kararlar:**
+
+1. **İki turlu yapı.** Tur 1: dilimler kendi içinde taranır, her dilim
+   kendi finalistlerini işaretler (dilim-göreceli yargı). Tur 2: tüm
+   dilimlerin finalistleri tek bir oturumda yan yana karşılaştırılır,
+   gerçek A/B/C orada belirlenir. Bu, "inceltme" sorusunu da doğal olarak
+   çözüyor: Tur 1 ince pack + çok isim, Tur 2 tam pack + az isim.
+   *Reddedilen alternatifler:* mutlak eşik (dilimden bağımsız sabit
+   kriterler; daha basit ama eşiklerin kendisi tanımsız), göreceli ama
+   ikinci tur yok (her dilimin finalisti doğrudan A sayılır -- zayıf
+   dilimlerden de A üretir, portföy seviyesinde çöp birikir).
+
+2. **Dilim kriteri: sektör + boyut düzeltmesi.** Sektör birincil kriter,
+   çünkü dilim-göreceli yargının anlamlı olması için isimlerin
+   karşılaştırılabilir olması gerekiyor ("yazılım şirketleri arasında en
+   cazip 3" anlamlı, "bu rastgele 25 arasında en cazip 3" değil). Ama saf
+   sektör dilimlemesi işlemiyor: bugünkü evrende technology 31,
+   consumer-staples 24, health-care 15, industrials 12,
+   communication-services 5 -- 5 isimlik dilimden 3 finalist %60 geçiş
+   oranı demek. Bu yüzden büyük sektörler alt-gruplara bölünür, çok
+   küçükler komşu sektörle birleştirilir; dilimler hedef boyuta çekilir.
+
+3. **Tarama hattı saf keşiftir; tezli isimler hiç girmez.** Tur 1 ve Tur
+   2, yalnızca tezi olmayan isimler için çalışır. Dilimler kurulurken
+   tezli isimler evrenden çıkarılır; tez `retired` olunca isim keşif
+   havuzuna geri döner.
+   Gerekçe: portföy/tez kararı ile araştırma önceliği **farklı sorular**.
+   Portföydeki bir isim "daha iyi bir aday çıktı" diye elenmez -- pozisyon
+   sayısı artırılabilir, ağırlıklar yeniden dengelenebilir, korelasyon ve
+   yoğunlaşma devreye girer. Bu kararı araştırma sıralamasıyla aynı
+   oturuma sıkıştırmak ikisini de bozar.
+   *Reddedilen alternatifler:* tezli isimlerin Tur 1'i atlayıp doğrudan
+   Tur 2'ye girmesi (yeni adaylarla aynı ölçekte görülürlerdi ama Tur 2'ye
+   dolaylı bir eleme yetkisi yüklenirdi), tezli isimlerin kendi sektör
+   diliminde normal taranması (Tur 1 elemesi dilim-göreceli ve zayıf bir
+   sinyal; `re-underwrite` gibi güçlü bir mekanizmayı tetiklemesi yanlış
+   alarm üretir).
+   **Bedeli, açıkça kabul edildi:** "bu yeni aday mevcut pozisyonumdan
+   daha iyi mi" karşılaştırması tarama hattında hiç yapılmaz; o soruyu
+   Başlık 4'teki portföy oturumu cevaplamak zorunda.
+
+4. **Tur 2, tüm dilimler bitince tek seferde çalışır.** Bir "tur" = tüm
+   evrenin dilimlerinin taranması + sonunda tek bir finalist karşılaştırma
+   oturumu. Finalistler tur bitene kadar bekler.
+   *Reddedilen alternatif:* periyodik Tur 2 (her gün biriken finalistlerle)
+   -- her Tur 2 farklı bir aday kümesiyle karşılaştırma yapardı, yani
+   dilim-göreceli sorunun aynısı bir üst katmanda tekrarlanırdı.
+   *Kabul edilen bedel:* ilk dilimin finalisti tur uzunluğu kadar bekler.
+
+**Not:** Bu tasarım, gündemdeki orijinal "T0'daki grup T60'ta tekrar mı
+taranır" sorusunu kapsıyor -- evren turlar hâlinde sürekli yeniden
+taranıyor, hiçbir isim kalıcı olarak unutulmuyor. Bu, **Başlık 1'in 1.
+kararını (C kovasına 3 aylık hatırlatıcı) gereksiz kılıyor olabilir**:
+C'deki bir isim zaten bir sonraki turda yeniden değerlendirilecek.
+Başlık 6 ele alınırken bu madde tekrar gözden geçirilmeli.
+
+### Başlık 4 — Portföy takibi (2026-08-15)
+
+Başlık 3, tarama hattını saf keşfe ayırdığı için açık tezleri besleme
+sorumluluğu tamamen buraya düştü. Ayrıca gündemdeki "muhasebe" ile
+"portföy seviyesinde karar" ayrımı korunuyor: ilki bizim tuttuğumuz
+defter, ikincisi skill'in işi.
+
+**Kararlar:**
+
+1. **Ritim mandate'ten geliyor, icat edilmiyor.** idea-generation
+   talimatındaki mandate zaten "Review weekly, rebalance monthly ... 
+   neither is obliged to [change the portfolio]" diyor. Buna karşılık iki
+   ayrı oturum: **haftalık tez sağlığı** ve **aylık rebalans**. Farklı
+   sorular oldukları için ayrı kalıyorlar.
+   *Reddedilen alternatifler:* tek haftalık oturum (her hafta tam rebalans
+   düşüncesi gereksiz işlem dürtüsü yaratır), olay-güdümlü/takvimsiz
+   (mandate'in ritmiyle çelişir, sessiz dönemlerde portföy hiç gözden
+   geçirilmez).
+
+2. **Haftalık kontrol iki kademeli: önce mekanik, sonra gerekirse derin.**
+   Her açık tezin kayıtlı beklentileri taze veriyle LLM'siz karşılaştırılır;
+   yalnız sapma gösterenler için `thesis_tracker` oturumu açılır. Sessiz
+   haftalarda hiç LLM çağrısı olmaz. `check_triggers` altyapısı zaten var.
+   *Reddedilen alternatifler:* her tez için ayrı oturum (10 tez = haftada
+   10 oturum, çoğu "değişen bir şey yok" diyecek), tek toplu oturum (tez
+   başına derinlik düşer -- dilim-göreceli sorunun aynısı).
+   **Bu, Başlık 2'de mekanizmasız kalan `re-underwrite` tetikleyicisinin
+   yaşadığı yerdir.**
+
+3. **Sapma ölçüsü teze özeldir, jenerik değil.** Tez açılırken (pitch
+   `actionable_candidate` → `thesis_opened`) `first_rejection`'ın metinsel
+   hali agy çıkarımıyla ölçülebilir eşiklere dönüştürülür ve tez kaydına
+   yazılır.
+   *Reddedilen alternatif:* her tez için aynı jenerik ölçü seti (yeni
+   bilanço, fiyat eşiği, revizyon dengesi, değerleme sapması) -- kurmak
+   kolay ama tezin asıl bozulma koşulunu yakalamaz.
+
+4. **Ölçülemeyen bozulma koşulu atılmaz, metinsel saklanır.** Pack'te
+   karşılığı olmayan koşullar (ör. "hyperscaler capex'i backlog'a
+   dönüşmezse") tez kaydında metin olarak kalır ve haftalık oturumda
+   "elle kontrol edilecek koşullar" olarak listelenir. Ölçülebilenler
+   mekanik kontrole girer.
+   *Reddedilen alternatifler:* sert fail-closed (tüm koşullar ölçülebilir
+   değilse tez açılmaz -- en değerli nitel tezler tam bu yüzden bloklanır),
+   ölçülemeyenleri atmak (tezin asıl gerekçesi kaybolur).
+
+5. **Aylık rebalans mantığı `portfolio-risk-management` skill'ine
+   devredilir.** Histerezis, ağırlıklandırma, korelasyon ve yoğunlaşma
+   kurallarını kendimiz tanımlamıyoruz; skill zaten bu iş için yazılmış.
+   Bizim işimiz orkestrasyon: skill'i kataloğa eklemek, portföy paketini
+   üretmek, çıktısını kaydetmek. Repo'nun mevcut deseniyle tutarlı --
+   analitik yargı skill'in, akış bizim.
+   **Açık iş:** skill kurulu olmadığı için girdi/çıktı sözleşmesi
+   bilinmiyor. `config/pei-workflows.json`'a eklenecek `pack_step`,
+   `required_workflows` ve `result_contract` alanları ancak skill
+   incelendikten sonra doldurulabilir.
+
+6. **Portföy defteri olay tabanlı olur.** Append-only işlem kaydı
+   (alım/satım/temettü; tarih, fiyat, adet ve **hangi teze bağlı**);
+   mevcut pozisyonlar bundan türetilir. Repo'nun geri kalanıyla aynı desen
+   (`events.jsonl`, append-only tez kaydı). Gerekçe: "bu tezle ne zaman
+   girdim, ne kazandım" sorusu ancak böyle cevaplanabilir -- tezlerin
+   gerçekten işe yarayıp yaramadığını ölçmenin tek yolu bu.
+   *Reddedilen alternatifler:* mutable pozisyon tablosu (kapanan pozisyon
+   iz bırakmadan siliniyor), olay defteri + türetilmiş önbellek (10-20
+   pozisyon ölçeğinde gereksiz).
+
+**Önemli not:** Mevcut `src/adapter/portfolio.py` / `data/portfolio/
+portfolio.json` **dummy bir çalışma**; bu tasarımda referans alınmadı.
+Gerçek defter yukarıdaki 6. maddeye göre sıfırdan kurulacak.
+
+### Başlık 5 — İzleme listesi takibi (2026-08-15)
+
+Bu başlığın sorusu ("pozisyon olmayan ama izlenen isimler zaman içinde
+nasıl takip edilir") büyük ölçüde önceki kararlardan türedi. Başlık 0'daki
+otomatik watchlist'in üç etiketi şu an şöyle kapsanıyor:
+
+| Etiket | Takip mekanizması |
+|---|---|
+| tez-öncesi aktif candidate | keşif hattı turları (Başlık 3) |
+| tez var, fonlanmamış | haftalık tez sağlığı (Başlık 4) + aylık rebalansta "fonlanmalı mı" |
+| portföyde, tezi izleniyor | haftalık tez sağlığı (Başlık 4) |
+
+**Ayrı bir izleme mekanizması kurulmuyor** -- watchlist zaten bu üç
+durumun türevi, kendi başına bir süreç değil.
+
+**Karar: fonlanmamış tez süresiz açık kalır.** Tez yalnız bozulunca (kendi
+eşikleri tetiklenince) `retired` olur. Fonlanmamış olmak tezin yanlış
+olduğunu göstermez -- fiyat henüz gelmemiş olabilir.
+*Reddedilen alternatifler:* periyodik zorunlu tazeleme, sabit süre
+sonunda otomatik retire (iyi bir tezi yalnızca zaman geçtiği için çöpe
+atar).
+
+*Değerlendirilen risk ve neden kabul edilebilir olduğu:* Başlık 4'te
+jenerik taban seti reddedilip teze özel eşikler seçildiği için, eşikleri
+hiç tetiklenmeyen bir tez teorik olarak "donabilir" -- üstelik tez açık
+olduğu sürece o isim keşif hattına da girmiyor (Başlık 3). Ancak aylık
+rebalans oturumu **tüm açık tezleri** görüyor (Başlık 4, karar 5), yani
+eşikleri sessiz bir tez de ayda bir `portfolio-risk-management` masasına
+geliyor. Donma tam değil; periyodik temas aylık rebalanstan sağlanıyor.
+
+### Başlık 6 — Ne portföyde ne izlemede olan isimler (2026-08-15)
+
+Gündemin sorusu: bu isimler sonsuza kadar mı unutulacak, yoksa bir
+geri-değerlendirme mekanizması mı olacak?
+
+Başlık 3'ün tur yapısı bunu zaten çözdü: evren turlar hâlinde sürekli
+yeniden taranıyor, yani hiçbir isim kalıcı olarak kaybolmuyor.
+
+**Karar: keşif havuzu = evren − açık tezli isimler. Başka hiçbir kalıcı
+dışlama yok.** `deprioritized`, `rejected` ve tez-`retired` isimler her
+turda normal şekilde yeniden değerlendirilir. Tek kural, istisna yok;
+ayrı bir "geri-değerlendirme mekanizması" kurulmuyor çünkü turların
+kendisi zaten o işi yapıyor.
+*Reddedilen alternatifler:* Reject'e bir tur soğuma süresi (ikinci bir
+zamanlama kuralı ve "kaçıncı turdayız" muhasebesi getirir), Reject'in
+kalıcı olup elle geri alınması (şirketler değişir; kalıcı damga zamanla
+yanlışa döner).
+
+**Sonucu:** Başlık 1'in 1. ve 2. kararları (C kovasına 3 aylık
+hatırlatıcı) geçersiz kaldı ve yukarıda öyle işaretlendi.
+
+---
+
+## Uçtan uca akış (7 başlığın birleşik sonucu)
+
+**Keşif hattı** -- evren turlar hâlinde taranır.
+1. Keşif havuzu = evren − açık tezli isimler (B6). Havuz sektöre göre,
+   hedef boyuta çekilmiş dilimlere bölünür (B3).
+2. **Tur 1:** her dilim ayrı oturumda, ince pack ile taranır; dilim kendi
+   finalistlerini işaretler (B3).
+3. **Tur 2:** tüm dilimler bitince tek oturum; finalistler tam pack ile
+   yan yana karşılaştırılır, gerçek A/B/C burada belirlenir (B3).
+4. A/B adayları workflow zincirine girer (tearsheet → comps →
+   earnings-preview → pitch ...). Candidate ticker ile anahtarlanır, tek
+   kayıt (B2). Yeni bir tur eski `completed_workflows`'u yalnız bucket ya
+   da setup değiştiyse bayat sayar (B2).
+5. `pitch` `actionable_candidate` verirse **otomatik tez açılır** (B0);
+   diğer üç verdikte isim candidate olarak kalır (B1). Tez açılışında
+   `first_rejection` ölçülebilir eşiklere çevrilir; ölçülemeyenler metin
+   olarak saklanır (B4).
+
+**Portföy/tez hattı** -- tez açıldığı andan itibaren.
+6. **Haftalık:** her açık tez için önce mekanik eşik kontrolü; yalnız
+   sapanlar için `thesis_tracker` oturumu (B4). `re-underwrite` buradan
+   tetiklenir.
+7. **Aylık:** `portfolio-risk-management` skill'i tüm açık tezleri
+   (fonlanmış + fonlanmamış) ve mevcut pozisyonları görür; giriş/çıkış/
+   ağırlık yargısını o verir (B4). Gerçek alım/satımı yalnız insan yapar
+   (B0); işlemler append-only, teze bağlı defterde tutulur (B4).
+8. Fonlanmamış tez süresiz açık kalır, yalnız bozulunca `retired` olur
+   (B5). Retired olan isim keşif havuzuna geri döner (B3).
+
+**Watchlist** ayrı bir süreç değil, bu durumların türevidir (B0, B5).
+
+## Kalibrasyon parametreleri (karar değil, ölçülerek ayarlanacak)
+
+Bunlar config'te tutulacak, koda gömülmeyecek:
+- dilim boyutu (bir Tur 1 oturumunda kaç ticker)
+- Tur 1 pack'inin inceltmesi (ticker başına hangi alanlar)
+- dilim başına finalist kotası
+- Tur 2'nin girdi üst sınırı
+- mekanik sapma kontrolünün tolerans payları
+
+## Açık işler (uygulamadan önce netleşmesi gerekenler)
+
+1. **`portfolio-risk-management` skill'i incelenmeli.** Katalog girdisi
+   (`pack_step`, `required_workflows`, `result_contract`) ancak skill'in
+   girdi/çıktı sözleşmesi görüldükten sonra yazılabilir (B4).
+2. **`thesis_tracker`'a `pack_step` bağlanmalı.** Bugün `null` -- yani tez
+   güncellemesi için taze veri paketi hiç üretilmiyor. Haftalık kontrol
+   bunsuz çalışamaz.
+3. **Eksik skill'ler kataloğa eklenmeli** (equity-model-update,
+   event-driven-analyzer) -- `route_unsupported` isimlerin gerçek çözümü
+   (B1, not).
+4. **Bilinen iki bug** (tasarım kararı değil): `WORKFLOW_MAP` substring
+   eşleştirmesinin metindeki sırayı değil sözlük sırasını izlemesi; ve
+   `run_codex_analysis()`'in `required_context_artifacts`'i hiç
+   kullanmaması (B1 notları). İkincisi `codex exec resume` kararıyla
+   birlikte ele alınacak.
+5. **Ticker-merkezli dizin göçü** -- bugün tek gerçek run olduğu için ucuz
+   (B2, karar 5).
