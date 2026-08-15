@@ -103,8 +103,14 @@ mekanizması mı olacak?
 
 ## Durum
 
-Gündem kullanıcı tarafından onaylandı (2026-08-14). Başlık 1 üzerinde
-çalışılıyor (brainstorming skill aktif).
+Gündem kullanıcı tarafından onaylandı (2026-08-14). Başlık 0, 1, 2 ve 3
+karara bağlandı; sırada Başlık 4 var. Henüz hiçbir karar koda dökülmedi --
+tasarım tamamlanmadan uygulamaya geçilmeyecek.
+
+**Başlık 4-5 için devredilen zorunluluk:** Başlık 3'te tarama hattı saf
+keşfe ayrıldığı için, açık tezleri besleyen tek kaynak artık portföy/tez
+oturumu. Başlık 4 ve 5, `re-underwrite` tetikleyicisini ve "yeni aday
+mevcut pozisyondan iyi mi" karşılaştırmasını tanımlamak zorunda.
 
 ## Karar günlüğü
 
@@ -241,7 +247,151 @@ mimarimiz bunu hiç yakalamıyor.
   Zincir, o ticker için ilk gerçek per-ticker adımdan (ör. tearsheet)
   başlar.
 
-## Karar günlüğü
+### Başlık 2 — Çoklu / kademeli kohortlar (2026-08-15)
 
-*(Her başlık netleştikçe buraya eklenecek: ne karar verildi, hangi
-alternatifler değerlendirildi, neden bu seçildi.)*
+Somut senaryo: T0'da "Tech sektörü" taraması NVDA'yı A'ya koyup zinciri
+yürütüyor; T15'te "Genel piyasa" taraması aynı ticker'ı bu sefer B'ye
+koyuyor. Bugünkü kodda bu iki koşu birbirinden habersiz iki ayrı candidate
+üretiyor ve iş kuyruğunda NVDA için ikinci, sıfırdan bir zincir beliriyor.
+
+**Kararlar:**
+
+1. **Candidate anahtarı `run_id:ticker` yerine sadece `ticker`.** Bir
+   ticker = tek kayıt. Hangi olayın hangi koşudan geldiği zaten her
+   event'in kendi `run_id`'sinde duruyor, denetim izi kaybolmuyor. Bu
+   yeniden icat değil, `pei-workflow-orchestrator.md` Bölüm 6'daki onaylı
+   ticker-sürekli kimlik ilkesine geri dönüş.
+   *Reddedilen alternatif:* bir ticker'ın birden fazla paralel araştırma
+   ipliği (sektör taraması vs. genel tarama ayrı ayrı ilerler) taşıması --
+   sonunda tek tez ve tek portföy pozisyonu olacağı için iplikleri
+   birleştirme problemi doğuruyor, karşılığı olmayan karmaşıklık.
+
+2. **Kademe kuralı: yeni screen aktif işi kesmez.** `thesis_opened`
+   durumundaki bir isim yeni bir taramadan doğrudan etkilenmez. Diğer tüm
+   durumlar (`ready` / `waiting` / `blocked` / `deprioritized` /
+   `completed`) yeni screen ile serbestçe güncellenir.
+   *Reddedilen alternatifler:* "en son tarama koşulsuz kazanır" (ilerlemiş
+   işi geri sarar), "her çakışma insana sorulur" (haftalık taramada el işi
+   biriktirir).
+
+3. **`in_progress` için özel davranış tanımlanmadı.** Tüm akış insan
+   tetiklemeli ve seri (`cmd_start_idea` / `cmd_prepare` / `cmd_run_codex`
+   / `cmd_attach_result`, `scripts/us_pei_dashboard_bridge.py`); bir iş
+   sürerken yeni tarama başlatmak pratikte olmuyor. Kod bunu engellemiyor
+   ama fail-closed bir guard eklenmedi -- bilerek yarım bırakılmış bloklu
+   bir işin başka taramaları kilitlememesi için. Disiplinle çözülür.
+
+4. **Bayatlama, bucket/setup değişimine bağlı.** Yeni screen aynı bucket +
+   aynı setup diyorsa `completed_workflows` korunur, zincir kaldığı yerden
+   devam eder. Bucket veya setup değiştiyse eski analiz artık farklı bir
+   soruyu cevaplıyor demektir -- ilgili adımlar bayat sayılır ve
+   `_first_missing_prerequisite` onları yeniden çalıştırır.
+   Gerekçe: sinyal zaten screen'in kendisinde, ayrı bir gün-sayısı
+   konfigürasyonu gerekmiyor.
+   *Reddedilen alternatifler:* workflow başına tazelik penceresi (her adım
+   için gün sayısı kararlaştırma yükü), her screen'in zinciri sıfırlaması
+   (haftalık taramada hiçbir zincir bitmez), bayatlamanın hiç olmaması
+   (bugünkü davranış -- 2 ay eski tearsheet üzerine pitch yazılabiliyor).
+
+5. **Artifact dizinleri ticker-merkezli olur.** Per-ticker adımlar
+   `data/pei-workflow/runs/<run_id>/work/...` altından çıkıp ticker altında
+   toplanır; run dizini yalnız idea-generation çıktısı (evren/kohort
+   seviyesi, bir ticker'a ait değil) için kalır. Bir ticker'ın tüm geçmişi
+   tek yerde okunur. Göç gerekiyor ama bugün tek gerçek run olduğu için
+   ucuz.
+   *Açık uçlu detay (uygulama sırasında netleşecek):* aynı ticker aynı
+   workflow'u bayatlama sonrası ikinci kez çalıştırabileceği için dizin ve
+   iş kalemi kimliği tarih ayırıcı taşımalı (ör.
+   `companies/<ticker>/<tarih>-<workflow>/`); `run_id`'nin iş kalemi
+   kimliğindeki rolü de buna göre yeniden düşünülmeli.
+
+**Kademe kuralının sonucu (Başlık 0'a bağlanıyor):** Tezi açık bir isim
+yeni taramada düşerse (ör. A→C) bu sinyal sessizce olay günlüğüne
+gömülmez -- yeni screen teze **evidence** olarak eklenir ve `position`
+ekseni `re-underwrite`'a çekilir. Tez ayakta kalır, otomatik iş
+tetiklenmez; haftalık kontrolde "tez hâlâ geçerli mi" sorusu bu kayıtla
+cevaplanır. thesis-tracker'ın mevcut sözlüğü kullanılıyor, yeni kavram
+icat edilmiyor.
+*Reddedilen alternatifler:* `manual_review_required` üretmek (candidate
+blocked'a düşer, tez durumuyla çelişir), yalnız panelde bir "conflicting
+screen" rozeti (tezin kendi kaydında iz bırakmadığı için tez okunduğunda
+sinyal kaybolur).
+
+> **SONRADAN GEÇERSİZ KALDI (Başlık 3, 2026-08-15).** Başlık 3'te tezli
+> isimlerin tarama hattına hiç girmemesine karar verildi. Tezli bir isim
+> hiç screen edilmiyorsa "yeni taramada düşme" olayı da hiç gerçekleşmez
+> -- yani bu tetikleyici mekanizmasız kaldı. Karar (yeni kanıt gelince
+> `re-underwrite`) hâlâ doğru, ama **tetikleyicisini Başlık 4 (portföyde
+> olan tezler) ve Başlık 5 (tezi olup fonlanmamışlar) tanımlamak
+> zorunda** -- aksi hâlde açık tezler hiçbir kaynaktan beslenmez.
+
+### Başlık 3 — Kapsama ve kademeli tarama (2026-08-15)
+
+Başlık 3 gündemde "aynı kohortun zaman içinde tekrar taranması" olarak
+yazılmıştı; konuşuldukça asıl sorunun **evren büyüdüğünde taramanın nasıl
+kademelendirileceği** olduğu ortaya çıktı. Evren bugün 87 isim ama sabit
+değil, ileride S&P 500 ölçeğine çıkabilir. Tek bir taramaya 500 isim
+verilirse -- pack inceltilse bile -- çıktı kalitesi düşer. Dilimleme
+şart. Ama dilimleme "haftada bir dilim" demek değil; aynı gün birkaç
+dilim ayrı oturumlarda çalıştırılabilir.
+
+**Ampirik olduğu için burada karara bağlanmayanlar** (config parametresi
+olarak dışarı alınacak, ilk turda ölçülüp ayarlanacak; koda gömülmeyecek):
+dilim boyutu (bir oturumda kaç ticker) ve pack inceltmesi (ticker başına
+hangi alanlar kalır). İkisi de ölçmeden bilinemez.
+
+**Kararlar:**
+
+1. **İki turlu yapı.** Tur 1: dilimler kendi içinde taranır, her dilim
+   kendi finalistlerini işaretler (dilim-göreceli yargı). Tur 2: tüm
+   dilimlerin finalistleri tek bir oturumda yan yana karşılaştırılır,
+   gerçek A/B/C orada belirlenir. Bu, "inceltme" sorusunu da doğal olarak
+   çözüyor: Tur 1 ince pack + çok isim, Tur 2 tam pack + az isim.
+   *Reddedilen alternatifler:* mutlak eşik (dilimden bağımsız sabit
+   kriterler; daha basit ama eşiklerin kendisi tanımsız), göreceli ama
+   ikinci tur yok (her dilimin finalisti doğrudan A sayılır -- zayıf
+   dilimlerden de A üretir, portföy seviyesinde çöp birikir).
+
+2. **Dilim kriteri: sektör + boyut düzeltmesi.** Sektör birincil kriter,
+   çünkü dilim-göreceli yargının anlamlı olması için isimlerin
+   karşılaştırılabilir olması gerekiyor ("yazılım şirketleri arasında en
+   cazip 3" anlamlı, "bu rastgele 25 arasında en cazip 3" değil). Ama saf
+   sektör dilimlemesi işlemiyor: bugünkü evrende technology 31,
+   consumer-staples 24, health-care 15, industrials 12,
+   communication-services 5 -- 5 isimlik dilimden 3 finalist %60 geçiş
+   oranı demek. Bu yüzden büyük sektörler alt-gruplara bölünür, çok
+   küçükler komşu sektörle birleştirilir; dilimler hedef boyuta çekilir.
+
+3. **Tarama hattı saf keşiftir; tezli isimler hiç girmez.** Tur 1 ve Tur
+   2, yalnızca tezi olmayan isimler için çalışır. Dilimler kurulurken
+   tezli isimler evrenden çıkarılır; tez `retired` olunca isim keşif
+   havuzuna geri döner.
+   Gerekçe: portföy/tez kararı ile araştırma önceliği **farklı sorular**.
+   Portföydeki bir isim "daha iyi bir aday çıktı" diye elenmez -- pozisyon
+   sayısı artırılabilir, ağırlıklar yeniden dengelenebilir, korelasyon ve
+   yoğunlaşma devreye girer. Bu kararı araştırma sıralamasıyla aynı
+   oturuma sıkıştırmak ikisini de bozar.
+   *Reddedilen alternatifler:* tezli isimlerin Tur 1'i atlayıp doğrudan
+   Tur 2'ye girmesi (yeni adaylarla aynı ölçekte görülürlerdi ama Tur 2'ye
+   dolaylı bir eleme yetkisi yüklenirdi), tezli isimlerin kendi sektör
+   diliminde normal taranması (Tur 1 elemesi dilim-göreceli ve zayıf bir
+   sinyal; `re-underwrite` gibi güçlü bir mekanizmayı tetiklemesi yanlış
+   alarm üretir).
+   **Bedeli, açıkça kabul edildi:** "bu yeni aday mevcut pozisyonumdan
+   daha iyi mi" karşılaştırması tarama hattında hiç yapılmaz; o soruyu
+   Başlık 4'teki portföy oturumu cevaplamak zorunda.
+
+4. **Tur 2, tüm dilimler bitince tek seferde çalışır.** Bir "tur" = tüm
+   evrenin dilimlerinin taranması + sonunda tek bir finalist karşılaştırma
+   oturumu. Finalistler tur bitene kadar bekler.
+   *Reddedilen alternatif:* periyodik Tur 2 (her gün biriken finalistlerle)
+   -- her Tur 2 farklı bir aday kümesiyle karşılaştırma yapardı, yani
+   dilim-göreceli sorunun aynısı bir üst katmanda tekrarlanırdı.
+   *Kabul edilen bedel:* ilk dilimin finalisti tur uzunluğu kadar bekler.
+
+**Not:** Bu tasarım, gündemdeki orijinal "T0'daki grup T60'ta tekrar mı
+taranır" sorusunu kapsıyor -- evren turlar hâlinde sürekli yeniden
+taranıyor, hiçbir isim kalıcı olarak unutulmuyor. Bu, **Başlık 1'in 1.
+kararını (C kovasına 3 aylık hatırlatıcı) gereksiz kılıyor olabilir**:
+C'deki bir isim zaten bir sonraki turda yeniden değerlendirilecek.
+Başlık 6 ele alınırken bu madde tekrar gözden geçirilmeli.
