@@ -103,14 +103,13 @@ mekanizması mı olacak?
 
 ## Durum
 
-Gündem kullanıcı tarafından onaylandı (2026-08-14). Başlık 0, 1, 2 ve 3
-karara bağlandı; sırada Başlık 4 var. Henüz hiçbir karar koda dökülmedi --
+Gündem kullanıcı tarafından onaylandı (2026-08-14). Başlık 0-4 karara
+bağlandı; sırada Başlık 5 var. Henüz hiçbir karar koda dökülmedi --
 tasarım tamamlanmadan uygulamaya geçilmeyecek.
 
-**Başlık 4-5 için devredilen zorunluluk:** Başlık 3'te tarama hattı saf
-keşfe ayrıldığı için, açık tezleri besleyen tek kaynak artık portföy/tez
-oturumu. Başlık 4 ve 5, `re-underwrite` tetikleyicisini ve "yeni aday
-mevcut pozisyondan iyi mi" karşılaştırmasını tanımlamak zorunda.
+Başlık 3'te tarama hattı saf keşfe ayrıldığı için açık tezleri besleyen
+tek kaynak portföy/tez oturumu oldu; Başlık 4 bunu haftalık mekanik
+kontrol + gerekirse derin oturum olarak karşıladı.
 
 ## Karar günlüğü
 
@@ -395,3 +394,74 @@ taranıyor, hiçbir isim kalıcı olarak unutulmuyor. Bu, **Başlık 1'in 1.
 kararını (C kovasına 3 aylık hatırlatıcı) gereksiz kılıyor olabilir**:
 C'deki bir isim zaten bir sonraki turda yeniden değerlendirilecek.
 Başlık 6 ele alınırken bu madde tekrar gözden geçirilmeli.
+
+### Başlık 4 — Portföy takibi (2026-08-15)
+
+Başlık 3, tarama hattını saf keşfe ayırdığı için açık tezleri besleme
+sorumluluğu tamamen buraya düştü. Ayrıca gündemdeki "muhasebe" ile
+"portföy seviyesinde karar" ayrımı korunuyor: ilki bizim tuttuğumuz
+defter, ikincisi skill'in işi.
+
+**Kararlar:**
+
+1. **Ritim mandate'ten geliyor, icat edilmiyor.** idea-generation
+   talimatındaki mandate zaten "Review weekly, rebalance monthly ... 
+   neither is obliged to [change the portfolio]" diyor. Buna karşılık iki
+   ayrı oturum: **haftalık tez sağlığı** ve **aylık rebalans**. Farklı
+   sorular oldukları için ayrı kalıyorlar.
+   *Reddedilen alternatifler:* tek haftalık oturum (her hafta tam rebalans
+   düşüncesi gereksiz işlem dürtüsü yaratır), olay-güdümlü/takvimsiz
+   (mandate'in ritmiyle çelişir, sessiz dönemlerde portföy hiç gözden
+   geçirilmez).
+
+2. **Haftalık kontrol iki kademeli: önce mekanik, sonra gerekirse derin.**
+   Her açık tezin kayıtlı beklentileri taze veriyle LLM'siz karşılaştırılır;
+   yalnız sapma gösterenler için `thesis_tracker` oturumu açılır. Sessiz
+   haftalarda hiç LLM çağrısı olmaz. `check_triggers` altyapısı zaten var.
+   *Reddedilen alternatifler:* her tez için ayrı oturum (10 tez = haftada
+   10 oturum, çoğu "değişen bir şey yok" diyecek), tek toplu oturum (tez
+   başına derinlik düşer -- dilim-göreceli sorunun aynısı).
+   **Bu, Başlık 2'de mekanizmasız kalan `re-underwrite` tetikleyicisinin
+   yaşadığı yerdir.**
+
+3. **Sapma ölçüsü teze özeldir, jenerik değil.** Tez açılırken (pitch
+   `actionable_candidate` → `thesis_opened`) `first_rejection`'ın metinsel
+   hali agy çıkarımıyla ölçülebilir eşiklere dönüştürülür ve tez kaydına
+   yazılır.
+   *Reddedilen alternatif:* her tez için aynı jenerik ölçü seti (yeni
+   bilanço, fiyat eşiği, revizyon dengesi, değerleme sapması) -- kurmak
+   kolay ama tezin asıl bozulma koşulunu yakalamaz.
+
+4. **Ölçülemeyen bozulma koşulu atılmaz, metinsel saklanır.** Pack'te
+   karşılığı olmayan koşullar (ör. "hyperscaler capex'i backlog'a
+   dönüşmezse") tez kaydında metin olarak kalır ve haftalık oturumda
+   "elle kontrol edilecek koşullar" olarak listelenir. Ölçülebilenler
+   mekanik kontrole girer.
+   *Reddedilen alternatifler:* sert fail-closed (tüm koşullar ölçülebilir
+   değilse tez açılmaz -- en değerli nitel tezler tam bu yüzden bloklanır),
+   ölçülemeyenleri atmak (tezin asıl gerekçesi kaybolur).
+
+5. **Aylık rebalans mantığı `portfolio-risk-management` skill'ine
+   devredilir.** Histerezis, ağırlıklandırma, korelasyon ve yoğunlaşma
+   kurallarını kendimiz tanımlamıyoruz; skill zaten bu iş için yazılmış.
+   Bizim işimiz orkestrasyon: skill'i kataloğa eklemek, portföy paketini
+   üretmek, çıktısını kaydetmek. Repo'nun mevcut deseniyle tutarlı --
+   analitik yargı skill'in, akış bizim.
+   **Açık iş:** skill kurulu olmadığı için girdi/çıktı sözleşmesi
+   bilinmiyor. `config/pei-workflows.json`'a eklenecek `pack_step`,
+   `required_workflows` ve `result_contract` alanları ancak skill
+   incelendikten sonra doldurulabilir.
+
+6. **Portföy defteri olay tabanlı olur.** Append-only işlem kaydı
+   (alım/satım/temettü; tarih, fiyat, adet ve **hangi teze bağlı**);
+   mevcut pozisyonlar bundan türetilir. Repo'nun geri kalanıyla aynı desen
+   (`events.jsonl`, append-only tez kaydı). Gerekçe: "bu tezle ne zaman
+   girdim, ne kazandım" sorusu ancak böyle cevaplanabilir -- tezlerin
+   gerçekten işe yarayıp yaramadığını ölçmenin tek yolu bu.
+   *Reddedilen alternatifler:* mutable pozisyon tablosu (kapanan pozisyon
+   iz bırakmadan siliniyor), olay defteri + türetilmiş önbellek (10-20
+   pozisyon ölçeğinde gereksiz).
+
+**Önemli not:** Mevcut `src/adapter/portfolio.py` / `data/portfolio/
+portfolio.json` **dummy bir çalışma**; bu tasarımda referans alınmadı.
+Gerçek defter yukarıdaki 6. maddeye göre sıfırdan kurulacak.
