@@ -1769,8 +1769,11 @@ def cmd_run(args: argparse.Namespace) -> int:
     except packs.PackError as exc:
         raise FundError(str(exc)) from exc
 
+    # Next to the ledger the artefacts belong to, not next to the repository.
+    # A second ledger (a test, a scratch book) must not scatter run output into
+    # the working tree.
     workdir = Path(args.workdir) if args.workdir else (
-        schemas.repo_root() / "data" / "fund" / "runs" / job["job_id"])
+        ledger.path.parent / "runs" / job["job_id"])
 
     if args.dry_run:
         workdir.mkdir(parents=True, exist_ok=True)
