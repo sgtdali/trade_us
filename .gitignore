@@ -31,3 +31,9 @@ pei/kpi/
 /data/pei-workflow/dashboard-scratch/
 
 # web/ Next.js paneli kendi .gitignore'unu tasir (node_modules, .next, vb).
+
+# Skill run artefacts. The ledger references them by digest and they can be
+# regenerated; the sidecar contents are already recorded in the job revisions.
+/data/fund/runs/
+# Regenerated from the ledger on demand by `fund report`.
+/data/fund/report.html
