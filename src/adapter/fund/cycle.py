@@ -120,7 +120,8 @@ def plan_work(
                     or observation.get("review_due")
                     or observation.get("price_window")
                     or observation["observed_at"][:10])
-        key = (observation["_security_id"], observation.get("_thesis_id"), evidence)
+        key = (observation.get("_security_id") or "-",
+               observation.get("_thesis_id"), evidence)
         grouped.setdefault(key, []).append(observation)
 
     planned: list[PendingWork] = []

@@ -135,7 +135,7 @@ def new_job(
     rule_version: int,
     recipe: str,
     assessment_mode: str,
-    security_id: str,
+    security_id: str | None,
     dedup_key_value: str,
     thesis_id: str | None = None,
     decision_deadline: str | None = None,
@@ -149,10 +149,12 @@ def new_job(
         "rule_version": rule_version,
         "recipe": recipe,
         "assessment_mode": assessment_mode,
-        "security_id": security_id,
         "dedup_key": dedup_key_value,
         "attempts": [],
     }
+    # A screening job is about a universe, not a security.
+    if security_id and security_id != "-":
+        document["security_id"] = security_id
     if thesis_id:
         document["thesis_id"] = thesis_id
     if decision_deadline:

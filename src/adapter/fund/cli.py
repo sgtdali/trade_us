@@ -35,6 +35,7 @@ from . import (
     quality as quality_module,
     recipes,
     report,
+    screening,
     schemas,
     sizing,
     store,
@@ -1952,6 +1953,33 @@ def cmd_research_cycle(args: argparse.Namespace) -> int:
                 as_of=as_of,
             ))
 
+        # 4. Discovery, if it is switched on. Last, and rate-limited by
+        #    attention rather than cost: a candidate not yet underwritten is a
+        #    reason not to raise another.
+        discovery_rule = dispatch.match("periodic_discovery", has_open_thesis=False)
+        if discovery_rule is not None:
+            existing = ledger.jobs()
+            by_security = {h.document["security_id"]: h for h in theses.values()}
+            last = max(
+                (job["created_at"][:10] for job in existing
+                 if job["trigger_snapshot"]["observation"] == "periodic_discovery"),
+                default=None)
+            decision = screening.should_run(
+                as_of=as_of,
+                last_discovery=last,
+                open_candidates=screening.count_open_candidates(
+                    existing, theses_by_security=by_security),
+                open_positions=len(_funded_securities(ledger)),
+                max_active_positions=policy_module.load()["capacity"]["max_active_positions"],
+                interval_days=tuning["discovery_interval_days"],
+                max_open_candidates=tuning["max_open_candidates"],
+            )
+            if decision.should_run:
+                observations.append(screening.discovery_observation(
+                    as_of=as_of, universe_id=tuning["discovery_universe"]))
+            else:
+                report.notes.append(f"discovery skipped: {decision.reason}")
+
         report.observed = len(observations)
 
         # 3. Match, merge, deduplicate.
@@ -2001,6 +2029,41 @@ def cmd_research_cycle(args: argparse.Namespace) -> int:
         print(f"  ! {job_id}: {error}")
     if report.jobs_opened or report.jobs_failed:
         print("  See `fund inbox` in the morning.")
+    return 0
+
+
+def cmd_discovery_status(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    tuning = dispatch.load_tuning()
+    rule = dispatch.match("periodic_discovery", has_open_thesis=False)
+    theses = _theses(ledger)
+    by_security = {h.document["security_id"]: h for h in theses.values()}
+    existing = ledger.jobs()
+    last = max((job["created_at"][:10] for job in existing
+                if job["trigger_snapshot"]["observation"] == "periodic_discovery"), default=None)
+
+    decision = screening.should_run(
+        as_of=args.as_of or _today(),
+        last_discovery=last,
+        open_candidates=screening.count_open_candidates(existing, theses_by_security=by_security),
+        open_positions=len(_funded_securities(ledger)),
+        max_active_positions=policy_module.load()["capacity"]["max_active_positions"],
+        interval_days=tuning["discovery_interval_days"],
+        max_open_candidates=tuning["max_open_candidates"],
+    )
+
+    print("DISCOVERY")
+    print(f"  {'enabled':<22}{'yes' if rule else 'no'}")
+    if rule is None:
+        print("  Switch it on in config/fund/dispatch-tuning.json once the monitoring of")
+        print("  the book you already own is reliable. Until then discovery is a way of")
+        print("  not looking at what is already there.")
+        return 0
+    print(f"  {'universe':<22}{tuning['discovery_universe']}")
+    print(f"  {'interval':<22}{tuning['discovery_interval_days']} days")
+    print(f"  {'open candidates':<22}{decision.open_candidates} "
+          f"(limit {tuning['max_open_candidates']})")
+    print(f"  {'runs tonight':<22}{'yes' if decision.should_run else 'no'} -- {decision.reason}")
     return 0
 
 
@@ -2479,6 +2542,11 @@ def build_parser() -> argparse.ArgumentParser:
                             help="write the pack and stop")
     run_parser.add_argument("--as-of")
     run_parser.set_defaults(handler=cmd_run)
+
+    discovery = subparsers.add_parser(
+        "discovery", help="whether the screen is on, and whether it runs tonight")
+    discovery.add_argument("--as-of")
+    discovery.set_defaults(handler=cmd_discovery_status)
 
     quality = subparsers.add_parser(
         "quality", help="is the monitoring alive, and is the judgement real")

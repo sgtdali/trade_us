@@ -112,17 +112,29 @@ def sidecars_file(tmp_path, **overrides):
 
 # ------------------------------------------------------------- dispatch
 
-def test_every_rule_requires_an_open_thesis_and_names_a_recipe():
-    """Nothing in the table acts on a company we have not underwritten."""
+def test_every_rule_names_a_real_recipe():
     assert {rule.rule_id for rule in dispatch.RULES} == {
         "new_filing_open_thesis", "earnings_evidence_open_thesis",
         "review_due_open_thesis", "price_shock_open_thesis",
-        "mechanical_breach_open_thesis",
+        "mechanical_breach_open_thesis", "periodic_discovery",
     }
     for rule in dispatch.RULES:
-        assert rule.requires_open_thesis
         assert rule.recipe in recipes.RECIPE_STEPS
         assert rule.version >= 1
+
+
+def test_only_discovery_acts_without_an_open_thesis():
+    """Everything else is about a company we have already underwritten."""
+    without_thesis = [rule.rule_id for rule in dispatch.RULES if not rule.requires_open_thesis]
+    assert without_thesis == ["periodic_discovery"]
+
+
+def test_discovery_ships_switched_off():
+    """Monitoring the book you own has to be reliable before looking for more."""
+    by_id = {rule.rule_id: rule for rule in dispatch.RULES}
+    assert by_id["periodic_discovery"].enabled is False
+    assert all(rule.enabled for rule in dispatch.RULES
+               if rule.rule_id != "periodic_discovery")
 
 
 def test_a_price_shock_is_reviewed_blind():
@@ -145,8 +157,8 @@ def test_a_filing_with_no_thesis_matches_nothing():
 
 
 def test_an_observation_with_no_rule_matches_nothing():
-    """Discovery arrives in F10; until then the observation simply goes nowhere."""
-    assert dispatch.match("periodic_discovery", has_open_thesis=True) is None
+    """preview_without_assessment has no rule yet; the observation goes nowhere."""
+    assert dispatch.match("preview_without_assessment", has_open_thesis=True) is None
 
 
 def test_a_disabled_rule_stops_matching():

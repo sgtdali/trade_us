@@ -520,7 +520,7 @@ RESEARCH_JOB = RecordKind(
     columns=lambda document: {
         "status": document["status"],
         "dedup_key": document["dedup_key"],
-        "security_id": document["security_id"],
+        "security_id": document.get("security_id", "-"),
         "thesis_id": document.get("thesis_id"),
         "created_at": document["created_at"],
     },

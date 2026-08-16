@@ -95,6 +95,18 @@ _BASE_RULES: tuple[DispatchRule, ...] = (
                     "view is hardest to re-examine honestly.",
     ),
     DispatchRule(
+        rule_id="periodic_discovery",
+        version=1,
+        observation="periodic_discovery",
+        recipe="idea_generation",
+        assessment_mode="de_novo",
+        requires_open_thesis=False,
+        description="A low-frequency screen for names we have no view on. Off by default: "
+                    "monitoring the book you already own has to be reliable first, or "
+                    "discovery becomes a way of not looking at what is already there.",
+        enabled=False,
+    ),
+    DispatchRule(
         rule_id="mechanical_breach_open_thesis",
         version=1,
         observation="mechanical_breach",
@@ -112,11 +124,16 @@ TUNING_RELATIVE_PATH = "config/fund/dispatch-tuning.json"
 #: What the owner may change without touching code. Deliberately four knobs:
 #: anything more expressive becomes a rule language, and a rule language needs
 #: a permission model nobody asked for.
-TUNABLE_FIELDS = ("enabled", "cooldown_days", "price_shock_bps", "price_shock_window_days")
+TUNABLE_FIELDS = ("enabled", "cooldown_days", "price_shock_bps",
+                  "price_shock_window_days", "discovery_interval_days",
+                  "max_open_candidates", "discovery_universe")
 
 DEFAULT_TUNING: dict[str, Any] = {
     "price_shock_bps": 2000,
     "price_shock_window_days": 30,
+    "discovery_interval_days": 30,
+    "max_open_candidates": 3,
+    "discovery_universe": "sp500",
 }
 
 

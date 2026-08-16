@@ -38,7 +38,7 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 | F7 | `research-cycle` — kendi kendine çalışma | ✅ Bitti — **kritik eşik geçildi** |
 | F8 | İkinci dalga tetikleyiciler | ✅ Bitti |
 | F9 | Canlılık ve kalite uyarıları | ✅ Bitti |
-| F10 | Discovery | ⬜ Başlanmadı |
+| F10 | Discovery | ✅ Kod bitti — **varsayılan kapalı** |
 
 İşaretler: ⬜ başlanmadı · 🔵 sürüyor · ✅ bitti · ⚠ engelli/sorunlu
 
@@ -373,13 +373,13 @@ hatırlamıyor, skill seçmiyor; sabah yalnız sonucu yargılıyor.
 
 ← F9.4. **Mevcut kitabın izlenmesi güvenilir olmadan başlamayın.**
 
-- [ ] **F10.1 Periyodik discovery dispatch kuralı**
+- [x] **F10.1 Periyodik discovery dispatch kuralı**
   *Bitti:* Düşük frekanslı `idea-generation` aynı sabit dispatch
   mekanizmasıyla çalışıyor; portföy pozisyonları pack'e **girmiyor**.
-- [ ] **F10.2 Discovery çıktısının sınırı**
+- [x] **F10.2 Discovery çıktısının sınırı**
   *Bitti:* Sonuç yalnız araştırma adayı üretiyor; sermaye kararı, tez veya
   readiness üretmiyor; aday `onboarding_underwrite` yoluna giriyor.
-- [ ] **F10.3 Aday üretim hızının sınırlanması**
+- [x] **F10.3 Aday üretim hızının sınırlanması**
   *Bitti:* Aynı anda açık aday sayısı sınırlı; kitap doluyken discovery
   yoğunluğu azalıyor.
 
@@ -684,6 +684,30 @@ saymak o tercihi cezalandırırdı. Sözleşmesi **hiç olmayan** tez ise kör.
 
 Tek bir `unavailable` → `degraded`, iki **ardışık** → `blind`. Gecikmiş bir
 çeyrek ile çalışmayı bırakmış bir kural aynı şey değil.
+
+### 2026-08-16 — F10 varsayılan olarak kapalı
+
+`periodic_discovery` kuralı `enabled=False` ile geliyor. Plan zaten "mevcut
+kitabın izlenmesi güvenilir olmadan başlamayın" diyor; bunu bir uyarı notu
+yerine varsayılan yaptım. Açmak `config/fund/dispatch-tuning.json`'da bir
+satır — kod değişikliği değil.
+
+### 2026-08-16 — F10.2 mükerrer filtresi **sonradan**
+
+Tarama pack'i portföy hakkında hiçbir şey taşımıyor: pozisyon, ağırlık, tez,
+önceki hüküm yok. Zaten bildiğimiz isimler **çıktıdan** eleniyor, girdiden
+değil. Girdiden elemek modele hangi isimlere zaten inandığımızı söylerdi — bir
+modelin zeki görünmesinin en ucuz yolu soran kişiyle aynı fikirde olmaktır.
+
+`idea-generation` sidecar'ı `proposed_assessment` taşıyamıyor (şema
+reddediyor). Tarama aday üretir, sermaye hükmü değil.
+
+### 2026-08-16 — F10.3 sınır dikkat, maliyet değil
+
+İki fren: (1) henüz underwrite edilmemiş aday sayısı sınırı (3) — bekleyen bir
+aday yeni aday üretmemek için sebeptir; (2) kitap doluyken interval iki katına
+çıkıyor, tamamen durmuyor — daha iyi bir fikir daha zayıf olanın yerini
+alabilir.
 
 ### 2026-08-16 — plan dışı eklenenler
 

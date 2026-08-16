@@ -6,7 +6,7 @@
   "type": "object",
   "required": [
     "job_id", "created_at", "status", "trigger_snapshot", "rule_id", "rule_version",
-    "recipe", "assessment_mode", "security_id", "dedup_key", "attempts"
+    "recipe", "assessment_mode", "dedup_key", "attempts"
   ],
   "properties": {
     "job_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/researchJobId"},
@@ -157,6 +157,15 @@
   "additionalProperties": false,
 
   "allOf": [
+    {
+      "$comment": "Every recipe but screening is about one security. A screen is about a universe, so it carries none -- and must not, since knowing which names we hold is exactly what it may not see.",
+      "if": {"properties": {"recipe": {"not": {"const": "idea_generation"}}}, "required": ["recipe"]},
+      "then": {"required": ["security_id"]},
+      "else": {"properties": {
+        "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+        "thesis_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+      }}
+    },
     {
       "if": {"properties": {"status": {"const": "awaiting_adjudication"}}, "required": ["status"]},
       "then": {"required": ["result"]}
