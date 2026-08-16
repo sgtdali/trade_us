@@ -33,7 +33,7 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 | F2 | Capital policy ve karar akışı | ✅ Bitti |
 | F3 | Tez lifecycle ve izleme sözleşmesi | 🔵 F3.1-F3.4 bitti · F3.5 gerçek pozisyon bekliyor |
 | F4 | Mekanik kontrol motoru | ✅ Bitti |
-| F5 | Job, dedup, inbox | ⬜ Başlanmadı |
+| F5 | Job, dedup, inbox | ✅ Bitti |
 | F6 | İlk otomatik recipe | ⬜ Başlanmadı |
 | F7 | `research-cycle` — kendi kendine çalışma | ⬜ Başlanmadı |
 | F8 | İkinci dalga tetikleyiciler | ⬜ Başlanmadı |
@@ -247,24 +247,24 @@ pozisyon/nakit/NAV state'i replay edilebiliyor.
 
 ← F4.4
 
-- [ ] **F5.1 `schemas/fund/research-job-record.schema.json`**
+- [x] **F5.1 `schemas/fund/research-job-record.schema.json`**
   *Bitti:* Tetikleyici snapshot'ı, `rule_id` + `rule_version`, recipe,
   `attempts[]`, sonuç referansı, hata durumu.
-- [ ] **F5.2 Dedup ve cooldown** ← F5.1
+- [x] **F5.2 Dedup ve cooldown** ← F5.1
   *Bitti:* Aynı `thesis_id + monitoring_contract_version + evidence_accession`
   ikinci kez iş açmıyor; aynı teze ait birden fazla tetikleyici tek işte
   birleşiyor.
-- [ ] **F5.3 Retry politikası** ← F5.1
+- [x] **F5.3 Retry politikası** ← F5.1
   *Bitti:* Tasarım Bölüm 6'daki hata tablosu uygulanıyor (veri hatası,
   skill/transport hatası, kontrat hatası, geç sonuç); üç başarısız cycle'dan
   sonra otomatik deneme duruyor.
-- [ ] **F5.4 Q0/Q1/Q2 kuyruk projection'ı** ← F5.1
+- [x] **F5.4 Q0/Q1/Q2 kuyruk projection'ı** ← F5.1
   *Bitti:* Üç sınıf doğru dolduruluyor; Q1 sıralaması tasarımdaki gibi;
   kuyruk ayrı bir defter değil, job ve açık assessment'lardan türetiliyor.
-- [ ] **F5.5 `fund inbox`** ← F5.4
+- [x] **F5.5 `fund inbox`** ← F5.4
   *Bitti:* Sessiz haftada "işlem gerekmiyor" özeti; iş varsa neden/son
   tarih/tahmini süre gösteriliyor.
-- [ ] **F5.6 `fund adjudicate <job_id>`** ← F5.5
+- [x] **F5.6 `fund adjudicate <job_id>`** ← F5.5
   *Bitti:* Tasarım Bölüm 7'deki ekran; sermaye etkisi **görünmüyor**; toplu
   onay yok; `Accept` varsayılan değil; üç kapalı soru soruluyor; maddi
   değişiklikte gerekçe zorunlu; `Reject` ve `Human-authored replacement`
@@ -546,6 +546,36 @@ sağlıklı" demez, "artık sandığımız şeyi ölçmüyoruz" der.
 
 Her kayda `binding_signature` yazılıyor (metrik, birimler, veri tipi, dönem);
 sonraki bir katalog değişikliği karşılaştırmayla görünür oluyor.
+
+### 2026-08-16 — F5.1 job'lar sürümlü satırlar olarak saklanıyor
+
+Job durumu değişiyor (pending → running → awaiting_adjudication → adjudicated),
+ama `commit()` yalnız insert yapıyor. Çözüm: her yazım yeni bir **revizyon**
+satırı, güncel job en yüksek revizyon. Tek yazma kapısı korunuyor, deneme
+geçmişi sessizce değiştirilemiyor ve "üçüncü hatadan önce bu job neye
+benziyordu" sorusu cevaplanabilir kalıyor.
+
+`dedup_key` üzerinde `revision = 1` koşullu unique index: bir dedup anahtarı
+ömür boyu bir job açar.
+
+### 2026-08-16 — F5.3 hata sınıfına göre farklı retry bütçesi
+
+Tasarımın hata tablosu sınıfları ayırıyor ama sayı vermiyor. Kod:
+`data_source_error` ve `skill_transport_error` 3, `contract_error` 2,
+`late_result` 1 deneme. Gerekçe: veri kaynağı genelde bozuk değil geç;
+transport hatası geçici; kontrat hatası kendi kendine düzelmez.
+`contract_failed` yine de bir onarım denemesine açık (tasarım "bir onarım
+denemesi" diyor) — formatlama hatası geçici olabiliyor.
+
+### 2026-08-16 — F5.6 adjudication komutu varsayılansız
+
+`fund adjudicate JOB-...` tek başına **ekranı gösterir, hiçbir şey kaydetmez**.
+Beş seçenekten biri açıkça verilmeli. Toplu onay yok: komut tek bir job_id
+alıyor, `--all` gibi bir bayrak hiç eklenmedi.
+
+`--reject` hiçbir assessment yazmıyor — öneri sessizce düzeltilmiyor. Farklı
+hüküm `--replace` ile ayrı bir `human_authored` kayıt doğuruyor ve
+`derived_from` ile öneriye bağlanıyor.
 
 ### 2026-08-16 — plan dışı eklenenler
 

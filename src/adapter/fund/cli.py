@@ -11,6 +11,7 @@ because in an append-only ledger the identifier is how a mistake gets fixed.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import date, datetime, timezone
@@ -22,6 +23,7 @@ from . import (
     decisions,
     ids,
     instruments,
+    jobs,
     metrics,
     monitoring,
     policy as policy_module,
@@ -1186,6 +1188,400 @@ def cmd_checks(args: argparse.Namespace) -> int:
     return 0
 
 
+# --------------------------------------------------------------------------
+# jobs, inbox, adjudication
+# --------------------------------------------------------------------------
+
+def cmd_job_open(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master, security_id = _resolve(args, args.security)
+
+    thesis_id = None
+    if args.thesis or args.observation in {"mechanical_breach", "review_due"}:
+        found = thesis_module.open_for_security(_theses(ledger), security_id)
+        if found is None and args.observation in {"mechanical_breach", "review_due"}:
+            raise FundError(f"{args.security} has no open thesis for a {args.observation} trigger")
+        thesis_id = found.thesis_id if found else None
+
+    contract_version = None
+    if thesis_id:
+        contract = _theses(ledger)[thesis_id].document.get("monitoring_contract")
+        contract_version = contract["version"] if contract else None
+
+    key = jobs.dedup_key(
+        observation=args.observation,
+        security_id=security_id,
+        thesis_id=thesis_id,
+        evidence_accession=args.accession,
+        monitoring_contract_version=contract_version,
+        review_due=args.review_due,
+    )
+    existing = ledger.job_for_dedup_key(key)
+    if existing is not None:
+        print(f"already open  {existing['job_id']} ({existing['status']})")
+        print("  same evidence, same contract version: this is the same piece of work")
+        return 0
+
+    snapshot: dict[str, Any] = {
+        "observation": args.observation,
+        "observed_at": _now(),
+    }
+    for field, value in (("evidence_accession", args.accession),
+                         ("evidence_date", args.evidence_date),
+                         ("review_due", args.review_due)):
+        if value:
+            snapshot[field] = value
+    if contract_version is not None:
+        snapshot["monitoring_contract_version"] = contract_version
+
+    document = jobs.new_job(
+        trigger_snapshot=snapshot,
+        rule_id=args.rule_id,
+        rule_version=args.rule_version,
+        recipe=args.recipe,
+        assessment_mode=args.mode,
+        security_id=security_id,
+        dedup_key_value=key,
+        thesis_id=thesis_id,
+        decision_deadline=args.deadline,
+    )
+    ledger.save_job(document)
+    print(f"opened     {document['job_id']}")
+    print(f"  {instruments.ticker_for(master, security_id)}  {args.observation}  "
+          f"-> {args.recipe} ({args.mode})")
+    return 0
+
+
+def cmd_job_result(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    document = ledger.job(args.job)
+
+    proposal = None
+    if args.proposal:
+        proposal = json.loads(Path(args.proposal).read_text(encoding="utf-8"))
+
+    artifact = {
+        "relative_path": args.artifact,
+        "digest": args.digest or ("sha256:" + hashlib.sha256(
+            Path(args.artifact).read_bytes() if Path(args.artifact).is_file()
+            else args.artifact.encode("utf-8")).hexdigest()),
+    }
+
+    updated = jobs.attach_result(document, artifact=artifact, proposed_assessment=proposal)
+    try:
+        schemas.validate(updated, schemas.RESEARCH_JOB_RECORD)
+    except FundError as exc:
+        failed = jobs.mark_contract_failed(document, f"result does not satisfy its contract: {exc}")
+        ledger.save_job(failed)
+        raise FundError(
+            "the result does not satisfy its contract, so it will not be put in front of you.\n"
+            f"  {exc}"
+        ) from exc
+
+    ledger.save_job(updated)
+    print(f"attached   {args.job}")
+    print(f"  status {updated['status']}")
+    if proposal:
+        print(f"  proposes readiness {proposal['readiness']}")
+    print(f"  adjudicate with: fund adjudicate {args.job}")
+    return 0
+
+
+def cmd_job_fail(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    document = ledger.job(args.job)
+    updated = jobs.fail_attempt(document, error_class=args.error_class, detail=args.detail)
+    ledger.save_job(updated)
+
+    print(f"failed     {args.job}  ({args.error_class})")
+    print(f"  attempt {jobs.attempts_used(updated)} of at most {jobs.MAX_ATTEMPTS}")
+    if jobs.stopped(updated):
+        print("  automatic retry stopped -- this is in Q0 now, not forgotten and not repeating")
+    return 0
+
+
+def cmd_jobs(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    records = ledger.jobs(status=args.status)
+    if not records:
+        print("no jobs")
+        return 0
+    print(f"{'CREATED':<22} {'TICKER':<8} {'OBSERVATION':<22} {'RECIPE':<24} "
+          f"{'STATUS':<22} ID")
+    for record in records:
+        ticker = instruments.ticker_for(master, record["security_id"])
+        print(f"{record['created_at']:<22} {ticker:<8} "
+              f"{record['trigger_snapshot']['observation']:<22} {record['recipe']:<24} "
+              f"{record['status']:<22} {record['job_id']}")
+    return 0
+
+
+def _funded_securities(ledger: store.Ledger) -> set[str]:
+    state = projection.project(ledger.account_events())
+    return set(state.open_positions())
+
+
+def cmd_inbox(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    as_of = args.as_of or _today()
+
+    queue = jobs.build_queue(ledger.jobs(), funded_security_ids=_funded_securities(ledger),
+                             as_of=as_of)
+
+    print(f"INBOX -- {as_of}")
+    print()
+    if queue.empty:
+        print("  Nothing needs you today.")
+        if queue.q2:
+            print(f"  ({len(queue.q2)} item(s) recorded for information only)")
+        return 0
+
+    if queue.q0:
+        print("Q0 -- BLOCKING")
+        for item in queue.q0:
+            ticker = instruments.ticker_for(master, item.job.get("security_id", "-"))
+            print(f"  {ticker:<8} {item.reason}")
+            if item.detail:
+                print(f"  {'':<8} {item.detail}")
+        print("  New risk should not be increased while these are open.")
+        print()
+
+    if queue.q1:
+        print(f"Q1 -- NEEDS ADJUDICATION  ({jobs.total_estimate(queue)} min estimated)")
+        for item in queue.q1:
+            ticker = instruments.ticker_for(master, item.job["security_id"])
+            deadline = item.job.get("decision_deadline")
+            due = f"  due {deadline}" if deadline else ""
+            estimate = f"~{item.estimate_minutes} min" if item.estimate_minutes else ""
+            print(f"  {ticker:<8} {item.reason:<24} {estimate:<9}{due}")
+            print(f"  {'':<8} fund adjudicate {item.job_id}")
+        print()
+
+    if queue.q2 and args.verbose:
+        print("Q2 -- FOR INFORMATION")
+        for item in queue.q2:
+            ticker = instruments.ticker_for(master, item.job.get("security_id", "-"))
+            print(f"  {ticker:<8} {item.reason}")
+    elif queue.q2:
+        print(f"Q2 -- {len(queue.q2)} item(s) for information (--verbose to see them)")
+    return 0
+
+
+def _render_adjudication(job: dict[str, Any], prior: dict[str, Any] | None,
+                         checks: list[dict[str, Any]], ticker: str) -> None:
+    proposal = job["result"]["proposed_assessment"]
+    trigger = job["trigger_snapshot"]
+
+    print(f"{ticker} -- ADJUDICATION   {job['job_id']}")
+    print(f"  {'Triggered by':<20}{trigger['observation'].replace('_', ' ')}"
+          f"{'  ' + trigger['evidence_accession'] if trigger.get('evidence_accession') else ''}")
+    print(f"  {'Mode':<20}{job['assessment_mode']}")
+    print(f"  {'Recipe':<20}{job['recipe']} (rule {job['rule_id']} v{job['rule_version']})")
+    print()
+
+    print("PROPOSED")
+    print(f"  {'Readiness':<20}{proposal['readiness']}")
+    downside = proposal["downside"]
+    if downside["status"] == "known":
+        print(f"  {'Downside':<20}{Decimal(downside['return_fraction']) * 100:.2f}%")
+        print(f"  {'Scenario':<20}{downside['scenario']}")
+    else:
+        print(f"  {'Downside':<20}unknown -- {downside['reason']}")
+    print(f"  {'Evidence date':<20}{proposal['evidence_date']}")
+    print(f"  {'Review due':<20}{proposal['review_due']}")
+    print()
+    print(f"  {proposal['thesis_summary']}")
+
+    if proposal.get("sources"):
+        print("\nSOURCES")
+        for source in proposal["sources"]:
+            print(f"  {source}")
+    print(f"\n  artifact: {job['result']['artifact']['relative_path']}")
+
+    if prior is not None and job["assessment_mode"] != "de_novo":
+        print("\nAGAINST THE PREVIOUS ACCEPTED JUDGEMENT")
+        print(f"  {'readiness':<20}{prior['readiness']} -> {proposal['readiness']}")
+        before = prior["downside"]
+        if before["status"] == "known" and downside["status"] == "known":
+            print(f"  {'downside':<20}{Decimal(before['return_fraction']) * 100:.2f}% -> "
+                  f"{Decimal(downside['return_fraction']) * 100:.2f}%")
+        else:
+            print(f"  {'downside':<20}{before['status']} -> {downside['status']}")
+        print(f"  {'evidence date':<20}{prior['evidence_date']} -> {proposal['evidence_date']}")
+        material, why = jobs.material_change(proposal, prior)
+        if material:
+            print(f"  MATERIAL CHANGE: {why} -- a rationale is required")
+
+    if checks:
+        print("\nMECHANICAL CHECKS")
+        for check in checks:
+            value = check.get("observed_value", check.get("unavailable_reason", ""))
+            print(f"  {check['rule_id']:<26} {check['result']:<14} {value}")
+
+    print("\n  Not shown: position weight, cash, P&L, average cost, capital at risk.")
+    print("  Judge the research. The capital consequence is a separate screen.")
+
+
+def cmd_adjudicate(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    job = ledger.job(args.job)
+
+    if job["status"] != jobs.AWAITING_ADJUDICATION:
+        raise FundError(f"job {args.job} is {job['status']}, not awaiting adjudication")
+    proposal = job.get("result", {}).get("proposed_assessment")
+    if proposal is None:
+        raise FundError(f"job {args.job} carries no proposed assessment to adjudicate")
+
+    security_id = job["security_id"]
+    ticker = instruments.ticker_for(master, security_id)
+    prior = ledger.latest_assessment(security_id)
+    checks = []
+    if job.get("thesis_id"):
+        checks = [c for c in ledger.check_records(thesis_id=job["thesis_id"])][-5:]
+
+    chosen = [name for name in ("accept", "reject", "replace", "defer", "acknowledge")
+              if getattr(args, name)]
+    if not chosen:
+        _render_adjudication(job, prior, checks, ticker)
+        print()
+        print("  Nothing recorded. Choose one:")
+        print("    --accept       with --sources-checked / --would-accept / --change-driver")
+        print("    --reject       --reason '...'   (a factual error: the proposal is refused)")
+        print("    --replace      write your own judgement, linked to this proposal")
+        print("    --defer        --reason '...'")
+        print("    --acknowledge  you are skipping the review; readiness cannot rise")
+        return 0
+    if len(chosen) > 1:
+        raise FundError(f"choose one outcome, not {len(chosen)}: {', '.join(chosen)}")
+    action = chosen[0]
+
+    if action == "reject":
+        if not args.reason:
+            raise FundError("--reject needs --reason")
+        ledger.save_job(jobs.adjudicate(job, outcome="rejected", reason=args.reason,
+                                        minutes_spent=args.minutes))
+        print(f"rejected   {args.job}")
+        print(f"  {args.reason}")
+        print("  No assessment was written. The proposal is not silently corrected.")
+        return 0
+
+    if action == "defer":
+        if not args.reason:
+            raise FundError("--defer needs --reason")
+        ledger.save_job(jobs.adjudicate(job, outcome="deferred", reason=args.reason,
+                                        minutes_spent=args.minutes))
+        print(f"deferred   {args.job}")
+        print(f"  {args.reason}")
+        print("  It stays in Q1.")
+        return 0
+
+    material, why = jobs.material_change(proposal, prior)
+
+    if action == "replace":
+        if not (args.readiness and (args.downside or args.downside_unknown) and args.summary):
+            raise FundError(
+                "--replace needs --summary, --readiness and either --downside with "
+                "--downside-scenario or --downside-unknown with --downside-reason"
+            )
+        readiness = args.readiness
+        summary = args.summary
+        if args.downside_unknown:
+            downside: dict[str, Any] = {"status": "unknown",
+                                        "reason": args.downside_reason or "not stated"}
+        else:
+            if not args.downside_scenario:
+                raise FundError("--downside needs --downside-scenario")
+            downside = {"status": "known",
+                        "return_fraction": to_string(Decimal(args.downside)),
+                        "scenario": args.downside_scenario}
+        human_authored = True
+        outcome = "human_authored_replacement"
+    else:
+        readiness = proposal["readiness"]
+        summary = proposal["thesis_summary"]
+        downside = dict(proposal["downside"])
+        human_authored = False
+        outcome = ("acknowledged_without_full_adjudication" if action == "acknowledge"
+                   else "accepted")
+
+    if action == "accept" and not args.change_driver and prior is not None:
+        raise FundError("--change-driver is required when a previous assessment exists")
+    if material and action in {"accept", "replace"} and not args.rationale:
+        raise FundError(f"this is a material change ({why}); --rationale is required")
+    if action == "accept" and args.sources_not_checked:
+        raise FundError(
+            "if you did not check the critical sources this is not a full adjudication; "
+            "use --acknowledge instead"
+        )
+
+    acceptance: dict[str, Any] = {
+        "accepted_at": _now(),
+        "mode": ("acknowledged_without_full_adjudication" if action == "acknowledge"
+                 else "human_adjudicated"),
+        "critical_sources_checked": not args.sources_not_checked and action != "acknowledge",
+        "would_accept_downside_without_position": not args.would_not_accept,
+    }
+    if args.change_driver:
+        acceptance["main_change_driver"] = args.change_driver
+    if args.rationale:
+        acceptance["rationale"] = args.rationale
+    if args.minutes is not None:
+        acceptance["minutes_spent"] = args.minutes
+
+    assessment: dict[str, Any] = {
+        "assessment_id": ids.new_id(ids.ASSESSMENT),
+        "security_id": security_id,
+        "as_of": args.as_of or _today(),
+        "assessment_mode": job["assessment_mode"],
+        "thesis_summary": summary,
+        "readiness": readiness,
+        "downside": downside,
+        "evidence_date": proposal["evidence_date"],
+        "review_due": proposal["review_due"],
+        "human_authored": human_authored,
+        "acceptance": acceptance,
+        "source_artifact": job["result"]["artifact"],
+    }
+    if job.get("thesis_id"):
+        assessment["thesis_id"] = job["thesis_id"]
+    if prior is not None:
+        assessment["derived_from"] = prior["assessment_id"]
+    elif job["assessment_mode"] != "de_novo":
+        raise FundError(
+            f"mode {job['assessment_mode']} needs a previous assessment and there is none"
+        )
+
+    result = ledger.commit([store.Write(kind=store.ASSESSMENT_RECORD.name, document=assessment)],
+                           allow_duplicate=True)
+    assessment_id = result.written[0]
+
+    ledger.save_job(jobs.adjudicate(job, outcome=outcome, assessment_id=assessment_id,
+                                    reason=args.rationale or args.reason,
+                                    minutes_spent=args.minutes))
+
+    if job.get("thesis_id"):
+        _commit_thesis(ledger, thesis_module.assessment_event(
+            thesis_id=job["thesis_id"], assessment_id=assessment_id,
+            effective_date=assessment["as_of"]))
+
+    label = {"accepted": "accepted", "human_authored_replacement": "replaced",
+             "acknowledged_without_full_adjudication": "acknowledged"}[outcome]
+    print(f"{label:<10} {args.job}")
+    print(f"  assessment {assessment_id}  readiness {readiness}")
+    if outcome == "acknowledged_without_full_adjudication":
+        print("  acknowledged without full adjudication -- this cannot raise readiness")
+    if outcome == "human_authored_replacement":
+        print(f"  your judgement, linked to the proposal it replaces")
+    if job.get("thesis_id") and _theses(ledger)[job["thesis_id"]].status == \
+            thesis_module.REVIEW_REQUIRED:
+        print(f"  the thesis is still review_required -- resolve it with "
+              f"`fund thesis status {job['thesis_id']} --to ...`")
+    return 0
+
+
 def cmd_report(args: argparse.Namespace) -> int:
     loaded = policy_module.load()
     currency = loaded["measurement"]["base_currency"]
@@ -1475,6 +1871,78 @@ def build_parser() -> argparse.ArgumentParser:
     t_reviewed.add_argument("--next-due", required=True)
     t_reviewed.add_argument("--as-of")
     t_reviewed.set_defaults(handler=cmd_thesis_reviewed)
+
+    job_parser = subparsers.add_parser("job", help="research jobs")
+    job_sub = job_parser.add_subparsers(dest="job_command", required=True)
+
+    j_open = job_sub.add_parser("open", help="open a research job")
+    j_open.add_argument("--security", required=True)
+    j_open.add_argument("--observation", required=True,
+                        choices=["new_periodic_filing", "earnings_evidence", "review_due",
+                                 "mechanical_breach", "price_shock",
+                                 "preview_without_assessment", "periodic_discovery"])
+    j_open.add_argument("--recipe", required=True,
+                        choices=["deep_dive_then_tracker", "tracker", "blind_review",
+                                 "onboarding_underwrite", "idea_generation"])
+    j_open.add_argument("--mode", required=True,
+                        choices=["de_novo", "update_against_prior",
+                                 "independent_then_reconcile"])
+    j_open.add_argument("--rule-id", default="manual")
+    j_open.add_argument("--rule-version", type=int, default=1)
+    j_open.add_argument("--thesis", action="store_true", help="attach the open thesis")
+    j_open.add_argument("--accession")
+    j_open.add_argument("--evidence-date")
+    j_open.add_argument("--review-due")
+    j_open.add_argument("--deadline", help="decision deadline; urgency is a date, not an amount")
+    j_open.set_defaults(handler=cmd_job_open)
+
+    j_result = job_sub.add_parser("result", help="attach a skill result to a job")
+    j_result.add_argument("job")
+    j_result.add_argument("--artifact", required=True)
+    j_result.add_argument("--digest")
+    j_result.add_argument("--proposal", help="JSON file holding the proposed assessment")
+    j_result.set_defaults(handler=cmd_job_result)
+
+    j_fail = job_sub.add_parser("fail", help="record a failed attempt")
+    j_fail.add_argument("job")
+    j_fail.add_argument("--error-class", required=True,
+                        choices=["data_source_error", "skill_transport_error",
+                                 "contract_error", "late_result"])
+    j_fail.add_argument("--detail", required=True)
+    j_fail.set_defaults(handler=cmd_job_fail)
+
+    jobs_parser = subparsers.add_parser("jobs", help="list research jobs")
+    jobs_parser.add_argument("--status")
+    jobs_parser.set_defaults(handler=cmd_jobs)
+
+    inbox = subparsers.add_parser("inbox", help="the daily queue")
+    inbox.add_argument("--as-of")
+    inbox.add_argument("--verbose", action="store_true")
+    inbox.set_defaults(handler=cmd_inbox)
+
+    adjudicate = subparsers.add_parser(
+        "adjudicate", help="judge one research result -- exactly one, never in bulk")
+    adjudicate.add_argument("job")
+    adjudicate.add_argument("--accept", action="store_true")
+    adjudicate.add_argument("--reject", action="store_true")
+    adjudicate.add_argument("--replace", action="store_true",
+                            help="write your own judgement instead")
+    adjudicate.add_argument("--defer", action="store_true")
+    adjudicate.add_argument("--acknowledge", action="store_true")
+    adjudicate.add_argument("--reason")
+    adjudicate.add_argument("--change-driver")
+    adjudicate.add_argument("--rationale")
+    adjudicate.add_argument("--minutes", type=int)
+    adjudicate.add_argument("--sources-not-checked", action="store_true")
+    adjudicate.add_argument("--would-not-accept", action="store_true")
+    adjudicate.add_argument("--summary", help="with --replace")
+    adjudicate.add_argument("--readiness", choices=["watchlist", "starter", "core", "exceptional"])
+    adjudicate.add_argument("--downside")
+    adjudicate.add_argument("--downside-scenario")
+    adjudicate.add_argument("--downside-unknown", action="store_true")
+    adjudicate.add_argument("--downside-reason")
+    adjudicate.add_argument("--as-of")
+    adjudicate.set_defaults(handler=cmd_adjudicate)
 
     check = subparsers.add_parser("check", help="run a thesis's mechanical rules")
     check.add_argument("thesis", help="thesis id or ticker")

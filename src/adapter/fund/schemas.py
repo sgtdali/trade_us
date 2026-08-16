@@ -30,6 +30,7 @@ DECISION_RECORD = "fund:schemas/fund/decision-record.schema.json"
 THESIS = "fund:schemas/fund/thesis.schema.json"
 THESIS_EVENT = "fund:schemas/fund/thesis-event.schema.json"
 MONITORING_CHECK_RECORD = "fund:schemas/fund/monitoring-check-record.schema.json"
+RESEARCH_JOB_RECORD = "fund:schemas/fund/research-job-record.schema.json"
 
 
 def repo_root() -> Path:

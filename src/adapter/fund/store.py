@@ -23,6 +23,7 @@ import hashlib
 import json
 import sqlite3
 from contextlib import contextmanager
+from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
@@ -281,8 +282,56 @@ _MIGRATION_0005 = Migration(
     ),
 )
 
+_MIGRATION_0006 = Migration(
+    version=6,
+    name="research jobs",
+    statements=(
+        # A job is a sequence of immutable revisions, not a row that changes.
+        # Every write stays on the one commit path and the attempt history
+        # cannot be quietly rewritten.
+        """
+        CREATE TABLE research_job (
+            job_id          TEXT NOT NULL,
+            revision        INTEGER NOT NULL,
+            status          TEXT NOT NULL,
+            dedup_key       TEXT NOT NULL,
+            security_id     TEXT NOT NULL,
+            thesis_id       TEXT,
+            created_at      TEXT NOT NULL,
+            written_at      TEXT NOT NULL,
+            content_digest  TEXT NOT NULL,
+            document        TEXT NOT NULL,
+            PRIMARY KEY (job_id, revision)
+        )
+        """,
+        "CREATE INDEX job_by_status ON research_job (status, created_at)",
+        "CREATE INDEX job_by_thesis ON research_job (thesis_id, created_at)",
+        # One dedup key opens one job, ever. Re-running the cycle over the same
+        # evidence must not produce a second opinion about it.
+        """
+        CREATE UNIQUE INDEX job_one_per_dedup_key
+            ON research_job (dedup_key) WHERE revision = 1
+        """,
+        """
+        CREATE TRIGGER research_job_immutable_update
+        BEFORE UPDATE ON research_job
+        BEGIN
+            SELECT RAISE(ABORT, 'job revisions are immutable: write the next revision');
+        END
+        """,
+        """
+        CREATE TRIGGER research_job_immutable_delete
+        BEFORE DELETE ON research_job
+        BEGIN
+            SELECT RAISE(ABORT, 'job revisions cannot be deleted');
+        END
+        """,
+    ),
+)
+
 MIGRATIONS: tuple[Migration, ...] = (
     _MIGRATION_0001, _MIGRATION_0002, _MIGRATION_0003, _MIGRATION_0004, _MIGRATION_0005,
+    _MIGRATION_0006,
 )
 
 
@@ -395,10 +444,24 @@ MONITORING_CHECK_RECORD = RecordKind(
     },
 )
 
+RESEARCH_JOB = RecordKind(
+    name="research_job",
+    table="research_job",
+    schema_id=schemas.RESEARCH_JOB_RECORD,
+    id_field="job_id",
+    columns=lambda document: {
+        "status": document["status"],
+        "dedup_key": document["dedup_key"],
+        "security_id": document["security_id"],
+        "thesis_id": document.get("thesis_id"),
+        "created_at": document["created_at"],
+    },
+)
+
 RECORD_KINDS: dict[str, RecordKind] = {
     kind.name: kind
     for kind in (ACCOUNT_EVENT, ASSESSMENT_RECORD, DECISION_RECORD, THESIS_EVENT,
-                 MONITORING_CHECK_RECORD)
+                 MONITORING_CHECK_RECORD, RESEARCH_JOB)
 }
 
 
@@ -444,6 +507,10 @@ class CommitResult:
 class Write:
     kind: str
     document: Mapping[str, Any]
+    #: Columns the record kind cannot derive from the document alone -- the
+    #: revision number of a job, for instance, which depends on what is
+    #: already stored.
+    extra_columns: Mapping[str, Any] | None = None
 
 
 @dataclass
@@ -535,7 +602,7 @@ class Ledger:
         if not writes:
             return CommitResult()
 
-        prepared: list[tuple[RecordKind, dict[str, Any], str, str]] = []
+        prepared: list[tuple[RecordKind, dict[str, Any], str, str, Write]] = []
         for write in writes:
             kind = RECORD_KINDS.get(write.kind)
             if kind is None:
@@ -545,9 +612,10 @@ class Ledger:
             record_id = document.get(kind.id_field)
             if not isinstance(record_id, str):
                 raise LedgerError(f"{kind.name} is missing {kind.id_field}")
-            prepared.append((kind, document, record_id, content_digest(document)))
+            prepared.append((kind, document, record_id, content_digest(document), write))
 
-        seen_ids = [record_id for _, _, record_id, _ in prepared]
+        seen_ids = [record_id for _, _, record_id, _, write in prepared
+                    if not (write.extra_columns or {}).get("revision")]
         if len(set(seen_ids)) != len(seen_ids):
             raise LedgerError("the same identifier appears twice in one batch")
 
@@ -556,7 +624,7 @@ class Ledger:
 
         with self.connection() as connection:
             with self._write_transaction(connection):
-                for kind, document, record_id, digest in prepared:
+                for kind, document, record_id, digest, write in prepared:
                     existing = [
                         str(row[kind.id_field])
                         for row in connection.execute(
@@ -579,6 +647,8 @@ class Ledger:
                         duplicates.append(warning)
 
                     columns = kind.columns(document)
+                    if write.extra_columns:
+                        columns.update(write.extra_columns)
                     columns[kind.id_field] = record_id
                     columns["content_digest"] = digest
                     columns["document"] = canonical_json(document)
@@ -691,6 +761,65 @@ class Ledger:
         query += " ORDER BY evaluated_at, check_record_id"
         with self.connection() as connection:
             return [json.loads(row["document"]) for row in connection.execute(query, params)]
+
+    def save_job(self, document: Mapping[str, Any]) -> int:
+        """Append the next revision of a job. Returns the revision written."""
+        job_id = document["job_id"]
+        with self.connection() as connection:
+            row = connection.execute(
+                "SELECT MAX(revision) AS revision FROM research_job WHERE job_id = ?", (job_id,)
+            ).fetchone()
+        revision = int(row["revision"] or 0) + 1
+        self.commit(
+            [Write(kind=RESEARCH_JOB.name, document=document,
+                   extra_columns={"revision": revision,
+                                  "written_at": datetime.now(timezone.utc)
+                                  .strftime("%Y-%m-%dT%H:%M:%SZ")})],
+            allow_duplicate=True,
+        )
+        return revision
+
+    def jobs(self, *, status: str | None = None) -> list[dict[str, Any]]:
+        """The latest revision of every job."""
+        with self.connection() as connection:
+            rows = connection.execute(
+                """
+                SELECT j.document FROM research_job j
+                JOIN (SELECT job_id, MAX(revision) AS revision FROM research_job GROUP BY job_id) m
+                  ON j.job_id = m.job_id AND j.revision = m.revision
+                ORDER BY j.created_at, j.job_id
+                """
+            ).fetchall()
+        documents = [json.loads(row["document"]) for row in rows]
+        if status is not None:
+            documents = [d for d in documents if d["status"] == status]
+        return documents
+
+    def job(self, job_id: str) -> dict[str, Any]:
+        with self.connection() as connection:
+            row = connection.execute(
+                "SELECT document FROM research_job WHERE job_id = ? "
+                "ORDER BY revision DESC LIMIT 1", (job_id,)
+            ).fetchone()
+        if row is None:
+            raise LedgerError(f"no such job: {job_id}")
+        return json.loads(row["document"])
+
+    def job_revisions(self, job_id: str) -> list[dict[str, Any]]:
+        with self.connection() as connection:
+            return [
+                json.loads(row["document"])
+                for row in connection.execute(
+                    "SELECT document FROM research_job WHERE job_id = ? ORDER BY revision",
+                    (job_id,))
+            ]
+
+    def job_for_dedup_key(self, dedup_key: str) -> dict[str, Any] | None:
+        with self.connection() as connection:
+            row = connection.execute(
+                "SELECT job_id FROM research_job WHERE dedup_key = ? AND revision = 1",
+                (dedup_key,)).fetchone()
+        return self.job(str(row["job_id"])) if row else None
 
     def find_by_digest(self, digest: str) -> list[str]:
         with self.connection() as connection:
