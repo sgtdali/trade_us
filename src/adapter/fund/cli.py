@@ -1214,7 +1214,19 @@ def cmd_checks(args: argparse.Namespace) -> int:
 
 def cmd_job_open(args: argparse.Namespace) -> int:
     ledger = _ledger(args)
-    master, security_id = _resolve(args, args.security)
+    master = _master(args)
+
+    if args.observation == "periodic_discovery":
+        if args.security:
+            raise FundError(
+                "a screen is about a universe, not a security. Drop --security: "
+                "telling the screen which name to look at is not screening."
+            )
+        return _open_discovery_job(args, ledger, master)
+
+    if not args.security:
+        raise FundError(f"a {args.observation} job needs --security")
+    security_id = instruments.resolve(master, args.security)
 
     thesis_id = None
     if args.thesis or args.observation in {"mechanical_breach", "review_due"}:
@@ -1270,6 +1282,50 @@ def cmd_job_open(args: argparse.Namespace) -> int:
     print(f"  {instruments.ticker_for(master, security_id)}  {args.observation}  "
           f"-> {args.recipe} ({args.mode})")
     return 0
+
+
+def _open_discovery_job(args: argparse.Namespace, ledger: store.Ledger,
+                        master: dict[str, Any]) -> int:
+    tuning = dispatch.load_tuning()
+    universe_id = args.universe or tuning["discovery_universe"]
+    as_of = args.as_of or _today()
+
+    key = jobs.dedup_key(observation="periodic_discovery", security_id="-",
+                         discovery_date=as_of)
+    existing = ledger.job_for_dedup_key(key)
+    if existing is not None:
+        print(f"already open  {existing['job_id']} ({existing['status']})")
+        return 0
+
+    document = jobs.new_job(
+        trigger_snapshot=screening.discovery_observation(as_of=as_of,
+                                                         universe_id=universe_id),
+        rule_id=args.rule_id if args.rule_id != "manual" else "periodic_discovery",
+        rule_version=1,
+        recipe="idea_generation",
+        assessment_mode="de_novo",
+        security_id=None,
+        dedup_key_value=key,
+    )
+    document["trigger_snapshot"].pop("_security_id", None)
+    document["trigger_snapshot"].pop("_thesis_id", None)
+    ledger.save_job(document)
+    print(f"opened     {document['job_id']}")
+    print(f"  screen of {universe_id}")
+    return 0
+
+
+def load_universe(universe_id: str, root: Path | None = None) -> list[str]:
+    path = (root or schemas.repo_root()) / "config" / "universes" / f"{universe_id}.json"
+    if not path.is_file():
+        raise FundError(
+            f"no universe called {universe_id!r}. Available: "
+            + ", ".join(sorted(p.stem for p in
+                               (root or schemas.repo_root()).joinpath(
+                                   "config", "universes").glob("*.json")))
+        )
+    document = json.loads(path.read_text(encoding="utf-8"))
+    return [member["ticker"] for member in document["members"]]
 
 
 def cmd_job_result(args: argparse.Namespace) -> int:
@@ -1330,7 +1386,9 @@ def cmd_jobs(args: argparse.Namespace) -> int:
     print(f"{'CREATED':<22} {'TICKER':<8} {'OBSERVATION':<22} {'RECIPE':<24} "
           f"{'STATUS':<22} ID")
     for record in records:
-        ticker = instruments.ticker_for(master, record["security_id"])
+        # A screening job is about a universe and carries no security.
+        ticker = (instruments.ticker_for(master, record["security_id"])
+                  if record.get("security_id") else "--")
         print(f"{record['created_at']:<22} {ticker:<8} "
               f"{record['trigger_snapshot']['observation']:<22} {record['recipe']:<24} "
               f"{record['status']:<22} {record['job_id']}")
@@ -1371,7 +1429,8 @@ def cmd_inbox(args: argparse.Namespace) -> int:
     if queue.q1:
         print(f"Q1 -- NEEDS ADJUDICATION  ({jobs.total_estimate(queue)} min estimated)")
         for item in queue.q1:
-            ticker = instruments.ticker_for(master, item.job["security_id"])
+            ticker = (instruments.ticker_for(master, item.job["security_id"])
+                      if item.job.get("security_id") else "screen")
             deadline = item.job.get("decision_deadline")
             due = f"  due {deadline}" if deadline else ""
             estimate = f"~{item.estimate_minutes} min" if item.estimate_minutes else ""
@@ -1451,6 +1510,13 @@ def cmd_adjudicate(args: argparse.Namespace) -> int:
 
     if job["status"] != jobs.AWAITING_ADJUDICATION:
         raise FundError(f"job {args.job} is {job['status']}, not awaiting adjudication")
+    if job["recipe"] == "idea_generation":
+        raise FundError(
+            "a screen produces research candidates, not a judgement to adjudicate. "
+            "Read its findings with `fund jobs`, then underwrite one:\n"
+            "  fund job open --security <TICKER> --observation preview_without_assessment "
+            "--recipe onboarding_underwrite --mode de_novo"
+        )
     proposal = job.get("result", {}).get("proposed_assessment")
     if proposal is None:
         raise FundError(f"job {args.job} carries no proposed assessment to adjudicate")
@@ -1741,6 +1807,9 @@ def cmd_run(args: argparse.Namespace) -> int:
     if job["status"] not in jobs.ATTEMPTABLE:
         raise FundError(f"job {args.job} is {job['status']}; it cannot be run")
 
+    if job["recipe"] == "idea_generation":
+        return _run_discovery(args, ledger, job)
+
     theses = _theses(ledger)
     history = theses.get(job.get("thesis_id") or "")
     thesis_document = history.document if history else None
@@ -1833,6 +1902,65 @@ def cmd_run(args: argparse.Namespace) -> int:
         print(f"  proposes readiness {proposal['readiness']}")
     print(f"  artifacts in {workdir}")
     print(f"  adjudicate with: fund adjudicate {args.job}")
+    return 0
+
+
+def _run_discovery(args: argparse.Namespace, ledger: store.Ledger,
+                   job: dict[str, Any]) -> int:
+    tuning = dispatch.load_tuning()
+    universe_id = (job["trigger_snapshot"].get("detail", "")
+                   .replace("periodic screen of ", "").strip()
+                   or tuning["discovery_universe"])
+    pack = screening.build_universe_pack(
+        job=job, universe=load_universe(universe_id), universe_id=universe_id)
+
+    workdir = Path(args.workdir) if args.workdir else (
+        ledger.path.parent / "runs" / job["job_id"])
+    if args.dry_run:
+        workdir.mkdir(parents=True, exist_ok=True)
+        (workdir / "pack.json").write_text(json.dumps(pack, indent=2, ensure_ascii=False),
+                                           encoding="utf-8")
+        print(f"pack written to {workdir / 'pack.json'} -- nothing was run")
+        print(f"  {len(pack['universe'])} names, nothing about what you hold")
+        return 0
+
+    executor = (recipes.stub_executor(json.loads(Path(args.stub).read_text(encoding="utf-8")))
+                if args.stub else
+                recipes.codex_executor(plugin_root=_pei_plugin_root(),
+                                       repo_root=schemas.repo_root()))
+
+    running = jobs.start_attempt(job)
+    ledger.save_job(running)
+    try:
+        result = recipes.run(recipe="idea_generation", pack=pack, executor=executor,
+                             workdir=workdir)
+    except recipes.ContractFailure as exc:
+        ledger.save_job(jobs.mark_contract_failed(running, str(exc)))
+        raise FundError(str(exc)) from exc
+    except recipes.RecipeError as exc:
+        ledger.save_job(jobs.fail_attempt(running, error_class="skill_transport_error",
+                                          detail=str(exc)))
+        raise FundError(str(exc)) from exc
+
+    artifact_path = result.final.artifact_path
+    artifact = {
+        "relative_path": (artifact_path.relative_to(schemas.repo_root()).as_posix()
+                          if artifact_path.is_relative_to(schemas.repo_root())
+                          else f"external/{job['job_id']}/{artifact_path.name}"),
+        "digest": "sha256:" + hashlib.sha256(artifact_path.read_bytes()).hexdigest(),
+        "media_type": "application/json",
+    }
+    ledger.save_job(jobs.attach_result(ledger.job(job["job_id"]), artifact=artifact))
+
+    findings = result.final.sidecar["findings"]
+    print(f"screened   {universe_id}  ({len(pack['universe'])} names)")
+    print(f"  {len(findings)} candidate finding(s)")
+    for finding in findings[:10]:
+        print(f"    {finding['statement'][:90]}")
+    print()
+    print("  These are research candidates, not judgements. Underwrite one with:")
+    print("    fund job open --security <TICKER> --observation preview_without_assessment \\")
+    print("      --recipe onboarding_underwrite --mode de_novo")
     return 0
 
 
@@ -2580,7 +2708,8 @@ def build_parser() -> argparse.ArgumentParser:
     job_sub = job_parser.add_subparsers(dest="job_command", required=True)
 
     j_open = job_sub.add_parser("open", help="open a research job")
-    j_open.add_argument("--security", required=True)
+    j_open.add_argument("--security", help="not for a screen: that is about a universe")
+    j_open.add_argument("--universe", help="which universe to screen")
     j_open.add_argument("--observation", required=True,
                         choices=["new_periodic_filing", "earnings_evidence", "review_due",
                                  "mechanical_breach", "price_shock",
@@ -2598,6 +2727,7 @@ def build_parser() -> argparse.ArgumentParser:
     j_open.add_argument("--evidence-date")
     j_open.add_argument("--review-due")
     j_open.add_argument("--deadline", help="decision deadline; urgency is a date, not an amount")
+    j_open.add_argument("--as-of")
     j_open.set_defaults(handler=cmd_job_open)
 
     j_result = job_sub.add_parser("result", help="attach a skill result to a job")

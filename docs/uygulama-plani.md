@@ -38,7 +38,7 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 | F7 | `research-cycle` — kendi kendine çalışma | ✅ Bitti — **kritik eşik geçildi** |
 | F8 | İkinci dalga tetikleyiciler | ✅ Bitti |
 | F9 | Canlılık ve kalite uyarıları | ✅ Bitti |
-| F10 | Discovery | ✅ Kod bitti — **varsayılan kapalı** |
+| F10 | Discovery | ✅ Bitti — **varsayılan kapalı** |
 
 **Kalan üç iş kod değil, veri:** F0.1 (hangi hesap), F1.11 (açılış kitabı),
 F3.5 (gerçek bir tez). Üçü de sizin elinizdeki gerçek rakamları bekliyor;
@@ -728,7 +728,22 @@ S1 (gölge işletim) ve S2 (kalibrasyon defteri) süreç görevleri; kod tarafı
 hazır (`shadow` varsayılan, `provisional` işaretleri, `fund quality`), gerisi
 zamanla birikecek gözlem.
 
-### 2026-08-16 — plan dışı eklenenler
+### 2026-08-16 — F10 önce eksik işaretlendi, sonra tamamlandı
+
+F10'u bileşenleri ve testleri geçtiği için "bitti" saymıştım; **uçtan uca
+testi yoktu** ve gerçekte tarama işi `fund run`'dan geçmiyordu:
+
+1. `fund job open` her zaman `--security` istiyordu — tarama bir evren
+   hakkında, tek hisse hakkında değil.
+2. `cmd_run` her işi `packs.build_pack`'e veriyordu, o da `security_id`
+   istiyor.
+3. `skill-output.schema.json` `security_id`'yi zorunlu kılıyordu; bir tarama
+   çıktısı tek hisse adı taşımamalı.
+4. `jobs`, `inbox` ve `_q1_rank` `job["security_id"]`'ye doğrudan erişiyordu.
+
+Hepsi düzeltildi, altı uçtan uca test eklendi. Ders: "bileşenler geçiyor"
+ile "yol çalışıyor" aynı şey değil — F6.6 gibi bir zincir testi her fazda
+olmalıydı.
 
 `fund` CLI'nın kullanılabilir olması için plana yazılmayan iki şey eklendi:
 

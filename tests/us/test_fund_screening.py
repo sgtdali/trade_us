@@ -133,12 +133,32 @@ def test_a_screen_may_not_propose_a_judgement():
 
 def test_a_screen_output_with_only_findings_is_valid():
     sidecar = {
-        "sidecar_version": 1, "skill": "idea-generation", "security_id": "sec:nvda",
+        "sidecar_version": 1, "skill": "idea-generation",
         "produced_at": "2026-11-05T00:00:00Z",
         "findings": [{"statement": "cheap on normalised earnings", "direction": "neutral",
                       "source": "screen"}],
     }
     assert schemas.schema_errors(sidecar, schemas.SKILL_OUTPUT) == []
+
+
+def test_a_screen_may_not_name_one_security():
+    """It looked at a universe. Naming a single security is a judgement in disguise."""
+    sidecar = {
+        "sidecar_version": 1, "skill": "idea-generation", "security_id": "sec:nvda",
+        "produced_at": "2026-11-05T00:00:00Z",
+        "findings": [{"statement": "cheap", "direction": "neutral", "source": "screen"}],
+    }
+    assert schemas.schema_errors(sidecar, schemas.SKILL_OUTPUT)
+
+
+def test_every_other_skill_must_name_its_security():
+    sidecar = {
+        "sidecar_version": 1, "skill": "earnings-deep-dive",
+        "produced_at": "2026-11-05T00:00:00Z",
+        "findings": [{"statement": "x", "direction": "neutral", "source": "10-Q"}],
+    }
+    assert any("security_id" in message
+               for message in schemas.schema_errors(sidecar, schemas.SKILL_OUTPUT))
 
 
 def test_a_screening_job_carries_no_security():
@@ -197,3 +217,106 @@ def test_switching_it_on_is_a_config_change_not_a_code_change():
     by_id = {rule.rule_id: rule for rule in tuned}
     assert by_id["periodic_discovery"].enabled is True
     assert by_id["periodic_discovery"].recipe == "idea_generation"
+
+
+# ------------------------------------------------- the screening run path
+
+def screen_sidecar(tmp_path):
+    path = tmp_path / "sidecars.json"
+    path.write_text(json.dumps({"idea-generation": {
+        "sidecar_version": 1,
+        "skill": "idea-generation",
+        "findings": [
+            {"statement": "ABBV: FCF yield 8% against a stable pipeline",
+             "direction": "neutral", "source": "screen"},
+            {"statement": "CAT: order book turned after two soft quarters",
+             "direction": "neutral", "source": "screen"},
+        ],
+        "open_questions": ["Neither has been underwritten"],
+    }}), encoding="utf-8")
+    return str(path)
+
+
+def test_a_screen_can_be_opened_without_a_security(fund, capsys):
+    capsys.readouterr()
+    assert fund("job", "open", "--observation", "periodic_discovery",
+                "--recipe", "idea_generation", "--mode", "de_novo",
+                "--universe", "us60", "--as-of", "2026-08-16") == 0
+    assert "screen of us60" in capsys.readouterr().out
+
+    ledger = store.open_ledger(path=fund.tmp_path / "ledger.sqlite3")
+    job = ledger.jobs()[-1]
+    assert "security_id" not in job
+    assert job["recipe"] == "idea_generation"
+
+
+def test_pointing_a_screen_at_one_name_is_refused(fund, capsys):
+    fund("instrument", "add", "--ticker", "NVDA", "--name", "NVIDIA Corporation")
+    capsys.readouterr()
+    assert fund("job", "open", "--security", "NVDA", "--observation", "periodic_discovery",
+                "--recipe", "idea_generation", "--mode", "de_novo") == 2
+    assert "not screening" in capsys.readouterr().err
+
+
+def test_a_screen_runs_end_to_end(fund, tmp_path, capsys):
+    fund("job", "open", "--observation", "periodic_discovery", "--recipe", "idea_generation",
+         "--mode", "de_novo", "--universe", "us60", "--as-of", "2026-08-16")
+    ledger = store.open_ledger(path=fund.tmp_path / "ledger.sqlite3")
+    job_id = ledger.jobs()[-1]["job_id"]
+
+    capsys.readouterr()
+    assert fund("run", job_id, "--stub", screen_sidecar(tmp_path),
+                "--workdir", str(tmp_path / "run"), "--as-of", "2026-08-16") == 0
+    output = capsys.readouterr().out
+    assert "screened   us60" in output
+    assert "2 candidate finding(s)" in output
+    assert "research candidates, not judgements" in output
+    assert ledger.job(job_id)["status"] == "awaiting_adjudication"
+
+
+def test_the_run_pack_holds_the_universe_and_nothing_about_us(fund, tmp_path, capsys):
+    fund("job", "open", "--observation", "periodic_discovery", "--recipe", "idea_generation",
+         "--mode", "de_novo", "--universe", "us60", "--as-of", "2026-08-16")
+    ledger = store.open_ledger(path=fund.tmp_path / "ledger.sqlite3")
+    job_id = ledger.jobs()[-1]["job_id"]
+
+    fund("run", job_id, "--dry-run", "--workdir", str(tmp_path / "run"))
+    pack = json.loads((tmp_path / "run" / "pack.json").read_text(encoding="utf-8"))
+    assert len(pack["universe"]) == 60
+    assert not {"thesis", "positions", "nav", "cash", "previous_judgement"} & set(pack)
+
+
+def test_a_screen_is_not_adjudicated(fund, tmp_path, capsys):
+    """It produced candidates, not a judgement. Different verb."""
+    fund("job", "open", "--observation", "periodic_discovery", "--recipe", "idea_generation",
+         "--mode", "de_novo", "--universe", "us60", "--as-of", "2026-08-16")
+    ledger = store.open_ledger(path=fund.tmp_path / "ledger.sqlite3")
+    job_id = ledger.jobs()[-1]["job_id"]
+    fund("run", job_id, "--stub", screen_sidecar(tmp_path), "--workdir", str(tmp_path / "run"))
+
+    capsys.readouterr()
+    assert fund("adjudicate", job_id) == 2
+    error = capsys.readouterr().err
+    assert "not a judgement to adjudicate" in error
+    assert "onboarding_underwrite" in error
+
+
+def test_an_unknown_universe_lists_the_real_ones(fund, tmp_path, capsys):
+    fund("job", "open", "--observation", "periodic_discovery", "--recipe", "idea_generation",
+         "--mode", "de_novo", "--universe", "atlantis", "--as-of", "2026-08-16")
+    ledger = store.open_ledger(path=fund.tmp_path / "ledger.sqlite3")
+    job_id = ledger.jobs()[-1]["job_id"]
+
+    capsys.readouterr()
+    assert fund("run", job_id, "--dry-run", "--workdir", str(tmp_path / "run")) == 2
+    error = capsys.readouterr().err
+    assert "no universe called 'atlantis'" in error
+    assert "us60" in error
+
+
+def test_the_screen_lists_without_a_ticker(fund, capsys):
+    fund("job", "open", "--observation", "periodic_discovery", "--recipe", "idea_generation",
+         "--mode", "de_novo", "--universe", "us60", "--as-of", "2026-08-16")
+    capsys.readouterr()
+    assert fund("jobs") == 0
+    assert "periodic_discovery" in capsys.readouterr().out

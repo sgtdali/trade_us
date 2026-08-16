@@ -4,7 +4,7 @@
   "title": "Skill output sidecar",
   "description": "The machine-readable half of a skill result. The prose stays free -- an analytical write-up forced into a template is a worse write-up -- but the part the system acts on has a contract.\n\nA sidecar that does not validate means the job is contract_failed and the result is never put in front of a human. That is a different fact from 'the analyst had nothing to say', and conflating the two is how a broken pipeline starts looking like a quiet market.\n\nNothing here is a capital input. readiness and downside are proposals; they become an assessment only when a person accepts them, and accepting is an act with answers attached.",
   "type": "object",
-  "required": ["sidecar_version", "skill", "security_id", "produced_at", "findings"],
+  "required": ["sidecar_version", "skill", "produced_at", "findings"],
   "properties": {
     "sidecar_version": {"type": "integer", "minimum": 1},
     "skill": {
@@ -96,10 +96,13 @@
       "then": {"required": ["proposed_assessment"]}
     },
     {
-      "$comment": "Screening produces candidates, never capital judgements.",
+      "$comment": "Screening produces candidates, never capital judgements -- and it is about a universe, so it names no single security either.",
       "if": {"properties": {"skill": {"const": "idea-generation"}}, "required": ["skill"]},
-      "then": {"properties": {"proposed_assessment":
-                              {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}}}
+      "then": {"properties": {
+        "proposed_assessment": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+        "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+      }},
+      "else": {"required": ["security_id"]}
     }
   ]
 }

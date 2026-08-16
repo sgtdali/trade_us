@@ -250,7 +250,9 @@ def stub_executor(sidecars: Mapping[str, Mapping[str, Any]]) -> Executor:
         sidecar = dict(sidecars[skill])
         sidecar.setdefault("produced_at",
                            datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"))
-        sidecar.setdefault("security_id", pack["security_id"])
+        # A screening pack is about a universe and names no security.
+        if "security_id" in pack:
+            sidecar.setdefault("security_id", pack["security_id"])
         sidecar.setdefault("job_id", pack["job_id"])
         (workdir / "result.md").write_text(f"# {skill}\n\nstub run\n", encoding="utf-8")
         return sidecar
