@@ -1,5 +1,22 @@
 # PEI serbest analiz kayit sistemi
 
+> **YURURLUKTEN KALKTI.** Bu doküman, skill'in serbest Markdown cevabından
+> `data/thesis-tracker/<TICKER>/<thesis_id>.jsonl` üretme yolunu anlatıyor.
+> Yeni tasarımda bu yol yok:
+>
+> - Ayrı bir tez defteri (`data/thesis-tracker/`) kurulmuyor; `thesis`,
+>   `assessment_record` ve `decision_record` tek SQLite defterinde yaşıyor.
+> - Skill çıktısı `draft.json` → `validate` → `approve` zinciriyle değil,
+>   **iki aşamalı adjudication** ile kabul ediliyor: araştırma hükmü önce
+>   sermaye etkisi görülmeden yargılanıyor.
+> - İnsan sayı değiştirdiğinde öneri üzerine yazılmıyor; ya reddediliyor ya
+>   `human_authored` ayrı bir kayıt doğuyor.
+>
+> Güncel karşılığı: [pei-company-lifecycle-tasarim.md](pei-company-lifecycle-tasarim.md)
+> Bölüm 4 (karar akışı) ve Bölüm 7 (adjudication ekranı).
+>
+> Mevcut `us_pei_record.py` bu dokümana göre çalışmaya devam ediyor.
+
 ## Amac
 
 Bir PEI skill'inin serbest Markdown cevabini kaliba zorlamadan saklamak ve bu

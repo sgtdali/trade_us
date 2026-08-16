@@ -4,6 +4,12 @@ Bu dosya "ne nerede, neden orada" sorusuna tek cevap. Aşağıdaki
 tutarsızlıklar tespit edilip 2026-08-13'te düzeltildi; bölüm 3 çözümü
 anlatıyor.
 
+> **Not (2026-08-16).** Bu harita repoda **bugün duran** yapıyı anlatır.
+> Hedeflenen sistem (portföy karar günlüğü) bunun **yanına** kuruluyor:
+> yeni SQLite defteri, `schemas/fund/` altında yeni şemalar ve `fund` CLI.
+> Eski yapıya göç yok; ne zaman kapatılacağı ayrı bir karar. Dokümanların
+> hangisi yürürlükte, hangisi mevcut kodu anlatıyor: [README.md](README.md).
+
 Etiketler: **[kaynak]** elle yazılan/tutulan gerçek veri · **[üretilmiş]**
 script'lerle yeniden üretilebilir · **[eski]** yeni sistemin yerini aldığı
 ama hâlâ referans edilen · **[tutarsız]** aşağıda ayrı bölümde açıklanan bir
@@ -17,7 +23,7 @@ sorunu olan.
 | `scripts/` | Çalıştırılabilir giriş noktaları (`us_pei_pack.py`, `us_pei_workflow.py`, `us_pei_record.py`, `us_pei_dashboard_bridge.py`) | [kaynak] |
 | `config/` | Şirket tanımları, evren listeleri, değerleme/peer politikaları, workflow kataloğu | [kaynak] |
 | `schemas/` | JSON Schema sözleşmeleri (finansal, event, thesis-record, vb.) | [kaynak] |
-| `docs/` | Tasarım dokümanları | [kaynak] |
+| `docs/` | Tasarım dokümanları — hangisinin yürürlükte olduğu için [docs/README.md](README.md) | [kaynak] |
 | `tests/` | pytest | [kaynak] |
 | `web/` | Next.js paneli | [kaynak] |
 | `data/` | Çalışma zamanı verisi — aşağıda detaylı | karışık |
@@ -30,14 +36,14 @@ sorunu olan.
 
 | Yol | Ne yazıyor | Git durumu | Not |
 |---|---|---|---|
-| `data/pei-workflow/events.jsonl` | Tüm sistemin tek otoriter kaydı — append-only olay günlüğü | tracked | Kanonik. |
+| `data/pei-workflow/events.jsonl` | Mevcut orkestratörün append-only olay günlüğü | tracked | Bugünkü sistemin kanonik kaydı. Hedef tasarım buna göç etmiyor, yeni bir SQLite defteri kuruyor. |
 | `data/pei-workflow/runs/` | Orkestratörün `start-idea`/`prepare` ile ürettiği pack/instructions/result — 2026-08-13'ten itibaren **tek canonical PEI artefakt ağacı** | tracked | `pei/` yerini aldı. |
 | `data/pei-workflow/dashboard-scratch/` | Web panelinden yapıştırılan sonuç/draft metinleri | gitignore'da | Panel çalışma alanı; onaylanan kopya `data/pei-workflow/runs/.../result.md`'ye zaten `attach-result` ile yazılıyor. |
-| `data/thesis-tracker/<TICKER>/*.jsonl` | Onaylı tez kayıtları, append-only | tracked | Kanonik. |
+| `data/thesis-tracker/<TICKER>/*.jsonl` | Onaylı tez kayıtları, append-only | tracked | Mevcut sistemde kanonik. Hedef tasarımda ayrı tez defteri yok; `thesis` + `assessment_record` tek defterde. |
 | `data/consensus/`, `data/events/` | Günlük konsensüs/olay takvimi anlık görüntüleri | gitignore'da | `events.jsonl` bunları kanıt olarak referans etmiyor — tamamen regenerable, `live/` ve `raw-cache/` ile aynı muameleyi görüyor. |
 | `data/valuation-history/history.json` | Tarihsel çarpan serisi | tracked | Kanonik. |
-| `data/portfolio/portfolio.json` | Portföy pozisyonları | oluşunca tracked | Bilinçli olarak event-log dışı tutuldu — bkz. bölüm 3.2. |
-| `data/watchlist/*.json` | İzleme listesi | oluşunca tracked | Aynı karar. |
+| `data/portfolio/portfolio.json` | Portföy pozisyonları (mutable CRUD) | oluşunca tracked | Bilinçli olarak event-log dışı tutuldu — bkz. bölüm 3.2. Hedef tasarımda yerini `account_event` defteri alıyor. |
+| `data/watchlist/*.json` | İzleme listesi | oluşunca tracked | Aynı karar. Hedef tasarımda ayrı watchlist yok; tez ve assessment durumundan türetiliyor. |
 
 ## Tespit edilen tutarsızlıklar ve çözümleri (2026-08-13)
 

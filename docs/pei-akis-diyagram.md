@@ -1,5 +1,18 @@
 # Public Equity Investing akışı
 
+> **YÜRÜRLÜKTEN KALKTI.** Bu diyagram mevcut kodun akışını gösteriyor
+> (idea-generation → bucket → workflow zinciri → tez). Yeni tasarımda bu akış
+> yok: keşif hattı sona alındı, workflow zinciri sabit dispatch kurallarına
+> dönüştü, tez ayrı bir lifecycle nesnesi oldu ve araya iki aşamalı insan
+> adjudication'ı girdi.
+>
+> Güncel akış: [pei-company-lifecycle-tasarim.md](pei-company-lifecycle-tasarim.md)
+> Bölüm 4 (karar akışı), Bölüm 5 (izleme döngüsü), Bölüm 6 (otomatik
+> araştırma operasyonu).
+>
+> Mevcut kodu okuyacaksanız diyagram hâlâ doğru bir tarif; yeni sistem için
+> değil.
+
 Portföy öncesi, kurulurken ve kurulduktan sonra. Kaynak:
 [docs/pei-workflow.md](pei-workflow.md) Bölüm 2-3,
 `scripts/us_pei_pack.py` içindeki `STEP_BLOCKS`, `us/config/mandate.json` ve

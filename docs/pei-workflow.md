@@ -1,5 +1,20 @@
 # Public Equity Investing eklentisini sistematik calistirma
 
+> **Kismen yururlukte.**
+>
+> **Hala gecerli:** Bolum 1 (skill dosyalarindan cikarilan yapisal gercekler)
+> ve Bolum 3 (adim adim hangi veri, hangi ek talimat). Bunlar eklentinin
+> kendi dosyalarindan cikarildi ve bir skill'i calistiracaksaniz hala dogru
+> referanstir.
+>
+> **Yururlukten kalkti:** Bolum 2 (akis), Bolum 4-5 (kayit tutma ve kayit
+> semasi) ve Bolum 6. Yeni akis, kayit ve orkestrasyon icin bkz.
+> [pei-company-lifecycle-tasarim.md](pei-company-lifecycle-tasarim.md)
+> Bolum 4-6.
+>
+> Ayrica: yeni tasarim eklentideki 23 skill'in yalniz altisini kullaniyor
+> (tasarim Bolum 13). Bu dokumandaki diger skill'ler referans olarak durur.
+
 Kalici, oturumdan bagimsiz calistirma durumunun kanonik tasarimi:
 [PEI workflow orchestrator tasarimi](pei-workflow-orchestrator.md).
 
