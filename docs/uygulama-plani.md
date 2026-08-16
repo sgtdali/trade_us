@@ -31,7 +31,7 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 | F0 | Kullanıcı kararları | 🔵 F0.2-F0.5 bitti · F0.1 gerçek hesap bilgisi bekliyor |
 | F1 | Defter ve manuel muhasebe | 🔵 Kod bitti (F1.1-F1.10) · F1.11 açılış kitabı bekliyor |
 | F2 | Capital policy ve karar akışı | ✅ Bitti |
-| F3 | Tez lifecycle ve izleme sözleşmesi | ⬜ Başlanmadı |
+| F3 | Tez lifecycle ve izleme sözleşmesi | 🔵 F3.1-F3.4 bitti · F3.5 gerçek pozisyon bekliyor |
 | F4 | Mekanik kontrol motoru | ⬜ Başlanmadı |
 | F5 | Job, dedup, inbox | ⬜ Başlanmadı |
 | F6 | İlk otomatik recipe | ⬜ Başlanmadı |
@@ -198,21 +198,21 @@ pozisyon/nakit/NAV state'i replay edilebiliyor.
 
 ← F2.4
 
-- [ ] **F3.1 `schemas/fund/thesis.schema.json`**
+- [x] **F3.1 `schemas/fund/thesis.schema.json`**
   *Bitti:* `thesis_id`, `security_id`, `opened_at`, `thesis_statement`,
   `status` (`active`/`review_required`/`broken`/`closed`),
   `current_assessment_id`, sürümlü `monitoring_contract`, `closed_at` ve
   `close_reason`. Exposure alanı **yok** (o `account_event` projection'ından
   gelir).
-- [ ] **F3.2 `monitoring_contract` alt belgesi** ← F3.1
+- [x] **F3.2 `monitoring_contract` alt belgesi** ← F3.1
   *Bitti:* `mechanical_rules[]` (rule_id, metric_id, period_basis, test_type,
   operator, threshold) ve `qualitative_checks[]` (check_id, question,
   review_on[], review_due, last_reviewed_at); kapalı sözlükler tasarım Bölüm
   5'teki gibi; tez başına en fazla 5 kural.
-- [ ] **F3.3 `fund thesis open`** ← F3.1, F2.4
+- [x] **F3.3 `fund thesis open`** ← F3.1, F2.4
   *Bitti:* Kabul edilmiş bir assessment'tan tez açılıyor; aynı security için
   ikinci açık tez açılamıyor.
-- [ ] **F3.4 Tez durum geçişleri** ← F3.3
+- [x] **F3.4 Tez durum geçişleri** ← F3.3
   *Bitti:* `active → review_required → active|broken|closed` geçişleri
   çalışıyor; **hiçbir kod yolu tezi otomatik `broken` veya `closed`
   yapamıyor** (test var).
@@ -536,4 +536,16 @@ ikinci review gerekiyor" diyor.
 Uygulama sırasında tasarımın eksik veya yanlış olduğu ortaya çıkarsa buraya
 yazın ve kullanıcıya sorun. Tasarım dokümanını tek taraflı değiştirmeyin.
 
-_(henüz soru yok)_
+### 2026-08-16 — F3.4 `active → closed` geçişi yok
+
+Tasarım Bölüm 5 geçişleri `active → review_required → active|broken|closed`
+diye tanımlıyor. Kod bunu **birebir** uyguluyor: bir tezi kapatmak için önce
+`review_required` işaretlemek gerekiyor.
+
+**Soru:** Pozisyondan tamamen çıkıldığında (hedef fiyata ulaşıldı, hisse
+satıldı) tezi kapatmak için önce "inceleme gerekli" demek doğru mu? Bir yandan
+tez kapatmak da bir lifecycle hükmü ve aynı kapıdan geçmesi tutarlı; öte yandan
+"sattım, bitti" durumunda iki komut gereksiz sürtünme.
+
+`active → closed` eklemek istersen söyle, `thesis.ALLOWED_TRANSITIONS`'a bir
+satır. Tek taraflı eklemedim.

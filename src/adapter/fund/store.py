@@ -201,7 +201,46 @@ _MIGRATION_0003 = Migration(
     ),
 )
 
-MIGRATIONS: tuple[Migration, ...] = (_MIGRATION_0001, _MIGRATION_0002, _MIGRATION_0003)
+_MIGRATION_0004 = Migration(
+    version=4,
+    name="thesis event stream",
+    statements=(
+        """
+        CREATE TABLE thesis_event (
+            thesis_event_id  TEXT PRIMARY KEY,
+            thesis_id        TEXT NOT NULL,
+            event_type       TEXT NOT NULL,
+            effective_date   TEXT NOT NULL,
+            recorded_at      TEXT NOT NULL,
+            actor            TEXT NOT NULL,
+            security_id      TEXT,
+            content_digest   TEXT NOT NULL,
+            document         TEXT NOT NULL
+        )
+        """,
+        "CREATE INDEX thesis_event_replay ON thesis_event (thesis_id, effective_date, recorded_at)",
+        "CREATE INDEX thesis_event_by_security ON thesis_event (security_id)",
+        """
+        CREATE TRIGGER thesis_event_immutable_update
+        BEFORE UPDATE ON thesis_event
+        BEGIN
+            SELECT RAISE(ABORT,
+                'thesis events are immutable: record another transition instead');
+        END
+        """,
+        """
+        CREATE TRIGGER thesis_event_immutable_delete
+        BEFORE DELETE ON thesis_event
+        BEGIN
+            SELECT RAISE(ABORT, 'thesis events cannot be deleted');
+        END
+        """,
+    ),
+)
+
+MIGRATIONS: tuple[Migration, ...] = (
+    _MIGRATION_0001, _MIGRATION_0002, _MIGRATION_0003, _MIGRATION_0004,
+)
 
 
 # --------------------------------------------------------------------------
@@ -283,8 +322,24 @@ DECISION_RECORD = RecordKind(
     columns=_decision_columns,
 )
 
+THESIS_EVENT = RecordKind(
+    name="thesis_event",
+    table="thesis_event",
+    schema_id=schemas.THESIS_EVENT,
+    id_field="thesis_event_id",
+    columns=lambda document: {
+        "thesis_id": document["thesis_id"],
+        "event_type": document["event_type"],
+        "effective_date": document["effective_date"],
+        "recorded_at": document["recorded_at"],
+        "actor": document["actor"],
+        "security_id": document.get("security_id"),
+    },
+)
+
 RECORD_KINDS: dict[str, RecordKind] = {
-    kind.name: kind for kind in (ACCOUNT_EVENT, ASSESSMENT_RECORD, DECISION_RECORD)
+    kind.name: kind
+    for kind in (ACCOUNT_EVENT, ASSESSMENT_RECORD, DECISION_RECORD, THESIS_EVENT)
 }
 
 
@@ -557,6 +612,16 @@ class Ledger:
                     "SELECT as_of, nav, cash, currency FROM nav_snapshot ORDER BY as_of"
                 )
             ]
+
+    def thesis_events(self, *, thesis_id: str | None = None) -> list[dict[str, Any]]:
+        query = "SELECT document FROM thesis_event"
+        params: tuple[Any, ...] = ()
+        if thesis_id is not None:
+            query += " WHERE thesis_id = ?"
+            params = (thesis_id,)
+        query += " ORDER BY effective_date, recorded_at, thesis_event_id"
+        with self.connection() as connection:
+            return [json.loads(row["document"]) for row in connection.execute(query, params)]
 
     def find_by_digest(self, digest: str) -> list[str]:
         with self.connection() as connection:

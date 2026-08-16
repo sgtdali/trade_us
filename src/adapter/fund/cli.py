@@ -28,6 +28,7 @@ from . import (
     schemas,
     sizing,
     store,
+    thesis as thesis_module,
 )
 from .errors import FundError, LedgerError
 from .money import Money, format_display, to_string
@@ -814,6 +815,264 @@ def cmd_decisions(args: argparse.Namespace) -> int:
     return 0
 
 
+# --------------------------------------------------------------------------
+# thesis
+# --------------------------------------------------------------------------
+
+def _theses(ledger: store.Ledger) -> dict[str, thesis_module.ThesisHistory]:
+    return thesis_module.project(ledger.thesis_events())
+
+
+def _find_thesis(ledger: store.Ledger, master: dict[str, Any], token: str):
+    theses = _theses(ledger)
+    if token in theses:
+        return theses[token]
+    security_id = instruments.resolve(master, token)
+    found = thesis_module.open_for_security(theses, security_id)
+    if found is None:
+        raise FundError(f"no open thesis for {token}")
+    return found
+
+
+def _commit_thesis(ledger: store.Ledger, document: dict[str, Any]) -> None:
+    ledger.commit([store.Write(kind=store.THESIS_EVENT.name, document=document)],
+                  allow_duplicate=True)
+
+
+def cmd_thesis_open(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master, security_id = _resolve(args, args.security)
+
+    existing = thesis_module.open_for_security(_theses(ledger), security_id)
+    if existing is not None:
+        raise FundError(
+            f"{args.security} already has an open thesis ({existing.thesis_id}, "
+            f"{existing.status}). Close it before opening another, or update it instead."
+        )
+
+    assessment_id = args.assessment or (
+        (ledger.latest_assessment(security_id) or {}).get("assessment_id")
+    )
+    if not assessment_id:
+        raise FundError(
+            f"a thesis opens from an accepted assessment; run `fund assess {args.security}` first"
+        )
+    assessment = ledger.assessment(assessment_id)
+    if assessment["security_id"] != security_id:
+        raise FundError(f"assessment {assessment_id} is for {assessment['security_id']}")
+    if assessment["acceptance"]["mode"] != "human_adjudicated":
+        raise FundError(
+            f"{assessment_id} was acknowledged without full adjudication; "
+            "a thesis cannot open from it"
+        )
+
+    event = thesis_module.open_event(
+        security_id=security_id,
+        thesis_statement=args.statement or assessment["thesis_summary"],
+        assessment_id=assessment_id,
+        effective_date=args.as_of or _today(),
+    )
+    _commit_thesis(ledger, event)
+    print(f"opened     {event['thesis_id']}")
+    print(f"  {instruments.ticker_for(master, security_id)}  status active")
+    print(f"  from assessment {assessment_id}")
+    print("  next: attach a monitoring contract with `fund thesis contract`")
+    return 0
+
+
+def cmd_thesis_list(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    theses = _theses(ledger)
+    if not theses:
+        print("no theses opened yet")
+        return 0
+    print(f"{'TICKER':<8} {'STATUS':<16} {'OPENED':<12} {'RULES':>5} {'CHECKS':>6} ID")
+    for history in sorted(theses.values(), key=lambda h: h.document["opened_at"]):
+        document = history.document
+        contract = document.get("monitoring_contract")
+        rules = len(contract["mechanical_rules"]) if contract else 0
+        checks = len(contract["qualitative_checks"]) if contract else 0
+        ticker = instruments.ticker_for(master, document["security_id"])
+        print(f"{ticker:<8} {document['status']:<16} {document['opened_at']:<12} "
+              f"{rules:>5} {checks:>6} {document['thesis_id']}")
+    return 0
+
+
+def cmd_thesis_show(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    history = _find_thesis(ledger, master, args.thesis)
+    document = history.document
+    as_of = args.as_of or _today()
+
+    print(f"{instruments.ticker_for(master, document['security_id'])} -- {document['thesis_id']}")
+    print()
+    print(f"  {'Status':<18}{document['status']}")
+    if document.get("status_reason"):
+        print(f"  {'Reason':<18}{document['status_reason']}")
+    print(f"  {'Opened':<18}{document['opened_at']}")
+    print(f"  {'Assessment':<18}{document.get('current_assessment_id', '-')}")
+    print()
+    print(f"  {document['thesis_statement']}")
+
+    contract = document.get("monitoring_contract")
+    if not contract:
+        print("\n  NO MONITORING CONTRACT -- nothing is watching this thesis")
+        return 0
+
+    print(f"\nMONITORING CONTRACT v{contract['version']} "
+          f"(from {contract['effective_from']})")
+    if contract["mechanical_rules"]:
+        print("\n  Mechanical")
+        for rule in contract["mechanical_rules"]:
+            print(f"    {rule['rule_id']:<24} {rule['metric_id']} {rule['period_basis']} "
+                  f"{rule['operator']} {rule['threshold']} ({rule['test_type']})")
+    if contract["qualitative_checks"]:
+        print("\n  Qualitative")
+        for check in contract["qualitative_checks"]:
+            due = "DUE" if check["review_due"] <= as_of else check["review_due"]
+            print(f"    {check['check_id']:<24} [{due}] {check['question']}")
+            print(f"    {'':<24} on: {', '.join(check['review_on'])}")
+
+    if history.transitions:
+        print("\nHISTORY")
+        for entry in history.transitions:
+            if entry["event_type"] == "closed":
+                print(f"  {entry['effective_date']}  closed ({entry['close_reason']}) "
+                      f"-- {entry['reason']}")
+            else:
+                print(f"  {entry['effective_date']}  {entry['from_status']} -> "
+                      f"{entry['to_status']} [{entry['actor']}] -- {entry['reason']}")
+    return 0
+
+
+def cmd_thesis_contract(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    history = _find_thesis(ledger, master, args.thesis)
+
+    raw = json.loads(Path(args.from_file).read_text(encoding="utf-8"))
+    previous = history.document.get("monitoring_contract")
+    version = raw.get("version") or ((previous["version"] + 1) if previous else 1)
+    if previous and version <= previous["version"]:
+        raise FundError(
+            f"contract version {version} is not newer than the active v{previous['version']}; "
+            "changing a threshold means a new version"
+        )
+    if previous and not (raw.get("change_reason") or args.reason):
+        raise FundError("replacing an active contract requires --reason")
+
+    contract = thesis_module.build_contract(
+        version=version,
+        effective_from=raw.get("effective_from") or args.as_of or _today(),
+        mechanical_rules=raw.get("mechanical_rules", []),
+        qualitative_checks=raw.get("qualitative_checks", []),
+        change_reason=raw.get("change_reason") or args.reason,
+    )
+    event = thesis_module.contract_event(
+        thesis_id=history.thesis_id,
+        contract=contract,
+        effective_date=contract["effective_from"],
+    )
+    _commit_thesis(ledger, event)
+
+    print(f"activated  monitoring contract v{version} on {history.thesis_id}")
+    print(f"  {len(contract['mechanical_rules'])} mechanical rule(s), "
+          f"{len(contract['qualitative_checks'])} qualitative check(s)")
+    if previous:
+        print(f"  v{previous['version']} is retained; checks already recorded keep their rule")
+    return 0
+
+
+def cmd_thesis_contract_template(args: argparse.Namespace) -> int:
+    print(json.dumps({
+        "version": 1,
+        "effective_from": _today(),
+        "mechanical_rules": [
+            {
+                "rule_id": "gross_margin_floor",
+                "metric_id": "gross_margin",
+                "period_basis": "ttm",
+                "test_type": "absolute_value",
+                "operator": "lt",
+                "threshold": "0.55",
+                "note": "Below this the pricing-power claim is not standing up",
+            }
+        ],
+        "qualitative_checks": [
+            {
+                "check_id": "customer_concentration",
+                "question": "Has the top-two customer share moved materially, "
+                            "and is the reason structural?",
+                "review_on": ["new_periodic_filing", "review_due"],
+                "review_due": _today(),
+            }
+        ],
+    }, indent=2))
+    return 0
+
+
+def cmd_thesis_status(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    history = _find_thesis(ledger, master, args.thesis)
+
+    event = thesis_module.status_event(
+        thesis_id=history.thesis_id,
+        from_status=history.status,
+        to_status=args.to,
+        reason=args.reason,
+        effective_date=args.as_of or _today(),
+        actor="human",
+    )
+    _commit_thesis(ledger, event)
+    print(f"{history.thesis_id}  {history.status} -> {args.to}")
+    print(f"  {args.reason}")
+    return 0
+
+
+def cmd_thesis_close(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    history = _find_thesis(ledger, master, args.thesis)
+
+    thesis_module.check_transition(history.status, thesis_module.CLOSED, "human")
+    event = thesis_module.close_event(
+        thesis_id=history.thesis_id,
+        close_reason=args.close_reason,
+        reason=args.reason,
+        effective_date=args.as_of or _today(),
+        superseded_by=args.superseded_by,
+    )
+    _commit_thesis(ledger, event)
+    print(f"closed     {history.thesis_id} ({args.close_reason})")
+    print(f"  {args.reason}")
+    return 0
+
+
+def cmd_thesis_reviewed(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    history = _find_thesis(ledger, master, args.thesis)
+    contract = history.document.get("monitoring_contract")
+    if not contract:
+        raise FundError("this thesis has no monitoring contract")
+    if not any(check["check_id"] == args.check for check in contract["qualitative_checks"]):
+        raise FundError(f"no qualitative check called {args.check!r} in the active contract")
+
+    event = thesis_module.check_reviewed_event(
+        thesis_id=history.thesis_id,
+        check_id=args.check,
+        next_review_due=args.next_due,
+        effective_date=args.as_of or _today(),
+    )
+    _commit_thesis(ledger, event)
+    print(f"reviewed   {args.check} on {history.thesis_id}")
+    print(f"  next due {args.next_due}")
+    return 0
+
+
 def cmd_report(args: argparse.Namespace) -> int:
     loaded = policy_module.load()
     currency = loaded["measurement"]["base_currency"]
@@ -1048,6 +1307,61 @@ def build_parser() -> argparse.ArgumentParser:
                         help="an adjudication is still open on this name")
     review.add_argument("--live", action="store_true")
     review.set_defaults(handler=cmd_review)
+
+    thesis_parser = subparsers.add_parser("thesis", help="open and steer theses")
+    thesis_sub = thesis_parser.add_subparsers(dest="thesis_command", required=True)
+
+    t_open = thesis_sub.add_parser("open", help="open a thesis from an accepted assessment")
+    t_open.add_argument("security")
+    t_open.add_argument("--assessment", help="defaults to the latest for this security")
+    t_open.add_argument("--statement", help="defaults to the assessment's thesis summary")
+    t_open.add_argument("--as-of")
+    t_open.set_defaults(handler=cmd_thesis_open)
+
+    t_list = thesis_sub.add_parser("list", help="every thesis and its status")
+    t_list.set_defaults(handler=cmd_thesis_list)
+
+    t_show = thesis_sub.add_parser("show", help="one thesis, its contract and its history")
+    t_show.add_argument("thesis", help="thesis id or ticker")
+    t_show.add_argument("--as-of")
+    t_show.set_defaults(handler=cmd_thesis_show)
+
+    t_contract = thesis_sub.add_parser(
+        "contract", help="activate a monitoring contract version")
+    t_contract.add_argument("thesis")
+    t_contract.add_argument("--from", dest="from_file", required=True,
+                            help="JSON file; see `fund thesis contract-template`")
+    t_contract.add_argument("--reason", help="required when replacing an active contract")
+    t_contract.add_argument("--as-of")
+    t_contract.set_defaults(handler=cmd_thesis_contract)
+
+    t_template = thesis_sub.add_parser("contract-template", help="print a starter contract")
+    t_template.set_defaults(handler=cmd_thesis_contract_template)
+
+    t_status = thesis_sub.add_parser("status", help="move a thesis through its lifecycle")
+    t_status.add_argument("thesis")
+    t_status.add_argument("--to", required=True,
+                          choices=["active", "review_required", "broken", "closed"])
+    t_status.add_argument("--reason", required=True)
+    t_status.add_argument("--as-of")
+    t_status.set_defaults(handler=cmd_thesis_status)
+
+    t_close = thesis_sub.add_parser("close", help="wind a thesis up")
+    t_close.add_argument("thesis")
+    t_close.add_argument("--close-reason", required=True,
+                         choices=["thesis_played_out", "thesis_broken", "better_use_of_capital",
+                                  "position_exited", "superseded_by_new_thesis"])
+    t_close.add_argument("--reason", required=True)
+    t_close.add_argument("--superseded-by")
+    t_close.add_argument("--as-of")
+    t_close.set_defaults(handler=cmd_thesis_close)
+
+    t_reviewed = thesis_sub.add_parser("reviewed", help="mark a qualitative check as reviewed")
+    t_reviewed.add_argument("thesis")
+    t_reviewed.add_argument("--check", required=True)
+    t_reviewed.add_argument("--next-due", required=True)
+    t_reviewed.add_argument("--as-of")
+    t_reviewed.set_defaults(handler=cmd_thesis_reviewed)
 
     report_parser = with_prices(subparsers.add_parser(
         "report", help="write the read-only HTML view"))
