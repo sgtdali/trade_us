@@ -344,7 +344,9 @@ def _q1_rank(item: QueueItem, *, funded: set[str], as_of: str) -> tuple:
     job = item.job
     deadline = job.get("decision_deadline")
     overdue = 0 if (deadline and deadline < as_of) else 1
-    is_funded = 0 if job["security_id"] in funded else 1
+    # A screening job has no security, so it can never be "funded" -- which is
+    # also the right priority: an existing position outranks a new idea.
+    is_funded = 0 if job.get("security_id") in funded else 1
     observation = job["trigger_snapshot"]["observation"]
     material = 0 if observation in _MATERIAL_OBSERVATIONS else 1
     routine = 0 if observation == "review_due" else 1
