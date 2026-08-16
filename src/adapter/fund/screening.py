@@ -166,19 +166,39 @@ def filter_candidates(
     return kept, dropped
 
 
+#: Keys that would mean the pipeline pack had been contaminated with our own
+#: book. A company's own cash balance is exactly what a screen should see; our
+#: cash is not. The two are different things and only the second is forbidden.
+OUR_BOOK_KEYS = frozenset({
+    "portfolio", "positions", "holdings", "thesis", "theses", "assessments",
+    "decisions", "readiness", "current_weight", "policy_compliant_max_weight",
+})
+
+
 def build_universe_pack(
     *,
     job: Mapping[str, Any],
     universe: Sequence[str],
     universe_id: str,
+    pipeline_pack: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """The screening pack: a universe and a question, and nothing about us.
+
+    ``pipeline_pack`` is the output of ``us_pei_pack.py --for idea`` -- the SEC
+    and valuation data for the whole universe, roughly a megabyte of it. Without
+    it the screen has only ticker symbols to work with, which is not screening;
+    it is asking a model what it remembers.
+
+    That pack knows nothing about this book by construction: it is built from
+    the universe config and SEC filings, and never reads the ledger. The check
+    below is a guard against someone helpfully merging portfolio context into it
+    later.
 
     No positions, no weights, no theses, no prior judgements. The exclusion of
     what we already own is not an oversight to be fixed later -- it is what
     makes the output worth reading.
     """
-    return {
+    pack: dict[str, Any] = {
         "pack_version": 1,
         "job_id": job["job_id"],
         "assessment_mode": "de_novo",
@@ -196,3 +216,36 @@ def build_universe_pack(
             "scrutiny is worth more than a long list that has not had any.",
         ],
     }
+
+    if pipeline_pack is None:
+        pack["data_warning"] = (
+            "No financial data is attached. You are being asked to screen on ticker "
+            "symbols alone, which you cannot do properly -- say so rather than "
+            "recalling what you know about these companies."
+        )
+        return pack
+
+    contaminated = sorted(OUR_BOOK_KEYS & set(pipeline_pack))
+    if contaminated:
+        raise ScreeningError(
+            "the screening data carries this book's own state ("
+            + ", ".join(contaminated)
+            + "). A screen that knows what we hold is a screen that agrees with us."
+        )
+
+    pack["companies"] = pipeline_pack.get("companies", [])
+    pack["data"] = {
+        key: value for key, value in pipeline_pack.items()
+        if key not in {"companies", "purpose", "pack_purpose", "intended_step"}
+    }
+    pack["universe"] = sorted(
+        {str(company["ticker"]) for company in pack["companies"] if company.get("ticker")}
+        or set(universe)
+    )
+    pack["instructions"].insert(
+        1,
+        f"`companies` holds the SEC-derived figures for all {len(pack['companies'])} names, "
+        "prepared by this pipeline. Those numbers are the primary source of truth; "
+        "prefer them over anything you recall.",
+    )
+    return pack

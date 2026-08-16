@@ -728,6 +728,21 @@ S1 (gölge işletim) ve S2 (kalibrasyon defteri) süreç görevleri; kod tarafı
 hazır (`shadow` varsayılan, `provisional` işaretleri, `fund quality`), gerisi
 zamanla birikecek gözlem.
 
+### 2026-08-16 — F10 tarama verisi mevcut hattan geliyor
+
+İlk hâlinde tarama pack'i **1,1 KB** idi: yalnız 60 ticker dizesi. Model elinde
+veri olmadan konuşurdu — bu tarama değil, hatırlama. Gerçek pack
+`us_pei_pack.py --for idea` çıktısı: **1,1 MB**, 87 şirket, her biri
+fundamentals / valuation / ROIC / sinyaller / konsensüs / net borç ile.
+
+`fund run` artık o hattı çağırıyor. Üç yol var: varsayılan (hattı çalıştırır),
+`--pack` (elde bir pack varsa), `--no-data` (yalnız ticker — ne olduğunu pack
+içinde açıkça söylüyor).
+
+**Sızıntı kuralı ayrıştırıldı:** bir *şirketin* nakdi taramanın görmesi gereken
+şeydir, *bizim* nakdimiz değil. `OUR_BOOK_KEYS` yalnız kendi kitabımıza ait
+anahtarları reddediyor; şirket finansalları serbest.
+
 ### 2026-08-16 — F10 önce eksik işaretlendi, sonra tamamlandı
 
 F10'u bileşenleri ve testleri geçtiği için "bitti" saymıştım; **uçtan uca

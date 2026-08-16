@@ -77,6 +77,65 @@ def test_open_candidates_are_counted_from_jobs():
 
 # ------------------------------------------------------- what it may see
 
+def pipeline_pack(**overrides):
+    document = {
+        "schema_version": 1,
+        "universe_count": 2,
+        "companies": [
+            {"ticker": "AAPL", "closing_price_usd": "220", "fundamentals": {"cash": "60000"}},
+            {"ticker": "ABBV", "closing_price_usd": "180", "fundamentals": {"cash": "12000"}},
+        ],
+    }
+    document.update(overrides)
+    return document
+
+
+def test_without_data_the_pack_says_it_cannot_screen():
+    """Ticker symbols alone are not a screen; they are a memory test."""
+    pack = screening.build_universe_pack(
+        job={"job_id": "JOB-x"}, universe=["AAPL"], universe_id="us60")
+    assert "cannot do properly" in pack["data_warning"]
+
+
+def test_the_pipeline_data_is_carried_into_the_pack():
+    pack = screening.build_universe_pack(
+        job={"job_id": "JOB-x"}, universe=["AAPL", "ABBV"], universe_id="us60",
+        pipeline_pack=pipeline_pack())
+    assert len(pack["companies"]) == 2
+    assert "data_warning" not in pack
+    assert "primary source of truth" in pack["instructions"][1]
+
+
+def test_the_universe_follows_the_data_not_the_config():
+    """The screen judges what it was actually given figures for."""
+    pack = screening.build_universe_pack(
+        job={"job_id": "JOB-x"}, universe=["AAPL", "ABBV", "NVDA"], universe_id="us60",
+        pipeline_pack=pipeline_pack())
+    assert pack["universe"] == ["AAPL", "ABBV"]
+
+
+def test_a_companys_own_cash_is_not_our_cash():
+    """Exactly what a screen should see. The leak rule is about OUR book."""
+    pack = screening.build_universe_pack(
+        job={"job_id": "JOB-x"}, universe=["AAPL"], universe_id="us60",
+        pipeline_pack=pipeline_pack())
+    assert pack["companies"][0]["fundamentals"]["cash"] == "60000"
+
+
+def test_data_contaminated_with_our_book_is_refused():
+    with pytest.raises(screening.ScreeningError, match="agrees with us"):
+        screening.build_universe_pack(
+            job={"job_id": "JOB-x"}, universe=["AAPL"], universe_id="us60",
+            pipeline_pack=pipeline_pack(positions=[{"ticker": "AAPL", "quantity": "100"}]))
+
+
+def test_theses_merged_into_the_data_are_refused():
+    with pytest.raises(screening.ScreeningError, match="knows what we hold"):
+        screening.build_universe_pack(
+            job={"job_id": "JOB-x"}, universe=["AAPL"], universe_id="us60",
+            pipeline_pack=pipeline_pack(theses=["THS-a"]))
+
+
 def test_the_screening_pack_says_nothing_about_us():
     pack = screening.build_universe_pack(
         job={"job_id": "JOB-x"}, universe=["AAPL", "MSFT", "NVDA"], universe_id="us60")
@@ -265,7 +324,7 @@ def test_a_screen_runs_end_to_end(fund, tmp_path, capsys):
     job_id = ledger.jobs()[-1]["job_id"]
 
     capsys.readouterr()
-    assert fund("run", job_id, "--stub", screen_sidecar(tmp_path),
+    assert fund("run", job_id, "--stub", screen_sidecar(tmp_path), "--no-data",
                 "--workdir", str(tmp_path / "run"), "--as-of", "2026-08-16") == 0
     output = capsys.readouterr().out
     assert "screened   us60" in output
@@ -280,7 +339,7 @@ def test_the_run_pack_holds_the_universe_and_nothing_about_us(fund, tmp_path, ca
     ledger = store.open_ledger(path=fund.tmp_path / "ledger.sqlite3")
     job_id = ledger.jobs()[-1]["job_id"]
 
-    fund("run", job_id, "--dry-run", "--workdir", str(tmp_path / "run"))
+    fund("run", job_id, "--dry-run", "--no-data", "--workdir", str(tmp_path / "run"))
     pack = json.loads((tmp_path / "run" / "pack.json").read_text(encoding="utf-8"))
     assert len(pack["universe"]) == 60
     assert not {"thesis", "positions", "nav", "cash", "previous_judgement"} & set(pack)
@@ -292,7 +351,8 @@ def test_a_screen_is_not_adjudicated(fund, tmp_path, capsys):
          "--mode", "de_novo", "--universe", "us60", "--as-of", "2026-08-16")
     ledger = store.open_ledger(path=fund.tmp_path / "ledger.sqlite3")
     job_id = ledger.jobs()[-1]["job_id"]
-    fund("run", job_id, "--stub", screen_sidecar(tmp_path), "--workdir", str(tmp_path / "run"))
+    fund("run", job_id, "--stub", screen_sidecar(tmp_path), "--no-data",
+         "--workdir", str(tmp_path / "run"))
 
     capsys.readouterr()
     assert fund("adjudicate", job_id) == 2
@@ -308,7 +368,8 @@ def test_an_unknown_universe_lists_the_real_ones(fund, tmp_path, capsys):
     job_id = ledger.jobs()[-1]["job_id"]
 
     capsys.readouterr()
-    assert fund("run", job_id, "--dry-run", "--workdir", str(tmp_path / "run")) == 2
+    assert fund("run", job_id, "--dry-run", "--no-data",
+                "--workdir", str(tmp_path / "run")) == 2
     error = capsys.readouterr().err
     assert "no universe called 'atlantis'" in error
     assert "us60" in error
@@ -320,3 +381,39 @@ def test_the_screen_lists_without_a_ticker(fund, capsys):
     capsys.readouterr()
     assert fund("jobs") == 0
     assert "periodic_discovery" in capsys.readouterr().out
+
+
+def test_a_screen_never_reaches_the_network_by_accident(fund, tmp_path, capsys, monkeypatch):
+    """--no-data and --pack are the only offline paths; everything else builds
+    the data, and a test that quietly hit SEC would be a test that lies."""
+    import subprocess
+
+    calls = []
+    monkeypatch.setattr(subprocess, "run",
+                        lambda *a, **k: calls.append(a) or subprocess.CompletedProcess(a, 1, "", "blocked"))
+
+    fund("job", "open", "--observation", "periodic_discovery", "--recipe", "idea_generation",
+         "--mode", "de_novo", "--universe", "us60", "--as-of", "2026-08-16")
+    ledger = store.open_ledger(path=fund.tmp_path / "ledger.sqlite3")
+    job_id = ledger.jobs()[-1]["job_id"]
+
+    capsys.readouterr()
+    assert fund("run", job_id, "--dry-run", "--workdir", str(tmp_path / "run")) == 2
+    assert "could not be built" in capsys.readouterr().err
+    assert calls, "the pipeline should have been invoked"
+
+
+def test_an_existing_pack_can_be_supplied_offline(fund, tmp_path, capsys):
+    supplied = tmp_path / "idea-pack.json"
+    supplied.write_text(json.dumps(pipeline_pack()), encoding="utf-8")
+
+    fund("job", "open", "--observation", "periodic_discovery", "--recipe", "idea_generation",
+         "--mode", "de_novo", "--universe", "us60", "--as-of", "2026-08-16")
+    ledger = store.open_ledger(path=fund.tmp_path / "ledger.sqlite3")
+    job_id = ledger.jobs()[-1]["job_id"]
+
+    capsys.readouterr()
+    assert fund("run", job_id, "--dry-run", "--pack", str(supplied),
+                "--workdir", str(tmp_path / "run")) == 0
+    pack = json.loads((tmp_path / "run" / "pack.json").read_text(encoding="utf-8"))
+    assert len(pack["companies"]) == 2

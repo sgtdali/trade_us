@@ -1911,8 +1911,16 @@ def _run_discovery(args: argparse.Namespace, ledger: store.Ledger,
     universe_id = (job["trigger_snapshot"].get("detail", "")
                    .replace("periodic screen of ", "").strip()
                    or tuning["discovery_universe"])
+    pipeline_pack = None
+    if args.pack:
+        pipeline_pack = json.loads(Path(args.pack).read_text(encoding="utf-8"))
+    elif not args.no_data:
+        pipeline_pack = _build_idea_pack(universe_id, ledger.path.parent / "packs",
+                                         refresh=not args.no_refresh)
+
     pack = screening.build_universe_pack(
-        job=job, universe=load_universe(universe_id), universe_id=universe_id)
+        job=job, universe=load_universe(universe_id), universe_id=universe_id,
+        pipeline_pack=pipeline_pack)
 
     workdir = Path(args.workdir) if args.workdir else (
         ledger.path.parent / "runs" / job["job_id"])
@@ -1962,6 +1970,41 @@ def _run_discovery(args: argparse.Namespace, ledger: store.Ledger,
     print("    fund job open --security <TICKER> --observation preview_without_assessment \\")
     print("      --recipe onboarding_underwrite --mode de_novo")
     return 0
+
+
+def _build_idea_pack(universe_id: str, out: Path, *, refresh: bool) -> dict[str, Any]:
+    """Run the existing SEC/valuation pipeline and read what it produced.
+
+    Reused rather than reimplemented: the screening data is the same data the
+    rest of this repository already knows how to build, and a second pipeline
+    would be a second set of numbers to reconcile.
+    """
+    import subprocess
+
+    out.mkdir(parents=True, exist_ok=True)
+    command = [sys.executable, str(schemas.repo_root() / "scripts" / "us_pei_pack.py"),
+               "--for", "idea", "--out", str(out)]
+    if not refresh:
+        command.append("--no-refresh")
+
+    print(f"  building the screening data ({universe_id})"
+          + ("" if refresh else ", no refresh") + " ...")
+    completed = subprocess.run(command, cwd=schemas.repo_root(), capture_output=True,
+                               text=True, encoding="utf-8")
+    if completed.returncode != 0:
+        raise FundError(
+            "the screening data could not be built:\n  "
+            + (completed.stderr or completed.stdout or "").strip()[:800]
+            + "\n  Run with --no-data to screen on ticker symbols alone, or pass an "
+              "existing pack with --pack."
+        )
+    pack_path = out / "pack.json"
+    if not pack_path.is_file():
+        raise FundError(f"the pipeline produced no pack.json in {out}")
+    document = json.loads(pack_path.read_text(encoding="utf-8"))
+    print(f"  {len(document.get('companies', []))} companies, "
+          f"{pack_path.stat().st_size // 1024} KB")
+    return document
 
 
 def _pei_plugin_root() -> Path:
@@ -2684,6 +2727,11 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--workdir")
     run_parser.add_argument("--dry-run", action="store_true",
                             help="write the pack and stop")
+    run_parser.add_argument("--pack", help="screening: an existing us_pei_pack.py idea pack")
+    run_parser.add_argument("--no-refresh", action="store_true",
+                            help="screening: build the data from what is already cached")
+    run_parser.add_argument("--no-data", action="store_true",
+                            help="screening: send ticker symbols only (not a real screen)")
     run_parser.add_argument("--as-of")
     run_parser.set_defaults(handler=cmd_run)
 
