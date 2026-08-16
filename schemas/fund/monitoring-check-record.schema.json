@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/monitoring-check-record.schema.json",
+  "title": "Monitoring check record",
+  "description": "One evaluation of one mechanical rule: which rule, under which contract version, against which filing, with what result.\n\nThe record exists so that two questions have answers a year later. 'Was this thesis actually being watched?' -- which needs the checks that ran, including the ones that could not be made. And 'under what rule was this judged?' -- which needs the contract version, because thresholds get recalibrated and a check judged under v1 must not be re-read as though it were v2.\n\nunavailable is a first-class result with a required reason. A check that did not happen is not a check that passed, and this schema makes it impossible to record it as one.",
+  "type": "object",
+  "required": [
+    "check_record_id", "thesis_id", "rule_id", "contract_version", "metric_id",
+    "period_basis", "test_type", "operator", "threshold", "result",
+    "evaluated_for", "evaluated_at"
+  ],
+  "properties": {
+    "check_record_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/checkRecordId"},
+    "thesis_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/thesisId"},
+    "rule_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+    "contract_version": {"type": "integer", "minimum": 1},
+
+    "metric_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+    "period_basis": {
+      "type": "string",
+      "enum": ["latest_quarter_yoy", "latest_quarter_qoq", "ttm", "latest_fy",
+               "change_from_baseline"]
+    },
+    "test_type": {"type": "string", "enum": ["absolute_value", "percentage_change",
+                                             "basis_point_change"]},
+    "operator": {"type": "string", "enum": ["lt", "lte", "gt", "gte"]},
+    "threshold": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+
+    "result": {"type": "string", "enum": ["not_breached", "breached", "unavailable"]},
+    "observed_value": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+    "unavailable_reason": {
+      "type": "string",
+      "enum": ["no_observation", "observation_unavailable", "catalog_drift",
+               "unit_mismatch", "stale_evidence", "binding_failed"]
+    },
+    "detail": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/note"},
+
+    "binding_signature": {
+      "description": "What the rule assumed about the metric when it ran: id, units, data type, period basis. A later catalog change becomes visible by comparison instead of being silently absorbed.",
+      "type": "string", "minLength": 1, "maxLength": 300
+    },
+    "evidence_accession": {
+      "description": "The filing this evaluation rests on. Also the dedup key: one accession produces one evaluation of one rule.",
+      "type": "string", "minLength": 1, "maxLength": 64
+    },
+    "evaluated_for": {
+      "description": "What prompted this check.",
+      "type": "string",
+      "enum": ["new_periodic_filing", "earnings_release", "material_8k", "review_due",
+               "manual"]
+    },
+    "evaluated_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"}
+  },
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "$comment": "An evaluated rule has an observed value; an unavailable one has a reason and no value to report.",
+      "if": {"properties": {"result": {"enum": ["not_breached", "breached"]}}, "required": ["result"]},
+      "then": {"required": ["observed_value"],
+               "properties": {"unavailable_reason":
+                              {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}}},
+      "else": {"required": ["unavailable_reason"],
+               "properties": {"observed_value":
+                              {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}}}
+    }
+  ]
+}

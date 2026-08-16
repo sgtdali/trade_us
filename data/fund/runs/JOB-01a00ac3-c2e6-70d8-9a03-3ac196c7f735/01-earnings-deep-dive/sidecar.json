@@ -1,0 +1,14 @@
+{
+  "sidecar_version": 1,
+  "skill": "earnings-deep-dive",
+  "findings": [
+    {
+      "statement": "Margin held",
+      "direction": "supports",
+      "source": "10-Q p.14"
+    }
+  ],
+  "produced_at": "2026-08-16T13:29:56Z",
+  "security_id": "sec:nvda",
+  "job_id": "JOB-01a00ac3-c2e6-70d8-9a03-3ac196c7f735"
+}

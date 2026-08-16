@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/research-job-record.schema.json",
+  "title": "Research job record",
+  "description": "One unit of automated research work: what was observed, which dispatch rule matched, what recipe ran, how it went, and what came out.\n\nThe job carries a snapshot of its trigger rather than a pointer to live state. A job opened because a 10-Q landed in November must still say so in March, even after three more filings. It also copies the rule_id and rule_version it matched, so a later change to the dispatch table cannot rewrite why work was done.\n\nAttempts are a small array inside the job, not their own records. They are only ever read in the context of their job, and a separate table would be ceremony.\n\nThe skill's output is content-addressed and lives outside; the job holds a reference. A result that fails its contract is never presented for adjudication -- it is shown as contract_failed, which is a different thing from 'the analyst had nothing to say'.",
+  "type": "object",
+  "required": [
+    "job_id", "created_at", "status", "trigger_snapshot", "rule_id", "rule_version",
+    "recipe", "assessment_mode", "dedup_key", "attempts"
+  ],
+  "properties": {
+    "job_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/researchJobId"},
+    "created_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"},
+
+    "status": {
+      "type": "string",
+      "enum": ["pending", "running", "awaiting_adjudication", "adjudicated",
+               "failed", "contract_failed", "superseded", "abandoned"]
+    },
+
+    "trigger_snapshot": {
+      "description": "What was true when the work was opened, frozen. Not a pointer: live state answers a different question later.",
+      "type": "object",
+      "required": ["observation", "observed_at"],
+      "properties": {
+        "observation": {
+          "type": "string",
+          "enum": ["new_periodic_filing", "earnings_evidence", "review_due",
+                   "mechanical_breach", "price_shock", "preview_without_assessment",
+                   "periodic_discovery"]
+        },
+        "observed_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"},
+        "evidence_accession": {"type": "string", "minLength": 1, "maxLength": 64},
+        "evidence_date": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+        "monitoring_contract_version": {"type": "integer", "minimum": 1},
+        "breached_rule_ids": {"type": "array", "items": {"type": "string"}},
+        "price_move_fraction": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+        "price_window": {
+          "description": "The two marks the move was measured between, as 'from..to'. Carried so a later reader can see what the move was measured against rather than trusting the number.",
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}\\.\\.[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "review_due": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+        "detail": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/note"}
+      },
+      "additionalProperties": false
+    },
+
+    "rule_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+    "rule_version": {"type": "integer", "minimum": 1},
+    "recipe": {
+      "type": "string",
+      "enum": ["deep_dive_then_tracker", "tracker", "blind_review",
+               "onboarding_underwrite", "idea_generation"]
+    },
+    "assessment_mode": {
+      "type": "string",
+      "enum": ["de_novo", "update_against_prior", "independent_then_reconcile"]
+    },
+
+    "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/securityId"},
+    "thesis_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/thesisId"},
+
+    "dedup_key": {
+      "description": "What makes this piece of work the same as another. Recomputed from the trigger, never invented, so re-running a cycle over the same evidence cannot open a second job.",
+      "type": "string", "minLength": 1, "maxLength": 200
+    },
+    "decision_deadline": {
+      "description": "How seriously to take this, expressed as a date. Capital at risk is deliberately NOT how urgency is communicated -- telling a model '82 bp is riding on this' does not improve the analysis, it encourages defending the position.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"
+    },
+
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["attempt", "started_at", "outcome"],
+        "properties": {
+          "attempt": {"type": "integer", "minimum": 1},
+          "started_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"},
+          "finished_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"},
+          "outcome": {"type": "string", "enum": ["succeeded", "failed"]},
+          "error_class": {
+            "type": "string",
+            "enum": ["data_source_error", "skill_transport_error", "contract_error",
+                     "late_result"]
+          },
+          "detail": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/note"}
+        },
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {"properties": {"outcome": {"const": "failed"}}, "required": ["outcome"]},
+            "then": {"required": ["error_class"]}
+          }
+        ]
+      }
+    },
+
+    "result": {
+      "type": "object",
+      "required": ["artifact"],
+      "properties": {
+        "artifact": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/artifactRef"},
+        "proposed_assessment": {
+          "description": "The judgement the skill proposes. It is a proposal and nothing else: it cannot become an assessment_record without a human accepting it, and accepting is an act with answers attached.",
+          "type": "object",
+          "required": ["thesis_summary", "readiness", "downside", "evidence_date", "review_due"],
+          "properties": {
+            "thesis_summary": {"type": "string", "minLength": 1, "maxLength": 4000},
+            "readiness": {"type": "string",
+                          "enum": ["watchlist", "starter", "core", "exceptional"]},
+            "downside": {"$ref": "fund:schemas/fund/assessment-record.schema.json#/properties/downside"},
+            "evidence_date": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+            "review_due": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+            "sources": {"type": "array", "items": {"type": "string", "minLength": 1}}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "adjudication": {
+      "type": "object",
+      "required": ["outcome", "adjudicated_at"],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": ["accepted", "rejected", "human_authored_replacement", "deferred",
+                   "acknowledged_without_full_adjudication"]
+        },
+        "adjudicated_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"},
+        "assessment_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/assessmentId"},
+        "reason": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "minutes_spent": {"type": "integer", "minimum": 0, "maximum": 600}
+      },
+      "additionalProperties": false
+    },
+
+    "error": {
+      "type": "object",
+      "required": ["error_class", "detail"],
+      "properties": {
+        "error_class": {
+          "type": "string",
+          "enum": ["data_source_error", "skill_transport_error", "contract_error", "late_result"]
+        },
+        "detail": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "automatic_retry_stopped": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+
+    "superseded_by": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/researchJobId"}
+  },
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "$comment": "Every recipe but screening is about one security. A screen is about a universe, so it carries none -- and must not, since knowing which names we hold is exactly what it may not see.",
+      "if": {"properties": {"recipe": {"not": {"const": "idea_generation"}}}, "required": ["recipe"]},
+      "then": {"required": ["security_id"]},
+      "else": {"properties": {
+        "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+        "thesis_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+      }}
+    },
+    {
+      "if": {"properties": {"status": {"const": "awaiting_adjudication"}}, "required": ["status"]},
+      "then": {"required": ["result"]}
+    },
+    {
+      "if": {"properties": {"status": {"const": "adjudicated"}}, "required": ["status"]},
+      "then": {"required": ["adjudication"]}
+    },
+    {
+      "if": {"properties": {"status": {"enum": ["failed", "contract_failed"]}},
+             "required": ["status"]},
+      "then": {"required": ["error"]}
+    }
+  ]
+}

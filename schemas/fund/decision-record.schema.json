@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/decision-record.schema.json",
+  "title": "Decision record",
+  "description": "The answer to 'what did I know that day, and what did I decide'. Frozen at the moment of the decision and never rewritten: the point of keeping it is that hindsight cannot reach it.\n\nIt carries the inputs as they stood -- the portfolio before the trade, the frozen research judgement, every policy ceiling and which one actually bound -- alongside the decision itself. Recording a decision is not executing it: an approved decision, an intent to trade and a fill are three separate facts, and the order still has to be entered at the broker by hand.\n\nno_change is a decision and gets a record. A review that changes nothing has to be distinguishable from a review that never happened.",
+  "type": "object",
+  "required": [
+    "decision_id", "as_of", "policy_version", "security_id", "action",
+    "pre_trade", "frozen_research", "policy_evaluation", "outcome", "mode"
+  ],
+  "properties": {
+    "decision_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decisionId"},
+    "as_of": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+    "recorded_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"},
+    "policy_version": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/semver"},
+    "assessment_id": {
+      "description": "The frozen research judgement this decision rests on. Absent only for a no_change decision taken with no assessment in play.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/assessmentId"
+    },
+    "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/securityId"},
+
+    "action": {"type": "string", "enum": ["buy", "sell", "no_change"]},
+
+    "contemplated": {
+      "description": "What was first considered, before the policy check. Kept even when the decision reduced it: the gap between what was wanted and what was allowed is the record worth having.",
+      "type": "object",
+      "required": ["quantity", "price"],
+      "properties": {
+        "quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveDecimalString"},
+        "price": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveMoney"},
+        "consideration": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveMoney"}
+      },
+      "additionalProperties": false
+    },
+
+    "pre_trade": {
+      "description": "The book as it stood. Snapshotted rather than referenced, because a projection recomputed a year later would answer a different question.",
+      "type": "object",
+      "required": ["nav", "cash", "position_quantity", "current_weight", "open_positions"],
+      "properties": {
+        "nav": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveMoney"},
+        "cash": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/money"},
+        "position_quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+        "current_weight": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+        "issuer_weight_excluding_security": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+        "open_positions": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+
+    "frozen_research": {
+      "type": "object",
+      "required": ["readiness", "downside_status", "evidence_date"],
+      "properties": {
+        "readiness": {"type": "string", "enum": ["watchlist", "starter", "core", "exceptional"]},
+        "downside_status": {"type": "string", "enum": ["known", "unknown"]},
+        "downside_return_fraction": {"type": "string", "pattern": "^-(0\\.[0-9]*[1-9]|1)$"},
+        "evidence_date": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+        "review_due": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"}
+      },
+      "additionalProperties": false
+    },
+
+    "policy_evaluation": {
+      "description": "Every ceiling that was computed, and the one that actually bound. 'Why only this much?' is answered by binding_constraint.",
+      "type": "object",
+      "required": ["ceilings", "policy_compliant_max_weight", "binding_constraint", "post_trade_weight", "within_policy"],
+      "properties": {
+        "ceilings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "status"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": ["readiness_weight", "downside_capacity", "max_security_weight",
+                         "issuer_capacity", "cash_capacity"]
+              },
+              "status": {"type": "string", "enum": ["binding", "computed", "not_applicable"]},
+              "max_weight": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+              "note": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/note"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "policy_compliant_max_weight": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+        "binding_constraint": {
+          "type": "string",
+          "enum": ["readiness_weight", "downside_capacity", "max_security_weight",
+                   "issuer_capacity", "cash_capacity", "none"]
+        },
+        "post_trade_weight": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+        "downside_cost_bps_nav": {
+          "description": "What this position costs the fund in basis points of NAV if its downside happens. Not rounded to an integer.",
+          "$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"
+        },
+        "within_policy": {"type": "boolean"},
+        "policy_compliant_quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+        "no_trade_band": {
+          "type": "object",
+          "required": ["half_width", "drift", "trade_candidate"],
+          "properties": {
+            "half_width": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+            "drift": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+            "trade_candidate": {"type": "boolean"},
+            "bypass_reason": {
+              "type": "string",
+              "enum": ["thesis_broken", "hard_limit_breach", "position_legitimacy_failure"]
+            }
+          },
+          "additionalProperties": false
+        },
+        "hard_breaches": {
+          "type": "array",
+          "items": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/reasonCode"}
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "outcome": {
+      "type": "object",
+      "required": ["decision", "rationale"],
+      "properties": {
+        "decision": {
+          "description": "recorded_outside_policy is deliberately available and deliberately uncomfortable: the owner may overrule the policy, but not without the record saying so.",
+          "type": "string",
+          "enum": ["executed_as_previewed", "reduced_to_policy_limit", "cancelled",
+                   "recorded_outside_policy", "no_change", "no_change_with_pending_review"]
+        },
+        "final_quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/nonNegativeDecimalString"},
+        "rationale": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "reason_code": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/reasonCode"},
+        "next_review": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"}
+      },
+      "additionalProperties": false
+    },
+
+    "mode": {
+      "description": "shadow: the decision is recorded, no capital moves. The system runs here until at least two monthly cycles and one live event have been observed.",
+      "type": "string",
+      "enum": ["shadow", "live"]
+    }
+  },
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "if": {"properties": {"action": {"enum": ["buy", "sell"]}}, "required": ["action"]},
+      "then": {"required": ["contemplated", "assessment_id"]}
+    },
+    {
+      "if": {"properties": {"action": {"const": "no_change"}}, "required": ["action"]},
+      "then": {"properties": {"contemplated": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}}}
+    },
+    {
+      "$comment": "Overruling the policy requires a reason code, so the calibration review can count how often it happened and why.",
+      "if": {
+        "properties": {"outcome": {"properties": {"decision": {"const": "recorded_outside_policy"}},
+                                   "required": ["decision"]}},
+        "required": ["outcome"]
+      },
+      "then": {"properties": {"outcome": {"required": ["reason_code"]}}}
+    }
+  ]
+}

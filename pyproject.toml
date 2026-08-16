@@ -20,6 +20,7 @@ dev = ["pytest>=8.0", "pytest-xdist>=3.5"]
 
 [project.scripts]
 us-pipeline = "adapter.cli:main"
+fund = "adapter.fund.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

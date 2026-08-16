@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/instrument-master.schema.json",
+  "title": "Instrument master (v0 stub)",
+  "description": "Three-level security identity in one hand-maintained document. Deliberately narrow: no ticker history, no corporate-action relations, no split or merger lineage. Those are real problems, but modelling them before a single position exists would be inventing requirements. The identity split itself is NOT deferrable -- GOOG and GOOGL are one issuer and two securities, and a ticker change must not look like a different company.",
+  "type": "object",
+  "required": ["schema_version", "as_of", "issuers", "securities", "listings"],
+  "properties": {
+    "schema_version": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/semver"},
+    "as_of": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+
+    "issuers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["issuer_id", "legal_name"],
+        "properties": {
+          "issuer_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/issuerId"},
+          "legal_name": {"type": "string", "minLength": 1, "maxLength": 200},
+          "cik": {
+            "description": "SEC Central Index Key, ten digits. Optional because identity must not depend on the filer database being reachable.",
+            "type": "string",
+            "pattern": "^[0-9]{10}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "securities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["security_id", "issuer_id", "security_type", "currency"],
+        "properties": {
+          "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/securityId"},
+          "issuer_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/issuerId"},
+          "security_type": {
+            "description": "Closed at one value on purpose: the mandate is US-listed common equity only. Widening this is a mandate change, not a config change.",
+            "type": "string",
+            "enum": ["common_equity"]
+          },
+          "share_class": {"type": "string", "minLength": 1, "maxLength": 16},
+          "currency": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/currencyCode"}
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "listings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["listing_id", "security_id", "mic", "ticker", "status"],
+        "properties": {
+          "listing_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/listingId"},
+          "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/securityId"},
+          "mic": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/mic"},
+          "ticker": {
+            "description": "The ticker as it stands today. Not a history: a renamed ticker is edited in place, because the identity that matters (security_id) did not change.",
+            "$ref": "fund:schemas/fund/common.schema.json#/$defs/ticker"
+          },
+          "status": {"type": "string", "enum": ["active", "delisted"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

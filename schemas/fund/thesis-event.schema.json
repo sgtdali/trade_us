@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/thesis-event.schema.json",
+  "title": "Thesis event",
+  "description": "One append-only change to a thesis. The thesis document is a projection of this stream, exactly as positions are a projection of account events.\n\nEvent-sourcing it is not uniformity for its own sake. The liveness checks need history -- when a thesis entered review, how long it stayed there, which contract version a check was judged under -- and a mutable row answers none of those. It also keeps every write on the one commit path, so the rule that a machine may only ever request a review has a single place to live.",
+  "type": "object",
+  "required": ["thesis_event_id", "thesis_id", "event_type", "effective_date", "recorded_at", "actor"],
+  "properties": {
+    "thesis_event_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/uuid7"},
+    "thesis_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/thesisId"},
+    "event_type": {
+      "type": "string",
+      "enum": ["opened", "status_changed", "contract_activated", "assessment_linked",
+               "qualitative_check_reviewed", "closed"]
+    },
+    "effective_date": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+    "recorded_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"},
+
+    "actor": {
+      "description": "Who made this change. The machine may request a review and nothing else; every other transition is refused unless the actor is human.",
+      "type": "string",
+      "enum": ["human", "machine"]
+    },
+    "reason": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "resolution": {
+      "description": "Why a review ended, set when leaving review_required. measurement_error means the rule was wrong; decision_irrelevant_breach means the breach was real and changed nothing. Both are calibration information, and neither is recoverable later.",
+      "type": "string",
+      "enum": ["measurement_error", "decision_irrelevant_breach", "thesis_confirmed",
+               "thesis_adjusted", "thesis_broken"]
+    },
+
+    "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/securityId"},
+    "thesis_statement": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "from_status": {"type": "string", "enum": ["active", "review_required", "broken", "closed"]},
+    "to_status": {"type": "string", "enum": ["active", "review_required", "broken", "closed"]},
+    "assessment_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/assessmentId"},
+    "monitoring_contract": {"$ref": "fund:schemas/fund/thesis.schema.json#/$defs/monitoringContract"},
+    "check_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+    "next_review_due": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+    "close_reason": {
+      "type": "string",
+      "enum": ["thesis_played_out", "thesis_broken", "better_use_of_capital",
+               "position_exited", "superseded_by_new_thesis"]
+    },
+    "superseded_by": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/thesisId"}
+  },
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "if": {"properties": {"event_type": {"const": "opened"}}, "required": ["event_type"]},
+      "then": {"required": ["security_id", "thesis_statement", "assessment_id"]}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "status_changed"}}, "required": ["event_type"]},
+      "then": {"required": ["from_status", "to_status", "reason"]}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "contract_activated"}}, "required": ["event_type"]},
+      "then": {"required": ["monitoring_contract"]}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "assessment_linked"}}, "required": ["event_type"]},
+      "then": {"required": ["assessment_id"]}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "qualitative_check_reviewed"}},
+             "required": ["event_type"]},
+      "then": {"required": ["check_id", "next_review_due"]}
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "closed"}}, "required": ["event_type"]},
+      "then": {"required": ["close_reason", "reason"]}
+    }
+  ]
+}

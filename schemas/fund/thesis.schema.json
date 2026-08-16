@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/thesis.schema.json",
+  "title": "Thesis",
+  "description": "The durable object: what is believed about a company and whether that belief is still standing. Assessments are its dated photographs; this is the thing being photographed.\n\nThere is no exposure field here, and that absence is deliberate. Three facts are kept apart on purpose -- the governance state of the thesis, the actual position, and the history of dated judgements. Fusing them is how 'I own it' quietly becomes 'therefore it is fine'.\n\nThis document is a projection of the thesis event stream, not a stored row. The stream is what is written; this shape is what is read.",
+  "type": "object",
+  "required": ["thesis_id", "security_id", "opened_at", "thesis_statement", "status"],
+  "properties": {
+    "thesis_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/thesisId"},
+    "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/securityId"},
+    "opened_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+    "thesis_statement": {"type": "string", "minLength": 1, "maxLength": 4000},
+
+    "status": {
+      "description": "review_required is the only state a machine may ever set. broken and closed are lifecycle judgements and belong to the owner: a mechanical breach says a rule was crossed, not that the reasoning was wrong.",
+      "type": "string",
+      "enum": ["active", "review_required", "broken", "closed"]
+    },
+    "status_reason": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "current_assessment_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/assessmentId"},
+
+    "monitoring_contract": {"$ref": "#/$defs/monitoringContract"},
+
+    "closed_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+    "close_reason": {
+      "type": "string",
+      "enum": ["thesis_played_out", "thesis_broken", "better_use_of_capital",
+               "position_exited", "superseded_by_new_thesis"]
+    },
+    "superseded_by": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/thesisId"}
+  },
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "closed"}}, "required": ["status"]},
+      "then": {"required": ["closed_at", "close_reason"]}
+    },
+    {
+      "if": {"properties": {"status": {"enum": ["review_required", "broken"]}}, "required": ["status"]},
+      "then": {"required": ["status_reason"]}
+    }
+  ],
+
+  "$defs": {
+    "monitoringContract": {
+      "description": "What would have to happen for this thesis to be wrong, written down in advance and versioned. Changing a threshold means a new version with a reason -- the old version is not deleted, and checks already recorded keep the rule they were judged under.\n\nSmall on purpose: one or two mechanical rules and one or two questions, five rules at the absolute ceiling. A contract with fifteen rules is not more rigorous, it is unread.",
+      "type": "object",
+      "required": ["version", "effective_from", "mechanical_rules", "qualitative_checks"],
+      "properties": {
+        "version": {"type": "integer", "minimum": 1},
+        "effective_from": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+        "change_reason": {"type": "string", "minLength": 1, "maxLength": 2000},
+
+        "mechanical_rules": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["rule_id", "metric_id", "period_basis", "test_type", "operator", "threshold"],
+            "properties": {
+              "rule_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+              "metric_id": {
+                "description": "Must exist in config/pipeline/metric-catalog.json. The unit, source contract and provenance come from the catalog and are NOT repeated here -- two copies of a unit is two chances to disagree.",
+                "type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"
+              },
+              "period_basis": {
+                "type": "string",
+                "enum": ["latest_quarter_yoy", "latest_quarter_qoq", "ttm", "latest_fy",
+                         "change_from_baseline"]
+              },
+              "test_type": {
+                "type": "string",
+                "enum": ["absolute_value", "percentage_change", "basis_point_change"]
+              },
+              "operator": {"type": "string", "enum": ["lt", "lte", "gt", "gte"]},
+              "threshold": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+              "baseline_period": {
+                "description": "Required when period_basis is change_from_baseline.",
+                "$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"
+              },
+              "note": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/note"}
+            },
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {"properties": {"period_basis": {"const": "change_from_baseline"}},
+                       "required": ["period_basis"]},
+                "then": {"required": ["baseline_period"]}
+              }
+            ]
+          }
+        },
+
+        "qualitative_checks": {
+          "description": "The conditions that cannot honestly be made mechanical. Forcing them into a formula does not make them rigorous, it makes them wrong and unquestioned.",
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["check_id", "question", "review_on", "review_due"],
+            "properties": {
+              "check_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+              "question": {"type": "string", "minLength": 1, "maxLength": 1000},
+              "review_on": {
+                "type": "array", "minItems": 1, "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "enum": ["new_periodic_filing", "earnings_release", "material_8k", "review_due"]
+                }
+              },
+              "review_due": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+              "last_reviewed_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

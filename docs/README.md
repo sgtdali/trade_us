@@ -9,6 +9,7 @@ hangisinin hangisi olduğunu söyler.
 | Doküman | Ne anlatır |
 |---|---|
 | [uygulama-plani.md](uygulama-plani.md) | **Ne yapılacak, hangi sırayla, ne zaman bitti sayılır.** Uygulamaya başlayan buradan başlar; ilerleme buraya işlenir. |
+| [fund-operasyon.md](fund-operasyon.md) | **Sistemi nasıl çalıştıracağın.** Günlük ritim, kurulum, komutlar, bir şey ters gittiğinde ne yapılacağı. |
 | [pei-company-lifecycle-tasarim.md](pei-company-lifecycle-tasarim.md) | **Hedeflenen sistemin tasarımı** — portföy karar günlüğü. Yalnız güncel durum; tarihçe yok. |
 | [us-market-pipeline.md](us-market-pipeline.md) | **SEC/XBRL veri boru hattı.** Bugün çalışıyor ve yeni tasarım bunu aynen kullanmaya devam ediyor. Değişmedi. |
 | [repo-map.md](repo-map.md) | Ne nerede duruyor. |
@@ -35,6 +36,8 @@ anlatırlar. `src/adapter/pei_workflow.py` veya `scripts/us_pei_*.py` üzerinde
 ---
 
 ## Nereden başlamalı
+
+**Sistemi kullanacaksanız:** `fund-operasyon.md`.
 
 **Uygulamaya başlıyorsanız:** `uygulama-plani.md` → ilk işaretsiz görev.
 

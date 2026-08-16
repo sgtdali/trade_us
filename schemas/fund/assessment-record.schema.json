@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/assessment-record.schema.json",
+  "title": "Assessment record",
+  "description": "A dated, human-accepted judgement about one security: what the thesis is, how ready it is to carry capital, and what the downside looks like. The thesis is the durable object; this is a photograph of it on one day.\n\nWhat is NOT here matters as much as what is: no position weight, no cash, no P&L, no average cost, no contemplated trade. The research judgement is formed and frozen before its capital consequence is visible, so that a downside the owner would have to act on cannot quietly soften into one they would not.\n\nA model can propose the content. Only a human can accept it, and accepting is recorded as an act with answers attached -- silently editing a number is not available. A factual error means rejecting the proposal; a different judgement means writing a human_authored assessment that links back to what it replaced.",
+  "type": "object",
+  "required": [
+    "assessment_id", "security_id", "as_of", "assessment_mode", "thesis_summary",
+    "readiness", "downside", "evidence_date", "review_due", "human_authored", "acceptance"
+  ],
+  "properties": {
+    "assessment_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/assessmentId"},
+    "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/securityId"},
+    "thesis_id": {
+      "description": "Absent while underwriting a name that has no thesis yet.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/thesisId"
+    },
+    "as_of": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+
+    "assessment_mode": {
+      "description": "How much of the prior judgement was visible while forming this one. de_novo shows nothing (onboarding). update_against_prior requires the previous judgement, to measure change. independent_then_reconcile forms the view blind and explains the difference afterwards -- for material breaks, where anchoring costs the most.",
+      "type": "string",
+      "enum": ["de_novo", "update_against_prior", "independent_then_reconcile"]
+    },
+
+    "thesis_summary": {"type": "string", "minLength": 1, "maxLength": 4000},
+
+    "readiness": {
+      "description": "Readiness is not conviction. It is a claim about the state of the evidence: an accepted thesis, a stated downside, an approved monitoring contract, no material data gap. watchlist carries no capital at all.",
+      "type": "string",
+      "enum": ["watchlist", "starter", "core", "exceptional"]
+    },
+
+    "downside": {
+      "description": "The scenario that sizes the position. 'unknown' is a legitimate answer with a consequence: policy makes the name ineligible for new risk rather than guessing a number.",
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"type": "string", "enum": ["known", "unknown"]},
+        "return_fraction": {
+          "description": "Negative fraction of the current price, e.g. '-0.3' for a 30% fall. Not basis points and not a percentage: this is a measured quantity, not a policy threshold.",
+          "type": "string",
+          "pattern": "^-(0\\.[0-9]*[1-9]|1)$"
+        },
+        "scenario": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "reason": {
+          "description": "Why the downside cannot be stated. Required when status is unknown.",
+          "type": "string", "minLength": 1, "maxLength": 2000
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "known"}}, "required": ["status"]},
+          "then": {
+            "required": ["return_fraction", "scenario"],
+            "properties": {"reason": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}}
+          },
+          "else": {
+            "required": ["reason"],
+            "properties": {
+              "return_fraction": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+              "scenario": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+            }
+          }
+        }
+      ]
+    },
+
+    "evidence_date": {
+      "description": "The date of the newest evidence this judgement rests on -- not the date it was written. A judgement written today on a filing from March is three months old, and the preview screen says so.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"
+    },
+    "review_due": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+
+    "source_artifact": {
+      "description": "The skill output this judgement was formed against, when there was one.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/artifactRef"
+    },
+    "human_authored": {
+      "description": "true when the owner wrote the judgement rather than accepting a proposal. Not a quality mark -- a provenance fact.",
+      "type": "boolean"
+    },
+    "derived_from": {
+      "description": "The assessment this one replaces or updates. Set when a human-authored judgement supersedes a model proposal, so the disagreement stays visible instead of being overwritten.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/assessmentId"
+    },
+
+    "acceptance": {
+      "description": "The act of accepting, with its answers. Skipping the questions is representable -- as acknowledged_without_full_adjudication, which does not count as adjudicated and cannot raise readiness.",
+      "type": "object",
+      "required": ["accepted_at", "mode", "critical_sources_checked", "would_accept_downside_without_position"],
+      "properties": {
+        "accepted_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"},
+        "mode": {
+          "type": "string",
+          "enum": ["human_adjudicated", "acknowledged_without_full_adjudication"]
+        },
+        "critical_sources_checked": {"type": "boolean"},
+        "would_accept_downside_without_position": {
+          "description": "'If you did not already own this, would you accept the same downside?' A false answer does not void the record -- it blocks the record from supporting an increase in risk.",
+          "type": "boolean"
+        },
+        "main_change_driver": {
+          "description": "What actually changed since the previous accepted judgement. Required whenever there is a previous one.",
+          "type": "string", "minLength": 1, "maxLength": 2000
+        },
+        "rationale": {
+          "description": "Required on a material change: a readiness move, or a downside difference over 500 bp.",
+          "type": "string", "minLength": 1, "maxLength": 4000
+        },
+        "minutes_spent": {"type": "integer", "minimum": 0, "maximum": 600}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$comment": "Skipping the review is allowed but cannot masquerade as having done it.",
+          "if": {
+            "properties": {"mode": {"const": "human_adjudicated"}},
+            "required": ["mode"]
+          },
+          "then": {"properties": {"critical_sources_checked": {"const": true}}}
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "$comment": "An update has to say what it is updating, otherwise the mode is decoration.",
+      "if": {
+        "properties": {"assessment_mode": {"enum": ["update_against_prior", "independent_then_reconcile"]}},
+        "required": ["assessment_mode"]
+      },
+      "then": {"required": ["derived_from"]}
+    }
+  ]
+}

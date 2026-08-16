@@ -13,6 +13,16 @@ class FilingRef:
     report_date: date
     primary_document: str
     is_amendment: bool = False
+    #: SEC "items" for 8-K filings, e.g. ("2.02", "9.01"). Item 2.02 is
+    #: "Results of Operations and Financial Condition" -- the earnings release
+    #: itself. Without this the typed layer cannot tell an earnings 8-K from any
+    #: other 8-K, and an earnings trigger has to fall back on a calendar date,
+    #: which is an estimate rather than evidence.
+    items: tuple[str, ...] = ()
+
+    @property
+    def is_earnings_release(self) -> bool:
+        return "2.02" in self.items
 
     @property
     def accession_compact(self) -> str:
