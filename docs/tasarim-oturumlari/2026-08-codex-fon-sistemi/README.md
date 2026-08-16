@@ -1,9 +1,14 @@
 # Codex tasarım oturumu — fon işletim sistemi (2026-08-15/16)
 
 Bu klasör, `docs/pei-company-lifecycle-tasarim.md`'nin arkasındaki ham
-tartışmayı taşır. Doküman kararları ve gerekçeleri içerir; buradaki kayıt
-o kararların **nasıl** varıldığını, hangi iddiaların kodda doğrulandığını
-ve hangi önerilerin geri çekildiğini gösterir.
+tartışmayı taşır.
+
+**İkisi arasındaki iş bölümü:** Doküman yalnız **güncel tasarımı** anlatır --
+tarihçe, geçersiz kalmış kararlar ve "önce şöyle demiştik" notları orada
+yoktur. Bu arşiv ise kararların **nasıl** varıldığını, hangi alternatiflerin
+neden reddedildiğini, hangi iddiaların kodda doğrulandığını ve hangi
+önerilerin geri çekildiğini taşır. Bir tasarım kararını sorgulamak
+isteyen buraya bakar.
 
 ## Oturum künyesi
 
@@ -28,6 +33,9 @@ bloklardan üstündür.** Erken turlardaki bir hükmü tek başına alıntılama
 | 4 | 33-42 | **Fon yönetim sistemi reframe'i** | Ürün sınırı tersine döndü; araştırma alt sistem oldu |
 | 5 | 43-52 | Policy'nin sınanması + somut şema | Dört kanıt katmanı, A0-A4 yetki merdiveni, V0 kesimi (7 tam şema + 3 stub + 1 DDL) |
 | 6 | 53-59 | Fon ile eklenti skill sisteminin entegrasyonu | Tek sınır, `capital_input_manifest`, iki aşamalı adjudication, görünürlük matrisi, revize inşa sırası |
+| 7 | 60-62 | "Tek kişi için fazla mı kurumsal?" değerlendirmesi | Evet, bütün olarak orantısız; doğruluk çekirdeği değil, etrafındaki yönetişim yüzeyi fazla |
+| 8 | 63-65 | Gerçek ölçek (5-10 pozisyon, elle giriş) | Platform çöktü, küçük karar günlüğü kaldı; dört nesne, CLI + salt-okunur HTML |
+| 9 | 66-71 | Otomatik orkestrasyon ve tez takibi | Sabit dispatch tablosu, `research-cycle`, thesis lifecycle, monitoring contract, `monitoring_coverage` |
 
 ## Tur dizini
 
@@ -121,6 +129,33 @@ Her tur iki dosya: `-soru` (Claude'un turu) ve `-cevap` (codex'in turu).
 | 57 | İki aşamalı adjudication; çöp çıktı; fiyat-tez çelişkisi; törensel onay |
 | 58 | Revize inşa sırası; en küçük entegrasyon dilimi; ilk adapter `comps-valuation` |
 | 59 | Kapanış: sınırın tek sayfalık tarifi |
+
+### Blok 7 — orantılılık değerlendirmesi
+
+| Tur | Konu |
+|---|---|
+| 60 | Tasarım tek kişi için orantısız mı; iki haftalık alternatif; çıkış değeri |
+| 61 | Gerçek alternatif broker + Excel; hangi hatalar gerçekten olur; süre dürüstlüğü |
+| 62 | Orta yol; hesap tablosunun riskleri; dokümanın dört kategorisi |
+
+### Blok 8 — gerçek ölçek
+
+| Tur | Konu |
+|---|---|
+| 63 | Elle giriş varsayımı; ne çöküyor; "yazılım yazma" hükmü değişiyor |
+| 64 | `fund assess` / `fund trade-preview` akışı; CLI + HTML; inşa süresi |
+| 65 | Kapanış: dokümanın etiketlenmesi ve tek sayfa |
+
+### Blok 9 — otomasyon
+
+| Tur | Konu |
+|---|---|
+| 66 | Aşırı düzeltmenin geri alınması; sabit dispatch tablosu; gözlenebilir tetikleyiciler |
+| 67 | Tez izleme; monitoring contract; thesis ile assessment ayrımı |
+| 68 | Üç gerçek hafta; Q0/Q1/Q2 kuyruğu; gece hatası politikası |
+| 69 | Nesne modeli; dispatch kurallarının yeri; süre ve inşa sırası |
+| 70 | Bir yıl sonra ne bozulur; insanın pasifleşmesi; yanlış alarm bütçesi |
+| 71 | Kapanış: güncel tasarımın tek sayfası |
 
 ## Okurken dikkat
 
