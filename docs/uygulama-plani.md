@@ -30,7 +30,7 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 |---|---|---|
 | F0 | Kullanıcı kararları | 🔵 F0.2-F0.5 bitti · F0.1 gerçek hesap bilgisi bekliyor |
 | F1 | Defter ve manuel muhasebe | 🔵 Kod bitti (F1.1-F1.10) · F1.11 açılış kitabı bekliyor |
-| F2 | Capital policy ve karar akışı | ⬜ Başlanmadı |
+| F2 | Capital policy ve karar akışı | ✅ Bitti |
 | F3 | Tez lifecycle ve izleme sözleşmesi | ⬜ Başlanmadı |
 | F4 | Mekanik kontrol motoru | ⬜ Başlanmadı |
 | F5 | Job, dedup, inbox | ⬜ Başlanmadı |
@@ -147,44 +147,44 @@ pozisyon/nakit/NAV state'i replay edilebiliyor.
 
 ← F0.5, F1.11
 
-- [ ] **F2.1 `schemas/fund/assessment-record.schema.json`**
+- [x] **F2.1 `schemas/fund/assessment-record.schema.json`**
   *Bitti:* Tez özeti, readiness (`watchlist`/`starter`/`core`), downside
   senaryosu ve yüzdesi, kanıt tarihi, `review_due`, kaynak artefakt
   referansı, `human_authored` bayrağı ve `derived_from`.
-- [ ] **F2.2 `schemas/fund/decision-record.schema.json`**
+- [x] **F2.2 `schemas/fund/decision-record.schema.json`**
   *Bitti:* Tasarım Bölüm 8'deki alanlar; `shadow`/`live` ayrımı var;
   immutable.
-- [ ] **F2.3 Policy hesaplayıcı** ← F1.4
+- [x] **F2.3 Policy hesaplayıcı** ← F1.4
   *Bitti:* `base_weight`, `readiness_weight`, downside kapasitesi, issuer/
   security/nakit kapasiteleri ve `policy_compliant_max_weight` hesaplanıyor;
   **bağlayıcı kısıt** (`binding_constraint`) doğru raporlanıyor; no-trade
   bandı değerlendiriliyor.
-- [ ] **F2.4 `fund assess`** ← F2.1
+- [x] **F2.4 `fund assess`** ← F2.1
   *Bitti:* Ekranda pozisyon ağırlığı, nakit, P&L, önerilen işlem ve sermaye
   riski **görünmüyor**; "bu pozisyona sahip olmasaydınız aynı downside'ı kabul
   eder miydiniz" sorusu soruluyor; sonuç `assessment_record` olarak
   dondurulıyor.
-- [ ] **F2.5 `fund trade-preview`** ← F2.3, F2.4
+- [x] **F2.5 `fund trade-preview`** ← F2.3, F2.4
   *Bitti:* Tasarım Bölüm 4'teki çıktı formatı üretiliyor; policy dışı işlemde
   policy içi üst sınır hesaplanıyor; üç seçenek (indir / iptal / gerekçeyle
   policy dışı kaydet) çalışıyor; karar `decision_record` olarak dondurulıyor.
-- [ ] **F2.6 `fund trade-add`** ← F2.5, F1.7 — kararı gerçekleşmeye bağlama.
+- [x] **F2.6 `fund trade-add`** ← F2.5, F1.7 — kararı gerçekleşmeye bağlama.
   *Bitti:* Kararla `account_event` arasındaki bağ (`decision_id`) kuruluyor.
-- [ ] **F2.7 `fund review`** — aylık oturum.
+- [x] **F2.7 `fund review`** — aylık oturum.
   *Bitti:* NAV, nakit, drawdown, pozisyon tablosu ve uyarılar gösteriliyor;
   `no_change` da bir karar olarak gerekçe koduyla kaydediliyor; çözülmemiş
   adjudication varken `no_change_with_pending_review` işaretleniyor.
-- [ ] **F2.8 Property testleri** ← F2.3
+- [x] **F2.8 Property testleri** ← F2.3
   *Bitti:* En az şunlar geçiyor: downside kötüleşirse ilgili tavan artamaz;
   readiness düşerse band genişleyemez; loss budget daralırsa tavan artamaz;
   ağırlıklar + nakit = %100 (tolerans içinde); policy sıkılaşırsa uygun
   portföy kümesi genişleyemez.
-- [ ] **F2.9 Golden fixture'lar** ← F2.3
+- [x] **F2.9 Golden fixture'lar** ← F2.3
   *Bitti:* 6-8 okunabilir kanonik kitap ve beklenen çıktıları donduruldu
   (tamamen nakit, aşırı yoğun tek pozisyon, dengeli kitap, limitlere yaklaşmış
   kitap, hard-limit ihlalli kitap, split içeren kitap, `cost_basis_unknown`
   içeren kitap).
-- [ ] **F2.10 Salt-okunur HTML görünümü** ← F1.9, F2.5
+- [x] **F2.10 Salt-okunur HTML görünümü** ← F1.9, F2.5
   *Bitti:* NAV, nakit, pozisyonlar, policy tavanları, ihlaller, review-due
   listesi ve son kararlar tek sayfada okunabiliyor; sayfa aynı veriden
   yeniden üretilebiliyor; yazma yolu **yok**.
@@ -489,6 +489,35 @@ uygulamada açılışta bayrak düşürülüyordu, daraltıldı.
   girilirse reddediliyor; gerçekten tekrar eden bir işlemse
   `--allow-duplicate` gerekiyor. Digest `event_id`, `recorded_at` ve `note`
   alanlarını dışlıyor.
+
+### 2026-08-16 — F2.3 readiness tavanı tasarımdaki örnekten farklı
+
+Tasarım Bölüm 4'teki önizleme örneği "Readiness tavanı %5,00" diyor; kod
+**%4,90** üretiyor. Kod doğru: tasarımın kendi formülü
+`base_weight = deployable_capital_fraction / max_active_positions` ve
+deployable = 1 − 200 bp operasyonel taban = 0,98. 0,98/10 × 0,5 = %4,9.
+Örnekteki %5 yuvarlanmış. Bağlayıcı kısıt, tavan (%3,33) ve policy içi miktar
+(18 hisse / $3.240) örnekle **birebir** aynı.
+
+### 2026-08-16 — F2.5 preview'da iki farklı "fiyat"
+
+`--price` işlem fiyatı, `--mark` kitabın geri kalanını değerlemek için piyasa
+fiyatı. Tek bayrakta birleştirmek, portföyü "ödemeyi umduğun fiyattan"
+değerlemenin sessiz bir yolu olurdu.
+
+### 2026-08-16 — F2.5 karar dondurmak açık tercih ister
+
+`fund trade-preview` tek başına **hiçbir şey kaydetmez**. Karar ancak
+`--decide accept|reduce|cancel|outside-policy` ile donuyor. Önizleme
+önizlemedir; bakmakla karar vermek arasındaki farkı defterin görmesi gerekiyor.
+
+### 2026-08-16 — F2.7 drawdown için NAV geçmişi eklendi
+
+Drawdown bir geçmiş ister, projection ise geçmiş uyduramaz: fiyat serisi
+olmadan geçen ayki NAV bilinemez. `nav_snapshot` tablosu (migration 3) eklendi;
+`fund review` her çalıştığında o günün markını yazıyor ve zirve dürüstçe
+"izleme başladığından beri" olarak tanımlanıyor. İlk review "bir zirve için
+ikinci review gerekiyor" diyor.
 
 ### 2026-08-16 — plan dışı eklenenler
 

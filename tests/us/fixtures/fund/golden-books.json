@@ -1,0 +1,180 @@
+{
+  "$comment": [
+    "Frozen canonical books. Every expected figure below was computed by hand,",
+    "which is why the numbers are round: a golden fixture whose expectations were",
+    "produced by the code it tests proves only that the code is consistent with",
+    "itself. If a change here is 'obviously fine', recompute it on paper first.",
+    "Prices are marks, not fills. Weights are fractions of NAV."
+  ],
+  "books": [
+    {
+      "name": "all_cash",
+      "description": "Nothing owned. Cash is a position, not an absence of one.",
+      "events": [
+        {"event_type": "opening_cash", "effective_date": "2026-08-01", "cash_amount": "50000"}
+      ],
+      "prices": {},
+      "expected": {
+        "nav": "50000",
+        "cash": "50000",
+        "cash_weight": "1",
+        "positions": {},
+        "realized_pnl": "0"
+      }
+    },
+    {
+      "name": "single_concentrated",
+      "description": "One name at 90% of NAV. Legal to hold, impossible to add to.",
+      "events": [
+        {"event_type": "opening_cash", "effective_date": "2026-08-01", "cash_amount": "10000"},
+        {"event_type": "opening_position", "effective_date": "2026-08-01",
+         "security_id": "sec:aaa", "quantity": "1000", "cost_basis_status": "known",
+         "unit_cost": "80"}
+      ],
+      "prices": {"sec:aaa": "90"},
+      "expected": {
+        "nav": "100000",
+        "cash": "10000",
+        "cash_weight": "0.1",
+        "positions": {
+          "sec:aaa": {"quantity": "1000", "market_value": "90000", "weight": "0.9",
+                      "cost_total": "80000", "unrealized": "10000"}
+        },
+        "realized_pnl": "0"
+      }
+    },
+    {
+      "name": "balanced",
+      "description": "Four names at 20% each, 20% cash. The shape the policy expects.",
+      "events": [
+        {"event_type": "opening_cash", "effective_date": "2026-08-01", "cash_amount": "20000"},
+        {"event_type": "opening_position", "effective_date": "2026-08-01",
+         "security_id": "sec:aaa", "quantity": "200", "cost_basis_status": "known", "unit_cost": "90"},
+        {"event_type": "opening_position", "effective_date": "2026-08-01",
+         "security_id": "sec:bbb", "quantity": "400", "cost_basis_status": "known", "unit_cost": "45"},
+        {"event_type": "opening_position", "effective_date": "2026-08-01",
+         "security_id": "sec:ccc", "quantity": "100", "cost_basis_status": "known", "unit_cost": "180"},
+        {"event_type": "opening_position", "effective_date": "2026-08-01",
+         "security_id": "sec:ddd", "quantity": "1000", "cost_basis_status": "known", "unit_cost": "18"}
+      ],
+      "prices": {"sec:aaa": "100", "sec:bbb": "50", "sec:ccc": "200", "sec:ddd": "20"},
+      "expected": {
+        "nav": "100000",
+        "cash": "20000",
+        "cash_weight": "0.2",
+        "positions": {
+          "sec:aaa": {"quantity": "200", "market_value": "20000", "weight": "0.2",
+                      "cost_total": "18000", "unrealized": "2000"},
+          "sec:bbb": {"quantity": "400", "market_value": "20000", "weight": "0.2",
+                      "cost_total": "18000", "unrealized": "2000"},
+          "sec:ccc": {"quantity": "100", "market_value": "20000", "weight": "0.2",
+                      "cost_total": "18000", "unrealized": "2000"},
+          "sec:ddd": {"quantity": "1000", "market_value": "20000", "weight": "0.2",
+                      "cost_total": "18000", "unrealized": "2000"}
+        },
+        "realized_pnl": "0"
+      }
+    },
+    {
+      "name": "near_limits",
+      "description": "9.9% against a 10% hard wall: compliant, with almost no headroom.",
+      "events": [
+        {"event_type": "opening_cash", "effective_date": "2026-08-01", "cash_amount": "90100"},
+        {"event_type": "opening_position", "effective_date": "2026-08-01",
+         "security_id": "sec:aaa", "quantity": "99", "cost_basis_status": "known", "unit_cost": "100"}
+      ],
+      "prices": {"sec:aaa": "100"},
+      "expected": {
+        "nav": "100000",
+        "cash": "90100",
+        "cash_weight": "0.901",
+        "positions": {
+          "sec:aaa": {"quantity": "99", "market_value": "9900", "weight": "0.099",
+                      "cost_total": "9900", "unrealized": "0"}
+        },
+        "realized_pnl": "0"
+      }
+    },
+    {
+      "name": "hard_limit_breach",
+      "description": "15% against a 10% wall. Already in breach -- and the policy may not be loosened to make it go away.",
+      "events": [
+        {"event_type": "opening_cash", "effective_date": "2026-08-01", "cash_amount": "85000"},
+        {"event_type": "opening_position", "effective_date": "2026-08-01",
+         "security_id": "sec:aaa", "quantity": "150", "cost_basis_status": "known", "unit_cost": "100"}
+      ],
+      "prices": {"sec:aaa": "100"},
+      "expected": {
+        "nav": "100000",
+        "cash": "85000",
+        "cash_weight": "0.85",
+        "positions": {
+          "sec:aaa": {"quantity": "150", "market_value": "15000", "weight": "0.15",
+                      "cost_total": "15000", "unrealized": "0"}
+        },
+        "realized_pnl": "0",
+        "breaches": ["policy.max_security_weight_exceeded"]
+      }
+    },
+    {
+      "name": "with_split",
+      "description": "A 4-for-1 split: four times the shares, the same money spent.",
+      "events": [
+        {"event_type": "opening_cash", "effective_date": "2026-08-01", "cash_amount": "10000"},
+        {"event_type": "opening_position", "effective_date": "2026-08-01",
+         "security_id": "sec:aaa", "quantity": "100", "cost_basis_status": "known", "unit_cost": "400"},
+        {"event_type": "quantity_adjustment", "effective_date": "2026-08-10",
+         "security_id": "sec:aaa", "quantity": "300", "adjustment_reason": "stock_split",
+         "note": "4-for-1"}
+      ],
+      "prices": {"sec:aaa": "110"},
+      "expected": {
+        "nav": "54000",
+        "cash": "10000",
+        "positions": {
+          "sec:aaa": {"quantity": "400", "market_value": "44000",
+                      "cost_total": "40000", "cost_per_share": "100", "unrealized": "4000"}
+        },
+        "realized_pnl": "0"
+      }
+    },
+    {
+      "name": "cost_basis_unknown",
+      "description": "An inherited holding. Valued, weighted, and reporting no P&L at all.",
+      "events": [
+        {"event_type": "opening_cash", "effective_date": "2026-08-01", "cash_amount": "5000"},
+        {"event_type": "opening_position", "effective_date": "2026-08-01",
+         "security_id": "sec:aaa", "quantity": "100", "cost_basis_status": "unknown"}
+      ],
+      "prices": {"sec:aaa": "50"},
+      "expected": {
+        "nav": "10000",
+        "cash": "5000",
+        "positions": {
+          "sec:aaa": {"quantity": "100", "market_value": "5000", "weight": "0.5",
+                      "unrealized": null, "unrealized_reason": "cost_basis_unknown"}
+        },
+        "realized_pnl": "0"
+      }
+    },
+    {
+      "name": "sold_to_zero",
+      "description": "Bought and fully sold. The position leaves the table; the gain does not.",
+      "events": [
+        {"event_type": "opening_cash", "effective_date": "2026-08-01", "cash_amount": "10000"},
+        {"event_type": "buy", "effective_date": "2026-08-05", "security_id": "sec:aaa",
+         "quantity": "100", "price": "50"},
+        {"event_type": "sell", "effective_date": "2026-08-20", "security_id": "sec:aaa",
+         "quantity": "100", "price": "60"}
+      ],
+      "prices": {"sec:aaa": "60"},
+      "expected": {
+        "nav": "11000",
+        "cash": "11000",
+        "cash_weight": "1",
+        "positions": {},
+        "realized_pnl": "1000"
+      }
+    }
+  ]
+}

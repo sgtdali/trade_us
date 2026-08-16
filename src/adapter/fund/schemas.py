@@ -25,6 +25,8 @@ COMMON = "fund:schemas/fund/common.schema.json"
 INSTRUMENT_MASTER = "fund:schemas/fund/instrument-master.schema.json"
 ACCOUNT_EVENT = "fund:schemas/fund/account-event.schema.json"
 CAPITAL_POLICY = "fund:schemas/fund/capital-policy.schema.json"
+ASSESSMENT_RECORD = "fund:schemas/fund/assessment-record.schema.json"
+DECISION_RECORD = "fund:schemas/fund/decision-record.schema.json"
 
 
 def repo_root() -> Path:

@@ -114,7 +114,94 @@ _MIGRATION_0001 = Migration(
     ),
 )
 
-MIGRATIONS: tuple[Migration, ...] = (_MIGRATION_0001,)
+_MIGRATION_0002 = Migration(
+    version=2,
+    name="assessment and decision records",
+    statements=(
+        """
+        CREATE TABLE assessment_record (
+            assessment_id   TEXT PRIMARY KEY,
+            security_id     TEXT NOT NULL,
+            thesis_id       TEXT,
+            as_of           TEXT NOT NULL,
+            readiness       TEXT NOT NULL,
+            review_due      TEXT NOT NULL,
+            derived_from    TEXT REFERENCES assessment_record(assessment_id),
+            content_digest  TEXT NOT NULL,
+            document        TEXT NOT NULL
+        )
+        """,
+        "CREATE INDEX assessment_by_security ON assessment_record (security_id, as_of)",
+        "CREATE INDEX assessment_by_review_due ON assessment_record (review_due)",
+        """
+        CREATE TRIGGER assessment_immutable_update
+        BEFORE UPDATE ON assessment_record
+        BEGIN
+            SELECT RAISE(ABORT,
+                'assessment records are immutable: write a new assessment with derived_from instead');
+        END
+        """,
+        """
+        CREATE TRIGGER assessment_immutable_delete
+        BEFORE DELETE ON assessment_record
+        BEGIN
+            SELECT RAISE(ABORT, 'assessment records cannot be deleted');
+        END
+        """,
+        """
+        CREATE TABLE decision_record (
+            decision_id     TEXT PRIMARY KEY,
+            as_of           TEXT NOT NULL,
+            security_id     TEXT NOT NULL,
+            assessment_id   TEXT REFERENCES assessment_record(assessment_id),
+            action          TEXT NOT NULL,
+            decision        TEXT NOT NULL,
+            mode            TEXT NOT NULL,
+            content_digest  TEXT NOT NULL,
+            document        TEXT NOT NULL
+        )
+        """,
+        "CREATE INDEX decision_by_security ON decision_record (security_id, as_of)",
+        "CREATE INDEX decision_by_date ON decision_record (as_of)",
+        """
+        CREATE TRIGGER decision_immutable_update
+        BEFORE UPDATE ON decision_record
+        BEGIN
+            SELECT RAISE(ABORT,
+                'decision records are immutable: they answer what was known that day');
+        END
+        """,
+        """
+        CREATE TRIGGER decision_immutable_delete
+        BEFORE DELETE ON decision_record
+        BEGIN
+            SELECT RAISE(ABORT, 'decision records cannot be deleted');
+        END
+        """,
+    ),
+)
+
+_MIGRATION_0003 = Migration(
+    version=3,
+    name="nav snapshots",
+    statements=(
+        # Drawdown needs a history, and a projection cannot invent one: without
+        # a price series there is no way to know what NAV was last month. So it
+        # is recorded as the reviews happen, and the peak is honestly described
+        # as the peak since tracking began.
+        """
+        CREATE TABLE nav_snapshot (
+            as_of        TEXT PRIMARY KEY,
+            nav          TEXT NOT NULL,
+            cash         TEXT NOT NULL,
+            currency     TEXT NOT NULL,
+            recorded_at  TEXT NOT NULL
+        )
+        """,
+    ),
+)
+
+MIGRATIONS: tuple[Migration, ...] = (_MIGRATION_0001, _MIGRATION_0002, _MIGRATION_0003)
 
 
 # --------------------------------------------------------------------------
@@ -150,6 +237,28 @@ class RecordKind:
     columns: Callable[[Mapping[str, Any]], dict[str, Any]]
 
 
+def _assessment_columns(document: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "security_id": document["security_id"],
+        "thesis_id": document.get("thesis_id"),
+        "as_of": document["as_of"],
+        "readiness": document["readiness"],
+        "review_due": document["review_due"],
+        "derived_from": document.get("derived_from"),
+    }
+
+
+def _decision_columns(document: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "as_of": document["as_of"],
+        "security_id": document["security_id"],
+        "assessment_id": document.get("assessment_id"),
+        "action": document["action"],
+        "decision": document["outcome"]["decision"],
+        "mode": document["mode"],
+    }
+
+
 ACCOUNT_EVENT = RecordKind(
     name="account_event",
     table="account_event",
@@ -158,7 +267,25 @@ ACCOUNT_EVENT = RecordKind(
     columns=_account_event_columns,
 )
 
-RECORD_KINDS: dict[str, RecordKind] = {ACCOUNT_EVENT.name: ACCOUNT_EVENT}
+ASSESSMENT_RECORD = RecordKind(
+    name="assessment_record",
+    table="assessment_record",
+    schema_id=schemas.ASSESSMENT_RECORD,
+    id_field="assessment_id",
+    columns=_assessment_columns,
+)
+
+DECISION_RECORD = RecordKind(
+    name="decision_record",
+    table="decision_record",
+    schema_id=schemas.DECISION_RECORD,
+    id_field="decision_id",
+    columns=_decision_columns,
+)
+
+RECORD_KINDS: dict[str, RecordKind] = {
+    kind.name: kind for kind in (ACCOUNT_EVENT, ASSESSMENT_RECORD, DECISION_RECORD)
+}
 
 
 # --------------------------------------------------------------------------
@@ -367,6 +494,69 @@ class Ledger:
         query += " ORDER BY effective_date, event_id"
         with self.connection() as connection:
             return [json.loads(row["document"]) for row in connection.execute(query, params)]
+
+    def assessments(self, *, security_id: str | None = None) -> list[dict[str, Any]]:
+        query = "SELECT document FROM assessment_record"
+        params: tuple[Any, ...] = ()
+        if security_id is not None:
+            query += " WHERE security_id = ?"
+            params = (security_id,)
+        query += " ORDER BY as_of, assessment_id"
+        with self.connection() as connection:
+            return [json.loads(row["document"]) for row in connection.execute(query, params)]
+
+    def assessment(self, assessment_id: str) -> dict[str, Any]:
+        with self.connection() as connection:
+            row = connection.execute(
+                "SELECT document FROM assessment_record WHERE assessment_id = ?", (assessment_id,)
+            ).fetchone()
+        if row is None:
+            raise LedgerError(f"no such assessment: {assessment_id}")
+        return json.loads(row["document"])
+
+    def latest_assessment(self, security_id: str) -> dict[str, Any] | None:
+        found = self.assessments(security_id=security_id)
+        return found[-1] if found else None
+
+    def decisions(self, *, security_id: str | None = None) -> list[dict[str, Any]]:
+        query = "SELECT document FROM decision_record"
+        params: tuple[Any, ...] = ()
+        if security_id is not None:
+            query += " WHERE security_id = ?"
+            params = (security_id,)
+        query += " ORDER BY as_of, decision_id"
+        with self.connection() as connection:
+            return [json.loads(row["document"]) for row in connection.execute(query, params)]
+
+    def decision(self, decision_id: str) -> dict[str, Any]:
+        with self.connection() as connection:
+            row = connection.execute(
+                "SELECT document FROM decision_record WHERE decision_id = ?", (decision_id,)
+            ).fetchone()
+        if row is None:
+            raise LedgerError(f"no such decision: {decision_id}")
+        return json.loads(row["document"])
+
+    def record_nav(self, *, as_of: str, nav: str, cash: str, currency: str, recorded_at: str) -> None:
+        """Upsert today's mark. Re-running a review must not create a second peak."""
+        with self.connection() as connection:
+            with self._write_transaction(connection):
+                connection.execute(
+                    "INSERT INTO nav_snapshot (as_of, nav, cash, currency, recorded_at) "
+                    "VALUES (?, ?, ?, ?, ?) "
+                    "ON CONFLICT(as_of) DO UPDATE SET nav = excluded.nav, cash = excluded.cash, "
+                    "currency = excluded.currency, recorded_at = excluded.recorded_at",
+                    (as_of, nav, cash, currency, recorded_at),
+                )
+
+    def nav_history(self) -> list[dict[str, str]]:
+        with self.connection() as connection:
+            return [
+                {key: row[key] for key in row.keys()}
+                for row in connection.execute(
+                    "SELECT as_of, nav, cash, currency FROM nav_snapshot ORDER BY as_of"
+                )
+            ]
 
     def find_by_digest(self, digest: str) -> list[str]:
         with self.connection() as connection:
