@@ -37,7 +37,7 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 | F6 | İlk otomatik recipe | ✅ Bitti |
 | F7 | `research-cycle` — kendi kendine çalışma | ✅ Bitti — **kritik eşik geçildi** |
 | F8 | İkinci dalga tetikleyiciler | ✅ Bitti |
-| F9 | Canlılık ve kalite uyarıları | ⬜ Başlanmadı |
+| F9 | Canlılık ve kalite uyarıları | ✅ Bitti |
 | F10 | Discovery | ⬜ Başlanmadı |
 
 İşaretler: ⬜ başlanmadı · 🔵 sürüyor · ✅ bitti · ⚠ engelli/sorunlu
@@ -349,20 +349,20 @@ hatırlamıyor, skill seçmiyor; sabah yalnız sonucu yargılıyor.
 
 ← F8.5
 
-- [ ] **F9.1 `monitoring_coverage`**
+- [x] **F9.1 `monitoring_coverage`**
   *Bitti:* Her aktif tez için `healthy` / `degraded` / `blind` hesaplanıyor;
   ilgili filing geldiği hâlde kural değerlendirilemediyse `degraded`; iki
   ardışık kanıt döneminde `unavailable` ise `blind`; `blind` tez Q0'a düşüyor
   ve yeni risk artırımı bloklanıyor.
-- [ ] **F9.2 Dispatch sağlık raporu** ← F7.1
+- [x] **F9.2 Dispatch sağlık raporu** ← F7.1
   *Bitti:* Kural bazında `enabled`, `last_observed`, `last_dispatched`,
   `jobs_30d`, `failures_30d` görülebiliyor; hiç ateşlemeyen kural fark
   ediliyor.
-- [ ] **F9.3 Adjudication kalite sinyalleri** ← F5.6
+- [x] **F9.3 Adjudication kalite sinyalleri** ← F5.6
   *Bitti:* Değiştirmeden kabul oranı, çok kısa adjudication sayısı, kaynak
   açılmadan verilen kabuller ölçülüyor; eşik aşılınca
   `adjudication_quality_warning` gösteriliyor.
-- [ ] **F9.4 Yanlış alarm sayacı** ← F4.3
+- [x] **F9.4 Yanlış alarm sayacı** ← F4.3
   *Bitti:* Yıllık `review_required` sayısı ve `measurement_error` /
   `decision_irrelevant_breach` ayrımı raporlanıyor; hedef bant (yılda 4-8)
   aşılınca kalibrasyon uyarısı çıkıyor.
@@ -667,6 +667,23 @@ var olmayan sayılar üzerine yapılır.
 şey: `enabled`, `cooldown_days`, `price_shock_bps`, `price_shock_window_days`.
 Başka bir alan yazılırsa **hata veriyor** — recipe veya assessment modu config'e
 açılırsa farkında olmadan bir kural dili kurulmuş olurdu.
+
+### 2026-08-16 — F9.4 için `resolution` alanı eklendi
+
+Yanlış alarm sayacı "ölçüm hatası mı, gerçekti ama kararı değiştirmedi mi"
+ayrımını istiyor. Bu bilgi hiçbir yerde yoktu ve **sonradan geri
+kazanılamıyor**. `review_required`'dan çıkış artık `--resolution` zorunlu
+kılıyor: `measurement_error` / `decision_irrelevant_breach` / `thesis_confirmed`
+/ `thesis_adjusted` / `thesis_broken`.
+
+### 2026-08-16 — F9.1 mekanik kuralı olmayan tez kör değildir
+
+Yalnız nitel izlenen bir tez `healthy`. Katalogda güvenilir karşılığı olmayan
+bir koşulu mekanik yapmaya zorlamamak tasarımın açık tercihi; onu `blind`
+saymak o tercihi cezalandırırdı. Sözleşmesi **hiç olmayan** tez ise kör.
+
+Tek bir `unavailable` → `degraded`, iki **ardışık** → `blind`. Gecikmiş bir
+çeyrek ile çalışmayı bırakmış bir kural aynı şey değil.
 
 ### 2026-08-16 — plan dışı eklenenler
 

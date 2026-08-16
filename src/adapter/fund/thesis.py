@@ -107,9 +107,12 @@ def status_event(
     reason: str,
     effective_date: str,
     actor: str = "human",
+    resolution: str | None = None,
 ) -> dict[str, Any]:
     check_transition(from_status, to_status, actor)
-    return {
+    if resolution and from_status != REVIEW_REQUIRED:
+        raise ThesisError("a resolution only describes the end of a review")
+    document = {
         "thesis_event_id": ids.uuid7(),
         "thesis_id": thesis_id,
         "event_type": "status_changed",
@@ -120,6 +123,9 @@ def status_event(
         "to_status": to_status,
         "reason": reason,
     }
+    if resolution:
+        document["resolution"] = resolution
+    return document
 
 
 def contract_event(

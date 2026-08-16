@@ -32,6 +32,7 @@ from . import (
     packs,
     policy as policy_module,
     projection,
+    quality as quality_module,
     recipes,
     report,
     schemas,
@@ -1042,6 +1043,13 @@ def cmd_thesis_status(args: argparse.Namespace) -> int:
     master = _master(args)
     history = _find_thesis(ledger, master, args.thesis)
 
+    if history.status == thesis_module.REVIEW_REQUIRED and not args.resolution:
+        raise FundError(
+            "leaving review_required needs --resolution: whether the rule was wrong "
+            "(measurement_error), the breach was real but changed nothing "
+            "(decision_irrelevant_breach), or the thesis itself moved. Without it the "
+            "thresholds cannot be calibrated, and the cause is not recoverable later."
+        )
     event = thesis_module.status_event(
         thesis_id=history.thesis_id,
         from_status=history.status,
@@ -1049,6 +1057,7 @@ def cmd_thesis_status(args: argparse.Namespace) -> int:
         reason=args.reason,
         effective_date=args.as_of or _today(),
         actor="human",
+        resolution=args.resolution,
     )
     _commit_thesis(ledger, event)
     print(f"{history.thesis_id}  {history.status} -> {args.to}")
@@ -2058,6 +2067,82 @@ def cmd_schedule(args: argparse.Namespace) -> int:
     return 0
 
 
+def _coverage_report(ledger: store.Ledger) -> list[quality_module.Coverage]:
+    coverages = []
+    for history in _theses(ledger).values():
+        if history.status == thesis_module.CLOSED:
+            continue
+        coverages.append(quality_module.coverage_for(
+            history.thesis_id,
+            contract=history.document.get("monitoring_contract"),
+            check_records=ledger.check_records(thesis_id=history.thesis_id),
+            evidence_seen=len(ledger.observed_filings(history.document["security_id"])),
+        ))
+    return coverages
+
+
+def cmd_quality(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    as_of = args.as_of or _today()
+    theses = _theses(ledger)
+
+    print(f"QUALITY -- {as_of}")
+    print()
+    print("MONITORING COVERAGE")
+    coverages = _coverage_report(ledger)
+    if not coverages:
+        print("  no open theses")
+    for coverage in coverages:
+        history = theses[coverage.thesis_id]
+        ticker = instruments.ticker_for(master, history.document["security_id"])
+        marker = {"healthy": "ok", "degraded": "DEGRADED", "blind": "BLIND"}[coverage.state]
+        print(f"  {ticker:<8} {marker:<10} {coverage.detail}")
+    blind = [c for c in coverages if c.blocks_new_risk]
+    if blind:
+        print(f"  ! {len(blind)} thesis/theses are blind: they are in Q0 and new risk "
+              "should not be increased on them")
+
+    print()
+    print("DISPATCH")
+    for row in dispatch.health(jobs=ledger.jobs(), as_of=as_of):
+        state = "on" if row["enabled"] else "off"
+        print(f"  {row['rule_id']:<32} {state:<4} {row['jobs_30d']:>3} in 30d, "
+              f"{row['failures_30d']} failed, last {row['last_dispatched'] or 'never'}")
+        if row["never_fired"]:
+            print(f"  {'':<32} ! never fired -- is it reaching anything?")
+
+    print()
+    print("ADJUDICATION")
+    assessments = {a["assessment_id"]: a for a in ledger.assessments()}
+    adjudication = quality_module.adjudication_quality(ledger.jobs(), assessments)
+    if not adjudication.total:
+        print("  nothing adjudicated yet")
+    else:
+        print(f"  {'adjudicated':<26}{adjudication.total}")
+        print(f"  {'accepted unchanged':<26}{adjudication.accepted_unchanged} "
+              f"({adjudication.unchanged_share * 100:.0f}%)")
+        print(f"  {'rejected':<26}{adjudication.rejected}")
+        print(f"  {'replaced with own view':<26}{adjudication.replaced}")
+        print(f"  {'acknowledged only':<26}{adjudication.acknowledged}")
+    for warning in adjudication.warnings:
+        print(f"  ! {warning}")
+
+    print()
+    print("FALSE ALARMS")
+    transitions = [t for history in theses.values() for t in history.transitions]
+    alarms = quality_module.false_alarms(transitions, as_of=as_of, window_days=args.window)
+    print(f"  {'reviews triggered':<26}{alarms.reviews_triggered} in {args.window} days "
+          f"(target {quality_module.FALSE_ALARM_TARGET[0]}-"
+          f"{quality_module.FALSE_ALARM_TARGET[1]})")
+    print(f"  {'measurement error':<26}{alarms.measurement_error}")
+    print(f"  {'real but irrelevant':<26}{alarms.decision_irrelevant}")
+    print(f"  {'thesis actually moved':<26}{alarms.thesis_changed}")
+    for warning in alarms.warnings:
+        print(f"  ! {warning}")
+    return 0
+
+
 def cmd_report(args: argparse.Namespace) -> int:
     loaded = policy_module.load()
     currency = loaded["measurement"]["base_currency"]
@@ -2328,6 +2413,10 @@ def build_parser() -> argparse.ArgumentParser:
     t_status.add_argument("--to", required=True,
                           choices=["active", "review_required", "broken", "closed"])
     t_status.add_argument("--reason", required=True)
+    t_status.add_argument("--resolution",
+                          choices=["measurement_error", "decision_irrelevant_breach",
+                                   "thesis_confirmed", "thesis_adjusted", "thesis_broken"],
+                          help="required when leaving review_required")
     t_status.add_argument("--as-of")
     t_status.set_defaults(handler=cmd_thesis_status)
 
@@ -2390,6 +2479,12 @@ def build_parser() -> argparse.ArgumentParser:
                             help="write the pack and stop")
     run_parser.add_argument("--as-of")
     run_parser.set_defaults(handler=cmd_run)
+
+    quality = subparsers.add_parser(
+        "quality", help="is the monitoring alive, and is the judgement real")
+    quality.add_argument("--window", type=int, default=365)
+    quality.add_argument("--as-of")
+    quality.set_defaults(handler=cmd_quality)
 
     dispatch_parser = subparsers.add_parser("dispatch", help="the dispatch table")
     dispatch_sub = dispatch_parser.add_subparsers(dest="dispatch_command", required=True)

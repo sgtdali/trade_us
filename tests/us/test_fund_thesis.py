@@ -294,14 +294,16 @@ def test_the_full_lifecycle(fund, tmp_path, capsys):
     assert only_thesis(fund).status == REVIEW_REQUIRED
 
     fund("thesis", "status", thesis_id, "--to", "active",
-         "--reason", "The miss was a one-off inventory charge", "--as-of", "2026-11-05")
+         "--reason", "The miss was a one-off inventory charge",
+         "--resolution", "decision_irrelevant_breach", "--as-of", "2026-11-05")
     assert only_thesis(fund).status == ACTIVE
     assert "status_reason" not in only_thesis(fund).document
 
     fund("thesis", "status", thesis_id, "--to", "review_required",
          "--reason", "Second consecutive miss", "--as-of", "2027-02-01")
     fund("thesis", "status", thesis_id, "--to", "broken",
-         "--reason", "The pricing-power claim is not standing up", "--as-of", "2027-02-03")
+         "--reason", "The pricing-power claim is not standing up",
+         "--resolution", "thesis_broken", "--as-of", "2027-02-03")
     assert only_thesis(fund).status == BROKEN
 
     capsys.readouterr()
@@ -309,6 +311,16 @@ def test_the_full_lifecycle(fund, tmp_path, capsys):
     output = capsys.readouterr().out
     assert "active -> review_required" in output
     assert "review_required -> broken" in output
+
+
+def test_leaving_a_review_needs_its_cause(fund, capsys):
+    """Without it the thresholds cannot be calibrated, and it is not recoverable later."""
+    fund("thesis", "open", "NVDA", "--as-of", "2026-08-16")
+    thesis_id = only_thesis(fund).thesis_id
+    fund("thesis", "status", thesis_id, "--to", "review_required", "--reason", "margin miss")
+    capsys.readouterr()
+    assert fund("thesis", "status", thesis_id, "--to", "active", "--reason", "fine now") == 2
+    assert "needs --resolution" in capsys.readouterr().err
 
 
 def test_an_illegal_transition_is_refused_with_the_legal_ones(fund, capsys):
@@ -341,7 +353,8 @@ def test_a_closed_thesis_cannot_be_reopened(fund, capsys):
     fund("thesis", "status", thesis_id, "--to", "review_required", "--reason", "x")
     fund("thesis", "close", thesis_id, "--close-reason", "position_exited", "--reason", "sold")
     capsys.readouterr()
-    assert fund("thesis", "status", thesis_id, "--to", "active", "--reason", "changed my mind") == 2
+    assert fund("thesis", "status", thesis_id, "--to", "active", "--reason", "changed my mind",
+                "--resolution", "thesis_confirmed") == 2
     assert "cannot go from closed" in capsys.readouterr().err
 
 

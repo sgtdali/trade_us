@@ -22,6 +22,12 @@
       "enum": ["human", "machine"]
     },
     "reason": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "resolution": {
+      "description": "Why a review ended, set when leaving review_required. measurement_error means the rule was wrong; decision_irrelevant_breach means the breach was real and changed nothing. Both are calibration information, and neither is recoverable later.",
+      "type": "string",
+      "enum": ["measurement_error", "decision_irrelevant_breach", "thesis_confirmed",
+               "thesis_adjusted", "thesis_broken"]
+    },
 
     "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/securityId"},
     "thesis_statement": {"type": "string", "minLength": 1, "maxLength": 4000},
