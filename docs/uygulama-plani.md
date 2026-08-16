@@ -28,8 +28,8 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 
 | Faz | Konu | Durum |
 |---|---|---|
-| F0 | Kullanıcı kararları | ⬜ Başlanmadı — **her şeyi bloklar** |
-| F1 | Defter ve manuel muhasebe | ⬜ Başlanmadı |
+| F0 | Kullanıcı kararları | 🔵 F0.2-F0.5 bitti · F0.1 gerçek hesap bilgisi bekliyor |
+| F1 | Defter ve manuel muhasebe | 🔵 Kod bitti (F1.1-F1.10) · F1.11 açılış kitabı bekliyor |
 | F2 | Capital policy ve karar akışı | ⬜ Başlanmadı |
 | F3 | Tez lifecycle ve izleme sözleşmesi | ⬜ Başlanmadı |
 | F4 | Mekanik kontrol motoru | ⬜ Başlanmadı |
@@ -56,21 +56,28 @@ cevapları beklemeden yapılabilir.
   dahil, açılış tarihi ne?
   *Bitti:* `fund_definition` dosyasında `included_accounts` ve `opening_as_of`
   dolu.
-- [ ] **F0.2 Raporlama para birimi** — kanonik NAV USD mi TL mi? Diğeri yalnız
+  **Açık.** Uydurulmadı; F1.11'de açılış kitabı girilirken gerçek değerlerle
+  yazılacak. Hiçbir şeyi bloklamıyor.
+- [x] **F0.2 Raporlama para birimi** — kanonik NAV USD mi TL mi? Diğeri yalnız
   bağlam serisi mi?
   *Bitti:* `base_currency` dolu, gerekçesi bir cümleyle yazılı.
-- [ ] **F0.3 Sermaye amacı** — hangi ufukta yönetilecek, öngörülebilir çekim
+  → **USD.** Gerekçe: `config/fund/capital-policy.notes.md`.
+- [x] **F0.3 Sermaye amacı** — hangi ufukta yönetilecek, öngörülebilir çekim
   ihtiyacı var mı?
   *Bitti:* `capital_horizon` ve `liquidity_need_mode` dolu.
-- [ ] **F0.4 Risk zarfı** — kabul edilebilir portföy drawdown'ı, pozisyon
+  → `over_3y` / `none`.
+- [x] **F0.4 Risk zarfı** — kabul edilebilir portföy drawdown'ı, pozisyon
   başına kayıp bütçesi (çıpa: 100 bp NAV), mutlak tek-isim tavanı.
   *Bitti:* `position_loss_budget_bps_nav`, `max_security_weight_bps`,
   `max_issuer_weight_bps` dolu.
-- [ ] **F0.5 Capital policy v0 dosyasını doldur** ← F0.1-F0.4
+  → 100 bp / 1000 bp / 1000 bp. Issuer tavanı ayrıca sorulmadı, security
+  tavanına eşitlendi ve `provisional` işaretlendi.
+- [x] **F0.5 Capital policy v0 dosyasını doldur** ← F0.1-F0.4
   *Bitti:* `config/fund/capital-policy.json` tasarım Bölüm 3'teki bütün
   alanları taşıyor; hiçbir alan `null` değil (her biri değer veya `disabled` /
   `unbounded_by_policy` / `not_applicable` / `monitor_only`); varsayılan
   kullanılan her sayı `provisional` işaretli.
+  → 12 alan provisional. `fund policy show` ile görülür.
 
 ---
 
@@ -80,49 +87,49 @@ Hedef: açılış kitabı ve elle işlem girişi, pozisyon/nakit/NAV replay.
 
 ### Şemalar
 
-- [ ] **F1.1 `schemas/fund/common.schema.json`** — UUIDv7, decimalString,
+- [x] **F1.1 `schemas/fund/common.schema.json`** — UUIDv7, decimalString,
   Money, Currency, UtcInstant, LocalDate, MarketSessionDate, digest, artifact
   ref.
   *Bitti:* Mevcut `valuation-common.schema.json` gelenekleriyle uyumlu
   (pattern tabanlı, `format`'a güvenmiyor); pozitif ve negatif fixture'ları
   geçiyor.
-- [ ] **F1.2 `schemas/fund/instrument-master.schema.json`** (stub) —
+- [x] **F1.2 `schemas/fund/instrument-master.schema.json`** (stub) —
   `issuer_id` / `security_id` / `listing_id`, güncel ticker, venue, currency.
   *Bitti:* Üç kimlik ayrı; dar ve kapalı; ticker geçmişi ve kurumsal işlem
   ilişkileri **yok**.
-- [ ] **F1.3 `schemas/fund/account-event.schema.json`** ← F1.1
+- [x] **F1.3 `schemas/fund/account-event.schema.json`** ← F1.1
   *Bitti:* Tasarım Bölüm 8'deki alanlar; `event_type` kapalı enum
   (`opening_position`, `opening_cash`, `buy`, `sell`, `deposit`, `withdrawal`,
   `dividend`, `fee`, `quantity_adjustment`, `correction`);
   `cost_basis_status` `known`/`unknown`; sentetik opening fill üretmiyor.
-- [ ] **F1.4 `schemas/fund/capital-policy.schema.json`** ← F1.1
+- [x] **F1.4 `schemas/fund/capital-policy.schema.json`** ← F1.1
   *Bitti:* Tasarım Bölüm 3 alan tablosunun tamamı; `null` reddediliyor;
   `readiness_multipliers` serbest map değil kapalı anahtarlı sabit nesne.
 
 ### Depolama
 
-- [ ] **F1.5 SQLite DDL ve migration** ← F1.3
+- [x] **F1.5 SQLite DDL ve migration** ← F1.3
   *Bitti:* Tablolar oluşuyor; exact decimal alanlar `TEXT`; `account_event`
   üzerinde UPDATE/DELETE reddeden trigger var; `schema_migrations` tablosu
   sürüm tutuyor.
-- [ ] **F1.6 Tek commit kapısı** ← F1.5
+- [x] **F1.6 Tek commit kapısı** ← F1.5
   *Bitti:* Bütün yazımlar tek `commit()` fonksiyonundan geçiyor;
   `BEGIN IMMEDIATE` kullanılıyor; iki eşzamanlı süreç testinde olay
   kaybolmuyor; aynı komut iki kez çalıştırıldığında ikinci kayıt oluşmuyor.
 
 ### CLI ve projection
 
-- [ ] **F1.7 `fund trade record`** ← F1.6 — elle alım/satım/nakit girişi.
+- [x] **F1.7 `fund trade record`** ← F1.6 — elle alım/satım/nakit girişi.
   *Bitti:* Alım, satım, temettü, ücret ve nakit giriş/çıkış kaydedilebiliyor;
   aynı işlemi ikinci kez girmeye çalışınca uyarı çıkıyor.
-- [ ] **F1.8 `fund correct`** ← F1.7 — hatalı kaydı düzeltme.
+- [x] **F1.8 `fund correct`** ← F1.7 — hatalı kaydı düzeltme.
   *Bitti:* Düzeltme yeni bir satır (`corrects_event_id`); eski satır
   değişmiyor; projection düzeltilmiş sonucu veriyor.
-- [ ] **F1.9 Pozisyon / nakit / NAV projection'ı** ← F1.7
+- [x] **F1.9 Pozisyon / nakit / NAV projection'ı** ← F1.7
   *Bitti:* Elle hesaplanan bir fixture ile pozisyon adetleri, nakit, NAV ve
   ağırlıklar birebir eşleşiyor; `cost_basis_status: unknown` olan pozisyonda
   unrealized P&L **hesaplanmıyor**, sıfır gösterilmiyor.
-- [ ] **F1.10 Replay ve idempotency testi** ← F1.9
+- [x] **F1.10 Replay ve idempotency testi** ← F1.9
   *Bitti:* Veritabanı silinip olaylardan yeniden kurulunca aynı state çıkıyor;
   aynı açılış kitabı iki kez içeri alınınca pozisyon ve nakit ikiye
   katlanmıyor.
@@ -430,7 +437,68 @@ SQLite'ta `TEXT` decimal alanlarda karşılaştırma yaparken dikkat: SQL içind
 ile yapılmalı.
 -->
 
-_(henüz not yok)_
+### 2026-08-16 — F1.3 `account_event` alan sözleşmesi
+
+Tasarım Bölüm 8 alanları **birleşim** olarak listeliyor; şema bunları event
+tipine göre koşullu hale getirdi. Üç yerde bilinçli somutlaştırma yapıldı:
+
+1. **`currency` üst düzeyde yok.** Her parasal alan kendi `{amount, currency}`
+   nesnesini taşıyor — tasarımın kendi tip kuralı bu. Üst düzeyde ikinci bir
+   currency alanı iki kaynak yaratırdı.
+2. **`cash_amount` işaretsiz büyüklüktür**, yönü `event_type` belirler.
+   Gerekçe: CLI'ya "5000 çektim" yazan biri eksi işareti düşünmüyor ve
+   append-only bir defterde işaret hatası pahalı.
+3. **`buy`/`sell` `cash_amount` taşımıyor.** `quantity × price` zaten nakit
+   etkisi; ikisini birlikte saklamak tutarsızlık davetiyesi. Komisyon ayrı
+   `fee` alanında.
+
+`correction` tipi **saf iptal** olarak modellendi (hiç olmaması gereken kayıt).
+Bir değeri düzeltmek ise `corrects_event_id` taşıyan **yeni tipli bir olay**.
+İkisi de "yeni satır, eski satır değişmez" kuralına uyuyor.
+
+### 2026-08-16 — F1.1 boolean `false` alt-şeması kullanılmadı
+
+Yasaklı alanlar `{"not": {}}` (`common.schema.json#/$defs/forbidden`) ile
+yazıldı. `"cash_amount": false` yazınca jsonschema hata yolunu **ve** alan
+adını düşürüyor; kullanıcı "False schema does not allow {...}" görüyor, hangi
+alanın yanlış olduğunu göremiyor. `{"not": {}}` yolu koruyor.
+
+### 2026-08-16 — F1.5 kimlik biçimi
+
+Kimlikler `EVT-<uuid7>` gibi önekli. Tasarım "UUIDv7" diyor, CLI örnekleri
+`ASM-...` / `DEC-...` gösteriyor; ikisi birleştirildi. Dört karakter maliyeti
+var, karşılığında bir decision id'nin assessment beklenen yere sessizce
+geçmesi imkânsız hale geliyor.
+
+Menkul kıymet kimlikleri okunabilir slug: `iss:alphabet` / `sec:googl` /
+`lst:xnas-googl`. V0'da elle bakıldıkları için opak UUID yerine bu seçildi.
+
+### 2026-08-16 — F1.9 `realized_pnl_complete` kapsamı
+
+Maliyeti bilinmeyen bir pozisyonu **tutmak** kitabın realized P&L toplamını
+bozmuyor; yalnız o hisseler **satılınca** toplam hesaplanamaz oluyor. İlk
+uygulamada açılışta bayrak düşürülüyordu, daraltıldı.
+
+### 2026-08-16 — F1.6 mükerrer kontrolü iki katmanlı
+
+- **Sert:** `opening_position` security başına bir kez, `opening_cash` para
+  birimi başına bir kez (partial unique index). Açılış kitabının iki kez
+  içeri alınmasını imkânsız kılıyor. Düzeltmeler muaf (`corrects_event_id`
+  taşıyorlar).
+- **Yumuşak:** `content_digest` üzerinden. Aynı ekonomik içerik ikinci kez
+  girilirse reddediliyor; gerçekten tekrar eden bir işlemse
+  `--allow-duplicate` gerekiyor. Digest `event_id`, `recorded_at` ve `note`
+  alanlarını dışlıyor.
+
+### 2026-08-16 — plan dışı eklenenler
+
+`fund` CLI'nın kullanılabilir olması için plana yazılmayan iki şey eklendi:
+
+- `config/fund/instrument-master.json` + `fund instrument add/list` — ticker
+  yazıp `security_id` çözebilmek için. F1.2 şemayı istiyordu, dosya ve giriş
+  yolu olmadan elle işlem girilemiyordu.
+- `fund init`, `fund events`, `fund positions`, `fund policy show` — sırasıyla
+  kurulum, defter dökümü, F1.9 projection'ının görüntüsü ve policy denetimi.
 
 ---
 

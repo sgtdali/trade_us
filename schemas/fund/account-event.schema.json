@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/account-event.schema.json",
+  "title": "Account event",
+  "description": "One hand-entered economic fact: a fill, a cash movement, or a share-count adjustment. Append-only -- a recorded row is never edited. Positions, cash, NAV and weights are all projections of this stream, never stored state.\n\nCash direction is NOT carried in the sign of cash_amount. The amount is always a positive magnitude and the direction follows from event_type, because a person entering a withdrawal at a CLI thinks 'I took out 5000', not 'minus five thousand' -- and a sign slip in an append-only ledger is expensive to live with.",
+  "type": "object",
+  "required": ["event_id", "event_type", "effective_date", "recorded_at"],
+  "properties": {
+    "event_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/accountEventId"},
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "opening_position",
+        "opening_cash",
+        "buy",
+        "sell",
+        "deposit",
+        "withdrawal",
+        "dividend",
+        "fee",
+        "quantity_adjustment",
+        "correction"
+      ]
+    },
+    "effective_date": {
+      "description": "The calendar day the economic fact happened -- trade date, pay date, adjustment date. A calendar day, never widened to a timestamp.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"
+    },
+    "recorded_at": {
+      "description": "When this row entered the ledger. Distinct from effective_date: entering last week's fill today is normal.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"
+    },
+
+    "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/securityId"},
+    "quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+    "price": {
+      "description": "Execution price per share.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveMoney"
+    },
+    "unit_cost": {
+      "description": "Average cost per share of an opening position. Not a price: no execution happened at this number.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveMoney"
+    },
+    "cash_amount": {
+      "description": "Positive magnitude of the cash movement. Direction comes from event_type.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveMoney"
+    },
+    "fee": {
+      "description": "Commission and regulatory fees attached to a fill, as a positive magnitude. Kept separate from price so quantity x price stays the clean economic figure.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveMoney"
+    },
+    "cost_basis_status": {
+      "description": "Whether the cost basis of an opening position is actually known. 'unknown' is a first-class answer: writing zero would silently manufacture a 100% unrealized gain.",
+      "type": "string",
+      "enum": ["known", "unknown"]
+    },
+    "adjustment_reason": {
+      "type": "string",
+      "enum": ["stock_split", "reverse_split", "stock_dividend", "spin_off", "broker_reconciliation"]
+    },
+
+    "decision_id": {
+      "description": "The decision this fill executes, when there is one. Absent for opening entries and cash movements.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/decisionId"
+    },
+    "corrects_event_id": {
+      "description": "The earlier event this row supersedes. The earlier row stays exactly as written; the projection honours the correction.",
+      "$ref": "fund:schemas/fund/common.schema.json#/$defs/accountEventId"
+    },
+    "note": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/note"}
+  },
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "$comment": "opening_position -- an existing holding brought into the book. Deliberately NOT written as a synthetic opening fill: inventing a trade that never happened would manufacture a false trade date, a false cash outflow and a false holding period.",
+      "if": {"properties": {"event_type": {"const": "opening_position"}}, "required": ["event_type"]},
+      "then": {
+        "required": ["security_id", "quantity", "cost_basis_status"],
+        "properties": {
+          "quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveDecimalString"},
+          "price": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "cash_amount": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "fee": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "adjustment_reason": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "decision_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"cost_basis_status": {"const": "known"}}, "required": ["cost_basis_status"]},
+            "then": {"required": ["unit_cost"]},
+            "else": {"properties": {"unit_cost": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}}}
+          }
+        ]
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "opening_cash"}}, "required": ["event_type"]},
+      "then": {
+        "required": ["cash_amount"],
+        "properties": {
+          "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "price": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "unit_cost": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "fee": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "cost_basis_status": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "adjustment_reason": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "decision_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"enum": ["buy", "sell"]}}, "required": ["event_type"]},
+      "then": {
+        "required": ["security_id", "quantity", "price"],
+        "properties": {
+          "quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveDecimalString"},
+          "cash_amount": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "unit_cost": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "cost_basis_status": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "adjustment_reason": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"enum": ["deposit", "withdrawal"]}}, "required": ["event_type"]},
+      "then": {
+        "required": ["cash_amount"],
+        "properties": {
+          "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "price": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "unit_cost": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "fee": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "cost_basis_status": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "adjustment_reason": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "decision_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+        }
+      }
+    },
+    {
+      "$comment": "cash_amount is the NET cash received after any withholding. The gross figure is not modelled: it changes no decision this system makes.",
+      "if": {"properties": {"event_type": {"const": "dividend"}}, "required": ["event_type"]},
+      "then": {
+        "required": ["security_id", "cash_amount"],
+        "properties": {
+          "quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "price": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "unit_cost": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "fee": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "cost_basis_status": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "adjustment_reason": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "decision_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"event_type": {"const": "fee"}}, "required": ["event_type"]},
+      "then": {
+        "required": ["cash_amount"],
+        "properties": {
+          "quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "price": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "unit_cost": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "fee": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "cost_basis_status": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "adjustment_reason": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "decision_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+        }
+      }
+    },
+    {
+      "$comment": "Share count changed without an economic decision: splits, spin-offs, or a broker reconciliation. Signed quantity -- a reverse split removes shares. Requires a written reason because an unexplained share-count change is indistinguishable from a data error.",
+      "if": {"properties": {"event_type": {"const": "quantity_adjustment"}}, "required": ["event_type"]},
+      "then": {
+        "required": ["security_id", "quantity", "adjustment_reason", "note"],
+        "properties": {
+          "price": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "unit_cost": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "cash_amount": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "fee": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "cost_basis_status": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "decision_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+        }
+      }
+    },
+    {
+      "$comment": "Pure retraction: an event that should never have existed (double entry, a fill that did not happen). To change a value instead, record a new typed event carrying corrects_event_id -- that supersedes rather than voids.",
+      "if": {"properties": {"event_type": {"const": "correction"}}, "required": ["event_type"]},
+      "then": {
+        "required": ["corrects_event_id", "note"],
+        "properties": {
+          "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "quantity": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "price": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "unit_cost": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "cash_amount": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "fee": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "cost_basis_status": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"},
+          "adjustment_reason": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}, "decision_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}
+        }
+      }
+    }
+  ]
+}

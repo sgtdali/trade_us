@@ -1,0 +1,94 @@
+{
+  "identity": {
+    "policy_version": "0.1.0",
+    "effective_from": "2026-08-16",
+    "owner": "sgtdali"
+  },
+  "objective": {
+    "objective": "absolute_return",
+    "underwriting_horizon_months": {"min": 3, "max": 18},
+    "portfolio_review_cadence": "monthly",
+    "change_required_at_review": false,
+    "capital_horizon": "over_3y",
+    "liquidity_need_mode": "none"
+  },
+  "eligibility": {
+    "direction": "long_only",
+    "security_types": ["us_listed_common_equity"],
+    "listing_countries": ["US"],
+    "shorting": "disabled",
+    "leverage": "disabled",
+    "derivatives": "disabled"
+  },
+  "cash": {
+    "full_investment_required": false,
+    "role": "legitimate_residual",
+    "operational_floor_bps_nav": 200,
+    "target": "disabled",
+    "ceiling": "unbounded_by_policy"
+  },
+  "capacity": {
+    "max_active_positions": 10,
+    "minimum_active_positions": "disabled"
+  },
+  "concentration": {
+    "max_security_weight_bps": 1000,
+    "max_issuer_weight_bps": 1000,
+    "sector_weight_limit": "monitor_only"
+  },
+  "sizing": {
+    "readiness_multipliers": {
+      "watchlist": "0",
+      "starter": "0.5",
+      "core": "1",
+      "exceptional": "disabled"
+    },
+    "min_economic_position": "disabled",
+    "unknown_downside_treatment": "ineligible_for_new_risk"
+  },
+  "risk": {
+    "position_loss_budget_bps_nav": 100,
+    "drawdown_response_ladder": [
+      {"drawdown_bps": 1000, "response": "warn"},
+      {"drawdown_bps": 1500, "response": "freeze_additions"},
+      {"drawdown_bps": 2000, "response": "full_reunderwrite"}
+    ],
+    "automatic_liquidation": "disabled"
+  },
+  "trading": {
+    "no_trade_band": {
+      "absolute_bps": 100,
+      "relative_bps": 2000
+    },
+    "band_bypass_reasons": ["thesis_broken", "hard_limit_breach", "position_legitimacy_failure"],
+    "price_tolerance_increase_risk_bps": 250,
+    "manual_execution_required": true
+  },
+  "measurement": {
+    "base_currency": "USD",
+    "nav_cut": "us_market_close",
+    "price_basis": "promoted_eod_close",
+    "benchmark_mode": "disabled",
+    "hurdle_mode": "disabled",
+    "missing_input_behavior": "fail_closed"
+  },
+  "governance": {
+    "loosening_cooling_off_days": 7,
+    "scheduled_review_cadence": "quarterly",
+    "retroactive_changes": "disabled"
+  },
+  "provisional_fields": [
+    "/objective/underwriting_horizon_months",
+    "/cash/operational_floor_bps_nav",
+    "/capacity/max_active_positions",
+    "/concentration/max_security_weight_bps",
+    "/concentration/max_issuer_weight_bps",
+    "/sizing/readiness_multipliers/starter",
+    "/sizing/readiness_multipliers/core",
+    "/risk/position_loss_budget_bps_nav",
+    "/risk/drawdown_response_ladder",
+    "/trading/no_trade_band",
+    "/trading/price_tolerance_increase_risk_bps",
+    "/governance/loosening_cooling_off_days"
+  ]
+}

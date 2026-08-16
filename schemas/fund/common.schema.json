@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/common.schema.json",
+  "title": "Fund shared definitions",
+  "description": "Shared primitive types for the portfolio decision journal. Pattern-based throughout: nothing here relies on JSON Schema 'format', which is annotation-only by default and would silently pass malformed values.",
+  "$defs": {
+    "uuid7": {
+      "description": "UUIDv7 -- time-ordered, so identifiers sort by creation. Version nibble is 7 and the variant nibble is 8/9/a/b.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "accountEventId": {
+      "type": "string",
+      "pattern": "^EVT-[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "assessmentId": {
+      "type": "string",
+      "pattern": "^ASM-[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "decisionId": {
+      "type": "string",
+      "pattern": "^DEC-[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "thesisId": {
+      "type": "string",
+      "pattern": "^THS-[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "checkRecordId": {
+      "type": "string",
+      "pattern": "^CHK-[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "researchJobId": {
+      "type": "string",
+      "pattern": "^JOB-[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+
+    "issuerId": {
+      "description": "Legal issuing entity. GOOG and GOOGL share one issuer_id. Hand-maintained in v0, so the form is readable rather than opaque.",
+      "type": "string",
+      "pattern": "^iss:[a-z0-9][a-z0-9\\-]{0,62}$"
+    },
+    "securityId": {
+      "description": "A distinct security of an issuer (a share class). Survives ticker changes and delistings.",
+      "type": "string",
+      "pattern": "^sec:[a-z0-9][a-z0-9\\-]{0,62}$"
+    },
+    "listingId": {
+      "description": "A security's listing on one venue. Delisting closes the listing, never the security.",
+      "type": "string",
+      "pattern": "^lst:[a-z0-9][a-z0-9\\-]{0,62}$"
+    },
+
+    "ticker": {
+      "type": "string",
+      "pattern": "^[A-Z0-9][A-Z0-9.\\-]{0,31}$"
+    },
+    "currencyCode": {
+      "description": "ISO 4217 alphabetic code. Minor-unit integers are not accepted anywhere in this system.",
+      "type": "string",
+      "pattern": "^[A-Z]{3}$"
+    },
+    "mic": {
+      "description": "ISO 10383 market identifier code.",
+      "type": "string",
+      "pattern": "^[A-Z0-9]{4}$"
+    },
+
+    "decimalString": {
+      "description": "Canonical exact decimal string: no leading zero (except the integer 0 itself), no trailing fractional zero, no binary float. Mirrors valuation-common.schema.json so both halves of the repo canonicalize decimals identically. The '-0\\.[0-9]*[1-9]' alternative exists because the primary alternative's integer-part group has no way to spell a negative magnitude strictly between -1 and 0; '-0' alone never matches either alternative.",
+      "type": "string",
+      "pattern": "^(0|-?[1-9][0-9]*)(\\.[0-9]*[1-9])?$|^-0\\.[0-9]*[1-9]$"
+    },
+    "nonNegativeDecimalString": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]*[1-9])?$"
+    },
+    "positiveDecimalString": {
+      "type": "string",
+      "pattern": "^([1-9][0-9]*(\\.[0-9]*[1-9])?|0\\.[0-9]*[1-9])$"
+    },
+
+    "money": {
+      "description": "Amount plus currency, always together. A bare number is never money.",
+      "type": "object",
+      "required": ["amount", "currency"],
+      "properties": {
+        "amount": {"$ref": "#/$defs/decimalString"},
+        "currency": {"$ref": "#/$defs/currencyCode"}
+      },
+      "additionalProperties": false
+    },
+    "positiveMoney": {
+      "type": "object",
+      "required": ["amount", "currency"],
+      "properties": {
+        "amount": {"$ref": "#/$defs/positiveDecimalString"},
+        "currency": {"$ref": "#/$defs/currencyCode"}
+      },
+      "additionalProperties": false
+    },
+    "quantity": {
+      "description": "Share count. Exact decimal because fractional shares exist; never a float.",
+      "$ref": "#/$defs/decimalString"
+    },
+
+    "basisPoints": {
+      "description": "Policy threshold in basis points, 100 = 1%. Integer by construction: policy thresholds are chosen, not measured. Computed weights are NOT rounded to bp.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "policySentinel": {
+      "description": "An explicit ruling where a number would otherwise sit. null is not a policy.",
+      "type": "string",
+      "enum": ["disabled", "unbounded_by_policy", "not_applicable", "monitor_only"]
+    },
+
+    "utcInstant": {
+      "description": "An exact moment. RFC 3339 with a literal Z; local offsets are not accepted.",
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]{1,6})?Z$"
+    },
+    "localDate": {
+      "description": "A calendar day as a human means it. Never widened into a midnight timestamp.",
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+    },
+    "marketSessionDate": {
+      "description": "A trading session, which is not the same thing as a calendar day: it carries the calendar that decides whether the venue was open.",
+      "type": "object",
+      "required": ["session_date", "calendar_id"],
+      "properties": {
+        "session_date": {"$ref": "#/$defs/localDate"},
+        "calendar_id": {"type": "string", "enum": ["XNYS"]}
+      },
+      "additionalProperties": false
+    },
+
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "relativePath": {
+      "description": "Structural surface check only ('/'-separated, no leading/trailing slash, no empty segments, no '..', no backslash). Root containment is enforced at runtime, not by this pattern.",
+      "type": "string",
+      "pattern": "^(?!/)(?!.*//)(?!.*\\.\\.)(?!.*/$)[^\\\\]+$"
+    },
+    "artifactRef": {
+      "description": "Content-addressed pointer to a stored artifact (skill output, pack, result). The record carries the reference; the bytes live outside.",
+      "type": "object",
+      "required": ["relative_path", "digest"],
+      "properties": {
+        "relative_path": {"$ref": "#/$defs/relativePath"},
+        "digest": {"$ref": "#/$defs/digest"},
+        "media_type": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+
+    "semver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "jsonPointer": {
+      "description": "RFC 6901 pointer into the same document. Used to mark provisional policy fields without distorting their value shapes.",
+      "type": "string",
+      "pattern": "^(/([^/~]|~[01])*)+$"
+    },
+    "reasonCode": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$"
+    },
+    "note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "forbidden": {
+      "description": "A property that must not appear in this branch. Spelled '{not: {}}' rather than the boolean 'false': a boolean subschema makes the validator drop both the instance path and the property name from the error, so the report says only 'False schema does not allow {...}' with no clue which field was wrong.",
+      "not": {}
+    }
+  }
+}

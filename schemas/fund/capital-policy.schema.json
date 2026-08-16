@@ -1,0 +1,298 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/capital-policy.schema.json",
+  "title": "Capital policy",
+  "description": "The executable rule set behind every capital decision. Current NAV, cash, positions and prices are NOT written here -- they are inputs to the policy, not part of it.\n\nEvery field is required and no field accepts null. null is not a policy; it is an unanswered question wearing a policy's clothes. Where a real number would be wrong, the field carries an explicit ruling instead: disabled, unbounded_by_policy, not_applicable or monitor_only.\n\nMost opening numbers are provisional -- chosen as calibratable anchors, not as optima. provisional_fields names them so a later review can tell a deliberate choice from a placeholder that was never revisited.",
+  "type": "object",
+  "required": [
+    "identity", "objective", "eligibility", "cash", "capacity", "concentration",
+    "sizing", "risk", "trading", "measurement", "governance", "provisional_fields"
+  ],
+  "properties": {
+
+    "identity": {
+      "type": "object",
+      "required": ["policy_version", "effective_from", "owner"],
+      "properties": {
+        "policy_version": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/semver"},
+        "effective_from": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+        "owner": {"type": "string", "minLength": 1, "maxLength": 120}
+      },
+      "additionalProperties": false
+    },
+
+    "objective": {
+      "type": "object",
+      "required": [
+        "objective", "underwriting_horizon_months", "portfolio_review_cadence",
+        "change_required_at_review", "capital_horizon", "liquidity_need_mode"
+      ],
+      "properties": {
+        "objective": {"type": "string", "enum": ["absolute_return"]},
+        "underwriting_horizon_months": {
+          "description": "How far ahead a thesis is expected to play out. The monthly review cadence sits inside this window on purpose -- rethinking monthly is not the same as trading monthly.",
+          "type": "object",
+          "required": ["min", "max"],
+          "properties": {
+            "min": {"type": "integer", "minimum": 1, "maximum": 120},
+            "max": {"type": "integer", "minimum": 1, "maximum": 120}
+          },
+          "additionalProperties": false
+        },
+        "portfolio_review_cadence": {"type": "string", "enum": ["monthly", "quarterly"]},
+        "change_required_at_review": {
+          "description": "false: a review that changes nothing is a valid outcome. Setting this true would manufacture trades to justify the ritual.",
+          "type": "boolean"
+        },
+        "capital_horizon": {"type": "string", "enum": ["under_1y", "1_to_3y", "over_3y"]},
+        "liquidity_need_mode": {"type": "string", "enum": ["none", "planned_partial", "unplanned_possible"]}
+      },
+      "additionalProperties": false
+    },
+
+    "eligibility": {
+      "type": "object",
+      "required": ["direction", "security_types", "listing_countries", "shorting", "leverage", "derivatives"],
+      "properties": {
+        "direction": {"type": "string", "enum": ["long_only"]},
+        "security_types": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "enum": ["us_listed_common_equity"]}
+        },
+        "listing_countries": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Z]{2}$"}
+        },
+        "shorting": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"},
+        "leverage": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"},
+        "derivatives": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+      },
+      "additionalProperties": false
+    },
+
+    "cash": {
+      "description": "Cash is a first-class asset in the accounting and a legitimate residual in allocation. If five names qualify, their weights are NOT normalized to 100% -- the unused capacity stays in cash.",
+      "type": "object",
+      "required": ["full_investment_required", "role", "operational_floor_bps_nav", "target", "ceiling"],
+      "properties": {
+        "full_investment_required": {"type": "boolean"},
+        "role": {"type": "string", "enum": ["legitimate_residual", "risk_reduction_instrument"]},
+        "operational_floor_bps_nav": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"},
+        "target": {
+          "oneOf": [
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"},
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+          ]
+        },
+        "ceiling": {
+          "oneOf": [
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"},
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "capacity": {
+      "type": "object",
+      "required": ["max_active_positions", "minimum_active_positions"],
+      "properties": {
+        "max_active_positions": {"type": "integer", "minimum": 1, "maximum": 50},
+        "minimum_active_positions": {
+          "oneOf": [
+            {"type": "integer", "minimum": 0, "maximum": 50},
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "concentration": {
+      "type": "object",
+      "required": ["max_security_weight_bps", "max_issuer_weight_bps", "sector_weight_limit"],
+      "properties": {
+        "max_security_weight_bps": {
+          "description": "Hard wall on one security regardless of how good the downside looks. Readiness can never widen it.",
+          "$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"
+        },
+        "max_issuer_weight_bps": {
+          "description": "Aggregated across share classes -- two listings of one issuer are one exposure.",
+          "$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"
+        },
+        "sector_weight_limit": {
+          "oneOf": [
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"},
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "sizing": {
+      "type": "object",
+      "required": ["readiness_multipliers", "min_economic_position", "unknown_downside_treatment"],
+      "properties": {
+        "readiness_multipliers": {
+          "description": "Readiness is not conviction. A skill calling something 'high confidence' produces no larger position: the class is derived only from typed evidence (accepted active thesis, defined downside, approved monitoring contract, no material data gap). A closed object rather than a free map, so a new tier cannot appear by typo.",
+          "type": "object",
+          "required": ["watchlist", "starter", "core", "exceptional"],
+          "properties": {
+            "watchlist": {
+              "oneOf": [
+                {"$ref": "fund:schemas/fund/common.schema.json#/$defs/nonNegativeDecimalString"},
+                {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+              ]
+            },
+            "starter": {
+              "oneOf": [
+                {"$ref": "fund:schemas/fund/common.schema.json#/$defs/nonNegativeDecimalString"},
+                {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+              ]
+            },
+            "core": {
+              "oneOf": [
+                {"$ref": "fund:schemas/fund/common.schema.json#/$defs/nonNegativeDecimalString"},
+                {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+              ]
+            },
+            "exceptional": {
+              "oneOf": [
+                {"$ref": "fund:schemas/fund/common.schema.json#/$defs/nonNegativeDecimalString"},
+                {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "min_economic_position": {
+          "oneOf": [
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/positiveMoney"},
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+          ]
+        },
+        "unknown_downside_treatment": {
+          "description": "What happens when the downside cannot be stated. ineligible_for_new_risk: no new capital, existing position untouched.",
+          "type": "string",
+          "enum": ["ineligible_for_new_risk", "treated_as_maximum_downside"]
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "risk": {
+      "type": "object",
+      "required": ["position_loss_budget_bps_nav", "drawdown_response_ladder", "automatic_liquidation"],
+      "properties": {
+        "position_loss_budget_bps_nav": {
+          "description": "Not a stop-loss. A sizing constraint applied BEFORE the position exists: the most of NAV this position may cost if its downside scenario happens. A larger downside therefore buys a smaller position, automatically.",
+          "$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"
+        },
+        "drawdown_response_ladder": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["drawdown_bps", "response"],
+            "properties": {
+              "drawdown_bps": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"},
+              "response": {
+                "type": "string",
+                "enum": ["warn", "freeze_additions", "full_reunderwrite"]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "automatic_liquidation": {
+          "description": "A price fall triggers a review, never a sale. Nothing in this system may sell.",
+          "$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "trading": {
+      "type": "object",
+      "required": ["no_trade_band", "band_bypass_reasons", "price_tolerance_increase_risk_bps", "manual_execution_required"],
+      "properties": {
+        "no_trade_band": {
+          "description": "Resolves the tension between a monthly decision rhythm and a 3-18 month horizon: band_half_width = max(absolute_bps, relative_bps x target_weight). Inside the band, drift is not a trade.",
+          "type": "object",
+          "required": ["absolute_bps", "relative_bps"],
+          "properties": {
+            "absolute_bps": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"},
+            "relative_bps": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"}
+          },
+          "additionalProperties": false
+        },
+        "band_bypass_reasons": {
+          "type": "array", "minItems": 0, "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": ["thesis_broken", "hard_limit_breach", "position_legitimacy_failure"]
+          }
+        },
+        "price_tolerance_increase_risk_bps": {
+          "description": "How far the market may move away from the previewed price before a risk-increasing decision must be re-previewed rather than executed.",
+          "$ref": "fund:schemas/fund/common.schema.json#/$defs/basisPoints"
+        },
+        "manual_execution_required": {
+          "description": "true, always. Approved decision, trade intent and fill are three separate facts; entering the order at the broker belongs to the human.",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "measurement": {
+      "type": "object",
+      "required": ["base_currency", "nav_cut", "price_basis", "benchmark_mode", "hurdle_mode", "missing_input_behavior"],
+      "properties": {
+        "base_currency": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/currencyCode"},
+        "nav_cut": {"type": "string", "enum": ["us_market_close"]},
+        "price_basis": {"type": "string", "enum": ["promoted_eod_close"]},
+        "benchmark_mode": {
+          "oneOf": [
+            {"type": "string", "enum": ["relative_to_index"]},
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+          ]
+        },
+        "hurdle_mode": {
+          "oneOf": [
+            {"type": "string", "enum": ["absolute_hurdle"]},
+            {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+          ]
+        },
+        "missing_input_behavior": {
+          "description": "fail_closed: a missing input stops the calculation. It is never treated as zero, and stale data is never presented as current.",
+          "type": "string",
+          "enum": ["fail_closed"]
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "governance": {
+      "description": "Tightening applies immediately; loosening waits. A limit may never be relaxed to make an existing breach disappear.",
+      "type": "object",
+      "required": ["loosening_cooling_off_days", "scheduled_review_cadence", "retroactive_changes"],
+      "properties": {
+        "loosening_cooling_off_days": {"type": "integer", "minimum": 0, "maximum": 365},
+        "scheduled_review_cadence": {"type": "string", "enum": ["monthly", "quarterly", "semiannual", "annual"]},
+        "retroactive_changes": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/policySentinel"}
+      },
+      "additionalProperties": false
+    },
+
+    "provisional_fields": {
+      "description": "JSON Pointers to fields whose value is a calibratable anchor rather than a settled choice. Each pointer must resolve in this document; the loader enforces that, since a pointer to a renamed field would quietly mark nothing.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/jsonPointer"}
+    }
+  },
+  "additionalProperties": false
+}
