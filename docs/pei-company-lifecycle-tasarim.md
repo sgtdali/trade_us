@@ -8,6 +8,10 @@
 
 Durum: tasarım tamamlandı, uygulama başlamadı. Son güncelleme 2026-08-16.
 
+> **Uygulamaya başlayacaksanız** bu doküman "nasıl olacağı"nı anlatır; sırayı
+> ve ilerlemeyi [uygulama-plani.md](uygulama-plani.md) takip eder. Görev
+> listesi, bağımlılıklar ve "bitti" tanımları oradadır.
+
 ---
 
 ## 1. Sistem nedir
