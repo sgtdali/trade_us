@@ -47,10 +47,9 @@ class DispatchRule:
         return has_open_thesis if self.requires_open_thesis else True
 
 
-#: F6 ships exactly one rule. The others are named in the design and arrive in
-#: F8, each one verified on its own -- a table that fires five ways on the first
-#: night is a table nobody can debug.
-RULES: tuple[DispatchRule, ...] = (
+#: Each rule was added and verified on its own. A table that fires five ways on
+#: the first night is a table nobody can debug.
+_BASE_RULES: tuple[DispatchRule, ...] = (
     DispatchRule(
         rule_id="new_filing_open_thesis",
         version=1,
@@ -61,7 +60,107 @@ RULES: tuple[DispatchRule, ...] = (
         description="A new 10-Q or 10-K on a company we have a thesis about is read, "
                     "and the reading is judged against what we previously believed.",
     ),
+    DispatchRule(
+        rule_id="earnings_evidence_open_thesis",
+        version=1,
+        observation="earnings_evidence",
+        recipe="deep_dive_then_tracker",
+        assessment_mode="update_against_prior",
+        requires_open_thesis=True,
+        description="An Item 2.02 results filing has actually landed. The trigger is the "
+                    "filing, never the expected date: a date is an estimate, and research "
+                    "fired at an estimate is research against numbers that do not exist yet.",
+    ),
+    DispatchRule(
+        rule_id="review_due_open_thesis",
+        version=1,
+        observation="review_due",
+        recipe="tracker",
+        assessment_mode="update_against_prior",
+        requires_open_thesis=True,
+        description="A qualitative check has come due. It runs whether or not new evidence "
+                    "arrived -- a review that only happens when someone remembers it is "
+                    "not a review.",
+    ),
+    DispatchRule(
+        rule_id="price_shock_open_thesis",
+        version=1,
+        observation="price_shock",
+        recipe="blind_review",
+        assessment_mode="independent_then_reconcile",
+        requires_open_thesis=True,
+        description="The market has moved sharply against, or with, the thesis. The first "
+                    "pass is deliberately blind -- neither the previous judgement nor the "
+                    "position is shown -- because a large move is precisely when a prior "
+                    "view is hardest to re-examine honestly.",
+    ),
+    DispatchRule(
+        rule_id="mechanical_breach_open_thesis",
+        version=1,
+        observation="mechanical_breach",
+        recipe="tracker",
+        assessment_mode="update_against_prior",
+        requires_open_thesis=True,
+        description="A monitoring rule was crossed. The reading has to address the breach; "
+                    "whether the thesis is broken remains the owner's judgement.",
+    ),
 )
+
+
+TUNING_RELATIVE_PATH = "config/fund/dispatch-tuning.json"
+
+#: What the owner may change without touching code. Deliberately four knobs:
+#: anything more expressive becomes a rule language, and a rule language needs
+#: a permission model nobody asked for.
+TUNABLE_FIELDS = ("enabled", "cooldown_days", "price_shock_bps", "price_shock_window_days")
+
+DEFAULT_TUNING: dict[str, Any] = {
+    "price_shock_bps": 2000,
+    "price_shock_window_days": 30,
+}
+
+
+def load_tuning(root: Any = None) -> dict[str, Any]:
+    """Owner settings, if any. Absent means defaults, not an error."""
+    import json
+    from pathlib import Path
+
+    from . import schemas
+
+    path = Path(root or schemas.repo_root()) / TUNING_RELATIVE_PATH
+    settings = dict(DEFAULT_TUNING)
+    if not path.is_file():
+        return settings
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    unknown = set(raw) - set(TUNABLE_FIELDS) - {"rules"}
+    if unknown:
+        raise DispatchError(
+            f"{path} sets fields that are not tunable: {', '.join(sorted(unknown))}. "
+            f"Only {', '.join(TUNABLE_FIELDS)} may be changed without a code change."
+        )
+    settings.update({k: v for k, v in raw.items() if k != "rules"})
+    settings["rules"] = raw.get("rules", {})
+    return settings
+
+
+def apply_tuning(rules: tuple[DispatchRule, ...], settings: Mapping[str, Any]
+                 ) -> tuple[DispatchRule, ...]:
+    from dataclasses import replace
+
+    per_rule = settings.get("rules", {}) or {}
+    tuned = []
+    for rule in rules:
+        overrides = per_rule.get(rule.rule_id, {})
+        unknown = set(overrides) - {"enabled", "cooldown_days"}
+        if unknown:
+            raise DispatchError(
+                f"{rule.rule_id}: {', '.join(sorted(unknown))} is not tunable"
+            )
+        tuned.append(replace(rule, **overrides))
+    return tuple(tuned)
+
+
+RULES: tuple[DispatchRule, ...] = _BASE_RULES
 
 
 def rules_by_id() -> dict[str, DispatchRule]:

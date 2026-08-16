@@ -112,9 +112,24 @@ def sidecars_file(tmp_path, **overrides):
 
 # ------------------------------------------------------------- dispatch
 
-def test_the_table_ships_one_rule():
-    assert len(dispatch.RULES) == 1
-    assert dispatch.RULES[0].rule_id == "new_filing_open_thesis"
+def test_every_rule_requires_an_open_thesis_and_names_a_recipe():
+    """Nothing in the table acts on a company we have not underwritten."""
+    assert {rule.rule_id for rule in dispatch.RULES} == {
+        "new_filing_open_thesis", "earnings_evidence_open_thesis",
+        "review_due_open_thesis", "price_shock_open_thesis",
+        "mechanical_breach_open_thesis",
+    }
+    for rule in dispatch.RULES:
+        assert rule.requires_open_thesis
+        assert rule.recipe in recipes.RECIPE_STEPS
+        assert rule.version >= 1
+
+
+def test_a_price_shock_is_reviewed_blind():
+    """A large move is exactly when a prior view is hardest to re-examine."""
+    rule = dispatch.match("price_shock", has_open_thesis=True)
+    assert rule.assessment_mode == "independent_then_reconcile"
+    assert rule.recipe == "blind_review"
 
 
 def test_a_filing_on_a_watched_company_matches():
@@ -130,7 +145,8 @@ def test_a_filing_with_no_thesis_matches_nothing():
 
 
 def test_an_observation_with_no_rule_matches_nothing():
-    assert dispatch.match("price_shock", has_open_thesis=True) is None
+    """Discovery arrives in F10; until then the observation simply goes nowhere."""
+    assert dispatch.match("periodic_discovery", has_open_thesis=True) is None
 
 
 def test_a_disabled_rule_stops_matching():

@@ -36,7 +36,7 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 | F5 | Job, dedup, inbox | ✅ Bitti |
 | F6 | İlk otomatik recipe | ✅ Bitti |
 | F7 | `research-cycle` — kendi kendine çalışma | ✅ Bitti — **kritik eşik geçildi** |
-| F8 | İkinci dalga tetikleyiciler | ⬜ Başlanmadı |
+| F8 | İkinci dalga tetikleyiciler | ✅ Bitti |
 | F9 | Canlılık ve kalite uyarıları | ⬜ Başlanmadı |
 | F10 | Discovery | ⬜ Başlanmadı |
 
@@ -327,19 +327,19 @@ hatırlamıyor, skill seçmiyor; sabah yalnız sonucu yargılıyor.
 
 ← F7.4. Sırayla ekleyin, her birini ayrı doğrulayın.
 
-- [ ] **F8.1 Review vadesi tetikleyicisi** → `tracker`
+- [x] **F8.1 Review vadesi tetikleyicisi** → `tracker`
   *Bitti:* Yeni kanıt olmasa bile `review_due` dolunca tracker çalışıyor.
-- [ ] **F8.2 Fiyat şoku tetikleyicisi** → kör ilk geçişli review
+- [x] **F8.2 Fiyat şoku tetikleyicisi** → kör ilk geçişli review
   *Bitti:* Adjusted-close baseline ve eşik tanımlı; `independent_then_reconcile`
   modu çalışıyor (ilk geçişte önceki hüküm ve pozisyon **gösterilmiyor**).
-- [ ] **F8.3 `FilingRef`'e SEC `items` alanı** — Item 2.02 tespiti için.
+- [x] **F8.3 `FilingRef`'e SEC `items` alanı** — Item 2.02 tespiti için.
   *Bitti:* Ham submissions'taki `items` typed katmana taşındı;
   `earnings_release` gözlemi çalışıyor.
-- [ ] **F8.4 `date_due` düzeltmesi** — tarih tetikleyicisi kanıt beklesin.
+- [x] **F8.4 `date_due` düzeltmesi** — tarih tetikleyicisi kanıt beklesin.
   *Bitti:* Tarih tek başına `trigger_satisfied` **üretmiyor**; yalnız kanıt
   kontrolü vadesi doğuruyor; `release_observed` ile `evidence_available`
   ayrımı var. *(Mevcut `evaluate_trigger` bunu yapmıyor — tasarım Bölüm 6.)*
-- [ ] **F8.5 `check_triggers` yerine tez-odaklı gözlemciler**
+- [x] **F8.5 `check_triggers` yerine tez-odaklı gözlemciler**
   *Bitti:* Eski `state == "waiting"` filtresine bağlı tarama kaldırıldı; açık
   tezler ve pozisyonlar taranıyor.
 
@@ -635,6 +635,38 @@ okunmamalı.
 `relative_path` şeması ters bölü kabul etmiyor. Windows'ta üretilen yol
 `as_posix()` ile yazılıyor — defter Windows'ta yazılıp başka yerde okunabilir
 kalmalı. Repo dışındaki workdir'ler `external/<job_id>/<dosya>` biçiminde.
+
+### 2026-08-16 — F8.2 fiyat şoku için mark serisi
+
+Fiyat şoku bir taban ister, taban bir seri ister. İkinci bir fiyat hattı
+kurmak yerine kullanıcının zaten verdiği markları (`fund review --price`,
+`fund research-cycle --mark`) `price_mark` tablosunda tutuyoruz. Taban, en az
+`window_days` eskiye ait en yakın mark — böylece yavaş sürüklenme sessiz kalıyor,
+basamak yakalanıyor.
+
+**Sınır:** seri kullanıcının verdiği kadar sık. Ayda bir review yapılıyorsa şok
+tespiti ayda bir. Gerçek EOD hattına bağlamak ayrı bir iş.
+
+### 2026-08-16 — F8.3 `report_date` geri düşüşü yalnız olay formlarında
+
+8-K'lerin çoğunda `reportDate` boş; eski kod bunları düşürüyordu, dolayısıyla
+Item 2.02 hiç görünmüyordu. Filing tarihine geri düşüş eklendi **ama yalnız
+10-K/10-Q dışındaki formlar için**. Periyodik bir formda yanlış dönem, üzerine
+kurulan her karşılaştırmayı kaydırırdı — eski davranış aynen korundu.
+
+### 2026-08-16 — F8.4 tarihten işe giden kod yolu yok
+
+`earnings_evidence` gözlemi yalnız `items` içinde `2.02` olan bir filing'den
+doğuyor. Beklenen earnings tarihinden işe giden bir yol **hiç yazılmadı** —
+test bunu doğruluyor. Tarih bir tahmindir; tahmine ateşlenen araştırma henüz
+var olmayan sayılar üzerine yapılır.
+
+### 2026-08-16 — F8 kullanıcı ayarları
+
+`config/fund/dispatch-tuning.json` (yoksa varsayılan). Değiştirilebilir dört
+şey: `enabled`, `cooldown_days`, `price_shock_bps`, `price_shock_window_days`.
+Başka bir alan yazılırsa **hata veriyor** — recipe veya assessment modu config'e
+açılırsa farkında olmadan bir kural dili kurulmuş olurdu.
 
 ### 2026-08-16 — plan dışı eklenenler
 

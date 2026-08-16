@@ -56,8 +56,24 @@ def list_filings(
             form = page["form"][index]
             filing_date = date.fromisoformat(page["filingDate"][index])
             report_date_raw = page["reportDate"][index]
-            if form not in forms or filing_date > as_of or not report_date_raw:
+            if form not in forms or filing_date > as_of:
                 continue
+            if not report_date_raw:
+                # Event filings (8-K and friends) often carry no period of
+                # report; falling back to the filing date keeps them usable as
+                # evidence instead of dropping them, which is what an earnings
+                # trigger needs. Periodic forms keep the old behaviour exactly:
+                # a 10-Q with no period would misalign every comparison built
+                # on it, so it is still skipped.
+                if form.startswith(("10-K", "10-Q")):
+                    continue
+                report_date_raw = page["filingDate"][index]
+            raw_items = page.get("items", [])
+            items = tuple(
+                part.strip()
+                for part in str(raw_items[index] if index < len(raw_items) else "").split(",")
+                if part.strip()
+            )
             result.append(FilingRef(
                 cik=cik,
                 accession=accession,
@@ -66,5 +82,6 @@ def list_filings(
                 report_date=date.fromisoformat(report_date_raw),
                 primary_document=page["primaryDocument"][index],
                 is_amendment=form.endswith("/A"),
+                items=items,
             ))
     return tuple(sorted(result, key=lambda item: (item.filing_date, item.accession), reverse=True))

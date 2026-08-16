@@ -375,9 +375,31 @@ _MIGRATION_0008 = Migration(
     ),
 )
 
+_MIGRATION_0009 = Migration(
+    version=9,
+    name="price marks",
+    statements=(
+        # Price shock detection needs a baseline, and a baseline needs a series.
+        # These are the marks the owner already supplies when reviewing or
+        # reporting -- kept rather than discarded, so the observer has something
+        # to compare against without a second price pipeline.
+        """
+        CREATE TABLE price_mark (
+            security_id  TEXT NOT NULL,
+            as_of        TEXT NOT NULL,
+            price        TEXT NOT NULL,
+            currency     TEXT NOT NULL,
+            recorded_at  TEXT NOT NULL,
+            PRIMARY KEY (security_id, as_of)
+        )
+        """,
+        "CREATE INDEX price_mark_by_date ON price_mark (security_id, as_of)",
+    ),
+)
+
 MIGRATIONS: tuple[Migration, ...] = (
     _MIGRATION_0001, _MIGRATION_0002, _MIGRATION_0003, _MIGRATION_0004, _MIGRATION_0005,
-    _MIGRATION_0006, _MIGRATION_0007, _MIGRATION_0008,
+    _MIGRATION_0006, _MIGRATION_0007, _MIGRATION_0008, _MIGRATION_0009,
 )
 
 
@@ -931,6 +953,29 @@ class Ledger:
                 for row in connection.execute(
                     "SELECT * FROM cycle_run ORDER BY started_at DESC LIMIT ?", (limit,))
             ][::-1]
+
+    def record_price_marks(self, marks: Sequence[Mapping[str, Any]]) -> None:
+        if not marks:
+            return
+        recorded_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        with self.connection() as connection:
+            with self._write_transaction(connection):
+                connection.executemany(
+                    "INSERT INTO price_mark (security_id, as_of, price, currency, recorded_at) "
+                    "VALUES (?, ?, ?, ?, ?) ON CONFLICT(security_id, as_of) "
+                    "DO UPDATE SET price = excluded.price, recorded_at = excluded.recorded_at",
+                    [(m["security_id"], m["as_of"], m["price"], m["currency"], recorded_at)
+                     for m in marks],
+                )
+
+    def price_marks(self, security_id: str) -> list[dict[str, str]]:
+        with self.connection() as connection:
+            return [
+                {k: row[k] for k in row.keys()}
+                for row in connection.execute(
+                    "SELECT security_id, as_of, price, currency FROM price_mark "
+                    "WHERE security_id = ? ORDER BY as_of", (security_id,))
+            ]
 
     def find_by_digest(self, digest: str) -> list[str]:
         with self.connection() as connection:

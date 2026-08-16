@@ -124,14 +124,18 @@ def test_the_cycle_can_observe_without_running(fund, tmp_path, capsys):
     assert ledger_of(fund).jobs()[-1]["status"] == jobs.PENDING
 
 
-def test_a_due_review_is_observed_even_with_no_new_evidence(fund, tmp_path, capsys):
-    """The observation is made. Dispatching it is F8.1's rule, not F6's."""
+def test_a_due_review_becomes_work_without_new_evidence(fund, tmp_path, capsys):
+    """A review that only happens when someone remembers it is not a review."""
     capsys.readouterr()
     fund("research-cycle", "--filings", filings_file(tmp_path, []), "--observe-only",
          "--as-of", "2027-02-01")
     output = capsys.readouterr().out
-    assert "1 observation(s)" in output
-    assert "0 opened" in output
+    assert "review_due" in output
+    assert "1 opened" in output
+
+    job = ledger_of(fund).jobs()[-1]
+    assert job["rule_id"] == "review_due_open_thesis"
+    assert job["recipe"] == "tracker"
 
 
 def test_one_job_failing_does_not_fail_the_cycle(fund, tmp_path, capsys):

@@ -711,6 +711,11 @@ def cmd_review(args: argparse.Namespace) -> int:
             print(f"  ! {warning}")
         return 1
 
+    ledger.record_price_marks([
+        {"security_id": position.security_id, "as_of": as_of,
+         "price": to_string(position.price.amount), "currency": currency}
+        for position in valuation.positions if position.price is not None
+    ])
     ledger.record_nav(as_of=as_of, nav=to_string(valuation.nav.amount),
                       cash=to_string(valuation.cash.amount), currency=currency,
                       recorded_at=_now())
@@ -1911,8 +1916,33 @@ def cmd_research_cycle(args: argparse.Namespace) -> int:
                     "_thesis_id": watched[security_id].thesis_id,
                 })
 
+            # Earnings evidence: the Item 2.02 filing itself, never a date.
+            observations.extend(observers.earnings_observations(
+                fresh, security_id=security_id, thesis_id=watched[security_id].thesis_id))
+
         # 2. Reviews that have come due.
         observations.extend(observers.review_due_observations(theses, as_of=as_of))
+
+        # 3. Price moves large enough to be worth re-reading a thesis for.
+        tuning = dispatch.load_tuning()
+        if args.mark or args.marks:
+            currency = policy_module.load()["measurement"]["base_currency"]
+            marks = _price_map(args, master, currency, pair_attr="mark", file_attr="marks")
+            ledger.record_price_marks([
+                {"security_id": security_id, "as_of": as_of,
+                 "price": to_string(money.amount), "currency": money.currency}
+                for security_id, money in marks.items()
+            ])
+        for security_id, history in sorted(watched.items()):
+            observations.extend(observers.price_shock_observations(
+                ledger.price_marks(security_id),
+                security_id=security_id,
+                thesis_id=history.thesis_id,
+                threshold_bps=tuning["price_shock_bps"],
+                window_days=tuning["price_shock_window_days"],
+                as_of=as_of,
+            ))
+
         report.observed = len(observations)
 
         # 3. Match, merge, deduplicate.
@@ -2322,6 +2352,9 @@ def build_parser() -> argparse.ArgumentParser:
         "research-cycle",
         help="the nightly pass: observe, match, deduplicate, run, queue")
     research_cycle.add_argument("--filings", help="JSON file instead of SEC")
+    research_cycle.add_argument("--mark", action="append", metavar="TICKER=AMOUNT",
+                                help="today's marking price, kept as the price-shock baseline")
+    research_cycle.add_argument("--marks", help="JSON file of {ticker: price}")
     research_cycle.add_argument("--stub", help="JSON file of prepared sidecars instead of codex")
     research_cycle.add_argument("--limit", type=int, default=1,
                                 help="most recent filings per security")

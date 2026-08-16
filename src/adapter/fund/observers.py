@@ -14,7 +14,7 @@ thing I actually saw", not "the last time I looked".
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from typing import Any, Iterable, Mapping, Sequence
 
 from ..discovery import list_filings
@@ -101,6 +101,96 @@ def all_unseen(
     return new_filings(client, security_id=security_id, cik=cik,
                        seen_accessions=seen_accessions, as_of=as_of, forms=forms,
                        limit=10_000)
+
+
+def earnings_observations(
+    filings: Sequence[Mapping[str, Any]],
+    *,
+    security_id: str,
+    thesis_id: str | None,
+) -> list[dict[str, Any]]:
+    """Earnings evidence that has actually landed.
+
+    A date is not evidence. An expected earnings date is an estimate -- issued
+    by the company, revised without notice, and frequently wrong -- and firing
+    research at an estimate produces work against numbers that do not exist yet.
+
+    So the trigger is the Item 2.02 filing itself. ``release_observed`` and
+    ``evidence_available`` are different facts, and only the second one starts
+    anything.
+    """
+    observations = []
+    for filing in filings:
+        items = filing.get("items") or ()
+        if isinstance(items, str):
+            items = tuple(part.strip() for part in items.split(",") if part.strip())
+        if "2.02" not in items:
+            continue
+        observations.append({
+            "observation": "earnings_evidence",
+            "observed_at": _now(),
+            "evidence_accession": filing["accession"],
+            "evidence_date": filing["filing_date"],
+            "detail": f"Item 2.02 results filed {filing['filing_date']}",
+            "_security_id": security_id,
+            "_thesis_id": thesis_id,
+        })
+    return observations
+
+
+def price_shock_observations(
+    marks: Sequence[Mapping[str, str]],
+    *,
+    security_id: str,
+    thesis_id: str | None,
+    threshold_bps: int,
+    window_days: int,
+    as_of: str,
+) -> list[dict[str, Any]]:
+    """A move large enough to be worth re-reading the thesis for.
+
+    A price fall triggers a review, never a sale. That distinction is the whole
+    reason this observer exists: the market disagreeing with a thesis is
+    information about the thesis, not an instruction about the position.
+
+    The baseline is the most recent mark at least ``window_days`` old, so a
+    steady drift does not register while a step does.
+    """
+    from decimal import Decimal
+
+    from .money import to_string
+
+    if len(marks) < 2:
+        return []
+
+    ordered = sorted(marks, key=lambda m: m["as_of"])
+    latest = ordered[-1]
+    if latest["as_of"] > as_of:
+        return []
+
+    cutoff = (date.fromisoformat(latest["as_of"]) - timedelta(days=window_days)).isoformat()
+    older = [m for m in ordered[:-1] if m["as_of"] <= cutoff]
+    baseline = older[-1] if older else ordered[0]
+    if baseline["as_of"] == latest["as_of"]:
+        return []
+
+    base_price = Decimal(baseline["price"])
+    if base_price <= 0:
+        return []
+    move = (Decimal(latest["price"]) - base_price) / base_price
+    if abs(move) * 10000 < threshold_bps:
+        return []
+
+    return [{
+        "observation": "price_shock",
+        "observed_at": _now(),
+        "price_move_fraction": to_string(move.quantize(Decimal("0.0001"))),
+        "price_window": f"{baseline['as_of']}..{latest['as_of']}",
+        "detail": (f"{move * 100:.1f}% between {baseline['as_of']} and {latest['as_of']} "
+                   f"-- a review, not a sale"),
+        "_security_id": security_id,
+        "_thesis_id": thesis_id,
+    }]
 
 
 def review_due_observations(

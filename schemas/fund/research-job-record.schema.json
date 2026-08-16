@@ -35,6 +35,11 @@
         "monitoring_contract_version": {"type": "integer", "minimum": 1},
         "breached_rule_ids": {"type": "array", "items": {"type": "string"}},
         "price_move_fraction": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/decimalString"},
+        "price_window": {
+          "description": "The two marks the move was measured between, as 'from..to'. Carried so a later reader can see what the move was measured against rather than trusting the number.",
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}\\.\\.[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
         "review_due": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
         "detail": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/note"}
       },
