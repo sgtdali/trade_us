@@ -1,6 +1,23 @@
 # PEI workflow orchestrator tasarimi
 
-Durum: Onaylanmis tasarim  
+> **Bu doküman MEVCUT KODU anlatır, hedef tasarımı değil.**
+>
+> `src/adapter/pei_workflow.py` ve `scripts/us_pei_*.py` bugün burada
+> anlatıldığı gibi çalışıyor; bu yüzden o kodu okuyacaksanız hâlâ gereklidir.
+> Ama sistemin gideceği yer değişti: bkz.
+> [pei-company-lifecycle-tasarim.md](pei-company-lifecycle-tasarim.md).
+>
+> Yeni tasarımın bu dokümandan ayrıldığı başlıca yerler:
+> `run_id:ticker` anahtarlaması yerine security bazlı kimlik ·
+> `allowed_next` kaldırıldı, yerine sabit dispatch tablosu ·
+> candidate/work-item makinesi yerine `thesis` + `assessment_record` +
+> `decision_record` · JSONL olay defteri yerine SQLite · genel tetikleyici
+> modeli yerine kanıt-tabanlı gözlemciler.
+>
+> Yeni sistem bunun **yanına** kurulacak; bu koda göç yok. Ne zaman
+> kapatılacağı ayrı bir karar (bkz. [uygulama-plani.md](uygulama-plani.md)).
+
+Durum: Mevcut implementasyonun tasarimi  
 Tarih: 2026-08-12
 
 ## 1. Amac

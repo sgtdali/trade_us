@@ -6,12 +6,18 @@ tek hat. `fundamentaltrading` reposunun ABD hattından 2026-08-11'de ayrıldı.
 
 ## Önce buraya bak
 
-- [docs/pei-workflow.md](docs/pei-workflow.md) — PEI adım adım akış, hangi
-  skill'e ne veriliyor, kayıt şeması.
-- [docs/pei-akis-diyagram.md](docs/pei-akis-diyagram.md) — aynı akışın
-  diyagramı, bugün gerçekten çalışan/çalışmayan kısımların durumu.
+- [docs/README.md](docs/README.md) — **hangi doküman yürürlükte, hangisi
+  mevcut kodu anlatıyor, hangisi kalktı.** Diğer her şeyden önce bu.
+- [docs/uygulama-plani.md](docs/uygulama-plani.md) — yapılacak işler, sıra ve
+  bitmiş sayılma koşulları. Uygulamaya başlıyorsanız buradan.
+- [docs/pei-company-lifecycle-tasarim.md](docs/pei-company-lifecycle-tasarim.md)
+  — hedeflenen sistemin (portföy karar günlüğü) tasarımı.
 - [docs/us-market-pipeline.md](docs/us-market-pipeline.md) — SEC pipeline
-  tasarımı, veri akışı, karar günlüğü.
+  tasarımı, veri akışı. Değişmedi, yeni sistem de bunu kullanıyor.
+
+Repoda **iki ayrı sistem** var: bugün çalışan PEI orkestratörü ve yanına
+kurulmakta olan portföy karar günlüğü. Hangi dokümanın hangisini anlattığını
+karıştırmayın; `docs/README.md` bunu ayırıyor.
 
 ## Kodlama Ajanı Verimlilik İlkesi
 

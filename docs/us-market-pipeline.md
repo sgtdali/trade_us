@@ -5,6 +5,13 @@ updated: 2026-08-09
 
 # ABD Piyasası SEC Pipeline Tasarımı
 
+> **Yürürlükte (2026-08-16 teyidi).** Veri katmanı tasarımı olduğu gibi
+> geçerli. Yeni portföy karar günlüğü bu hattı **değiştirmeden** kullanıyor:
+> SEC çekme, XBRL normalizasyonu, değerleme motoru ve `pack.json` üretimi
+> aynı kalıyor; yeni sistem bunların çıktısını tüketiyor. Bkz.
+> [pei-company-lifecycle-tasarim.md](pei-company-lifecycle-tasarim.md)
+> Bölüm 12 (kapsam dışı).
+
 ## Amaç ve sınırlar
 
 İlk hedef, ABD merkezli ve US-GAAP kullanan 10-12 standart şirket için ücretsiz
