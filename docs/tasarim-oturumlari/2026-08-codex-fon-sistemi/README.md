@@ -16,7 +16,7 @@ ve hangi önerilerin geri çekildiğini gösterir.
 | Tarih | 2026-08-15 / 2026-08-16 |
 | Karşı taraf | Claude (bu repoda çalışan oturum) |
 
-Tartışma **dört blok** hâlinde yürüdü. Her blok bir öncekinin sonuçlarını
+Tartışma **beş blok** hâlinde yürüdü. Her blok bir öncekinin sonuçlarını
 sınadı ve bir kısmını geçersiz kıldı; bu yüzden **son blok önceki
 bloklardan üstündür.** Erken turlardaki bir hükmü tek başına alıntılamayın.
 
@@ -26,6 +26,8 @@ bloklardan üstündür.** Erken turlardaki bir hükmü tek başına alıntılama
 | 2 | 08-17 | Mekanizma: olay şeması, defter, eşikler, insan yüzeyi | Beş eksen üçe indi, Başlık 4 karar 5 iptal, capital policy boşluğu bulundu |
 | 3 | 18-32 | Eklentideki 23 skill'in envanteri | Lead+support modeli, 10+1 katalog, "V1 etiketi hak edilmedi" |
 | 4 | 33-42 | **Fon yönetim sistemi reframe'i** | Ürün sınırı tersine döndü; araştırma alt sistem oldu |
+| 5 | 43-52 | Policy'nin sınanması + somut şema | Dört kanıt katmanı, A0-A4 yetki merdiveni, V0 kesimi (7 tam şema + 3 stub + 1 DDL) |
+| 6 | 53-59 | Fon ile eklenti skill sisteminin entegrasyonu | Tek sınır, `capital_input_manifest`, iki aşamalı adjudication, görünürlük matrisi, revize inşa sırası |
 
 ## Tur dizini
 
@@ -92,6 +94,33 @@ Her tur iki dosya: `-soru` (Claude'un turu) ve `-cevap` (codex'in turu).
 | 40 | Yeni inşa sırası; ölen / değişen / ayakta kalan kararlar |
 | 41 | Skill envanteri fon çerçevesinde; C1-C18; fon tarafında LLM |
 | 42 | Kapanış: sistemin tanımı, fon değişmezleri, ilk hafta |
+
+### Blok 5 — sınama ve şema
+
+| Tur | Konu |
+|---|---|
+| 43 | Backtest neden geçersiz; dört ayrı sınama türü |
+| 44 | Monotonluk özellikleri; fixture mimarisi; `policy_validation_spec`'in yeri |
+| 45 | Gölge koşu (kör paralel + kâğıt icra); A0-A4 yetki merdiveni |
+| 46 | Şema stratejisi: dört temsil, para/zaman/kimlik/sürümleme kararları |
+| 47 | Kimlik üçlüsü; `opening_account_state_asserted`; muhasebe olay ailesi; lot |
+| 48 | `capital_policy` şeması ve doldurulabilir draft; `operating_authority`; `config` vs `data` |
+| 49 | `portfolio_risk_snapshot` ve `portfolio_proposal` şemaları; binding constraint |
+| 50 | Olay zarfı; SQLite depolama; tek yazarlı commit kapısı |
+| 51 | **V0 kesimi:** 7 tam şema + 3 stub + 1 DDL |
+| 52 | Kapanış: özet, önceki turlarla daraltmalar, yarın ne yapılacak |
+
+### Blok 6 — fon ↔ skill entegrasyonu
+
+| Tur | Konu |
+|---|---|
+| 53 | Temas yüzeyleri; beş entegrasyon değil tek sınır |
+| 54 | `capital_input_manifest`; bayatlama; açılış kitabı; eksik girdi × aksiyon matrisi |
+| 55 | `research_work_request`; routing; dedup; iptal; kullanıcı yüzeyi |
+| 56 | Görünürlük matrisi; assessment modları; sermaye tutarının modele gösterilmemesi |
+| 57 | İki aşamalı adjudication; çöp çıktı; fiyat-tez çelişkisi; törensel onay |
+| 58 | Revize inşa sırası; en küçük entegrasyon dilimi; ilk adapter `comps-valuation` |
+| 59 | Kapanış: sınırın tek sayfalık tarifi |
 
 ## Okurken dikkat
 

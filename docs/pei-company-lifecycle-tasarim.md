@@ -196,6 +196,19 @@ inşa sırası fon-önce olarak yeniden yazıldı. Araştırma tarafının üç
 turluk birikimi çöpe gitmedi -- **yanlış olan bu katmanların varlığı
 değil, ürünün merkezi sanılmalarıydı.**
 
+**5. tur (on tur, sınama ve şema):** capital policy'nin gerçek para riske
+edilmeden nasıl sınanacağı (dört kanıt katmanı, A0-A4 yetki merdiveni) ve
+tasarımın somut şemaya dönüşü (para/zaman/kimlik/sürümleme kararları, olay
+zarfı, SQLite depolama). Turun en değerli çıktısı bir kesim: ~30 şemalık
+yüzey, ilk çalışan dilim için **7 tam şema + 3 stub + 1 DDL**'e indirildi.
+
+**6. tur (yedi tur, entegrasyon):** fon ile eklenti skill sisteminin nasıl
+konuşacağı. Beş iş teması **tek teknik sınıra** indirildi; `capital_input_
+manifest` arayüz nesnesi tanımlandı; adjudication iki aşamaya bölündü
+(araştırma hükmü sermaye etkisi görülmeden yargılanır); görünürlük matrisi
+ve "sermaye tutarı modele gösterilmez" kuralı kondu; inşa sırası revize
+edildi (manuel capital-input katmanı risk motorunun önüne).
+
 ## Geçerli tasarım (2026-08-16 itibarıyla)
 
 Bu bölüm dört tasarım turundan sonra ayakta kalan resmi veriyor.
@@ -544,11 +557,115 @@ başlamadan önce makul sonuçlardan en az birinin kararı değiştirebilmesi
 Kitap doluyken discovery'nin amacı on birinci pozisyonu eklemek değil,
 **onuncunun hâlâ sermayeyi hak ettiğini sınayacak opsiyonellik üretmektir.**
 
+### Araştırma ↔ fon sınırı
+
+Fon ile eklenti arasında **tek bir sınır** vardır. Fon bir skill istemez, bir
+*karar girdisi* ister.
+
+```
+fon olayı / karar ihtiyacı
+   → research_work_request        (capability ister: downside_case.v1)
+   → araştırma orkestratörü        (lead/support seçimi burada)
+   → provisional artefakt
+   → contract + kaynak doğrulaması
+   → İNSAN KAPISI 1               (araştırma hükmü, sermaye etkisi görülmeden)
+   → kanonik sürümlü capital input
+   → capital_input_manifest        (karar anında mühürlenir)
+   → deterministik risk/proposal motoru
+   → İNSAN KAPISI 2               (portföy etkisi ve sermaye kararı)
+```
+
+**Fon skill adı bilmez.** `requested_capability` bir domain çıktısıdır
+(`downside_case.v1`, `valuation_anchor.v1`, `thesis_assessment.v1`); hangi
+skill'in cevaplayacağına araştırma orkestratörü karar verir ve gerekçesini
+`research_work_routed` ile kaydeder. Fon şemaları skill adı taşımaz; skill
+ve model kimliği yalnız provenance'da görünür.
+
+**İki aşamalı adjudication.** Kullanıcı önce araştırma hükmünü *sermaye
+sonucunu görmeden* yargılar; ancak kaydedildikten sonra sistem yeni downside
+kapasitesini, eligible bandı ve olası proposal etkisini gösterir. Aksi hâlde
+kullanıcı kabul edeceği downside'ın kendisini satışa zorlayacağını görüp
+analitik hükmü yumuşatır. Aşama 1'de görülmeyenler: pozisyon ağırlığı, P&L,
+ortalama maliyet, önerilen trade, `capital_at_risk`.
+
+**Sermaye tutarı modele gösterilmez.** "82 bp risk altında" demek downside
+analizini iyileştirmez, modeli pozisyonu savunmaya teşvik eder. Sermaye
+riski yalnız orkestratörün öncelik, güvence (assurance tier) ve maliyet
+kararını etkiler; ciddiyet `decision_deadline` ve `reliance_class` ile
+anlatılır.
+
+**Görünürlük** skill adına değil `(skill, execution_role,
+requested_capability, assessment_mode)` bileşimine bağlıdır. Kapalı
+profiller: `none` / `funded_flag_only` / `position_context` /
+`portfolio_exposure_context`. Pitch, tracker, deep-dive, comps, tearsheet ve
+idea-generation fon durumunu **görmez**; yalnız `portfolio-risk-management`
+ve `economic-impact-report`'un portföy overlay modu görür -- o da P&L ve
+ortalama maliyet olmadan (sunk-cost yanlılığı).
+
+**Anchoring için üç assessment modu:** `de_novo` (önceki hüküm
+gösterilmez -- pitch), `update_against_prior` (değişimi ölçmek için önceki
+hüküm zorunlu -- tracker), `independent_then_reconcile` (önce bağımsız
+üretilir, ikinci geçişte mevcut kabul edilmiş nesneyle farkı açıklanır --
+karar-kritik downside/valuation).
+
+**`capital_input_manifest`** security başına, belirli bir anda geçerli kabul
+edilmiş araştırma girdilerini exact sürüm ve digest'leriyle bağlayan
+immutable bir manifesttir. Bileşenleri: thesis version, readiness kararı,
+downside case, valuation anchor, driver exposure set, monitoring
+contract/status. **Tek bir `manifest_valid` bayrağı yoktur** -- manifest
+kısmen kullanılabilir olabilir (hard-limit trim için yeterli, yeni risk için
+yetersiz). Her bileşen kendi freshness durumunu taşır (`current` /
+`review_due` / `stale` / `superseded` / `invalidated` / `disputed` /
+`missing`).
+
+Önemli ayrım: **güncel fiyat `valuation_anchor`'ın parçası değildir** --
+anchor yöntem/varsayım taşır, fiyat market snapshot'tan gelir,
+`capital_actionability` ikisinin karşılaştırmasından türer. Bu yüzden fiyatın
+günlük değişmesi readiness'i günlük bozmaz.
+
+Manifestin içeriği türetilir; **karar anındaki örneği mühürlenir.** Böylece
+eski bir proposal "bugün araştırma ne diyor" sorusunu değil, "o karar
+verilirken sistem tam olarak ne biliyordu" sorusunu cevaplar.
+
+**Açılış kitabı** (`legacy_hold_only`): tezi, readiness'i ve downside'ı
+olmayan pozisyonlar için `policy_compliant_max_weight` sıfır değil
+**`not_computable`** olur; mevcut ağırlık hedef sayılmaz; yeni alım
+bloklanır; hard-limit ihlali varsa trim üretilir; ama **yalnız araştırma
+eksik diye otomatik satış üretilmez.** Normalleşme `onboarding_underwrite`
+ile olur -- ayrı bir skill değil, pitch'in bir execution mode'u; *sunum
+genişliği azaltılabilir, kanıt standardı azaltılamaz*; en fazla `starter`
+readiness verir.
+
+**Eksik girdi × mümkün aksiyon:** statüko her durumda mümkündür (ama bu bir
+*hold tavsiyesi* değil, yalnız mevcut gerçekliği değiştirmeyen seçenek);
+hard-limit trim her durumda mümkündür; yeni pozisyon/artırma tez, readiness,
+downside, anchor veya monitoring eksikse **bloklanır**; replacement hükmü
+bloklanır; exit ise eksiklik nedeniyle otomatik üretilmez.
+
 ### İnşa sırası
 
 Varsayımlar: tek broker hesabı, tek sahip, ~10 pozisyon, EOD değerleme,
 resmi fon muhasebesi/vergi motoru yok, broker'dan en azından yapılandırılmış
 CSV/OFX alınabiliyor (yalnız PDF varsa süreler uzar).
+
+> **SIRA REVİZE EDİLDİ (6. tur).** Manuel capital-input katmanı risk
+> motorunun **önüne** taşındı ve eski Adım 8 ikiye bölündü. Gerekçe: aksi
+> hâlde risk motoru, hesaplaması gereken readiness/downside girdilerinin
+> yalnız ileride kurulacak plugin'den gelebileceğini varsayar ve "LLM'siz
+> fon çekirdeği" bağımsızlık testi bozulur.
+>
+> Yürürlükteki sıra: **0** policy · **1** defter · **2** açılış kitabı +
+> importer · **3** NAV/performans · **4 (yeni)** sağlayıcı-bağımsız
+> capital-input substrate (manuel authoring, doğrulama, iki aşamalı
+> adjudication, `capital_input_manifest`) · **5** risk motoru · **6**
+> proposal ve karar kapısı · **7** icra köprüsü *(← "kötü de olsa fon"
+> eşiği burada)* · **8** attribution · **9** `research_work_request` +
+> routing + episode + provenance · **10** ilk skill adapter (`comps-
+> valuation`) + gölge koşu · **11** pitch–tez–tracker lifecycle · **12**
+> discovery.
+>
+> Aşağıdaki tablonun "bitti" tanımları geçerliliğini korur; yalnız adım
+> numaraları kayar ve iki yeni adım eklenir.
 
 | # | Adım | Neden bu sırada | "Bitti" tanımı | Tahmin |
 |---:|---|---|---|---:|
@@ -563,6 +680,14 @@ CSV/OFX alınabiliyor (yalnız PDF varsa süreler uzar).
 | 8 | **Araştırma–sermaye arayüzü** | Araştırmanın çıktısı doğrudan LLM eylemi değil, adjudicated capital input olmalı | Risk olayı research task açıyor; kabul edilen sonuç weight bandını yeniden hesaplatıyor; research target'ı doğrudan değiştiremiyor | 1-2 hafta |
 | 9 | **Kanıt–pitch–tez–tracker dikey dilimi** | Fon omurgası kanıtlandıktan sonra araştırma otomasyonu sermayeye bağlanabilir | Üç gölge vaka geçiyor; kabul edilen pitch investable set'e giriyor; tracker yeni tez açamıyor; eksik kanıt fail-closed | 3-5 hafta |
 | 10 | **Discovery ve ölçekleme** | Yeni fikir hacmi ancak bütün downstream döngü çalışınca güvenli | Discovery araştırma adayı üretir ama sermaye kararı üretmez; dolu kitapta minimum opsiyonellik sürer | 2-3 hafta |
+
+> **Daraltma (5. tur).** Capital policy bütün altyapıyı bloklamaz. Dört
+> kullanıcı kararı policy'nin **etkinleştirilmesini**, risk motorunu ve
+> proposal üretimini bloklar; `core-types`, olay zarfı, SQLite DDL, açılış
+> durumu şeması ve kabul fixture'ları cevap beklemeden yazılabilir.
+> `policy_validation_spec` ise policy yazıldıktan sonra ve motor
+> kodlanmadan önce hazırlanır -- motorun yazılmasını değil, **karar
+> kalitesinde sayılmasını** bloklar.
 
 **Sistem Adım 6'dan sonra "kötü de olsa bir fon"dur.** O noktada araştırma
 girdileri hâlâ elle girilebilir, ama sermaye döngüsü kapalıdır: sistem
@@ -2425,6 +2550,384 @@ düzeltilmesi; capital policy değişikliği veya override.
 > yatırım sistemi değil, açık varsayımlardan oluşan ilk anayasadır;
 > matematik onu tutarlı yapar, doğru yapmaz.
 
+## Gözden geçirme — 5. tur: sınama ve şema (2026-08-16)
+
+Aynı oturumda on tur daha (t43-t52). İki konu: capital policy'nin gerçek
+para riske edilmeden sınanması, ve tasarımın somut şemaya dönüştürülmesi.
+
+### Policy nasıl sınanır
+
+**Klasik backtest geçersizdir.** Girdilerin çoğu tarihsel olarak var olmayan
+yargılardır: geçmiş bir tarih için tez, readiness ve downside üretmek
+hindsight bulaştırır; bugünkü evren dosyası survivorship taşır. Yerine dört
+bağımsız kanıt katmanı:
+
+| Katman | Neyi sınar | Zorunlu mu |
+|---|---|---|
+| **Property testleri** | Motorun kurallara sadakati; rastgele üretilmiş binlerce girdide invariant | Evet |
+| **Golden fixture'lar** | Kuralların anlamı; 6-8 okunabilir kanonik kitap | Evet |
+| **Mekanik tarihsel replay** | Gerçekçi davranış; alfa iddiası yok, nakit/turnover/band/limit davranışı | Evet |
+| **Gölge koşu** | İşletilebilirlik | Evet |
+
+Dördü birbirinin yerine geçmez. Replay sonuçları provisional sayıları
+**optimize etmek için kullanılamaz** -- o an kapı bir overfitting makinesine
+dönüşür.
+
+**Davranışsal başarısızlıkların çoğu monotonluk özelliğidir** ve otomatik
+sınanabilir: downside kötüleşirse ilgili pozisyonun tavanı artamaz; loss
+budget daralırsa tavan artamaz; readiness düşerse band genişleyemez; policy
+sıkılaşırsa uygun portföy kümesi genişleyemez (`F(P_sıkı,S) ⊆
+F(P_gevşek,S)`). Sınır önemli: monoton olan **kötüleşen ismin kendi
+tavanı** ve toplam uygun küme; diğer isimlerin ağırlıkları artabilir, çünkü
+boşalan kapasite başka yere veya nakde gider.
+
+Property'ye indirgenemeyenler örnek senaryo ister: bir eşiğin ekonomik
+olarak doğru olup olmadığı, challenger'ın gerçekten daha iyi olup olmadığı,
+driver taksonomisinin dünyayı temsil edip etmediği, operatörün adjudication'ı
+zaman bütçesinde yapabilmesi.
+
+**Determinizm LLM'den önce değil, adjudication'dan sonra başlar.** Doğru
+soru "aynı hafta iki kez çalıştırsam aynı sonuç gelir mi" değil, **"iki
+koşunun kanonik girdi manifestleri aynı mı"**dır. Aynıysa sonuç aynı
+olmalıdır; değilse sistem sessiz farklılık değil input diff göstermelidir.
+
+**Gölge koşu iki aşamalıdır:** önce *kör paralel* (sistem önerisini
+mühürler, kullanıcı kendi kararını kaydetmeden görmez -- karar farkını
+ölçer), sonra *kâğıt icra* (öneri görülür, simülasyonda onaylanır, fiyat
+geçersizleşmesi/kısmi fill/expiry/reconciliation çalışır, broker emri yok --
+uygulanabilirliği ölçer). Küçük tutarlı gerçek işlem bunun devamı değil,
+zaten sınırlı canlı pilottur.
+
+İnsanla sistemin farklı karar vermesi tek başına başarısızlık değildir; fark
+önce sınıflandırılır (input farkı / policy boşluğu / motor kusuru / insan
+policy sapması / yargı farkı / operasyon farkı / kayıt yetersizliği).
+**Agreement rate başarı metriği değildir** -- insan ve sistem aynı anda aynı
+yanlışı da yapabilir. İnsan sürekli policy dışı davranıyorsa "motor
+başarısız" denmez; ya kullanıcı yazılı policy'ye inanmıyordur ya policy
+gerçek tercihleri temsil etmiyordur -- her iki hâlde de canlı yetkiye
+geçilmez.
+
+**Yetki merdiveni (A0-A4)** ayrı bir `operating_authority` nesnesidir,
+capital policy alanı değil -- aynı policy hem gölgede hem canlıda
+kullanılabilir, ve operasyonel arıza yetkiyi düşürürken ekonomik policy
+değişmeyebilir.
+
+| Seviye | Sistem ne yapabilir | İlerleme kapısı |
+|---|---|---|
+| A0 Kayıt | Gerçeği, NAV'ı ve riski gösterir; sermaye önermez | Açılış kitabı ve bir statement dönemi uzlaştırılmış |
+| A1 Kör gölge | Mühürlü proposal üretir, karar öncesi göstermez | İki aylık döngü + bir olay vakası; hard failure yok |
+| A2 Kâğıt icra | Proposal'ı gösterir; order/fill/expiry/reconciliation'ı simüle eder | Fiyat geçersizleşmesi, kısmi fill, iptal, uzlaştırma uçtan uca çalışmış |
+| A3 Sınırlı canlı | Pilot tavanıyla sınırlı proposal'lar insan onayına açılır | Bir tam statement kapanışı + iki uzlaştırılmış canlı döngü |
+| A4 Normal canlı | Policy kapsamındaki tam proposal seti | Sürekli işletim; otomatik emir yetkisi hiçbir zaman doğmaz |
+
+`authority_grant` immutable'dır; revocation ayrı olaydır. Revocation
+tetikleyicileri kapalı sözlük (policy superseded, validation regression,
+çözülmemiş hard breach, disputed reconciliation, stale NAV, input integrity
+failure, manuel).
+
+**Kabul kapısı** dört iddiayı destekler, kârlılığı değil: uygulanabilir /
+güvenli / kararlı / işletilebilir. Beklenen sonuçlar test koşulmadan önce
+yazılır; sonuç görüldükten sonra kriter değiştirilmez. Parametre duyarlılığı
+en iyi değeri seçmek için değil **kırılganlığı görmek** için ölçülür --
+komşu değerler bambaşka portföyler üretiyorsa merkez değer "makul"
+sayılamaz.
+
+### Şema kararları
+
+Dört temsil, farklı sorumluluklar: kanonik olaylar + hash'li artefaktlar
+(otorite), SQLite (atomiklik ve saklama), kalıcı projection'lar (karar
+arayüzü, şemalı), geçici kod nesneleri (şemasız). Önemli düzeltme: **olay
+şeması otorite değildir**; kabul edilmiş olay örnekleri ve referans
+verdikleri değişmez artefaktlar otoritedir. Şema yalnız deftere neyin kabul
+edilebileceğini belirler.
+
+| Karar | Hüküm |
+|---|---|
+| **Para** | `{amount: decimalString, currency: ISO-4217}`. Float yasak. Minor-unit integer de reddedildi (FX, kesirli hisse, bölünme oranı, kesirli kuruş için yetersiz). SQLite'ta `TEXT` -- `NUMERIC` affinity metni REAL'a çevirip hassasiyet kaybettirir. |
+| **Adet** | `decimalString`; kesirli hisse baştan desteklenir, izin verilen adım broker yeteneğinden gelir. Global "en fazla dört ondalık" kuralı konmaz. |
+| **Eşikler** | Policy'nin yazdığı oranlar bp integer (`100 = %1`); hesaplanmış ağırlıklar bp'ye yuvarlanmaz. |
+| **Zaman** | Üç tip: `UtcInstant` (gerçek an), `LocalDate` (ekonomik takvim günü -- gece yarısı timestamp'ine çevirmek yasak), `MarketSessionDate` (borsa takvimi). **"Bugün" kanonik veri alanı değildir**: scheduler bir `evaluation_instant` alır, operatör tarihi ve borsa seansı ondan ayrı türetilir. |
+| **Kimlik** | UUIDv7 (sıralanabilir). Okunabilir `PROP-2026-0042` yalnız `display_ref`; foreign key veya idempotency anahtarı olamaz. |
+| **Menkul kıymet** | Üç seviye: `issuer_id` / `security_id` / `listing_id`. GOOG-GOOGL aynı issuer farklı security; ticker değişimi hiçbirini değiştirmez; delisting listing'i kapatır, security'yi değil. CIK issuer'a bağlı haricî kimliklerden biridir, `issuer_id`'nin yerine geçmez. |
+| **Sürümleme** | Dosya adı + `$id` + veri örneği birlikte sürüm taşır. Yayınlanmış şema değiştirilmez; eski olaylar yeniden yazılmaz, projector upcaster ile çevirir. `schema_version` / `policy_version` / `engine_version` ayrı anlamlardır, tek alana sıkıştırılamaz. |
+| **Yerleşim** | Yeni fon şemaları `schemas/fund/` altında; mevcut düz dosyalar taşınmaz. |
+
+**Açılış kitabı özel bir problemdir.** Sentetik "opening fill" **yasak** --
+olmamış bir işlem uydurmak sahte işlem tarihi, nakit çıkışı, elde tutma
+süresi ve karar attribution'ı üretir. Ayrı bir `opening_account_state_
+asserted` olayı kullanılır ve `cost_basis_status` taşır
+(`lot_level_known` / `aggregate_only` / `partial` / `unknown`). **Maliyet
+bilinmiyorsa sıfır yazılmaz**: adet ve piyasa değeri bilinir, açılıştan
+sonraki TWR hesaplanır, ama unrealized P&L `unknown` kalır. Maliyet sonradan
+bulunursa geçmiş olay değiştirilmez; `opening_cost_basis_supplied` referans
+verir.
+
+Diğer muhasebe kararları: **temettü iki olaydır** (ex-date'te alacak,
+ödeme tarihinde nakit -- tek olay kullanılırsa aradaki dönemde NAV sahte
+düşüş gösterir); `net = gross - withholding - fees` eşitliği validator
+tarafından doğrulanır; uzlaştırma ekonomik olay değildir, ayrı ailedir;
+**lot bir projection ama lot SEÇİMİ bir olaydır** (satışta hangi lotun
+kapandığı karardır, projection'a gömülemez -- sistem sessizce FIFO
+varsaymamalıdır); `projected_flat` (fill'lerden sıfır türedi) ile
+`confirmed_flat` (broker snapshot'ıyla uzlaştırıldı) ayrıdır.
+
+**Olay zarfı:** tek primary `subject` + çoğul `related_refs` (çoklu primary
+subject stream sıralamasını belirsizleştirir); `correlation_id` ve
+`causation` ayrı işler yapar, ikisi de gerekli; `actor` zorunlu
+(human/system/external_source); yetki her olayda değil ayrık
+`authority_basis` ile (`not_required` / `explicit_user_action` /
+`operating_authority` / `external_observation`); idempotency payload'da
+değil zarfta (commit kapısı payload'ı açmadan duplicate yakalayabilmeli);
+`occurred_at` her zaman bilinemeyeceği için `occurrence` ayrık tiptir
+(instant veya date); **genel `approval` alanı kaldırıldı** -- onay ayrı bir
+domain olayıdır; **`sequence` zarfta değil storage metadata'sındadır.**
+
+**SQLite:** `BEGIN IMMEDIATE` + unique constraint'ler, dosya kilidinden hem
+basit hem doğrudur. Batch'te `pending/committed` durumu tutulmaz --
+transaction başarılıysa batch vardır, başarısızsa hiç yoktur; okuyucu yarım
+batch göremez, `committed` filtresi gereksizdir. `global_position` ve
+`stream_position` **boşluksuz olmak zorunda değildir**; güvence benzersiz ve
+monoton sıralamadır. `events` ve `event_batches` üzerinde UPDATE/DELETE
+reddeden trigger bulunur. WAL correctness sağlamaz -- onu transaction ve
+constraint'ler sağlar.
+
+Tek operatöre rağmen eşzamanlılık gerçektir (iki terminal, dashboard + CLI,
+import retry, aynı düğmeye iki kez basma, crash sonrası yeniden çalıştırma).
+"Disiplinle çözülür" burada da yeterli değildir; ama çözüm dosya kilidi
+değil, **tek `commit_batch()` kod yolu**dur.
+
+### V0 kesimi
+
+Beş turda ~30 şemalık yüzey tanımlandıktan sonra kesim yapıldı. İlke:
+**genelliği kes, doğruluğu kesme.** Ve: *"kullanılmayan enum değeri geleceğe
+hazırlık değil, test edilmemiş davranıştır"* -- yeni değer, gerçekten
+üretileceği turda eklenir.
+
+**İlk çalışan dilim: 7 tam şema + 3 stub + 1 DDL.**
+
+| Şimdi tam yazılacak | Stub (dar, kapalı, sürümlü) | Bu dilimde hiç yazılmayacak |
+|---|---|---|
+| `common` (primitive'ler) | `instrument-master` | Fill/temettü/ücret/vergi/corporate-action şemaları |
+| `fund-definition` | `artifact-manifest` | Lot projection ve lot disposition |
+| `event-envelope` | `input-manifest` | Reconciliation motoru |
+| `opening-accounting-event` | | `policy_validation_spec`, `operating_authority` |
+| `valuation-observation-bundle` | | `portfolio_risk_snapshot`, `portfolio_proposal` |
+| `fund-state-projections` | | Execution plan/ticket/broker order |
+| `nav-snapshot` | | TWR/MWR, attribution, driver registry |
+| `fund-ledger.sql` (DDL) | | Araştırma/tez entegrasyonu |
+
+Stub, `additionalProperties: true` demek değildir -- dar ve kapalı olur,
+sonra yeni opsiyonel alanlarla veya yeni şema sürümüyle genişler.
+
+**V0'ın tek sorusu:** *Broker kaynaklı bir açılış kitabını exact
+para/adetlerle bir kez kaydedip, tekrar çalıştırmada çoğaltmadan,
+fiyatlandırıp aynı pozisyon/nakit/NAV state'ini replay edebiliyor muyum?*
+Bu soru geçmeden risk snapshot, proposal, authority veya validation spec
+yazmak yeniden erken kurumsallaşmadır.
+
+**Şimdi doğru konması gerekenler** (sonradan değiştirmek pahalı): UUID
+kimliklerinin anlamı, decimal/money/currency temsili, zaman alanlarının
+anlamı, artifact/event/projection ayrımı, exact policy/input/engine
+referansları, proposal'ın immutable olması, insan kararının ayrı olay
+olması, option'ın tüm portföyü temsil etmesi, target'ın band olabilmesi,
+primary subject ve stream kimliği, sürümleme, position state'lerinin
+anlamı, maliyet bilinmiyorsa sıfır yazılmaması.
+
+**Sonradan ucuz eklenebilecekler:** yeni constraint türleri, yeni binding
+açıklamaları, yeni exposure breakdown'ları, alternatif option'lar, yeni
+scenario sonuçları, daha zengin reason code'lar.
+
+Süre: ilk dilimin şemaları **5-8 iş günü**; tanımlanan tüm hedef set 15-25
+odaklı iş günü (~4-6 takvim haftası kısmi zamanla). Ayrım önemli: *şemayı
+yazmak hızlıdır, doğru şemaya karar vermek değildir* -- Claude/codex
+boilerplate, `oneOf`/`$defs`, fixture üretimi ve tutarlılık kontrolünü
+hızlandırır; alanın gerçekten gerekli olup olmadığına, iki alanın aynı
+gerçeği taşıyıp taşımadığına, muhasebe semantiğine ve geriye uyumluluğa
+karar vermeyi hızlandırmaz.
+
+### 5. turun getirdiği daraltmalar
+
+- **Capital policy bütün altyapıyı bloklamaz** (yukarıda İnşa sırasına
+  işlendi).
+- **`config/` yalnız düzenlenebilir taslaktır**; runtime otoritesi mühürlü
+  artefakt + `capital_policy_activated` olayıdır. Etkinleştirmeden sonra
+  config dosyası ikinci gerçeklik kaynağı sayılamaz.
+- **Zarftan `approval` kaldırıldı** -- bu, 1. turdaki onay ayrımıyla tam
+  uyumludur; `authority_basis` genel bir onay alanının yerine geçmez.
+
+### Kalan uyarı
+
+> En kolay yanlış anlama, replay edilebilir ve deterministik bir sistemin
+> otomatik olarak doğru olduğuna inanmaktır. Sistem aynı yanlış fiyatı,
+> yanlış FX'i veya kötü seçilmiş policy sayısını kusursuz biçimde tekrar
+> üretebilir. İlk başarı ölçütü "iyi proposal verdi" değil; broker gerçeğini
+> kayıpsız aldı, bilinmeyeni sıfıra çevirmedi, aynı girdiyi çoğaltmadı ve
+> aynı manifestten aynı state'i üretti olmalıdır.
+
+## Gözden geçirme — 6. tur: fon ↔ skill entegrasyonu (2026-08-16)
+
+Aynı oturumda yedi tur (t53-t59). Konu: 4. turda "araştırma alt sistemdir"
+denmişti ama sınırın nerede olduğu hiç somutlaştırılmamıştı.
+
+Sınırın kendisi "Geçerli tasarım → Araştırma ↔ fon sınırı"na işlendi. Bu
+bölüm turun geri kalanını taşır.
+
+### Beş temas değil tek sınır
+
+Fonun skill'e dokunduğu iş noktaları beştir (investable sete kabul, tez
+izleme, downside/valuation güncellemesi, discovery, driver yorumu -- artı
+altıncısı: performans geri beslemesinden doğan re-underwrite). Ama bunlar
+**beş ayrı teknik entegrasyon olmamalıdır.** Hepsi aynı sınırdan geçer.
+
+Yön farkı semantiktir, altyapı ortaktır: fon → araştırma yönü
+`research_work_requested` (asenkron görev; risk motoru LLM çağrısını
+beklemez, aynı transaction içinde skill çalıştırmaz), araştırma → fon yönü
+`capital_input_adjudicated` (skill completion değil, kabul edilmiş sürümlü
+domain artefaktı).
+
+**Muhasebe/NAV V0'ında sıfır skill; ilk risk/proposal sürümünde de teknik
+olarak sıfır skill gerekir.** İnsan gerekli capital input'ları typed biçimde
+elle girebilir. Skill entegrasyonu bu girdilerin *üretimini* iyileştirir,
+fonun *doğruluğunu* kurmaz.
+
+### `research_work_request`
+
+Kalıcı bir **karar ihtiyacıdır**, kuyruk öğesi değil; kuyruk açık taleplerin
+güncel fon durumu, deadline ve kapasiteyle yeniden sıralanmış
+projection'ıdır. Taşıdıkları: `requested_capability` (domain çıktısı, skill
+adı değil), `required_output_contract`, origin refs, decision context
+(karar tipi, bloklanan aksiyonlar, deadline, `capital_at_risk`), araştırma
+sorusu (birincil soru, mevcut belirsizlik, olası sermaye etkileri, gerekli
+kanıt, durma koşulları), VOI (`admission_basis`, ordinal impact /
+changeability / effort), ve `work_equivalence_key`.
+
+Request'i deterministik bir planlayıcı veya insan üretir; **skill üst düzey
+fon araştırma ihtiyacı yaratamaz** (yalnız kendi episode'u içinde
+`support_request_proposed` önerebilir).
+
+Dedup iki seviyelidir: idempotency (aynı origin + capability + decision ref)
+ve semantik gruplama (farklı geçerli request'ler tek episode tarafından
+karşılanabilir). Öncelik leksikografiktir: R sınıfı → deadline → risk
+altındaki sermaye → changeability/effort. Yani `R2 + 82bp` bir iş, diğer R2
+işleri arasında öne çıkar ama **R1'i geçmez.**
+
+Bir düzeltme: **R0 çoğunlukla araştırma işi değildir.** Sermaye gerçeği
+bilinmiyorsa çözüm skill değil reconciliation/importer'dır; R0 birleşik
+operatör kuyruğunda kalır, araştırma kuyruğu normalde R1-R5'tir.
+
+İptal, "skill'i" değil **karar ihtiyacını** iptal eder; request silinmez,
+`research_work_cancelled`/`superseded` eklenir. Çalışan iş durdurulamıyorsa
+sonuç `quarantined_late_result` sayılır ve yeni request + adjudication
+olmadan capital input olamaz. Request, attempt başlamadan **ve** provisional
+sonuç adjudication'a sunulmadan önce güncel fon state'ine karşı yeniden
+doğrulanır -- araştırma bir hafta sürerken sermaye sorusu ortadan kalkmışsa
+eski cevap yeni kararın içine sızamaz.
+
+### Adjudication pratiği
+
+Aşama A'da kullanıcı şunları görür: senaryonun causal zinciri, varsayımlar
+ve birimler, her önemli sayı için kaynak, mevcut kabul edilmiş case ile alan
+bazında fark, yeni/çelişkili/eksik kanıtlar, falsifier bağlantısı, validator
+sonuçları. Cevapladığı sorulardan biri kritiktir: **"Bu pozisyona sahip
+olmasaydım aynı senaryoyu kabul eder miydim?"**
+
+Süreler: dar güncelleme 5-10 dk, yeni downside case 20-30 dk, maddi varsayım
+değişikliği 15-30 dk. **30 dakikayı geçiyorsa defer veya reject.** Haftada
+onlarca adjudication kabul edilebilir değildir; sistem normal haftada birkaç
+maddi hüküm üretecek kadar dar tutulmalıdır.
+
+**İnsan sayıyı değiştirirse** mevcut önerinin üzerine yazılmaz: olgusal hata
+varsa öneri *reject* edilir ve doğru kaynakla yeni case üretilir; bilinçli
+daha muhafazakâr yargı ise `human_authored_downside_case` olur, model
+artefaktına `derived_from` ile bağlanır ve aynı validator'dan geçer. Bu bir
+policy override değildir -- override, geçerli bir girdiye rağmen policy
+sınırını aşmaktır.
+
+**Kalite üç katmanda ayrılır:** şema (JSON Schema), kaynak varlığı/dönem/
+birim/tie-out/citation lineage (deterministik validator), peer setinin
+anlamlılığı ve senaryonun makullüğü (insan). Kalite skill adına göre değil
+`plugin_version + skill_digest + model + execution_role +
+requested_capability` route'una göre ölçülür; uydurulmuş kaynak veya yasak
+sermaye hükmü route'u tek seferde quarantine edebilir.
+
+**Araştırma ile fiyat çelişirse** sistem gösterir ama fiyatı tez hakemi
+yapmaz. İki sinyal: `thesis_deteriorating_market_favorable` ve
+`thesis_intact_market_adverse`. Tracker'ın ilk analitik geçişi fiyat/P&L
+görmeden yapılır; market overlay ayrı gelir. Tez broken + fiyat yükseliyor →
+broken hükmü değişmez. Tez intact + fiyat %40 düşmüş → tez otomatik
+bozulmaz, ama drawdown policy'si zorunlu re-underwrite ve ekleme dondurması
+üretir.
+
+**Bayat adjudication kilitlenme değil, doğru güvenlik davranışıdır** --
+muhasebe, NAV, hard-limit trim ve exit çalışmaya devam eder. "Olduğu gibi
+uzat" yalnız kısa-form inceleme ile mümkündür (incelenen kanıt penceresi,
+kontrol edilen maddi olaylar, sonuç, sonraki vade); hiç kanıt bakmadan
+`administrative_extension` karar-kritik girdilerde **yasaktır**. Bütün kitap
+stale oluyorsa doğru çözüm süreleri sahte uzatmak değil, pozisyon sayısını
+veya kadansı kapasiteye uydurmaktır.
+
+**Törensel onay** kesin ispatlanamaz ama sinyalleri vardır (olağandışı kısa
+süreler, %100 kabul oranı, hiç reject/defer olmaması, kaynak panelinin hiç
+açılmaması, toplu onaylar, sonradan sık düzeltme). Yüzeyde korumalar: "hepsini
+onayla" yok, accept varsayılan seçenek değil, yüksek-reliance case'lerde bir
+cümlelik gerekçe zorunlu. Kullanıcı yine de incelemeden geçmek isterse kayıt
+`acknowledged_without_full_adjudication` olur -- `human_adjudicated`
+sayılmaz, readiness yükseltmez.
+
+> Kullanıcı kendi parasında istediğini yapabilir; sistem bunu "disiplinli
+> adjudication yapıldı" diye yalanlayamaz.
+
+### Uygulama sırası ve ilk adapter
+
+İnşa sırası revize edildi (yukarıda İnşa sırası bölümüne işlendi).
+
+**En küçük entegrasyon dilimi iki aşamalıdır.** Önce *skill'siz sınır
+testi*: insan-authored bir `proposed_downside_case` → validator → Aşama A
+adjudication → `capital_input_manifest` → risk motoru → ağırlık tavanı. Bu
+test **plugin olmadan geçmelidir**; böylece adapter bozulduğunda domain
+sınırının çalıştığı bilinir. Sonra *ilk gerçek sağlayıcı testi* -- ama tek
+downside case tek başına nihai tavanı üretemez; fixture'da tez ve readiness
+önceden kabul edilmiş olmalı, yalnız downside eksik bırakılmalı ve downside
+kısıtı gerçekten binding olacak şekilde kurulmalıdır.
+
+**İlk adapter `comps-valuation`**: dar capability (`valuation_anchor`), tez
+gerektirmez (legacy pozisyonda çalışır), kaynak/peer/dönem/tie-out
+deterministik doğrulanabilir, lifecycle açmaz veya kapatmaz. Sıra: comps →
+pitch (onboarding underwrite) → tracker → deep-dive → tearsheet →
+idea-generation. Tracker veya deep-dive'ı ilk yapmak tavuk-yumurta üretir
+(tracker'ın tezi, deep-dive'ın beklenti bağlamı yoktur); pitch'i ilk yapmak
+entegrasyon tesisatıyla analitik kaliteyi aynı anda debug ettirir.
+
+Süre: entegrasyon katmanı (skill'ler hariç) **4-7 hafta**; `comps-valuation`
+adapter'ı 4-7 iş günü; pitch/onboarding adapter'ı ayrıca 1,5-2,5 hafta;
+tracker veya deep-dive ortak altyapıdan sonra 1-2 hafta/adet.
+
+> Önce manuel producer ile sınırı kanıtla, sonra aynı output contract'a
+> plugin'i tak. Plugin'i ilk producer yaparsan, hata çıktığında bunun domain
+> sözleşmesinden mi, orkestrasyondan mı, prompttan mı yoksa skill'den mi
+> geldiğini ayıramazsın.
+
+### Önceki turlarla tutarlılık
+
+Lead+support modeli ve katalog v2 geçerliliğini korur; fonun request
+üretmesi yalnız yeni bir talep kaynağıdır, lead seçimi ve episode yapısı
+araştırma orkestratöründe kalır. Kataloğa capability/output contract,
+görünürlük profili, assessment mode ve assurance politikası eklenir;
+`allowed_next` geri gelmez. `capital_input_manifest` 4. turdaki "adjudicated
+capital input" kavramının somut paketidir -- yeni bir otorite veya ikinci
+defter değildir; bileşenler ve adjudication olayları otoritatiftir, manifest
+karar anında onlardan türetilip mühürlenir.
+
+### Kalan uyarı
+
+> En kolay ve en tehlikeli yanlış anlama, "skill çıktısı fona girdi olur"
+> cümlesidir. Olmaz: yalnız doğrulanmış ve insan tarafından bağımsız biçimde
+> adjudicate edilmiş domain nesneleri fona girdi olabilir. Biri
+> `skill result → risk engine` kestirmesi yaparsa bütün güvenlik mimarisi
+> çöker. Entegrasyonun başarı ölçütü plugin'i çağırabilmek değil, **plugin'i
+> söktüğünde fonun doğru kalması ve aynı sözleşmeye başka bir producer
+> takılabilmesidir.**
+
 ## Kullanıcı kararı bekleyen sorular
 
 Bunlar teknik değil tercih soruları -- doğru cevabı tasarımdan
@@ -2470,19 +2973,24 @@ edilebilir başlangıç çıpaları oldukları için kullanılabilir.
 ### İlk hafta
 
 Önceliği kod değil, policy ve broker gerçeğidir -- bilinmeyen veri üzerinde
-yazılan muhasebe modeli yeniden yazılır.
+yazılan muhasebe modeli yeniden yazılır. Ama **dört soruyu beklerken boş
+oturmak gerekmiyor** (5. tur daraltması): aşağıdaki 2-4. maddeler cevaptan
+bağımsızdır.
 
 1. Fon perimetresini, raporlama para birimini, sermaye amacını ve risk
-   zarfını karara bağla.
-2. Broker'dan açılış tarihine ait pozisyon, nakit ve mümkünse tam işlem
-   ekstresini **değişmeden** dışa aktar.
-3. Capital Policy v0'ı sürümlü doldur; varsayılan kullanılan her sayıyı
-   açıkça `provisional` işaretle.
-4. Açılış portföyünü elle çıkar ve broker ile pozisyon/nakit bazında
-   uzlaştır; açıklanamayan farkları kapatmadan listele.
-5. Kodlamadan önce mevcut portföy üzerinde manuel prova yap: NAV,
-   ağırlıklar, kayıp bütçesi, hard limitler ve varsayılan `no_change`
-   proposal'ı hesaplanabiliyor mu?
+   zarfını karara bağla. *(Bu, 1. ve 5. maddeleri açar.)*
+2. Broker hesaplarını, açılış tarihini ve kaynak ekstre/export dosyalarını
+   envanterle -- **henüz import yapma**, yalnız neyin elde olduğunu gör.
+3. `core-types`, `event-envelope` ve SQLite DDL sözleşmelerini
+   kesinleştir; atomiklik, idempotency ve replay kabul fixture'larını yaz.
+4. 7 tam şema + 3 stub sınırını dondur; bu listenin dışına çıkma.
+5. Dört cevap geldikten sonra `fund_definition`, `capital_policy` ve
+   `policy_validation_spec`'i tamamla. Policy aktivasyonu, risk motoru ve
+   proposal çalışması o ana kadar bekler.
+
+Kodlamaya başlamadan önce mevcut portföy üzerinde manuel bir prova da
+yararlıdır: NAV, ağırlıklar, kayıp bütçesi, hard limitler ve varsayılan
+`no_change` proposal'ı elle hesaplanabiliyor mu?
 
 ### Önceki turlardan devam edenler
 

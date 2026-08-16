@@ -1,0 +1,15 @@
+Bu tur çok işe yaradı. Özellikle şunlar: fiyatın `valuation_anchor`ın parçası OLMAMASI (fiyat market snapshot'ın, anchor yöntem/varsayım; capital_actionability ikisinin karşılaştırmasından türüyor -- bu benim "her gün bayatlar mı" sorumu tam çözdü); `readiness_effect` kapalı sözlüğü (`no_readiness_effect` / `readiness_review_required` / `readiness_invalidated`); `legacy_hold_only` ve `policy_compliant_max_weight = not_computable` (sıfır değil!); "araştırma eksikliği riski artırmayı engeller, fakat tek başına zorunlu satış kanıtı oluşturmaz"; ve manifestin içeriğinin türetilip karar anındaki örneğinin mühürlenmesi. Eksik girdi × aksiyon matrisi doğrudan kodlanabilir.
+
+`ununderwritten_hold_exception`'ın süreli olması ve süresi dolunca otomatik satış değil zorunlu insan kararı doğurması da doğru -- bu, açılış kitabının sonsuza kadar gri bölgede kalmasını engelliyor.
+
+Şimdi ters yöne bakalım: FON OLAYI NASIL BİR ARAŞTIRMA İŞİNE DÖNÜŞÜYOR?
+
+(1) `research_work_request` ŞEMASI. Kim üretir, ne taşır? 39. turda risk-güdümlü görevler için alanlar saymıştık (`originating_risk_event`, `capital_at_risk_bps`, `decision_to_inform`, `decision_deadline`, `question`, `possible_capital_effects`, `required_evidence`). Bunu VOI kapısıyla (impact/changeability/effort) birleştir ve kesin şemayı ver. Ve şunu netleştir: request bir OLAY mı (deftere yazılır) yoksa bir kuyruk öğesi mi (projection)?
+
+(2) BU İSTEK, 3. TURDA KURDUĞUMUZ ARAŞTIRMA ORKESTRATÖRÜNE NASIL BAĞLANIYOR? Orada `research_case` / `episode` / `lead_workflow` / `support_policy` yapısı vardı. Şimdi fon bir istek üretiyor. Bu istek doğrudan bir `research_case` mi açıyor, yoksa mevcut bir vakaya mı ekleniyor? Ve `lead_workflow` seçimini kim yapıyor -- fon mu söylüyor ("bana downside lazım, comps çalıştır") yoksa araştırma orkestratörü mü karar veriyor? Ben ikincisini savunuyorum (fon SORUYU söyler, hangi skill'in cevaplayacağına araştırma tarafı karar verir) ama o zaman fon bir cevabın ne zaman geleceğini bilmiyor.
+
+(3) DEDUPLIKASYON VE ÖNCELİK. Aynı security için birden fazla tetikleyici aynı anda istek üretebilir: haftalık kontrol sapma buldu, aynı hafta earnings geldi, ve risk motoru driver yoğunlaşması gördü. Üç ayrı iş mi açılıyor, yoksa birleşiyor mu? Ve R0-R5 sıralaması ile fonun "risk altındaki sermaye" sıralaması aynı şey mi -- yoksa bir istek hem R2 hem yüksek sermayeli olabilir mi ve bu nasıl çözülür?
+
+(4) VE PRATİK OLAN: KULLANICI BUNU NASIL GÖRÜYOR? Sistem bir istek üretti; kullanıcı sabah oturuyor. Ne görüyor -- "NVDA için downside güncellemesi gerekiyor, 82 bp sermaye riski, son tarih 5 gün" gibi bir kuyruk öğesi mi? Ve o öğeye tıkladığında ne oluyor: sistem skill'i çalıştırıyor mu, yoksa kullanıcı mı tetikliyor? 15. turda "insan tetiklemeli olmak, insan tarafından adım adım sürülmek demek değildir" demiştik -- burada sınır nerede?
+
+(5) Son olarak: fon tarafı bir isteği İPTAL edebilir mi? Örneğin downside güncellemesi istendi ama bu arada pozisyon satıldı, ya da tez `broken` oldu ve artık soru anlamsız. Açık araştırma işleri fon state'i değiştikçe ne oluyor?
