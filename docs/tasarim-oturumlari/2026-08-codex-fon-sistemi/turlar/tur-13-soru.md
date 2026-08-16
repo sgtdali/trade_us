@@ -1,0 +1,19 @@
+Skill'i ben de açtım (0.1.31 sürümü) ve senin girdi özetin doğru: satır 95 aynen "security, direction, current/proposed size, thesis exposure to retain, unwanted risk, price/as-of time, horizon/catalyst, portfolio context, mandate limits, liquidity, and requested action" diyor, satır 66 çıktı zorunluluklarını, satır 96 da loss-budget yorumunu sayıyor. Kanonik snapshot / skill adapter ayrımını kabul ediyorum. Lot, para birimi, kurumsal işlem ve reconciliation provenance'ının ilk günden gelmesi gerektiği konusunda da hemfikirim.
+
+AMA skill'i okurken dokümanın doğrudan yanlış olan bir kararını buldum ve bu senin de gözünden kaçmış görünüyor. Skill'in Mode Selection tablosunda ÜÇ mod var: position_sizing, hedge_design, integrated_risk_plan. Üçü de TEK BİR pozisyon hakkında: "bu isimden ne kadar tutayım", "bu maruziyeti nasıl hedge ederim", "ikisi birlikte". Portföy bağlamı bu modlarda bir GİRDİ KISITI olarak geçiyor -- kararın konusu değil.
+
+Oysa Başlık 4 karar 5 şunu diyor: "Aylık rebalans mantığı portfolio-risk-management skill'ine devredilir. Histerezis, ağırlıklandırma, korelasyon ve yoğunlaşma kurallarını kendimiz tanımlamıyoruz; skill zaten bu iş için yazılmış."
+
+Skill bu iş için yazılmamış. Kitap boyunca "şu isimden ne kadar" sorusunu cevaplıyor, "on iki ismin arasında ağırlıkları nasıl dağıtayım, hangisinden çıkıp hangisine gireyim" sorusunu değil. Yani devretme sahte: skill'i her isim için ayrı ayrı çağırsak bile o cevapları BİRLEŞTİREN mantık bizde kalıyor -- ki kararın gerekçesi tam olarak o mantığı kendimiz tanımlamamaktı ("analitik yargı skill'in, akış bizim").
+
+Üç olası çıkış görüyorum, hangisini savunduğunu ve diğerlerinin neden yanlış olduğunu söyle:
+
+(a) Aylık oturum aslında bir "rebalans" değil; her açık tez için ayrı bir sizing kararı. Skill'in modeline birebir oturuyor ama o zaman N ayrı oturum demek (senin daha önce reddettiğin "10 tez = haftada 10 oturum" deseninin aylık hâli) ve portföy-geneli yoğunlaşma sorusu hiç sorulmuyor.
+
+(b) Portföy-geneli mantığı biz tanımlıyoruz (ağırlık tavanları, sektör limitleri, korelasyon eşikleri mandate'ten gelir), skill'i yalnız tek tek isimlerde kısıt üretmek için çağırıyoruz. Dürüst ama Başlık 4 karar 5'in gerekçesini çöpe atıyor -- ve "kendimiz tanımlamayalım" endişesi haklıydı, çünkü bu kuralları uydurmak kolay, doğrulamak zor.
+
+(c) Portföy-geneli karar aslında hiç otomatikleştirilmemeli; sistem yalnız paketi hazırlar, insan bakar. Sen zaten ilk sürüm için bunu önerdin. Ama o zaman "skill kataloğa eklenecek" açık işi ilk sürümde tamamen düşüyor ve doküman bunu böyle söylemiyor.
+
+İkinci konu, birinciyle bağlantılı: skill "thesis exposure to retain" ve "unwanted risk" istiyor -- yani tezin KASTETTİĞİ alfa ile taşımak zorunda kalınan ama istenmeyen riski ayırmasını bekliyor. Bizim pitch çıktımız böyle bir ayrım üretiyor mu? Ben üretmediğini düşünüyorum: pitch "alınabilir mi" diyor, "bu isimde neyi kastediyorum, neye katlanıyorum" diye ayırmıyor. Eğer öyleyse portföy paketini hiçbir zaman tam dolduramayız ve skill her seferinde eksik girdiyle çalışır. Bu, tez şemasına şimdi eklenmesi gereken bir alan mı -- yani tez açılırken "intended alpha / unwanted risk" ayrımı da kaydedilmeli mi?
+
+Üçüncüsü ve daha genel olanı: bu, kataloğa alacağımız DİĞER skill'ler için de geçerli bir uyarı mı? Biz doküman boyunca "analitik yargı skill'in, akış bizim" diye rahatlıkla devrettik ama şimdi görüyorum ki bir skill'in gerçekten hangi soruyu cevapladığını okumadan devretmek, karşılığı olmayan bir çek yazmak oluyor -- tıpkı Başlık 3'ün Başlık 4'e yazdığı çek gibi. Aynı hatayı başka nerelerde yapmış olabiliriz? Özellikle thesis-tracker'ın gerçekten ne yaptığını (bizim "haftalık tez sağlığı" beklentimizi karşılıyor mu) ve idea-generation'ın dilim-göreceli çalışmaya uygun olup olmadığını merak ediyorum. İstersen o iki skill'e de bak ve bana dürüst söyle: tasarımın onlardan beklediği şeyle gerçekte yaptıkları örtüşüyor mu?

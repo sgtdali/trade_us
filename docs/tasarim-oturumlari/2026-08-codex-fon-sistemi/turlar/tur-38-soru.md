@@ -1,0 +1,17 @@
+Risk bölümünü olduğu gibi alıyorum. En değerli üç ayrım: "risk araçları azdır ama ölçülmesi gereken riskler az değildir" (yani ayrı bir deterministik `risk_engine` gerekiyor, ayrı bir LLM değil); causal driver registry + korelasyonun ikisinin farklı işler yapması (nedensel hipotez vs ampirik alarm); ve "kayıp bütçesi stop değildir, pozisyon açılmadan ÖNCE uygulanan boyutlandırma sınırıdır" düzeltmesi. Drawdown'ın otomatik satış değil zorunlu yeniden inceleme tetiklemesi ve dondurmanın fiyat toparlandı diye değil inceleme bitince kalkması da doğru kurulmuş. `policy_assumption` nesnesi likidite varsayımı sorununu tam çözüyor.
+
+Şimdi tasarımın en az konuşulan ama fon açısından en kritik yerine geliyoruz: KARAR İLE GERÇEK DÜNYA ARASINDAKİ KÖPRÜ. Buradaki her kusur doğrudan gerçek paraya yansıyor.
+
+Gerçekçi varsayımlar: kullanıcı bireysel bir aracı kurum kullanıyor, muhtemelen API yok, işlemler elle giriliyor, fills elle veya ekstre üzerinden sisteme aktarılıyor. Yani köprünün her iki yönü de manuel.
+
+(1) ZAMAN AŞIMI SORUNU. Proposal Cuma üretildi, insan Cumartesi onayladı, Pazartesi açılışta işlem girdi, fiyatlar %3 değişti. Hedef ağırlıklar artık farklı sayıda hisseye karşılık geliyor. Sistem ne yapmalı: (a) hedef AĞIRLIĞI koruyup adedi icra anında yeniden hesaplamalı, (b) onaylanan ADEDİ koruyup ağırlığın kaymasına izin vermeli, (c) belirli bir fiyat toleransı aşılırsa proposal'ı geçersiz kılıp yeniden onay istemeli? Ben (a) + (c) kombinasyonuna meyilliyim ama toleransın nerede olacağını bilmiyorum. Ve bu, `valid_until` alanının gerçek anlamını belirliyor.
+
+(2) İNSAN FARKLI BİR ŞEY YAPARSA. Onaylanan liste 100 hisse alım diyor, insan 60 alıp duruyor; ya da hiç almıyor; ya da listede olmayan bir şey alıyor. Bunlar farklı şeyler ve sistemin tepkisi de farklı olmalı. Özellikle sonuncusu kritik: sistem dışında alınmış bir pozisyon fona girmiş oluyor ama hiçbir tezi, readiness'i, kayıp bütçesi hesabı yok. Bunu nasıl karşılamalı -- reddetmek mümkün değil (gerçek para gerçekten harcandı), ama sessizce kabul etmek de tüm policy zincirini boşa düşürür.
+
+(3) KISMİ VE ÇOK PARÇALI GERÇEKLEŞME. Bir emir üç gün boyunca parça parça dolabilir, farklı fiyatlardan. Sistem her fill'i ayrı mı kaydetmeli, yoksa emir seviyesinde toplulaştırmalı mı? Ve bir emir kısmen dolup iptal edilirse, hedefe ulaşılamamış olur -- bu bir "başarısızlık" mı, yoksa yeni bir durum mu?
+
+(4) UZLAŞTIRMA NE DEMEK VE NE SIKLIKLA? "Reconciled" ne zaman denebilir: adet eşleşmesi mi, adet + nakit mi, adet + nakit + maliyet temeli mi? Ve hangi sıklıkta -- her işlem sonrası mı, haftalık mı, aylık mı? Ayrıca uzlaştırma başarısız olursa (sistem 100 diyor, broker 97 diyor) ne olur; sistem kendi kaydını mı düzeltir, yoksa insana mı sorar?
+
+(5) NAKİT VE TEMETTÜ. Temettüler otomatik gelir, ücretler otomatik kesilir, faiz işler. Bunlar hiçbir karar üretmez ama NAV'ı ve nakit ağırlığını değiştirir. Bunları yakalamanın en ucuz yolu ne -- her uzlaştırmada farkı "açıklanamayan nakit hareketi" olarak yakalayıp insana mı sormalı, yoksa broker ekstresinden mi ayrıştırmalı? Ve açıklanamayan bir nakit farkı ne kadar tolere edilebilir?
+
+(6) Ve bir tasarım sorusu: bütün bu manuel köprü, kullanıcının haftalık 6-9 saatinin ne kadarını yer? Eğer icra + uzlaştırma tek başına haftada 2 saat alıyorsa, bu fonun ölçeğine bir sınır koyar (10 pozisyon tavanı belki de bu yüzden doğru). Kaba bir tahmin ver ve bu yükü azaltmanın en etkili yolunu söyle.
