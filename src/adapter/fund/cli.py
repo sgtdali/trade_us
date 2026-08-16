@@ -21,13 +21,17 @@ from typing import Any, Sequence
 
 from . import (
     decisions,
+    dispatch,
     ids,
     instruments,
     jobs,
     metrics,
     monitoring,
+    observers,
+    packs,
     policy as policy_module,
     projection,
+    recipes,
     report,
     schemas,
     sizing,
@@ -1582,6 +1586,262 @@ def cmd_adjudicate(args: argparse.Namespace) -> int:
     return 0
 
 
+# --------------------------------------------------------------------------
+# observe and run -- the automated half
+# --------------------------------------------------------------------------
+
+def _filings_from_file(path: str, master: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    raw = json.loads(Path(path).read_text(encoding="utf-8"))
+    resolved: dict[str, list[dict[str, Any]]] = {}
+    for token, entries in raw.items():
+        security_id = instruments.resolve(master, token)
+        resolved[security_id] = [dict(entry, security_id=security_id) for entry in entries]
+    return resolved
+
+
+def _filings_from_sec(master: dict[str, Any], ledger: store.Ledger,
+                      security_ids: list[str], as_of: str) -> dict[str, list[dict[str, Any]]]:
+    from datetime import date as _date
+
+    from ..sec_client import SecClient
+
+    client = SecClient()
+    found: dict[str, list[dict[str, Any]]] = {}
+    for security_id in security_ids:
+        cik = None
+        for issuer in master["issuers"]:
+            if issuer["issuer_id"] == instruments.issuer_of(master, security_id):
+                cik = issuer.get("cik")
+        if not cik:
+            raise FundError(
+                f"{instruments.ticker_for(master, security_id)} has no CIK on file; "
+                "add it with `fund instrument add --cik ...` before observing"
+            )
+        observations = observers.all_unseen(
+            client, security_id=security_id, cik=cik,
+            seen_accessions=ledger.seen_accessions(security_id),
+            as_of=_date.fromisoformat(as_of),
+        )
+        found[security_id] = [
+            {"security_id": o.security_id, "accession": o.accession, "form": o.form,
+             "filing_date": o.filing_date, "report_date": o.report_date}
+            for o in observations
+        ]
+    return found
+
+
+def cmd_observe(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    as_of = args.as_of or _today()
+    theses = _theses(ledger)
+
+    watched = {history.document["security_id"]: history
+               for history in theses.values()
+               if history.status != thesis_module.CLOSED}
+    if not watched:
+        print("no open theses; nothing is being watched")
+        return 0
+
+    if args.filings:
+        candidates = _filings_from_file(args.filings, master)
+    else:
+        candidates = _filings_from_sec(master, ledger, sorted(watched), as_of)
+
+    opened, skipped = 0, 0
+    for security_id, entries in sorted(candidates.items()):
+        if security_id not in watched:
+            continue
+        seen = ledger.seen_accessions(security_id)
+        fresh = [e for e in entries if e["accession"] not in seen]
+        if not fresh:
+            continue
+
+        ticker = instruments.ticker_for(master, security_id)
+        ledger.record_observed_filings(fresh)
+
+        # Bounded on purpose: the first run on a company with twenty years of
+        # history should produce one piece of work, not eighty. The rest are
+        # marked seen above, so they never resurface.
+        newest = sorted(fresh, key=lambda e: (e["filing_date"], e["accession"]),
+                        reverse=True)[:args.limit]
+        for entry in newest:
+            history = watched[security_id]
+            rule = dispatch.match("new_periodic_filing", has_open_thesis=True)
+            if rule is None:
+                skipped += 1
+                continue
+
+            contract = history.document.get("monitoring_contract")
+            key = jobs.dedup_key(
+                observation=rule.observation,
+                security_id=security_id,
+                thesis_id=history.thesis_id,
+                evidence_accession=entry["accession"],
+                monitoring_contract_version=contract["version"] if contract else None,
+            )
+            if ledger.job_for_dedup_key(key) is not None:
+                skipped += 1
+                continue
+
+            snapshot = {
+                "observation": rule.observation,
+                "observed_at": _now(),
+                "evidence_accession": entry["accession"],
+                "evidence_date": entry["filing_date"],
+                "detail": f"{entry['form']} filed {entry['filing_date']}",
+            }
+            if contract:
+                snapshot["monitoring_contract_version"] = contract["version"]
+
+            document = jobs.new_job(
+                trigger_snapshot=snapshot,
+                rule_id=rule.rule_id,
+                rule_version=rule.version,
+                recipe=rule.recipe,
+                assessment_mode=rule.assessment_mode,
+                security_id=security_id,
+                dedup_key_value=key,
+                thesis_id=history.thesis_id,
+            )
+            ledger.save_job(document)
+            opened += 1
+            print(f"{ticker:<8} {entry['form']:<8} {entry['filing_date']}  "
+                  f"-> {document['job_id']}")
+
+    if not opened:
+        print("nothing new" + (f" ({skipped} already known)" if skipped else ""))
+    else:
+        print()
+        print(f"{opened} job(s) opened. Run them with `fund run <job_id>`.")
+    return 0
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    job = ledger.job(args.job)
+
+    if job["status"] not in jobs.ATTEMPTABLE:
+        raise FundError(f"job {args.job} is {job['status']}; it cannot be run")
+
+    theses = _theses(ledger)
+    history = theses.get(job.get("thesis_id") or "")
+    thesis_document = history.document if history else None
+
+    prior = ledger.latest_assessment(job["security_id"])
+    checks = ledger.check_records(thesis_id=job["thesis_id"]) if job.get("thesis_id") else []
+    due_questions = (thesis_module.due_qualitative_checks(thesis_document, args.as_of or _today())
+                     if thesis_document else [])
+
+    evidence = None
+    accession = job["trigger_snapshot"].get("evidence_accession")
+    if accession:
+        evidence = {"accession": accession,
+                    "date": job["trigger_snapshot"].get("evidence_date", "")}
+
+    try:
+        pack = packs.build_pack(
+            job=job,
+            ticker=instruments.ticker_for(master, job["security_id"]),
+            thesis=thesis_document,
+            prior_assessment=prior,
+            check_outcomes=checks[-5:],
+            due_questions=due_questions,
+            evidence=evidence,
+        )
+    except packs.PackError as exc:
+        raise FundError(str(exc)) from exc
+
+    workdir = Path(args.workdir) if args.workdir else (
+        schemas.repo_root() / "data" / "fund" / "runs" / job["job_id"])
+
+    if args.dry_run:
+        workdir.mkdir(parents=True, exist_ok=True)
+        (workdir / "pack.json").write_text(json.dumps(pack, indent=2, ensure_ascii=False),
+                                           encoding="utf-8")
+        print(f"pack written to {workdir / 'pack.json'} -- nothing was run")
+        return 0
+
+    if args.stub:
+        executor = recipes.stub_executor(
+            json.loads(Path(args.stub).read_text(encoding="utf-8")))
+    else:
+        plugin_root = _pei_plugin_root()
+        executor = recipes.codex_executor(plugin_root=plugin_root,
+                                          repo_root=schemas.repo_root())
+
+    running = jobs.start_attempt(job)
+    ledger.save_job(running)
+
+    try:
+        result = recipes.run(recipe=job["recipe"], pack=pack, executor=executor,
+                             workdir=workdir)
+    except recipes.ContractFailure as exc:
+        ledger.save_job(jobs.mark_contract_failed(running, str(exc)))
+        raise FundError(
+            f"{exc}\n  This will not be put in front of you. "
+            "'The output could not be read' is not 'the analyst had nothing to say'."
+        ) from exc
+    except recipes.RecipeError as exc:
+        ledger.save_job(jobs.fail_attempt(running, error_class="skill_transport_error",
+                                          detail=str(exc)))
+        raise FundError(str(exc)) from exc
+
+    proposal = result.proposed_assessment
+    artifact_path = result.final.artifact_path
+    artifact = {
+        "relative_path": str(artifact_path.relative_to(schemas.repo_root()))
+        if artifact_path.is_relative_to(schemas.repo_root()) else artifact_path.name,
+        "digest": "sha256:" + hashlib.sha256(
+            artifact_path.read_bytes()).hexdigest(),
+        "media_type": "application/json",
+    }
+
+    updated = jobs.attach_result(ledger.job(args.job), artifact=artifact,
+                                 proposed_assessment=proposal)
+    ledger.save_job(updated)
+
+    print(f"ran        {args.job}  ({job['recipe']})")
+    for step in result.steps:
+        print(f"  {step.skill:<22} {len(step.sidecar['findings'])} finding(s)")
+    if proposal:
+        print(f"  proposes readiness {proposal['readiness']}")
+    print(f"  artifacts in {workdir}")
+    print(f"  adjudicate with: fund adjudicate {args.job}")
+    return 0
+
+
+def _pei_plugin_root() -> Path:
+    import os
+
+    override = os.environ.get("PEI_PLUGIN_ROOT")
+    if override:
+        return Path(override)
+    base = Path.home() / ".codex" / "plugins" / "cache" / "openai-curated-remote" / \
+        "public-equity-investing"
+    versions = sorted((p for p in base.glob("*") if p.is_dir()), reverse=True)
+    if not versions:
+        raise FundError(
+            "the public-equity-investing plugin was not found. "
+            "Set PEI_PLUGIN_ROOT to its directory."
+        )
+    return versions[0]
+
+
+def cmd_dispatch_health(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    rows = dispatch.health(jobs=ledger.jobs(), as_of=args.as_of or _today())
+    print(f"{'RULE':<28} {'V':>2} {'ON':<4} {'30D':>4} {'FAIL':>5} LAST DISPATCHED")
+    for row in rows:
+        print(f"{row['rule_id']:<28} {row['version']:>2} "
+              f"{'yes' if row['enabled'] else 'no':<4} {row['jobs_30d']:>4} "
+              f"{row['failures_30d']:>5} {row['last_dispatched'] or 'never'}")
+        if row["never_fired"]:
+            print(f"{'':<28} ! this rule has never fired -- is it reaching anything?")
+    return 0
+
+
 def cmd_report(args: argparse.Namespace) -> int:
     loaded = policy_module.load()
     currency = loaded["measurement"]["base_currency"]
@@ -1871,6 +2131,29 @@ def build_parser() -> argparse.ArgumentParser:
     t_reviewed.add_argument("--next-due", required=True)
     t_reviewed.add_argument("--as-of")
     t_reviewed.set_defaults(handler=cmd_thesis_reviewed)
+
+    observe = subparsers.add_parser(
+        "observe", help="look for new evidence and open the work it implies")
+    observe.add_argument("--filings", help="JSON file of {ticker: [filings]} instead of SEC")
+    observe.add_argument("--limit", type=int, default=1,
+                         help="most recent filings per security to open work for")
+    observe.add_argument("--as-of")
+    observe.set_defaults(handler=cmd_observe)
+
+    run_parser = subparsers.add_parser("run", help="run a job's recipe")
+    run_parser.add_argument("job")
+    run_parser.add_argument("--stub", help="JSON file of prepared sidecars instead of codex")
+    run_parser.add_argument("--workdir")
+    run_parser.add_argument("--dry-run", action="store_true",
+                            help="write the pack and stop")
+    run_parser.add_argument("--as-of")
+    run_parser.set_defaults(handler=cmd_run)
+
+    dispatch_parser = subparsers.add_parser("dispatch", help="the dispatch table")
+    dispatch_sub = dispatch_parser.add_subparsers(dest="dispatch_command", required=True)
+    d_health = dispatch_sub.add_parser("health", help="per-rule activity")
+    d_health.add_argument("--as-of")
+    d_health.set_defaults(handler=cmd_dispatch_health)
 
     job_parser = subparsers.add_parser("job", help="research jobs")
     job_sub = job_parser.add_subparsers(dest="job_command", required=True)

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fund:schemas/fund/skill-output.schema.json",
+  "title": "Skill output sidecar",
+  "description": "The machine-readable half of a skill result. The prose stays free -- an analytical write-up forced into a template is a worse write-up -- but the part the system acts on has a contract.\n\nA sidecar that does not validate means the job is contract_failed and the result is never put in front of a human. That is a different fact from 'the analyst had nothing to say', and conflating the two is how a broken pipeline starts looking like a quiet market.\n\nNothing here is a capital input. readiness and downside are proposals; they become an assessment only when a person accepts them, and accepting is an act with answers attached.",
+  "type": "object",
+  "required": ["sidecar_version", "skill", "security_id", "produced_at", "findings"],
+  "properties": {
+    "sidecar_version": {"type": "integer", "minimum": 1},
+    "skill": {
+      "type": "string",
+      "enum": ["earnings-deep-dive", "thesis-tracker", "long-short-pitch",
+               "comps-valuation", "company-tearsheet", "idea-generation"]
+    },
+    "security_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/securityId"},
+    "job_id": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/researchJobId"},
+    "produced_at": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/utcInstant"},
+
+    "findings": {
+      "description": "What the analysis actually established, each tied to where it came from. A finding with no source is an opinion, and opinions do not update a thesis.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["statement", "direction", "source"],
+        "properties": {
+          "statement": {"type": "string", "minLength": 1, "maxLength": 2000},
+          "direction": {
+            "description": "Whether this supports the thesis, cuts against it, or neither.",
+            "type": "string",
+            "enum": ["supports", "contradicts", "neutral"]
+          },
+          "source": {"type": "string", "minLength": 1, "maxLength": 500},
+          "materiality": {"type": "string", "enum": ["high", "medium", "low"]}
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "answers": {
+      "description": "Responses to the qualitative questions the pack asked by name. A question that was asked and not answered stays visible as unanswered rather than disappearing.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["check_id", "answered", "answer"],
+        "properties": {
+          "check_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+          "answered": {"type": "boolean"},
+          "answer": {"type": "string", "minLength": 1, "maxLength": 4000},
+          "source": {"type": "string", "minLength": 1, "maxLength": 500}
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "proposed_assessment": {
+      "description": "The judgement the skill would make. A proposal and nothing else.",
+      "type": "object",
+      "required": ["thesis_summary", "readiness", "downside", "evidence_date", "review_due"],
+      "properties": {
+        "thesis_summary": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "readiness": {"type": "string", "enum": ["watchlist", "starter", "core", "exceptional"]},
+        "downside": {"$ref": "fund:schemas/fund/assessment-record.schema.json#/properties/downside"},
+        "evidence_date": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+        "review_due": {"$ref": "fund:schemas/fund/common.schema.json#/$defs/localDate"},
+        "sources": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+
+    "open_questions": {
+      "description": "What the analysis could not settle. Kept because an unresolved question is a real output, and burying it makes the next reader repeat the work.",
+      "type": "array",
+      "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+    },
+
+    "data_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["what", "why_it_matters"],
+        "properties": {
+          "what": {"type": "string", "minLength": 1, "maxLength": 500},
+          "why_it_matters": {"type": "string", "minLength": 1, "maxLength": 1000}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+
+  "allOf": [
+    {
+      "$comment": "A tracker run exists to update the judgement, so it has to produce one.",
+      "if": {"properties": {"skill": {"const": "thesis-tracker"}}, "required": ["skill"]},
+      "then": {"required": ["proposed_assessment"]}
+    },
+    {
+      "$comment": "Screening produces candidates, never capital judgements.",
+      "if": {"properties": {"skill": {"const": "idea-generation"}}, "required": ["skill"]},
+      "then": {"properties": {"proposed_assessment":
+                              {"$ref": "fund:schemas/fund/common.schema.json#/$defs/forbidden"}}}
+    }
+  ]
+}

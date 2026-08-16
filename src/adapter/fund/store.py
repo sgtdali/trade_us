@@ -329,9 +329,31 @@ _MIGRATION_0006 = Migration(
     ),
 )
 
+_MIGRATION_0007 = Migration(
+    version=7,
+    name="observed filings",
+    statements=(
+        # The watermark is "the last thing I actually saw", not "the last time I
+        # looked". That distinction is what lets a machine that was switched off
+        # for a week catch up instead of skipping the week.
+        """
+        CREATE TABLE observed_filing (
+            security_id   TEXT NOT NULL,
+            accession     TEXT NOT NULL,
+            form          TEXT NOT NULL,
+            filing_date   TEXT NOT NULL,
+            report_date   TEXT,
+            first_seen_at TEXT NOT NULL,
+            PRIMARY KEY (security_id, accession)
+        )
+        """,
+        "CREATE INDEX observed_filing_by_date ON observed_filing (security_id, filing_date)",
+    ),
+)
+
 MIGRATIONS: tuple[Migration, ...] = (
     _MIGRATION_0001, _MIGRATION_0002, _MIGRATION_0003, _MIGRATION_0004, _MIGRATION_0005,
-    _MIGRATION_0006,
+    _MIGRATION_0006, _MIGRATION_0007,
 )
 
 
@@ -820,6 +842,46 @@ class Ledger:
                 "SELECT job_id FROM research_job WHERE dedup_key = ? AND revision = 1",
                 (dedup_key,)).fetchone()
         return self.job(str(row["job_id"])) if row else None
+
+    def seen_accessions(self, security_id: str) -> set[str]:
+        with self.connection() as connection:
+            return {
+                str(row["accession"])
+                for row in connection.execute(
+                    "SELECT accession FROM observed_filing WHERE security_id = ?",
+                    (security_id,))
+            }
+
+    def record_observed_filings(self, observations: Sequence[Mapping[str, Any]]) -> int:
+        """Mark filings as seen. Idempotent: seeing one twice records it once."""
+        if not observations:
+            return 0
+        seen_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        with self.connection() as connection:
+            with self._write_transaction(connection):
+                before = connection.execute(
+                    "SELECT COUNT(*) AS n FROM observed_filing").fetchone()["n"]
+                connection.executemany(
+                    "INSERT OR IGNORE INTO observed_filing "
+                    "(security_id, accession, form, filing_date, report_date, first_seen_at) "
+                    "VALUES (?, ?, ?, ?, ?, ?)",
+                    [(o["security_id"], o["accession"], o["form"], o["filing_date"],
+                      o.get("report_date"), seen_at) for o in observations],
+                )
+                after = connection.execute(
+                    "SELECT COUNT(*) AS n FROM observed_filing").fetchone()["n"]
+        return int(after) - int(before)
+
+    def observed_filings(self, security_id: str | None = None) -> list[dict[str, Any]]:
+        query = "SELECT * FROM observed_filing"
+        params: tuple[Any, ...] = ()
+        if security_id is not None:
+            query += " WHERE security_id = ?"
+            params = (security_id,)
+        query += " ORDER BY security_id, filing_date DESC"
+        with self.connection() as connection:
+            return [{k: row[k] for k in row.keys()}
+                    for row in connection.execute(query, params)]
 
     def find_by_digest(self, digest: str) -> list[str]:
         with self.connection() as connection:

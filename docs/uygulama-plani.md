@@ -34,7 +34,7 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 | F3 | Tez lifecycle ve izleme sözleşmesi | 🔵 F3.1-F3.4 bitti · F3.5 gerçek pozisyon bekliyor |
 | F4 | Mekanik kontrol motoru | ✅ Bitti |
 | F5 | Job, dedup, inbox | ✅ Bitti |
-| F6 | İlk otomatik recipe | ⬜ Başlanmadı |
+| F6 | İlk otomatik recipe | ✅ Bitti |
 | F7 | `research-cycle` — kendi kendine çalışma | ⬜ Başlanmadı |
 | F8 | İkinci dalga tetikleyiciler | ⬜ Başlanmadı |
 | F9 | Canlılık ve kalite uyarıları | ⬜ Başlanmadı |
@@ -277,24 +277,24 @@ pozisyon/nakit/NAV state'i replay edilebiliyor.
 
 ← F5.6
 
-- [ ] **F6.1 SEC accession gözlemcisi** — security başına son görülen
+- [x] **F6.1 SEC accession gözlemcisi** — security başına son görülen
   accession watermark'ı.
   *Bitti:* Yeni 10-Q/10-K deterministik olarak tespit ediliyor; aynı filing
   ikinci kez tetikleyici üretmiyor.
-- [ ] **F6.2 Dispatch tablosu (tek kural)** ← F6.1
+- [x] **F6.2 Dispatch tablosu (tek kural)** ← F6.1
   *Bitti:* "Yeni ilgili filing + açık tez → `deep-dive → tracker`,
   `update_against_prior`" kuralı kodda tipli ve kapalı; `rule_version` var.
-- [ ] **F6.3 Nitel soruların pack'e enjeksiyonu** ← F3.2
+- [x] **F6.3 Nitel soruların pack'e enjeksiyonu** ← F3.2
   *Bitti:* Tezin vadesi gelmiş nitel soruları deep-dive pack'ine açıkça
   giriyor; skill'in kendiliğinden bakacağı varsayılmıyor.
-- [ ] **F6.4 Skill çıktısı sözleşmeleri** ← F6.2
+- [x] **F6.4 Skill çıktısı sözleşmeleri** ← F6.2
   *Bitti:* `deep-dive` ve `tracker` çıktıları için makine-okunur sidecar
   şemaları var; şema veya kontrat geçmezse sonuç adjudication'a
   **sunulmuyor**.
-- [ ] **F6.5 Görünürlük kontrolü** ← F6.2
+- [x] **F6.5 Görünürlük kontrolü** ← F6.2
   *Bitti:* Pack'te pozisyon ağırlığı, nakit, P&L, ortalama maliyet ve sermaye
   riski **bulunmadığı** testle doğrulandı.
-- [ ] **F6.6 Elle tetiklemeli uçtan uca test** ← F6.4
+- [x] **F6.6 Elle tetiklemeli uçtan uca test** ← F6.4
   *Bitti:* Elle verilen bir filing kanıtı → mekanik kontrol → deep-dive →
   tracker → Q1 inbox → adjudication → yeni assessment → tez durumu zinciri
   çalışıyor.
@@ -576,6 +576,39 @@ alıyor, `--all` gibi bir bayrak hiç eklenmedi.
 `--reject` hiçbir assessment yazmıyor — öneri sessizce düzeltilmiyor. Farklı
 hüküm `--replace` ile ayrı bir `human_authored` kayıt doğuruyor ve
 `derived_from` ile öneriye bağlanıyor.
+
+### 2026-08-16 — F6.4 tek sidecar şeması, skill başına değil
+
+Plan `deep-dive` ve `tracker` için ayrı sidecar şemaları istiyordu. Tek
+`skill-output.schema.json` yazıldı, skill'e göre koşullu kurallarla:
+`thesis-tracker` bir `proposed_assessment` **üretmek zorunda**,
+`idea-generation` ise üretmesi **yasak** (tarama aday üretir, sermaye hükmü
+değil). İki dosya aynı `findings`/`answers` gövdesini kopyalayacaktı.
+
+Düzyazı serbest kalıyor — şablona sokulmuş bir analiz daha kötü bir analiz.
+Sözleşme yalnız sistemin üzerine iş yaptığı yarıya uygulanıyor.
+
+### 2026-08-16 — F6.5 görünürlük kontrolü yapısal
+
+`packs.walk_for_capital_leaks` pack'in **tamamını** gezip yasaklı anahtar
+arıyor ve bulursa pack üretilmiyor. Sadece test değil, çalışma anı koruması:
+ileride bir snapshot'a eklenen alan kazara pack'e gömülürse orada patlıyor.
+
+Ciddiyet `decision_deadline` ile anlatılıyor — bir tarih, bir tutar değil.
+"82 bp risk altında" demek analizi iyileştirmiyor, modele pozisyonu savunma
+gerekçesi veriyor.
+
+### 2026-08-16 — F6.1 gözlem sınırı
+
+`fund observe --limit` varsayılan 1. Yirmi yıllık geçmişi olan bir şirkette ilk
+koşu seksen iş değil bir iş üretmeli. Sınırın **üstündeki** filing'ler de
+`observed_filing`'e yazılıyor, yani bir daha yüzeye çıkmıyorlar.
+
+### 2026-08-16 — skill çalıştırıcı enjekte ediliyor
+
+`recipes.run` bir `executor` alıyor: üretimde codex, testte hazırlanmış
+sidecar'lar. Bu dikiş test kolaylığı için değil — **kontrat kontrolü orada
+yaşıyor** ve bozuk bir model çıktısıyla kullanıcının hükmü arasındaki tek şey o.
 
 ### 2026-08-16 — plan dışı eklenenler
 
