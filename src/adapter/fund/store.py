@@ -238,8 +238,51 @@ _MIGRATION_0004 = Migration(
     ),
 )
 
+_MIGRATION_0005 = Migration(
+    version=5,
+    name="monitoring check records",
+    statements=(
+        """
+        CREATE TABLE monitoring_check_record (
+            check_record_id    TEXT PRIMARY KEY,
+            thesis_id          TEXT NOT NULL,
+            rule_id            TEXT NOT NULL,
+            contract_version   INTEGER NOT NULL,
+            result             TEXT NOT NULL,
+            evidence_accession TEXT,
+            evaluated_at       TEXT NOT NULL,
+            content_digest     TEXT NOT NULL,
+            document           TEXT NOT NULL
+        )
+        """,
+        "CREATE INDEX check_by_thesis ON monitoring_check_record (thesis_id, evaluated_at)",
+        "CREATE INDEX check_by_rule ON monitoring_check_record (thesis_id, rule_id, evaluated_at)",
+        # One filing evaluates one rule once. Re-running the cycle over the same
+        # evidence must not manufacture a second opinion about it.
+        """
+        CREATE UNIQUE INDEX check_once_per_evidence
+            ON monitoring_check_record (thesis_id, rule_id, contract_version, evidence_accession)
+            WHERE evidence_accession IS NOT NULL
+        """,
+        """
+        CREATE TRIGGER check_record_immutable_update
+        BEFORE UPDATE ON monitoring_check_record
+        BEGIN
+            SELECT RAISE(ABORT, 'monitoring check records are immutable');
+        END
+        """,
+        """
+        CREATE TRIGGER check_record_immutable_delete
+        BEFORE DELETE ON monitoring_check_record
+        BEGIN
+            SELECT RAISE(ABORT, 'monitoring check records cannot be deleted');
+        END
+        """,
+    ),
+)
+
 MIGRATIONS: tuple[Migration, ...] = (
-    _MIGRATION_0001, _MIGRATION_0002, _MIGRATION_0003, _MIGRATION_0004,
+    _MIGRATION_0001, _MIGRATION_0002, _MIGRATION_0003, _MIGRATION_0004, _MIGRATION_0005,
 )
 
 
@@ -337,9 +380,25 @@ THESIS_EVENT = RecordKind(
     },
 )
 
+MONITORING_CHECK_RECORD = RecordKind(
+    name="monitoring_check_record",
+    table="monitoring_check_record",
+    schema_id=schemas.MONITORING_CHECK_RECORD,
+    id_field="check_record_id",
+    columns=lambda document: {
+        "thesis_id": document["thesis_id"],
+        "rule_id": document["rule_id"],
+        "contract_version": document["contract_version"],
+        "result": document["result"],
+        "evidence_accession": document.get("evidence_accession"),
+        "evaluated_at": document["evaluated_at"],
+    },
+)
+
 RECORD_KINDS: dict[str, RecordKind] = {
     kind.name: kind
-    for kind in (ACCOUNT_EVENT, ASSESSMENT_RECORD, DECISION_RECORD, THESIS_EVENT)
+    for kind in (ACCOUNT_EVENT, ASSESSMENT_RECORD, DECISION_RECORD, THESIS_EVENT,
+                 MONITORING_CHECK_RECORD)
 }
 
 
@@ -620,6 +679,16 @@ class Ledger:
             query += " WHERE thesis_id = ?"
             params = (thesis_id,)
         query += " ORDER BY effective_date, recorded_at, thesis_event_id"
+        with self.connection() as connection:
+            return [json.loads(row["document"]) for row in connection.execute(query, params)]
+
+    def check_records(self, *, thesis_id: str | None = None) -> list[dict[str, Any]]:
+        query = "SELECT document FROM monitoring_check_record"
+        params: tuple[Any, ...] = ()
+        if thesis_id is not None:
+            query += " WHERE thesis_id = ?"
+            params = (thesis_id,)
+        query += " ORDER BY evaluated_at, check_record_id"
         with self.connection() as connection:
             return [json.loads(row["document"]) for row in connection.execute(query, params)]
 

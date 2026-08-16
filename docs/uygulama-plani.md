@@ -32,7 +32,7 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 | F1 | Defter ve manuel muhasebe | 🔵 Kod bitti (F1.1-F1.10) · F1.11 açılış kitabı bekliyor |
 | F2 | Capital policy ve karar akışı | ✅ Bitti |
 | F3 | Tez lifecycle ve izleme sözleşmesi | 🔵 F3.1-F3.4 bitti · F3.5 gerçek pozisyon bekliyor |
-| F4 | Mekanik kontrol motoru | ⬜ Başlanmadı |
+| F4 | Mekanik kontrol motoru | ✅ Bitti |
 | F5 | Job, dedup, inbox | ⬜ Başlanmadı |
 | F6 | İlk otomatik recipe | ⬜ Başlanmadı |
 | F7 | `research-cycle` — kendi kendine çalışma | ⬜ Başlanmadı |
@@ -226,18 +226,18 @@ pozisyon/nakit/NAV state'i replay edilebiliyor.
 
 ← F3.2
 
-- [ ] **F4.1 Metrik binding doğrulaması**
+- [x] **F4.1 Metrik binding doğrulaması**
   *Bitti:* Sözleşme aktive edilirken `metric_id`, birim, dönem tipi ve test
   türü `config/pipeline/metric-catalog.json` ile karşılaştırılıyor;
   eşleşmiyorsa sözleşme **aktive edilmiyor**.
-- [ ] **F4.2 Kontrol motoru (saf fonksiyon)** ← F4.1
+- [x] **F4.2 Kontrol motoru (saf fonksiyon)** ← F4.1
   *Bitti:* Dondurulmuş veri fixture'ında `not_breached` / `breached` /
   `unavailable` üretiyor; katalog veya veri yapısı değiştiyse çalışma anında
   yeniden doğrulayıp `unavailable` veriyor, "değişiklik yok" **vermiyor**.
-- [ ] **F4.3 `monitoring_check_record`** ← F4.2
+- [x] **F4.3 `monitoring_check_record`** ← F4.2
   *Bitti:* Hangi kural, hangi accession/veri sürümü, hangi sonuç kaydediliyor;
   `unavailable` hiçbir yerde "sapma yok" sayılmıyor.
-- [ ] **F4.4 Breach → `review_required`** ← F4.3, F3.4
+- [x] **F4.4 Breach → `review_required`** ← F4.3, F3.4
   *Bitti:* Mekanik breach tezi `review_required` yapıyor ve başka hiçbir şey
   yapmıyor.
 
@@ -518,6 +518,34 @@ olmadan geçen ayki NAV bilinemez. `nav_snapshot` tablosu (migration 3) eklendi;
 `fund review` her çalıştığında o günün markını yazıyor ve zirve dürüstçe
 "izleme başladığından beri" olarak tanımlanıyor. İlk review "bir zirve için
 ikinci review gerekiyor" diyor.
+
+### 2026-08-16 — F4.1 bağlama kuralları kataloğun ötesine geçti
+
+Tasarım "metric_id, birim, dönem tipi katalogla eşleşmiyorsa aktive edilmez"
+diyor. Kod üç ek tutarlılık kuralı uyguluyor, çünkü bunlar sessizce yanlış
+sonuç üretiyordu:
+
+1. `absolute_value` yalnız **seviye** dönemleriyle (`ttm`, `latest_fy`).
+   Bir eşiği yıllık değişimle karşılaştırmak seviyeyi delta ile ölçmek demek —
+   hiçbir şey ölçmez ve doğru görünür.
+2. `percentage_change` / `basis_point_change` yalnız **değişim** dönemleriyle.
+3. `basis_point_change` yalnız oran birimli metriklerde; `percentage_change`
+   ise oran birimli metriklerde **reddediliyor** (yüzdenin yüzde değişimi
+   belirsiz — orada bp kullanılmalı).
+
+Katalogda `revenue` ve `net_debt_to_ebitda` **yok** (203 metrik var ama bu
+ikisi farklı adlarla). Kural yazarken `fund thesis contract` zaten reddediyor.
+
+### 2026-08-16 — F4.2 çalışma anı yeniden doğrulaması
+
+Bağlama iki kez kontrol ediliyor: aktivasyonda (bağlamazsa sözleşme **aktive
+edilmiyor**) ve her değerlendirmede. İkincisi asıl olan — katalog yaşayan bir
+dosya ve altı ay önce bağlanan bir kural bugün bağlamayabilir. O durumda sonuç
+`unavailable`, asla `not_breached`. Yeniden adlandırılmış bir metrik "tez
+sağlıklı" demez, "artık sandığımız şeyi ölçmüyoruz" der.
+
+Her kayda `binding_signature` yazılıyor (metrik, birimler, veri tipi, dönem);
+sonraki bir katalog değişikliği karşılaştırmayla görünür oluyor.
 
 ### 2026-08-16 — plan dışı eklenenler
 

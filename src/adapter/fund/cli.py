@@ -22,6 +22,8 @@ from . import (
     decisions,
     ids,
     instruments,
+    metrics,
+    monitoring,
     policy as policy_module,
     projection,
     report,
@@ -970,6 +972,16 @@ def cmd_thesis_contract(args: argparse.Namespace) -> int:
         qualitative_checks=raw.get("qualitative_checks", []),
         change_reason=raw.get("change_reason") or args.reason,
     )
+
+    # A rule that does not bind to the metric catalog cannot be evaluated, so
+    # it must not be activated: a contract carrying rules that will only ever
+    # return unavailable looks like monitoring and is not.
+    problems = metrics.check_contract(contract, metrics.load_catalog())
+    if problems:
+        raise FundError(
+            "this contract does not bind to the metric catalog, so it was not activated:\n  "
+            + "\n  ".join(problems)
+        )
     event = thesis_module.contract_event(
         thesis_id=history.thesis_id,
         contract=contract,
@@ -1070,6 +1082,107 @@ def cmd_thesis_reviewed(args: argparse.Namespace) -> int:
     _commit_thesis(ledger, event)
     print(f"reviewed   {args.check} on {history.thesis_id}")
     print(f"  next due {args.next_due}")
+    return 0
+
+
+# --------------------------------------------------------------------------
+# check -- run the mechanical rules
+# --------------------------------------------------------------------------
+
+def cmd_check(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    history = _find_thesis(ledger, master, args.thesis)
+    contract = history.document.get("monitoring_contract")
+    if not contract:
+        raise FundError(f"{history.thesis_id} has no monitoring contract; nothing to check")
+
+    raw = json.loads(Path(args.observations).read_text(encoding="utf-8"))
+    observations = [monitoring.Observation.from_document(entry)
+                    for entry in (raw["observations"] if isinstance(raw, dict) else raw)]
+
+    outcomes = monitoring.evaluate_contract(
+        contract, observations, metrics.load_catalog(),
+        max_evidence_age_days=args.max_evidence_age_days,
+        as_of=args.as_of or _today(),
+    )
+
+    ticker = instruments.ticker_for(master, history.document["security_id"])
+    print(f"{ticker} -- {history.thesis_id}   contract v{contract['version']}")
+    print()
+    writes = []
+    rules_by_id = {rule["rule_id"]: rule for rule in contract["mechanical_rules"]}
+    for outcome in outcomes:
+        rule = rules_by_id[outcome.rule_id]
+        marker = {"breached": "BREACHED", "not_breached": "ok", "unavailable": "UNAVAILABLE"}
+        print(f"  {outcome.rule_id:<26} {marker[outcome.result]:<12} {outcome.detail or ''}")
+        if outcome.result == monitoring.UNAVAILABLE:
+            print(f"  {'':<26} reason: {outcome.reason}")
+        writes.append(store.Write(
+            kind=store.MONITORING_CHECK_RECORD.name,
+            document=monitoring.build_record(
+                outcome, rule,
+                thesis_id=history.thesis_id,
+                contract_version=contract["version"],
+                evaluated_for=args.evaluated_for,
+                evidence_accession=args.accession,
+            ),
+        ))
+
+    try:
+        ledger.commit(writes, allow_duplicate=True)
+    except LedgerError as exc:
+        raise FundError(
+            f"these checks were already recorded for this evidence: {exc}"
+        ) from exc
+
+    print()
+    print(f"  {monitoring.summarise(outcomes)}")
+    unavailable = monitoring.unavailable_rules(outcomes)
+    if unavailable:
+        print("  ! an unavailable check is not a passed check -- these rules did not run")
+
+    breaches = monitoring.breached_rules(outcomes)
+    if not breaches:
+        if not unavailable:
+            print("  no rule was crossed. That is not the same as the thesis being healthy.")
+        return 0
+
+    if history.status != thesis_module.ACTIVE:
+        print(f"\n  thesis is already {history.status}; no further status change")
+        return 0
+
+    event = thesis_module.status_event(
+        thesis_id=history.thesis_id,
+        from_status=thesis_module.ACTIVE,
+        to_status=thesis_module.REVIEW_REQUIRED,
+        reason="mechanical breach: " + ", ".join(o.rule_id for o in breaches),
+        effective_date=args.as_of or _today(),
+        actor="machine",
+    )
+    _commit_thesis(ledger, event)
+    print(f"\n  thesis -> review_required")
+    print("  the machine can do nothing further here: whether the thesis is broken")
+    print("  is your judgement, not the rule's.")
+    return 0
+
+
+def cmd_checks(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    thesis_id = None
+    if args.thesis:
+        thesis_id = _find_thesis(ledger, master, args.thesis).thesis_id
+    records = ledger.check_records(thesis_id=thesis_id)
+    if not records:
+        print("no checks recorded yet")
+        return 0
+    print(f"{'EVALUATED':<22} {'RULE':<26} {'V':>2} {'RESULT':<14} {'VALUE':>12} EVIDENCE")
+    for record in records:
+        print(f"{record['evaluated_at']:<22} {record['rule_id']:<26} "
+              f"{record['contract_version']:>2} {record['result']:<14} "
+              f"{record.get('observed_value', '-'):>12} "
+              f"{record.get('evidence_accession', record['evaluated_for'])}")
     return 0
 
 
@@ -1362,6 +1475,22 @@ def build_parser() -> argparse.ArgumentParser:
     t_reviewed.add_argument("--next-due", required=True)
     t_reviewed.add_argument("--as-of")
     t_reviewed.set_defaults(handler=cmd_thesis_reviewed)
+
+    check = subparsers.add_parser("check", help="run a thesis's mechanical rules")
+    check.add_argument("thesis", help="thesis id or ticker")
+    check.add_argument("--observations", required=True,
+                       help="JSON file of measured values from the data layer")
+    check.add_argument("--evaluated-for", default="manual",
+                       choices=["new_periodic_filing", "earnings_release", "material_8k",
+                                "review_due", "manual"])
+    check.add_argument("--accession", help="the filing this evaluation rests on")
+    check.add_argument("--max-evidence-age-days", type=int)
+    check.add_argument("--as-of")
+    check.set_defaults(handler=cmd_check)
+
+    checks = subparsers.add_parser("checks", help="list recorded mechanical checks")
+    checks.add_argument("--thesis")
+    checks.set_defaults(handler=cmd_checks)
 
     report_parser = with_prices(subparsers.add_parser(
         "report", help="write the read-only HTML view"))
