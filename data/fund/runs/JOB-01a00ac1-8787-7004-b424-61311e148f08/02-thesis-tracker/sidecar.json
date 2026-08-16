@@ -1,0 +1,25 @@
+{
+  "sidecar_version": 1,
+  "skill": "thesis-tracker",
+  "findings": [
+    {
+      "statement": "Pillar intact",
+      "direction": "supports",
+      "source": "10-Q p.14"
+    }
+  ],
+  "proposed_assessment": {
+    "thesis_summary": "Pricing power held",
+    "readiness": "starter",
+    "downside": {
+      "status": "known",
+      "return_fraction": "-0.28",
+      "scenario": "Mix shift persists"
+    },
+    "evidence_date": "2026-11-01",
+    "review_due": "2027-02-15"
+  },
+  "produced_at": "2026-08-16T13:27:30Z",
+  "security_id": "sec:nvda",
+  "job_id": "JOB-01a00ac1-8787-7004-b424-61311e148f08"
+}

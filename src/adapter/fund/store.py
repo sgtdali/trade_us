@@ -351,9 +351,33 @@ _MIGRATION_0007 = Migration(
     ),
 )
 
+_MIGRATION_0008 = Migration(
+    version=8,
+    name="cycle heartbeat",
+    statements=(
+        # Every run is recorded, succeeded or failed. A cycle that fails
+        # silently is worse than no cycle: the owner stops checking.
+        """
+        CREATE TABLE cycle_run (
+            cycle_id      TEXT PRIMARY KEY,
+            started_at    TEXT NOT NULL,
+            finished_at   TEXT,
+            as_of         TEXT NOT NULL,
+            status        TEXT NOT NULL,
+            observed      INTEGER NOT NULL DEFAULT 0,
+            jobs_opened   INTEGER NOT NULL DEFAULT 0,
+            jobs_run      INTEGER NOT NULL DEFAULT 0,
+            jobs_failed   INTEGER NOT NULL DEFAULT 0,
+            detail        TEXT
+        )
+        """,
+        "CREATE INDEX cycle_run_by_time ON cycle_run (started_at)",
+    ),
+)
+
 MIGRATIONS: tuple[Migration, ...] = (
     _MIGRATION_0001, _MIGRATION_0002, _MIGRATION_0003, _MIGRATION_0004, _MIGRATION_0005,
-    _MIGRATION_0006, _MIGRATION_0007,
+    _MIGRATION_0006, _MIGRATION_0007, _MIGRATION_0008,
 )
 
 
@@ -882,6 +906,31 @@ class Ledger:
         with self.connection() as connection:
             return [{k: row[k] for k in row.keys()}
                     for row in connection.execute(query, params)]
+
+    def record_cycle(self, report: Mapping[str, Any]) -> None:
+        with self.connection() as connection:
+            with self._write_transaction(connection):
+                connection.execute(
+                    "INSERT INTO cycle_run (cycle_id, started_at, finished_at, as_of, status, "
+                    "observed, jobs_opened, jobs_run, jobs_failed, detail) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+                    "ON CONFLICT(cycle_id) DO UPDATE SET finished_at = excluded.finished_at, "
+                    "status = excluded.status, observed = excluded.observed, "
+                    "jobs_opened = excluded.jobs_opened, jobs_run = excluded.jobs_run, "
+                    "jobs_failed = excluded.jobs_failed, detail = excluded.detail",
+                    (report["cycle_id"], report["started_at"], report.get("finished_at"),
+                     report["as_of"], report["status"], report.get("observed", 0),
+                     report.get("jobs_opened", 0), report.get("jobs_run", 0),
+                     report.get("jobs_failed", 0), report.get("detail")),
+                )
+
+    def cycle_runs(self, limit: int = 30) -> list[dict[str, Any]]:
+        with self.connection() as connection:
+            return [
+                {k: row[k] for k in row.keys()}
+                for row in connection.execute(
+                    "SELECT * FROM cycle_run ORDER BY started_at DESC LIMIT ?", (limit,))
+            ][::-1]
 
     def find_by_digest(self, digest: str) -> list[str]:
         with self.connection() as connection:

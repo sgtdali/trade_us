@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any, Sequence
 
 from . import (
+    cycle,
     decisions,
     dispatch,
     ids,
@@ -1790,9 +1791,14 @@ def cmd_run(args: argparse.Namespace) -> int:
 
     proposal = result.proposed_assessment
     artifact_path = result.final.artifact_path
+    # POSIX separators: the schema's relativePath rejects backslashes, and a
+    # ledger written on Windows has to stay readable anywhere.
+    if artifact_path.is_relative_to(schemas.repo_root()):
+        relative_path = artifact_path.relative_to(schemas.repo_root()).as_posix()
+    else:
+        relative_path = f"external/{job['job_id']}/{artifact_path.name}"
     artifact = {
-        "relative_path": str(artifact_path.relative_to(schemas.repo_root()))
-        if artifact_path.is_relative_to(schemas.repo_root()) else artifact_path.name,
+        "relative_path": relative_path,
         "digest": "sha256:" + hashlib.sha256(
             artifact_path.read_bytes()).hexdigest(),
         "media_type": "application/json",
@@ -1839,6 +1845,186 @@ def cmd_dispatch_health(args: argparse.Namespace) -> int:
               f"{row['failures_30d']:>5} {row['last_dispatched'] or 'never'}")
         if row["never_fired"]:
             print(f"{'':<28} ! this rule has never fired -- is it reaching anything?")
+    return 0
+
+
+# --------------------------------------------------------------------------
+# research-cycle -- the threshold where the system starts driving itself
+# --------------------------------------------------------------------------
+
+def cmd_research_cycle(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    as_of = args.as_of or _today()
+    report = cycle.new_report(as_of)
+
+    def persist(detail: str | None = None) -> None:
+        ledger.record_cycle({
+            "cycle_id": report.cycle_id,
+            "started_at": report.started_at,
+            "finished_at": report.finished_at,
+            "as_of": report.as_of,
+            "status": report.status,
+            "observed": report.observed,
+            "jobs_opened": len(report.jobs_opened),
+            "jobs_run": len(report.jobs_run),
+            "jobs_failed": len(report.jobs_failed),
+            "detail": detail or ("; ".join(report.notes) or None),
+        })
+
+    persist()
+    print(f"CYCLE {report.cycle_id[:8]} -- {as_of}")
+
+    try:
+        theses = _theses(ledger)
+        watched = {h.document["security_id"]: h for h in theses.values()
+                   if h.status != thesis_module.CLOSED}
+
+        observations: list[dict[str, Any]] = []
+
+        # 1. New evidence.
+        if args.filings:
+            candidates = _filings_from_file(args.filings, master)
+        elif watched:
+            candidates = _filings_from_sec(master, ledger, sorted(watched), as_of)
+        else:
+            candidates = {}
+
+        for security_id, entries in sorted(candidates.items()):
+            if security_id not in watched:
+                continue
+            seen = ledger.seen_accessions(security_id)
+            fresh = [e for e in entries if e["accession"] not in seen]
+            if not fresh:
+                continue
+            ledger.record_observed_filings(fresh)
+            newest = sorted(fresh, key=lambda e: (e["filing_date"], e["accession"]),
+                            reverse=True)[:args.limit]
+            for entry in newest:
+                observations.append({
+                    "observation": "new_periodic_filing",
+                    "observed_at": _now(),
+                    "evidence_accession": entry["accession"],
+                    "evidence_date": entry["filing_date"],
+                    "detail": f"{entry['form']} filed {entry['filing_date']}",
+                    "_security_id": security_id,
+                    "_thesis_id": watched[security_id].thesis_id,
+                })
+
+        # 2. Reviews that have come due.
+        observations.extend(observers.review_due_observations(theses, as_of=as_of))
+        report.observed = len(observations)
+
+        # 3. Match, merge, deduplicate.
+        planned, duplicates = cycle.plan_work(
+            observations, theses=theses,
+            already_open=lambda key: ledger.job_for_dedup_key(key) is not None)
+        report.skipped_duplicates = duplicates
+
+        for work in planned:
+            document = cycle.to_job(work)
+            ledger.save_job(document)
+            report.jobs_opened.append(document["job_id"])
+            ticker = instruments.ticker_for(master, work.security_id)
+            print(f"  opened   {ticker:<8} {work.trigger['observation']:<22} "
+                  f"{document['job_id']}")
+
+        # 4. Run what is runnable, one at a time.
+        if not args.observe_only:
+            pending = [job for job in ledger.jobs() if cycle.runnable(job)]
+            executor = None
+            if args.stub:
+                executor = recipes.stub_executor(
+                    json.loads(Path(args.stub).read_text(encoding="utf-8")))
+
+            def run_one(job: dict[str, Any]) -> None:
+                run_args = argparse.Namespace(
+                    ledger=args.ledger, instruments=args.instruments, job=job["job_id"],
+                    stub=args.stub, workdir=None, dry_run=False, as_of=as_of)
+                if cmd_run(run_args) != 0:  # pragma: no cover -- cmd_run raises instead
+                    raise FundError(f"{job['job_id']} did not complete")
+
+            cycle.run_serially(pending, run_one=run_one, report=report, limit=args.max_jobs)
+
+    except Exception as exc:  # noqa: BLE001 -- the cycle records its own failure
+        cycle.finish(report, failed=str(exc)[:500])
+        persist()
+        print(f"  CYCLE FAILED: {exc}")
+        print("  This is recorded; tomorrow's summary will show it.")
+        return 1
+
+    cycle.finish(report)
+    persist()
+
+    print()
+    print(f"  {report.summary()}")
+    for job_id, error in report.jobs_failed:
+        print(f"  ! {job_id}: {error}")
+    if report.jobs_opened or report.jobs_failed:
+        print("  See `fund inbox` in the morning.")
+    return 0
+
+
+def cmd_status(args: argparse.Namespace) -> int:
+    ledger = _ledger(args)
+    master = _master(args)
+    as_of = args.as_of or _today()
+
+    runs = ledger.cycle_runs()
+    beat = cycle.heartbeat_from(runs, as_of=as_of)
+    queue = jobs.build_queue(ledger.jobs(), funded_security_ids=_funded_securities(ledger),
+                             as_of=as_of)
+
+    print(f"STATUS -- {as_of}")
+    print()
+    print(f"  {'Cycle':<14}{beat.describe(as_of)}")
+    if not beat.healthy:
+        print("  ! the automation is not healthy; do not read a quiet inbox as good news")
+    if runs:
+        last = runs[-1]
+        print(f"  {'Last run':<14}{last['observed']} observed, {last['jobs_opened']} opened, "
+              f"{last['jobs_run']} run, {last['jobs_failed']} failed")
+        if last.get("detail"):
+            print(f"  {'':<14}{last['detail']}")
+
+    print()
+    print(f"  {'Q0':<14}{len(queue.q0)} blocking")
+    print(f"  {'Q1':<14}{len(queue.q1)} needing judgement "
+          f"({jobs.total_estimate(queue)} min)")
+    print(f"  {'Q2':<14}{len(queue.q2)} for information")
+
+    if queue.q0:
+        print()
+        for item in queue.q0:
+            ticker = instruments.ticker_for(master, item.job.get("security_id", "-"))
+            print(f"  ! {ticker:<8} {item.reason}")
+    return 0
+
+
+def cmd_schedule(args: argparse.Namespace) -> int:
+    """Print the Task Scheduler registration, rather than running it."""
+    python = sys.executable
+    repo = schemas.repo_root()
+    command = (
+        f'schtasks /Create /TN "fund-research-cycle" /SC DAILY /ST {args.at} '
+        f'/TR "\\"{python}\\" -m adapter.fund.cli research-cycle" '
+        f'/RL LIMITED /F'
+    )
+    print("Register the nightly cycle with:")
+    print()
+    print(f"  {command}")
+    print()
+    print("Then open the task in Task Scheduler and tick:")
+    print("  - Run task as soon as possible after a scheduled start is missed")
+    print("    (StartWhenAvailable). Without it, a machine that was off overnight")
+    print("    skips the night entirely rather than catching up.")
+    print("  - Stop the task if it runs longer than 2 hours.")
+    print()
+    print(f"Working directory: {repo}")
+    print(f"Set PYTHONPATH={repo / 'src'} if the package is not installed.")
+    print()
+    print("Check it is actually running with `fund status` -- a scheduled task that")
+    print("silently stopped looks exactly like a quiet market.")
     return 0
 
 
@@ -2131,6 +2317,29 @@ def build_parser() -> argparse.ArgumentParser:
     t_reviewed.add_argument("--next-due", required=True)
     t_reviewed.add_argument("--as-of")
     t_reviewed.set_defaults(handler=cmd_thesis_reviewed)
+
+    research_cycle = subparsers.add_parser(
+        "research-cycle",
+        help="the nightly pass: observe, match, deduplicate, run, queue")
+    research_cycle.add_argument("--filings", help="JSON file instead of SEC")
+    research_cycle.add_argument("--stub", help="JSON file of prepared sidecars instead of codex")
+    research_cycle.add_argument("--limit", type=int, default=1,
+                                help="most recent filings per security")
+    research_cycle.add_argument("--max-jobs", type=int, default=5,
+                                help="how many jobs to run in one pass")
+    research_cycle.add_argument("--observe-only", action="store_true",
+                                help="open work but run nothing")
+    research_cycle.add_argument("--as-of")
+    research_cycle.set_defaults(handler=cmd_research_cycle)
+
+    status = subparsers.add_parser(
+        "status", help="is the automation actually running, and what is waiting")
+    status.add_argument("--as-of")
+    status.set_defaults(handler=cmd_status)
+
+    schedule = subparsers.add_parser("schedule", help="print the Task Scheduler setup")
+    schedule.add_argument("--at", default="03:30", help="local start time, HH:MM")
+    schedule.set_defaults(handler=cmd_schedule)
 
     observe = subparsers.add_parser(
         "observe", help="look for new evidence and open the work it implies")

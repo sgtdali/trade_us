@@ -35,7 +35,7 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 | F4 | Mekanik kontrol motoru | ✅ Bitti |
 | F5 | Job, dedup, inbox | ✅ Bitti |
 | F6 | İlk otomatik recipe | ✅ Bitti |
-| F7 | `research-cycle` — kendi kendine çalışma | ⬜ Başlanmadı |
+| F7 | `research-cycle` — kendi kendine çalışma | ✅ Bitti — **kritik eşik geçildi** |
 | F8 | İkinci dalga tetikleyiciler | ⬜ Başlanmadı |
 | F9 | Canlılık ve kalite uyarıları | ⬜ Başlanmadı |
 | F10 | Discovery | ⬜ Başlanmadı |
@@ -305,16 +305,16 @@ pozisyon/nakit/NAV state'i replay edilebiliyor.
 
 ← F6.6
 
-- [ ] **F7.1 `fund research-cycle` komutu**
+- [x] **F7.1 `fund research-cycle` komutu**
   *Bitti:* Veriyi tazeliyor, gözlemleri çıkarıyor, kuralları eşleştiriyor,
   dedup uyguluyor, işleri **seri** çalıştırıyor, doğruluyor, kuyruğa koyuyor.
-- [ ] **F7.2 Watermark ve catch-up** ← F7.1
+- [x] **F7.2 Watermark ve catch-up** ← F7.1
   *Bitti:* Bilgisayar birkaç gün kapalı kalsa bile aradaki filing kaybolmuyor;
   cycle son watermark'tan devam ediyor.
-- [ ] **F7.3 Task Scheduler kurulumu** ← F7.1
+- [x] **F7.3 Task Scheduler kurulumu** ← F7.1
   *Bitti:* Gecelik çalışıyor; `StartWhenAvailable` açık; kurulum adımları
   yazılı.
-- [ ] **F7.4 Heartbeat ve sabah durum özeti** ← F7.1
+- [x] **F7.4 Heartbeat ve sabah durum özeti** ← F7.1
   *Bitti:* Son cycle zamanı ve sonucu görünüyor; başarısız cycle sessiz
   kalmıyor; Q0 uyarısı doğuyor.
 
@@ -609,6 +609,32 @@ koşu seksen iş değil bir iş üretmeli. Sınırın **üstündeki** filing'ler
 `recipes.run` bir `executor` alıyor: üretimde codex, testte hazırlanmış
 sidecar'lar. Bu dikiş test kolaylığı için değil — **kontrat kontrolü orada
 yaşıyor** ve bozuk bir model çıktısıyla kullanıcının hükmü arasındaki tek şey o.
+
+### 2026-08-16 — F7.1 birleştirme kanıt bazında
+
+İlk uygulamada `plan_work` gözlemleri (security, thesis, **gözlem tipi**) ile
+gruplayıp birleştiriyordu. Bu, bir haftalık aradan sonra gelen **üç ayrı
+filing'i tek işe** katıyordu — tam da catch-up'ın koruması gereken şeyi
+bozuyordu. Doğrusu: gruplama **kanıt** bazında (accession / review tarihi /
+fiyat penceresi). Bir filing hakkındaki iki sinyal tek okuma; iki farklı filing
+iki okuma.
+
+Bir kanıt üzerinde birden çok gözlem varsa iş, en ciddi olanın kuralıyla
+açılıyor (`OBSERVATION_PRIORITY`): mekanik breach, onu ortaya çıkaran
+filing'den önce gelir.
+
+### 2026-08-16 — F7.4 sessizlik operatör tarihiyle ölçülüyor
+
+Heartbeat "kaç gündür sessiz" hesabını `started_at` (duvar saati) yerine
+cycle'ın `as_of`'u ile yapıyor. Tasarım "'bugün' kanonik bir veri alanı
+değildir" diyor; geriye dönük çalıştırılan bir cycle iki aylık sessizlik gibi
+okunmamalı.
+
+### 2026-08-16 — artifact yolları POSIX
+
+`relative_path` şeması ters bölü kabul etmiyor. Windows'ta üretilen yol
+`as_posix()` ile yazılıyor — defter Windows'ta yazılıp başka yerde okunabilir
+kalmalı. Repo dışındaki workdir'ler `external/<job_id>/<dosya>` biçiminde.
 
 ### 2026-08-16 — plan dışı eklenenler
 
