@@ -2192,6 +2192,19 @@ def cmd_quality(args: argparse.Namespace) -> int:
         print(f"  ! {warning}")
 
     print()
+    print("WEEKLY LOAD")
+    load = quality_module.weekly_load(ledger.jobs(), as_of=as_of)
+    print(f"  {'minutes per week':<26}{load.minutes_per_week:.0f} over {load.weeks} weeks "
+          f"(target {quality_module.WEEKLY_MINUTES_TARGET[0]}-"
+          f"{quality_module.WEEKLY_MINUTES_TARGET[1]})")
+    if load.unrecorded:
+        print(f"  ! {load.unrecorded} adjudication(s) recorded no time; pass --minutes "
+              "so this can be measured rather than guessed")
+    if load.over_target:
+        print("  ! the load is above target. Write down why -- a system that quietly grows "
+              "from 20 minutes to two hours has become something else.")
+
+    print()
     print("FALSE ALARMS")
     transitions = [t for history in theses.values() for t in history.transitions]
     alarms = quality_module.false_alarms(transitions, as_of=as_of, window_days=args.window)

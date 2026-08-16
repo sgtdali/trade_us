@@ -34,6 +34,8 @@ RECIPE_STEPS: dict[str, tuple[str, ...]] = {
 
 CODEX_TIMEOUT_SECONDS = 1800
 
+PIN_RELATIVE_PATH = "config/fund/plugin-pin.json"
+
 
 class RecipeError(FundError):
     """A recipe could not be run."""
@@ -41,6 +43,33 @@ class RecipeError(FundError):
 
 class ContractFailure(RecipeError):
     """A skill produced something that does not satisfy its output contract."""
+
+
+def load_pin(root: Path | None = None) -> str | None:
+    """The plugin version this system was calibrated against, if one is pinned.
+
+    A skill upgrade changes what the analysis says without changing a line of
+    this repository. Pinning does not prevent that -- it makes it a decision
+    rather than a surprise.
+    """
+    path = (root or schemas.repo_root()) / PIN_RELATIVE_PATH
+    if not path.is_file():
+        return None
+    return json.loads(path.read_text(encoding="utf-8")).get("plugin_version")
+
+
+def check_pin(plugin_root: Path, root: Path | None = None) -> None:
+    pinned = load_pin(root)
+    if pinned is None:
+        return
+    installed = plugin_root.name
+    if installed != pinned:
+        raise RecipeError(
+            f"the public-equity-investing plugin is {installed}, but this system is "
+            f"pinned to {pinned}. A skill upgrade changes what the analysis says.\n"
+            f"  Run the contract fixtures against {installed} first, then update "
+            f"{PIN_RELATIVE_PATH}."
+        )
 
 
 class Executor(Protocol):
@@ -165,6 +194,8 @@ def codex_executor(
     timeout: int = CODEX_TIMEOUT_SECONDS,
 ) -> Executor:
     """The production executor: shells out to codex with the PEI plugin loaded."""
+
+    check_pin(plugin_root)
 
     def execute(skill: str, pack: Mapping[str, Any], workdir: Path) -> Mapping[str, Any]:
         skill_path = plugin_root / "skills" / skill / "SKILL.md"

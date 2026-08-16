@@ -310,3 +310,67 @@ def test_the_resolution_reaches_the_false_alarm_report(fund, capsys):
     fund("quality", "--as-of", "2026-12-31")
     output = capsys.readouterr().out
     assert "real but irrelevant       1" in output.replace("  ", "  ")
+
+
+# ------------------------------------------------------------ weekly load
+
+def adjudicated(minutes=None, at="2026-11-05T00:00:00Z"):
+    document = {"job_id": f"JOB-{at}-{minutes}",
+                "adjudication": {"outcome": "accepted", "adjudicated_at": at}}
+    if minutes is not None:
+        document["adjudication"]["minutes_spent"] = minutes
+    return document
+
+
+def test_weekly_load_is_measured_from_recorded_minutes():
+    load = quality.weekly_load(
+        [adjudicated(20), adjudicated(30), adjudicated(10)],
+        as_of="2026-11-30", window_days=28)
+    assert load.weeks == 4
+    assert load.total_minutes == 60
+    assert load.minutes_per_week == 15
+
+
+def test_unrecorded_time_is_counted_separately_not_guessed():
+    load = quality.weekly_load([adjudicated(20), adjudicated()], as_of="2026-11-30")
+    assert load.recorded == 1
+    assert load.unrecorded == 1
+
+
+def test_load_above_target_is_flagged():
+    load = quality.weekly_load([adjudicated(200)], as_of="2026-11-30", window_days=28)
+    assert load.over_target
+
+
+def test_old_adjudications_fall_outside_the_window():
+    load = quality.weekly_load([adjudicated(60, at="2025-01-01T00:00:00Z")],
+                               as_of="2026-11-30", window_days=84)
+    assert load.total_minutes == 0
+
+
+def test_quality_reports_the_weekly_load(fund, capsys):
+    capsys.readouterr()
+    fund("quality", "--as-of", "2026-11-05")
+    assert "WEEKLY LOAD" in capsys.readouterr().out
+
+
+# --------------------------------------------------------- plugin pinning
+
+def test_no_pin_means_no_check(tmp_path):
+    from adapter.fund import recipes
+
+    assert recipes.load_pin(root=tmp_path) is None
+    recipes.check_pin(tmp_path / "0.1.31", root=tmp_path)
+
+
+def test_a_mismatched_plugin_version_is_refused(tmp_path):
+    from adapter.fund import recipes
+
+    config = tmp_path / "config" / "fund"
+    config.mkdir(parents=True)
+    (config / "plugin-pin.json").write_text(json.dumps({"plugin_version": "0.1.31"}),
+                                            encoding="utf-8")
+
+    recipes.check_pin(tmp_path / "0.1.31", root=tmp_path)
+    with pytest.raises(recipes.RecipeError, match="pinned to 0.1.31"):
+        recipes.check_pin(tmp_path / "0.2.0", root=tmp_path)

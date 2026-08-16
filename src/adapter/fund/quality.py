@@ -210,6 +210,56 @@ def adjudication_quality(
     return quality
 
 
+#: The design's expectation for an existing book. Above it, either the contract
+#: is too busy or the adjudications are taking longer than they should -- both
+#: worth knowing before the habit sets in.
+WEEKLY_MINUTES_TARGET = (15, 25)
+
+
+@dataclass
+class WeeklyLoad:
+    weeks: int
+    total_minutes: int
+    recorded: int
+    unrecorded: int
+
+    @property
+    def minutes_per_week(self) -> float:
+        return self.total_minutes / self.weeks if self.weeks else 0.0
+
+    @property
+    def over_target(self) -> bool:
+        return self.minutes_per_week > WEEKLY_MINUTES_TARGET[1]
+
+
+def weekly_load(
+    jobs: Iterable[Mapping[str, Any]], *, as_of: str, window_days: int = 84
+) -> WeeklyLoad:
+    """Minutes actually spent, per week.
+
+    Measured rather than estimated. A system that quietly grows from twenty
+    minutes a week to two hours has changed into something else, and the change
+    is invisible from inside it.
+    """
+    import datetime as _datetime
+
+    cutoff = (date.fromisoformat(as_of) -
+              _datetime.timedelta(days=window_days)).isoformat()
+    total, recorded, unrecorded = 0, 0, 0
+    for job in jobs:
+        adjudication = job.get("adjudication")
+        if not adjudication or adjudication["adjudicated_at"][:10] < cutoff:
+            continue
+        minutes = adjudication.get("minutes_spent")
+        if minutes is None:
+            unrecorded += 1
+        else:
+            total += minutes
+            recorded += 1
+    return WeeklyLoad(weeks=max(window_days // 7, 1), total_minutes=total,
+                      recorded=recorded, unrecorded=unrecorded)
+
+
 # --------------------------------------------------------------------------
 # False alarms
 # --------------------------------------------------------------------------

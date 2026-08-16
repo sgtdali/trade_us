@@ -1,0 +1,4 @@
+{
+  "plugin_version": "0.1.31",
+  "note": "The public-equity-investing version the output contracts were verified against. A skill upgrade changes what the analysis says without changing a line of this repository; run the contract fixtures against the new version before moving this."
+}

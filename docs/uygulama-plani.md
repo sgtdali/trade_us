@@ -40,6 +40,10 @@ Bu dosya **çalışma listesidir**, tasarım dokümanı değildir.
 | F9 | Canlılık ve kalite uyarıları | ✅ Bitti |
 | F10 | Discovery | ✅ Kod bitti — **varsayılan kapalı** |
 
+**Kalan üç iş kod değil, veri:** F0.1 (hangi hesap), F1.11 (açılış kitabı),
+F3.5 (gerçek bir tez). Üçü de sizin elinizdeki gerçek rakamları bekliyor;
+uydurulmadılar. `docs/fund-operasyon.md` → "İlk kurulum" bunları anlatıyor.
+
 İşaretler: ⬜ başlanmadı · 🔵 sürüyor · ✅ bitti · ⚠ engelli/sorunlu
 
 **Kritik eşik: F7.** Oraya kadar sistem elle sürülür; F7'den sonra kendisi
@@ -395,7 +399,7 @@ Bir fazın parçası değil; süreç boyunca.
 - [ ] **S2 Kalibrasyon defteri** — Her `provisional` policy değeri için
   gerçek gözlem biriktirin: kaç kez bağlayıcı oldu, kaç yanlış alarm üretti,
   kullanıcı kaç kez override etti. Üç ayda bir gözden geçirin.
-- [ ] **S3 Plugin sürüm sabitleme** — `public-equity-investing` sürümü
+- [x] **S3 Plugin sürüm sabitleme** — `public-equity-investing` sürümü
   pinlenir; yeni sürüm önce contract fixture'larından geçmeden kullanılmaz.
 - [ ] **S4 Haftalık yük ölçümü** — Gerçek harcanan dakikayı kaydedin. Mevcut
   kitap için 15-25 dk/hafta hedefi aşılıyorsa neden aşıldığını yazın.
@@ -708,6 +712,21 @@ reddediyor). Tarama aday üretir, sermaye hükmü değil.
 aday yeni aday üretmemek için sebeptir; (2) kitap doluyken interval iki katına
 çıkıyor, tamamen durmuyor — daha iyi bir fikir daha zayıf olanın yerini
 alabilir.
+
+### 2026-08-16 — S3 ve S4 kodla desteklendi
+
+**S3:** `config/fund/plugin-pin.json` sabitlenen sürümü tutuyor;
+`recipes.codex_executor` kurulu sürüm farklıysa **çalışmayı reddediyor**.
+Sabitleme yükseltmeyi engellemiyor, sürprizden karara çeviriyor.
+
+**S4:** `fund quality` artık haftalık dakikayı raporluyor —
+adjudication'da `--minutes` ile kaydedilen gerçek süreden. Hedef 15-25 dk/hafta;
+üstüne çıkarsa neden çıktığını yazmanız isteniyor. Süresi kaydedilmemiş
+adjudication'lar ayrıca sayılıyor, tahmin edilmiyor.
+
+S1 (gölge işletim) ve S2 (kalibrasyon defteri) süreç görevleri; kod tarafı
+hazır (`shadow` varsayılan, `provisional` işaretleri, `fund quality`), gerisi
+zamanla birikecek gözlem.
 
 ### 2026-08-16 — plan dışı eklenenler
 
